@@ -268,7 +268,8 @@ export class UiRapidDatasetToggle {
 
     const $$label = $$rows
       .append('div')
-      .attr('class', 'rapid-feature');
+      .attr('class', 'rapid-feature')
+      .classed('plateau', d => d.id === 'plateauJapan');  // Plateau datasets styling
 
     // line1: name and optional beta badge
     const $$line1 = $$label

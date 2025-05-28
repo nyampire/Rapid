@@ -8,7 +8,7 @@ const OVERTURE_CYAN = '#00ffff';
 const RAPID_COLORS = [
   '#ff0000',  // red
   '#ffa500',  // orange
-  '#ffd700',  // gold
+  '#66BB6A',  // plateau green
   '#00ff00',  // lime
   '#00ffff',  // cyan
   '#1e90ff',  // dodgerblue
@@ -141,8 +141,8 @@ export class RapidSystem extends AbstractSystem {
 
         // Set some defaults
         if (!urlhash.initialHashParams.has('datasets')) {
-          this._addedDatasetIDs = new Set(['fbRoads', 'msBuildings', 'overture-places', 'omdFootways']);  // on menu
-          this._enabledDatasetIDs = new Set(['fbRoads', 'msBuildings']);  // checked
+          this._addedDatasetIDs = new Set(['fbRoads', 'msBuildings', 'overture-places', 'omdFootways', 'plateauJapan']);  // on menu
+          this._enabledDatasetIDs = new Set(['fbRoads', 'msBuildings', 'plateauJapan']);  // checked
           this._datasetsChanged();
         }
 

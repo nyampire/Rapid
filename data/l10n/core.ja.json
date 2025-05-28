@@ -876,6 +876,10 @@
       "remove": "削除",
       "category": {
         "roads": "道路"
+      },
+      "plateauJapan": {
+        "label": "Plateau 日本建物データ",
+        "description": "Plateau 3D都市モデル建物データ"
       }
     },
     "tag_reference": {

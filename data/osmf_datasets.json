@@ -1,0 +1,19 @@
+{
+  "osmf_yonago": {
+    "id": "osmf_yonago",
+    "name": "osmf.jp 米子市建物データ",
+    "description": "Plateau建物データ（米子市132件）",
+    "type": "buildings",
+    "category": "featured",
+    "url": "http://localhost:8000/api/mapwithai/buildings",
+    "bounds": [
+      [133.363341, 35.378689],
+      [133.374820, 35.383417]
+    ],
+    "minzoom": 14,
+    "maxzoom": 18,
+    "attribution": "osmf.jp / Plateau",
+    "terms_url": "https://osmf.jp/terms",
+    "enabled": true
+  }
+}

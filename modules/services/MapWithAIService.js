@@ -100,6 +100,21 @@ export class MapWithAIService extends AbstractSystem {
       descriptionStringID: 'rapid_menu.fbRoads.description'
     });
 
+    // === Plateau日本 データセット追加 ここから ===
+    const plateauJapan = new RapidDataset(context, {
+      id: 'plateauJapan',
+      conflated: false,  // 独自データなのでconflated処理不要
+      service: 'mapwithai',  // MapWithAIサービスを使用
+      categories: new Set(['plateau', 'buildings', 'featured', 'japan']),
+      dataUsed: ['osmf.jp', 'Plateau Buildings'],
+      itemUrl: 'https://osmf.jp/plateau-data',
+      licenseUrl: 'https://osmf.jp/license',
+      color: '#66BB6A',
+      labelStringID: 'rapid_menu.plateauJapan.label',
+      descriptionStringID: 'rapid_menu.plateauJapan.description'
+    });
+    // === osmf.jp データセット追加 ここまで ===
+
     const msBuildings = new RapidDataset(context, {
       id: 'msBuildings',
       conflated: true,
@@ -155,7 +170,7 @@ export class MapWithAIService extends AbstractSystem {
       label: 'Rapid Walkthrough'
     });
 
-    return [fbRoads, msBuildings, omdFootways, metaSyntheticFootways, introGraph];
+    return [fbRoads, msBuildings, plateauJapan, omdFootways, metaSyntheticFootways, introGraph];
   }
 
 
@@ -342,6 +357,11 @@ export class MapWithAIService extends AbstractSystem {
     } else if (datasetID === 'msBuildings') {
       qs.result_type = 'road_building_vector_xml';
       qs.building_source = 'microsoft';
+    }  else if (datasetID === 'plateauJapan') {
+  // === osmf.jp 独自処理 ===
+  // Facebook APIは使わず、直接osmf.jp APIを呼び出し
+       const bbox = `${extent.min[0]},${extent.min[1]},${extent.max[0]},${extent.max[1]}`;
+       return `http://localhost:8000/api/mapwithai/buildings?bbox=${bbox}`;
     } else {
       qs.result_type = 'osm_xml';
       qs.sources = `esri_building.${datasetID}`;

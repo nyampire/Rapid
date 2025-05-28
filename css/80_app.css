@@ -5989,3 +5989,172 @@ bottom-left | bottom-middle | bottom-right
   height: 100%;
   object-fit: cover;
 }
+
+/* osmf.jp カスタマイズ - Rapid Editor
+------------------------------------------------------- */
+
+/* osmf.jpブランディング */
+.osmf-branding {
+  background: linear-gradient(135deg, #4CAF50, #2196F3);
+  color: white;
+  padding: 8px 16px;
+  border-radius: 4px;
+  font-weight: bold;
+  margin: 10px 0;
+  text-align: center;
+}
+
+.osmf-branding a {
+  color: #FFE082;
+  text-decoration: none;
+}
+
+.osmf-branding a:hover {
+  text-decoration: underline;
+}
+
+/* osmf.jpデータセットの特別スタイリング */
+.dataset-item.osmf {
+  border-left: 4px solid #4CAF50;
+  background: rgba(76, 175, 80, 0.1);
+}
+
+/* osmf.jpデータセットを優先表示 */
+.preset-list .osmf-dataset {
+  border: 2px solid #4CAF50;
+  background: rgba(76, 175, 80, 0.05);
+  border-radius: 4px;
+  margin-bottom: 5px;
+}
+
+.preset-list .osmf-dataset .preset-list-button .label {
+  background: rgba(76, 175, 80, 0.1);
+}
+
+/* osmf.jpデータセット有効化時の表示強化 */
+.layer-list li.osmf-layer {
+  border-left: 3px solid #4CAF50;
+}
+
+.layer-list li.osmf-layer.active {
+  background: rgba(76, 175, 80, 0.1);
+}
+
+/* osmf.jpデータ読み込み中のインジケータ */
+.osmf-loading {
+  background: url(img/loader.gif) center center no-repeat;
+  background-size: 20px 20px;
+}
+
+/* osmf.jpデータセットの説明テキスト */
+.osmf-description {
+  font-size: 11px;
+  color: #666;
+  font-style: italic;
+  margin-top: 2px;
+}
+
+/* osmf.jpロゴ対応 */
+.osmf-logo {
+  width: 16px;
+  height: 16px;
+  margin-right: 5px;
+  vertical-align: middle;
+}
+
+/* Rapid Catalog での osmf.jp セクション */
+.rapid-catalog .osmf-section {
+  border: 1px solid #4CAF50;
+  border-radius: 6px;
+  margin: 10px 0;
+  padding: 10px;
+  background: rgba(76, 175, 80, 0.02);
+}
+/* =============================================
+   Plateau Dataset Special Styling
+   ============================================= */
+
+/* Plateauデータセット基本スタイリング */
+.rapid-feature.plateau {
+  border-left: 4px solid #4CAF50 !important;
+  box-shadow: 0 2px 4px rgba(76, 175, 80, 0.2) !important;
+  position: relative;
+}
+
+/* Plateauデータセット サムネイル強調 */
+.rapid-feature.plateau .rapid-feature-label {
+  color: #66BB6A !important;  /* 明るい緑で視認性向上 */
+  font-weight: bold !important;
+}
+
+/* ホバー効果 */
+.rapid-feature.plateau:hover {
+  transform: translateY(-1px);
+  transition: all 0.2s ease;
+}
+
+/* モバイル対応 */
+@media (max-width: 768px) {
+  .rapid-feature.plateau {
+    border-left-width: 2px !important;
+  }
+}
+
+.rapid-catalog .osmf-section h3 {
+  color: #4CAF50;
+  margin-bottom: 10px;
+  font-size: 14px;
+  font-weight: bold;
+}
+
+/* osmf.jpデータセットのアイコン調整 */
+.preset-icon-container .osmf-icon {
+  background: #4CAF50;
+  border-radius: 3px;
+  padding: 2px;
+}
+
+/* osmf.jpデータが選択された時のハイライト */
+.selected.osmf-feature {
+  stroke: #4CAF50 !important;
+  stroke-width: 3px !important;
+}
+
+/* osmf.jpデータセットの統計情報表示 */
+.osmf-stats {
+  font-size: 10px;
+  color: #888;
+  margin-top: 5px;
+}
+
+.osmf-stats .count {
+  font-weight: bold;
+  color: #4CAF50;
+}
+
+/* レスポンシブ対応 */
+@media (max-width: 768px) {
+  .osmf-branding {
+    padding: 6px 12px;
+    font-size: 12px;
+  }
+
+  .dataset-item.osmf {
+    border-left-width: 2px;
+  }
+}
+
+/* ダークモード対応 */
+@media (prefers-color-scheme: dark) {
+  .osmf-branding {
+    background: linear-gradient(135deg, #2E7D32, #1565C0);
+  }
+
+  .dataset-item.osmf {
+    background: rgba(76, 175, 80, 0.2);
+  }
+
+  .osmf-description {
+    color: #aaa;
+  }
+}

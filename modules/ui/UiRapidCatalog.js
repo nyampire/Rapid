@@ -512,13 +512,24 @@ export class UiRapidCatalog extends EventEmitter {
    * Featured datasets next
    * All others sort by name
    */
-  sortDatasets(a, b) {
-    return a.added && !b.added ? -1
-      : b.added && !a.added ? 1
-      : a.featured && !b.featured ? -1
-      : b.featured && !a.featured ? 1
-      : a.label.localeCompare(b.label);
-  }
+   sortDatasets(a, b) {
+     // 1. Added datasets first
+     if (a.added && !b.added) return -1;
+     if (b.added && !a.added) return 1;
+
+     // 2. Plateau datasets second (NEW!)
+     const aIsPlateau = a.categories && (a.categories.has('plateau') || a.categories.has('japan'));
+     const bIsPlateau = b.categories && (b.categories.has('plateau') || b.categories.has('japan'));
+     if (aIsPlateau && !bIsPlateau) return -1;
+     if (bIsPlateau && !aIsPlateau) return 1;
+
+     // 3. Featured datasets third
+     if (a.featured && !b.featured) return -1;
+     if (b.featured && !a.featured) return 1;
+
+     // 4. All others sort by name
+     return a.label.localeCompare(b.label);
+   }
 
 
   /**
@@ -579,4 +590,3 @@ export class UiRapidCatalog extends EventEmitter {
   }
 
 }
-
