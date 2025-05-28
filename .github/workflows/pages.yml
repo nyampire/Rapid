@@ -34,6 +34,21 @@ jobs:
           npm install
           npm run all
           
+      - name: Fix paths for GitHub Pages
+        run: |
+          cd dist
+          # HTMLファイル内のパスを修正
+          sed -i "s|href='dist/|href='./|g" index.html
+          sed -i 's|href="dist/|href="./|g' index.html
+          sed -i "s|src='dist/|src='./|g" index.html
+          sed -i 's|src="dist/|src="./|g' index.html
+          sed -i "s|assetPath = 'dist/'|assetPath = './'|g" index.html
+          sed -i 's|assetPath = "dist/"|assetPath = "./"|g' index.html
+          
+          # 修正結果を確認
+          echo "=== Modified index.html paths ==="
+          grep -n "dist/" index.html || echo "No dist/ paths found - SUCCESS!"
+          
       - name: Setup Pages
         uses: actions/configure-pages@v5
         
