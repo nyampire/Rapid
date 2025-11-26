@@ -33,6 +33,12 @@ export class PixiFeaturePolygon extends AbstractFeature {
   constructor(layer, featureID) {
     super(layer, featureID);
 
+    // === デバッグログ追加 ===
+    console.log('🏗️ PixiFeaturePolygon constructor called:', {
+      featureID: featureID,
+      layerId: layer?.id
+    });
+
     this.type = 'polygon';
     this._ssrdata = null;
     this._bufferdata = null;
@@ -129,6 +135,17 @@ export class PixiFeaturePolygon extends AbstractFeature {
    * @param  {number}    zoom     - Effective zoom to use for rendering
    */
   update(viewport, zoom) {
+    // === 最初にこれを追加 ===
+    if (this.geometry?.entity?.tags?.height === '8.2') {
+      console.log('🎯 PixiFeaturePolygon.update() called for height=8.2:', {
+        featureID: this.featureID,
+        dirty: this.dirty,
+        geometryDirty: this.geometry?.dirty,
+        hasEntity: !!this.geometry?.entity,
+        entityId: this.geometry?.entity?.id
+      });
+    }
+
     if (!this.dirty) return;  // nothing to do
 
     const context = this.context;
@@ -141,6 +158,25 @@ export class PixiFeaturePolygon extends AbstractFeature {
     //
     if (this.geometry.dirty) {
       this.geometry.update(viewport, zoom);
+
+      // === デバッグログ追加 ===
+      if (this.geometry.entity && this.geometry.entity.tags?.height === '8.2') {
+        console.log('🎯 Processing height=8.2 polygon geometry:', {
+          featureID: this.featureID,
+          entityID: this.geometry.entity.id,
+          nodeCount: this.geometry.entity.nodes?.length,
+          hasOuter: !!this.geometry.outer,
+          outerLength: this.geometry.outer?.length,
+          hasExtent: !!this.geometry.extent,
+          extent: this.geometry.extent?.toString(),
+          hasSSR: !!this.geometry.ssr
+        });
+
+        if (this.geometry.outer && this.geometry.outer.length > 0) {
+          console.log('  First few coords:', this.geometry.outer.slice(0, 6));
+          console.log('  Last few coords:', this.geometry.outer.slice(-6));
+        }
+      }
 
       // Redo ssr (move more of this into PixiGeometry later)
       this._ssrdata = null;
@@ -195,6 +231,18 @@ export class PixiFeaturePolygon extends AbstractFeature {
     const [minX, minY] = this.geometry.extent.min;
     const [maxX, maxY] = this.geometry.extent.max;
     const [w, h] = [maxX - minX, maxY - minY];
+
+    // === デバッグログ追加 ===
+    if (this.geometry.entity && this.geometry.entity.tags?.height === '8.2') {
+      console.log('🎯 Polygon bounds calculation:', {
+        featureID: this.featureID,
+        bounds: { minX, minY, maxX, maxY, w, h },
+        tooSmall: (w < 4 && h < 4),
+        lowRes: (w < 20 && h < 20),
+        visible: this.visible
+      });
+    }
+
     this.sceneBounds.x = minX;
     this.sceneBounds.y = minY;
     this.sceneBounds.width = w;
@@ -288,12 +336,40 @@ export class PixiFeaturePolygon extends AbstractFeature {
     // redraw the shapes
     //
     const rings = this.geometry.flatCoords || [];  // outer, followed by holes if any
+
+    // === デバッグログ追加 ===
+    if (this.geometry.entity && this.geometry.entity.tags?.height === '8.2') {
+      console.log('🎯 Polygon rendering decision:', {
+        featureID: this.featureID,
+        lod: this.lod,
+        visible: this.visible,
+        ringsCount: rings.length,
+        firstRingLength: rings[0]?.length,
+        fillVisible: fill.visible,
+        strokesVisible: strokes.visible
+      });
+
+      if (rings.length > 0 && rings[0]) {
+        console.log('  First ring coords (first 10):', rings[0].slice(0, 10));
+      }
+    }
+
     this._bufferdata = null;
 
     // STROKES
     strokes.removeChildren();
     if (strokes.visible && rings.length) {
       strokes.eventMode = this._classes.has('drawing') ? 'none' : 'static';  // Rapid#648
+
+      // === デバッグログ追加 ===
+      if (this.geometry.entity && this.geometry.entity.tags?.height === '8.2') {
+        console.log('🎯 STROKES processing for height=8.2:', {
+          featureID: this.featureID,
+          ringsCount: rings.length,
+          strokesVisible: strokes.visible,
+          isWireframeMode: isWireframeMode
+        });
+      }
 
       const lineWidth = isWireframeMode ? 1 : style.fill.width || 2;
       const strokeStyle = {
@@ -316,6 +392,16 @@ export class PixiFeaturePolygon extends AbstractFeature {
       for (let i = 0; i < rings.length; i++) {
         const ring = rings[i];
         const stroke = new PIXI.Graphics();
+
+        // === デバッグログ追加 ===
+        if (this.geometry.entity && this.geometry.entity.tags?.height === '8.2' && i === 0) {
+          console.log('🎯 Drawing first stroke ring:', {
+            featureID: this.featureID,
+            ringIndex: i,
+            ringLength: ring.length,
+            firstCoords: ring.slice(0, 8)
+          });
+        }
 
         if (dash) {
           strokeStyle.dash = dash;
@@ -346,6 +432,18 @@ export class PixiFeaturePolygon extends AbstractFeature {
     if (fill.visible && rings.length) {
       fill.eventMode = this._classes.has('drawing') ? 'none' : 'static';  // Rapid#648
 
+      // === デバッグログ追加 ===
+      if (this.geometry.entity && this.geometry.entity.tags?.height === '8.2') {
+        console.log('🎯 FILL processing for height=8.2:', {
+          featureID: this.featureID,
+          ringsCount: rings.length,
+          fillVisible: fill.visible,
+          doFullFill: doFullFill,
+          color: color.toString(16),
+          alpha: alpha
+        });
+      }
+
       const fillStyle = {
         color: color,
         alpha: alpha,
@@ -355,6 +453,16 @@ export class PixiFeaturePolygon extends AbstractFeature {
 
       fill.clear();
       for (let i = 0; i < rings.length; i++) {
+        // === デバッグログ追加 ===
+        if (this.geometry.entity && this.geometry.entity.tags?.height === '8.2' && i === 0) {
+          console.log('🎯 Drawing first fill ring:', {
+            featureID: this.featureID,
+            ringIndex: i,
+            ringLength: rings[i].length,
+            firstCoords: rings[i].slice(0, 8)
+          });
+        }
+
         fill.poly(rings[i]);
         if (i === 0) {
           fill.fill(fillStyle);
