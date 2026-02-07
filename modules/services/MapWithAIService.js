@@ -303,61 +303,12 @@ export class MapWithAIService extends AbstractSystem {
                 delete cache.inflight[tile.id];
                 if (!xml) return;
                 this._parseXML(ds, xml, tile, (err, result) => {
-                  console.log('🔍 _parseXML callback called:', {
-                    datasetID: datasetID,
-                    hasError: !!err,
-                    error: err,
-                    hasResult: !!result,
-                    resultLength: result ? result.length : 0
-                  });
-
-                  if (err) {
-                    console.error('❌ _parseXML error:', err);
-                    return;
-                  }
-
-                  // graph.rebase実行前の状態
-                  console.log('🔍 Before graph.rebase:', {
-                    datasetID: datasetID,
-                    parseResults: result.length,
-                    graphExists: !!graph,
-                    graphEntitiesBefore: graph._entities ? Object.keys(graph._entities).length : 'NO _entities',
-                    sampleResult: result[0] || 'no results'
-                  });
+                  if (err) return;
 
                   graph.rebase(result, [graph], true);   // true = force replace entities
                   tree.rebase(result, true);
 
-                  // graph.rebase実行後の状態
-                  console.log('🔍 After graph.rebase:', {
-                    datasetID: datasetID,
-                    graphEntitiesAfter: graph._entities ? Object.keys(graph._entities).length : 'NO _entities',
-                    treeSize: tree._tree ? tree._tree.size : 'NO _tree',
-                    graphType: typeof graph,
-                    graphConstructor: graph.constructor.name
-                  });
-
                   cache.loaded.add(tile.id);
-
-                  // === デバッグログ追加 ===
-                  if (datasetID === 'plateauJapan') {
-                    const heightBuildings = result.filter(r => r.tags?.height === '8.2');
-                    console.log('🎯 MapWithAI loadTiles completed for plateauJapan:', {
-                      datasetID: datasetID,
-                      tileId: tile.id,
-                      totalResults: result.length,
-                      heightBuildings: heightBuildings.length,
-                      graphEntityCount: graph._entities ? Object.keys(graph._entities).length : 'unknown',
-                      treeEntityCount: tree._tree ? tree._tree.size : 'unknown'
-                    });
-
-                    if (heightBuildings.length > 0) {
-                      console.log('  Height 8.2 buildings added to graph:', heightBuildings.map(b => ({
-                        id: b.id,
-                        nodeCount: b.nodes?.length
-                      })));
-                    }
-                  }
 
                   const gfx = this.context.systems.gfx;
                   gfx.deferredRedraw();
@@ -473,15 +424,6 @@ export class MapWithAIService extends AbstractSystem {
     const elems = Array.from(xml.getElementsByTagName('nd'));
     const nodeIds = elems.map(elem => 'n' + elem.attributes.ref.value);
 
-    // === デバッグログ追加 ===
-    if (nodeIds.length > 5) {  // ポリゴンの可能性
-      console.log('📍 Parsing nodes for polygon:', {
-        nodeCount: nodeIds.length,
-        firstFew: nodeIds.slice(0, 3),
-        lastFew: nodeIds.slice(-3)
-      });
-    }
-
     return nodeIds;
   }
 
@@ -515,17 +457,6 @@ export class MapWithAIService extends AbstractSystem {
       tags: this._getTags(obj)
     });
 
-    // === デバッグログ追加 ===
-    if (uid.includes('189425') || attrs.id?.value === '189425') {
-      console.log('🔍 Parsing Node ID 189425:', {
-        uid: uid,
-        originalId: attrs.id?.value,
-        loc: node.loc,
-        visible: node.visible,
-        tags: node.tags
-      });
-    }
-
     return node;
   }
 
@@ -541,48 +472,17 @@ export class MapWithAIService extends AbstractSystem {
       nodes: nodes,
     });
 
-    // === デバッグログ追加 ===
-    if (tags.height === '8.2' || uid.includes('100000')) {
-      console.log('🏢 Parsing Way with height 8.2:', {
-        uid: uid,
-        originalId: attrs.id?.value,
-        nodeCount: nodes.length,
-        nodes: nodes,
-        tags: tags,
-        visible: way.visible
-      });
-    }
-
     return way;
   }
 
 
   _parseXML(dataset, xml, tile, callback) {
-    // === デバッグログ追加 ===
-    console.log('🔍 Parsing XML for dataset:', dataset.id);
-    console.log('🗺️ Tile:', tile.id, tile.wgs84Extent.toString());
-
     if (!xml || !xml.childNodes) {
-      console.error('❌ No XML or childNodes');
       return callback({ message: 'No XML', status: -1 });
     }
 
     const root = xml.childNodes[0];
     const children = root.childNodes;
-
-    // XML内容の統計を取得
-    let nodeCount = 0;
-    let wayCount = 0;
-    for (const child of children) {
-      if (child.nodeName === 'node') nodeCount++;
-      if (child.nodeName === 'way') wayCount++;
-    }
-
-    console.log('📊 XML Statistics:', {
-      totalChildren: children.length,
-      nodes: nodeCount,
-      ways: wayCount
-    });
 
     const handle = window.requestIdleCallback(() => {
       this._deferred.delete(handle);
@@ -593,44 +493,7 @@ export class MapWithAIService extends AbstractSystem {
         if (result) results.push(result);
       }
 
-      console.log('🔍 After _parseEntity loop:', {
-        datasetId: dataset.id,
-        tileId: tile.id,
-        intermediateResults: results.length
-      });
-
       results = results.concat(this._connectSplitWays(dataset));
-
-      console.log('🔍 After _connectSplitWays:', {
-        datasetId: dataset.id,
-        tileId: tile.id,
-        finalResults: results.length
-      });
-
-      // === 結果のデバッグログ ===
-      console.log('✅ Parse Results:', {
-        datasetId: dataset.id,
-        tileId: tile.id,
-        resultCount: results.length,
-        resultTypes: results.map(r => r.type).reduce((acc, type) => {
-          acc[type] = (acc[type] || 0) + 1;
-          return acc;
-        }, {})
-      });
-
-      // height=8.2の建物を探す
-      const heightBuildings = results.filter(r => r.tags?.height === '8.2');
-      if (heightBuildings.length > 0) {
-        console.log('🏢 Found height=8.2 buildings:', heightBuildings.length);
-        heightBuildings.forEach(building => {
-          console.log('  Building:', {
-            id: building.id,
-            type: building.type,
-            nodeCount: building.nodes?.length,
-            tags: building.tags
-          });
-        });
-      }
 
       callback(null, results);
     });
@@ -648,9 +511,6 @@ export class MapWithAIService extends AbstractSystem {
     let entityID, entity;
     entityID = osmEntity.id.fromOSM(type, element.attributes.id.value);
 
-    // === デバッグログ追加 ===
-    const originalId = element.attributes.id.value;
-
     if (type === 'node') {
       if (cache.seen.has(entityID)) {
         return null;
@@ -660,19 +520,6 @@ export class MapWithAIService extends AbstractSystem {
       }
 
     } else if (type === 'way') {
-      // height=8.2をチェック
-      const tags = this._getTags(element);
-      const isTarget = tags.height === '8.2';
-
-      if (isTarget) {
-        console.log('🎯 Processing target building way:', {
-          originalId: originalId,
-          entityID: entityID,
-          hasOrigId: !!element.attributes.orig_id,
-          tags: tags
-        });
-      }
-
       if (element.attributes.orig_id) {
         const origEntityID = osmEntity.id.fromOSM(type, element.attributes.orig_id.value);
         entity = this._parseWay(element, entityID);
@@ -712,16 +559,6 @@ export class MapWithAIService extends AbstractSystem {
     };
 
     const result = Object.assign(entity, metadata);
-
-    // === 結果のデバッグログ ===
-    if (result.tags?.height === '8.2') {
-      console.log('🏗️ Created target entity:', {
-        id: result.id,
-        type: result.type,
-        nodeCount: result.nodes?.length,
-        metadata: metadata
-      });
-    }
 
     return result;
   }
