@@ -53,6 +53,7 @@ export class RapidSystem extends AbstractSystem {
     // These features will be filtered out when drawing
     this.acceptIDs = new Set();    // Set<dataID>
     this.ignoreIDs = new Set();    // Set<dataID>
+    this.ignoredGersIDs = new Set();  // Set<string> - GERS IDs of ignored Overture features
 
     this._nextColorIndex = 2;  // see note in _datasetsChanged()
     this._taskExtent = null;
@@ -141,8 +142,8 @@ export class RapidSystem extends AbstractSystem {
 
         // Set some defaults
         if (!urlhash.initialHashParams.has('datasets')) {
-          this._addedDatasetIDs = new Set(['fbRoads', 'msBuildings', 'overture-places', 'omdFootways', 'plateauJapan']);  // on menu
-          this._enabledDatasetIDs = new Set(['fbRoads', 'msBuildings', 'plateauJapan']);  // checked
+          this._addedDatasetIDs = new Set(['fbRoads', 'esri-buildings', 'ml-buildings-overture', 'omdFootways', 'plateauJapan']);  // on menu
+          this._enabledDatasetIDs = new Set(['ml-buildings-overture', 'plateauJapan']);  // checked
           this._datasetsChanged();
         }
 
@@ -240,7 +241,9 @@ export class RapidSystem extends AbstractSystem {
     const results = new Map();
     for (const datasetID of this._addedDatasetIDs) {
       const dataset = this.catalog.get(datasetID);
-      results.set(datasetID, dataset);
+      if (dataset) {  // Only include datasets that exist in the catalog
+        results.set(datasetID, dataset);
+      }
     }
     return results;
   }
@@ -394,15 +397,11 @@ export class RapidSystem extends AbstractSystem {
 
     const enabledIDs = [];
     for (const [datasetID, dataset] of this.catalog) {
-      // This code is a bit weird - I don't like it and we should change it...
-      // I'm trying to match the legacy color-choosing behavior from before Rapid#1642 (which changed a bunch of things)
-      // - If adding fbRoads/msBuildings, choose "Rapid magenta".
-      // - If adding an Overture dataset, choose "Overture cyan".
-      // - If adding an Esri dataset, choose a color based on how many datasets were added already.
       const wasAdded = dataset.added;
       const nowAdded = this._addedDatasetIDs.has(datasetID);
+      // Ensure that the familiar RAPID_MAGENTA color is used for the ML buildings
       if (!wasAdded && nowAdded && dataset.color === RAPID_MAGENTA) {  // being added right now with the default color
-        if (dataset.categories.has('meta') || dataset.categories.has('microsoft')) {
+        if (dataset.categories.has('meta') || dataset.categories.has('microsoft') || dataset.categories.has('google')) {
           dataset.color = RAPID_MAGENTA;
         } else if (dataset.categories.has('overture')) {
           dataset.color = OVERTURE_CYAN;

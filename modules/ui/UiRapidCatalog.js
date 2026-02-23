@@ -4,7 +4,7 @@ import { marked } from 'marked';
 
 import { uiIcon } from './icon.js';
 import { uiCombobox} from './combobox.js';
-import { utilKeybinding, utilNoAuto } from '../util/index.js';
+import { utilKeybinding, utilNoAuto, utilSanitizeHTML } from '../util/index.js';
 
 const MAXRESULTS = 100;
 
@@ -562,10 +562,6 @@ export class UiRapidCatalog extends EventEmitter {
       rapid.removeDatasets(d.id);  // remove from menu and disable/uncheck
     } else {
       rapid.enableDatasets(d.id);  // add to menu and enable/check
-      // If adding an Esri building dataset, disable the Microsoft buildings to avoid clutter
-      if (d.categories.has('esri') && d.categories.has('buildings') && added.has('msBuildings')) {
-        rapid.disableDatasets('msBuildings');
-      }
     }
     context.enter('browse');   // return to browse mode (in case something was selected)
     this.render();
@@ -574,9 +570,12 @@ export class UiRapidCatalog extends EventEmitter {
 
   /**
    * highlight
+   * Highlights matches of `needle` in `haystack` with <mark> tags.
+   * Sanitizes the haystack first to prevent XSS.
    */
   highlight(needle, haystack) {
-    let html = haystack;
+    // Sanitize the haystack to prevent XSS from dataset labels
+    let html = utilSanitizeHTML(haystack);
     if (needle) {
       const re = new RegExp('\(' + _escapeRegex(needle) + '\)', 'gi');
       html = html.replace(re, '<mark>$1</mark>');

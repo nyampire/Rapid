@@ -21,19 +21,19 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
-        
+        uses: actions/checkout@v6
+
       - name: Setup Node.js 18
         uses: actions/setup-node@v4
         with:
           node-version: 18
           cache: 'npm'
-          
+
       - name: Install dependencies and build
         run: |
           npm install
           npm run all
-          
+
       - name: Fix paths for GitHub Pages
         run: |
           cd dist
@@ -44,19 +44,19 @@ jobs:
           sed -i 's|src="dist/|src="./|g' index.html
           sed -i "s|assetPath = 'dist/'|assetPath = './'|g" index.html
           sed -i 's|assetPath = "dist/"|assetPath = "./"|g' index.html
-          
+
           # 修正結果を確認
           echo "=== Modified index.html paths ==="
           grep -n "dist/" index.html || echo "No dist/ paths found - SUCCESS!"
-          
+
       - name: Setup Pages
         uses: actions/configure-pages@v5
-        
+
       - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3
+        uses: actions/upload-pages-artifact@v4
         with:
           path: 'dist'
-          
+
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4

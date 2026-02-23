@@ -5,7 +5,7 @@ import { utilQsString } from '@rapid-sdk/util';
 import { AbstractSystem } from '../core/AbstractSystem.js';
 import { Graph, Tree, RapidDataset } from '../core/lib/index.js';
 import { osmNode, osmRelation, osmWay } from '../osm/index.js';
-import { utilFetchResponse } from '../util/index.js';
+import { utilFetchResponse, utilSanitizeHTML } from '../util/index.js';
 
 
 const GROUPID = 'bdf6c800b3ae453b9db239e03d7c1727';
@@ -92,11 +92,18 @@ export class EsriService extends AbstractSystem {
    * Called by `RapidSystem` to get the datasets that this service provides.
    * @return {Array<RapidDataset>}  The datasets this service provides
    */
-  getAvailableDatasets() {
+    getAvailableDatasets() {
     // Convert the internal datasets into "Rapid" datasets for the catalog.
     // We expect them to be all loaded now because `_loadDatasetsAsync` is called by `initAsync`
     //  and `getAvailableDatasets` is called by RapidSystem's `startAsync`.
-    return Object.values(this._datasets).map(d => {
+    // Note: Building datasets are excluded here because they are now provided by OvertureService
+    //  (Esri Community Maps and ML Buildings via Overture PMTiles).
+    return Object.values(this._datasets)
+      .filter(d => {
+        const categories = (d.groupCategories ?? []).map(c => c.toLowerCase().replace('/categories/', ''));
+        return !categories.includes('buildings');
+      })
+      .map(d => {
       // gather categories
       const categories = new Set(['esri']);
       for (const c of d.groupCategories) {
@@ -281,13 +288,13 @@ export class EsriService extends AbstractSystem {
     ds.lastv = null;
     ds.layer = null;   // the schema info will live here
 
-    // Cleanup the `licenseInfo` field by removing styles  (not used currently)
+    // Cleanup and sanitize the `licenseInfo` field from Esri API
     const license = select(document.createElement('div'));
-    license.html(ds.licenseInfo);       // set innerHtml
+    license.html(utilSanitizeHTML(ds.licenseInfo));  // sanitize then set innerHTML
     license.selectAll('*')
       .attr('style', null)
       .attr('size', null);
-    ds.license_html = license.html();   // get innerHtml
+    ds.license_html = license.html();   // get innerHTML
   }
 
 

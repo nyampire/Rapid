@@ -103,8 +103,8 @@ export class MapWithAIService extends AbstractSystem {
     // === Plateau日本 データセット追加 ここから ===
     const plateauJapan = new RapidDataset(context, {
       id: 'plateauJapan',
-      conflated: false,  // 独自データなのでconflated処理不要
-      service: 'mapwithai',  // MapWithAIサービスを使用
+      conflated: false,
+      service: 'mapwithai',
       categories: new Set(['plateau', 'buildings', 'featured', 'japan']),
       dataUsed: ['osmf.jp', 'Plateau Buildings'],
       itemUrl: 'https://osmf.jp/plateau-data',
@@ -113,19 +113,7 @@ export class MapWithAIService extends AbstractSystem {
       labelStringID: 'rapid_menu.plateauJapan.label',
       descriptionStringID: 'rapid_menu.plateauJapan.description'
     });
-    // === osmf.jp データセット追加 ここまで ===
-
-    const msBuildings = new RapidDataset(context, {
-      id: 'msBuildings',
-      conflated: true,
-      service: 'mapwithai',
-      categories: new Set(['microsoft', 'buildings', 'featured']),
-      dataUsed: ['mapwithai', 'Microsoft Buildings'],
-      itemUrl: 'https://github.com/microsoft/GlobalMLBuildingFootprints',
-      licenseUrl: 'https://github.com/microsoft/USBuildingFootprints/blob/master/LICENSE-DATA',
-      labelStringID: 'rapid_menu.msBuildings.label',
-      descriptionStringID: 'rapid_menu.msBuildings.description'
-    });
+    // === Plateau日本 データセット追加 ここまで ===
 
     const omdFootways = new RapidDataset(context, {
       id: 'omdFootways',
@@ -170,7 +158,7 @@ export class MapWithAIService extends AbstractSystem {
       label: 'Rapid Walkthrough'
     });
 
-    return [fbRoads, msBuildings, plateauJapan, omdFootways, metaSyntheticFootways, introGraph];
+    return [fbRoads, plateauJapan, omdFootways, metaSyntheticFootways, introGraph];
   }
 
 
@@ -224,105 +212,95 @@ export class MapWithAIService extends AbstractSystem {
    * Schedule any data requests needed to cover the current map view
    * @param   {string}  datasetID - datasetID to load tiles for
    */
-   /**
-      * loadTiles
-      * Schedule any data requests needed to cover the current map view
-      * @param   {string}  datasetID - datasetID to load tiles for
-      */
-      /**
-         * loadTiles
-         * Schedule any data requests needed to cover the current map view
-         * @param   {string}  datasetID - datasetID to load tiles for
-         */
-        loadTiles(datasetID) {
-          if (this._paused) return;
+  loadTiles(datasetID) {
+    if (this._paused) return;
 
-          let ds = this._datasets[datasetID];
-          let graph, tree, cache;
+    let ds = this._datasets[datasetID];
+    let graph, tree, cache;
 
-          if (ds) {
-            graph = ds.graph;
-            tree = ds.tree;
-            cache = ds.cache;
+    if (ds) {
+      graph = ds.graph;
+      tree = ds.tree;
+      cache = ds.cache;
 
-          } else {
-            // as tile requests arrive, setup the resources needed to hold the results
-            graph = new Graph();
-            tree = new Tree(graph);
-            cache = {
-              inflight: {},
-              loaded: new Set(),           // Set(tileID)
-              seen: new Set(),             // Set(entityID)
-              seenFirstNodeID: new Set(),  // Set(entityID)
-              splitWays: new Map()         // Map(originalID -> Set(Entity))
-            };
-            ds = {
-              id: datasetID,
-              graph: graph,
-              tree: tree,
-              cache: cache,
-              lastv: null
-            };
-            this._datasets[datasetID] = ds;
-          }
+    } else {
+      // as tile requests arrive, setup the resources needed to hold the results
+      graph = new Graph();
+      tree = new Tree(graph);
+      cache = {
+        inflight: {},
+        loaded: new Set(),           // Set(tileID)
+        seen: new Set(),             // Set(entityID)
+        seenFirstNodeID: new Set(),  // Set(entityID)
+        splitWays: new Map()         // Map(originalID -> Set(Entity))
+      };
+      ds = {
+        id: datasetID,
+        graph: graph,
+        tree: tree,
+        cache: cache,
+        lastv: null
+      };
+      this._datasets[datasetID] = ds;
+    }
 
-          const locations = this.context.systems.locations;
+    const locations = this.context.systems.locations;
 
-          const viewport = this.context.viewport;
-          if (ds.lastv === viewport.v) return;  // exit early if the view is unchanged
-          ds.lastv = viewport.v;
+    const viewport = this.context.viewport;
+    if (ds.lastv === viewport.v) return;  // exit early if the view is unchanged
+    ds.lastv = viewport.v;
 
-          // Determine the tiles needed to cover the view..
-          const tiles = this._tiler.getTiles(viewport).tiles;
+    // Determine the tiles needed to cover the view..
+    const tiles = this._tiler.getTiles(viewport).tiles;
 
-          // Abort inflight requests that are no longer needed..
-          for (const k of Object.keys(cache.inflight)) {
-            const wanted = tiles.find(tile => tile.id === k);
-            if (!wanted) {
-              this._abortRequest(cache.inflight[k]);
-              delete cache.inflight[k];
-            }
-          }
+    // Abort inflight requests that are no longer needed..
+    for (const k of Object.keys(cache.inflight)) {
+      const wanted = tiles.find(tile => tile.id === k);
+      if (!wanted) {
+        this._abortRequest(cache.inflight[k]);
+        delete cache.inflight[k];
+      }
+    }
 
-          for (const tile of tiles) {
-            if (cache.loaded.has(tile.id) || cache.inflight[tile.id]) continue;
+    for (const tile of tiles) {
+      if (cache.loaded.has(tile.id) || cache.inflight[tile.id]) continue;
 
-            // Exit if this tile covers a blocked region (all corners are blocked)
-            const corners = tile.wgs84Extent.polygon().slice(0, 4);
-            const tileBlocked = corners.every(loc => locations.blocksAt(loc).length);
-            if (tileBlocked) {
-              cache.loaded.add(tile.id);  // don't try again
-              continue;
-            }
+      // Exit if this tile covers a blocked region (all corners are blocked)
+      const corners = tile.wgs84Extent.polygon().slice(0, 4);
+      const tileBlocked = corners.every(loc => locations.blocksAt(loc).length);
+      if (tileBlocked) {
+        cache.loaded.add(tile.id);  // don't try again
+        continue;
+      }
 
-            const resource = this._tileURL(ds, tile.wgs84Extent);
-            const controller = new AbortController();
-            fetch(resource, { signal: controller.signal })
-              .then(utilFetchResponse)
-              .then(xml => {
-                delete cache.inflight[tile.id];
-                if (!xml) return;
-                this._parseXML(ds, xml, tile, (err, result) => {
-                  if (err) return;
+      const resource = this._tileURL(ds, tile.wgs84Extent);
+      const controller = new AbortController();
+      fetch(resource, { signal: controller.signal })
+        .then(utilFetchResponse)
+        .then(xml => {
+          delete cache.inflight[tile.id];
+          if (!xml) return;
+          this._parseXML(ds, xml, tile, (err, result) => {
+            if (err) return;
 
-                  graph.rebase(result, [graph], true);   // true = force replace entities
-                  tree.rebase(result, true);
+            graph.rebase(result, [graph], true);   // true = force replace entities
+            tree.rebase(result, true);
 
-                  cache.loaded.add(tile.id);
+            cache.loaded.add(tile.id);
 
-                  const gfx = this.context.systems.gfx;
-                  gfx.deferredRedraw();
-                  this.emit('loadedData');
-                });
-              })
-              .catch(e => {
-                if (e.name === 'AbortError') return;
-                console.error(e);  // eslint-disable-line
-              });
+            const gfx = this.context.systems.gfx;
+            gfx.deferredRedraw();
+            this.emit('loadedData');
+          });
+        })
+        .catch(e => {
+          if (e.name === 'AbortError') return;
+          console.error(e);  // eslint-disable-line
+        });
 
-            cache.inflight[tile.id] = controller;
-          }
-        }
+      cache.inflight[tile.id] = controller;
+    }
+  }
 
   graph(datasetID) {
     const ds = this._datasets[datasetID];
