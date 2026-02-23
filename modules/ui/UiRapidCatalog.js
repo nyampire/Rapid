@@ -517,7 +517,7 @@ export class UiRapidCatalog extends EventEmitter {
      if (a.added && !b.added) return -1;
      if (b.added && !a.added) return 1;
 
-     // 2. Plateau datasets second (NEW!)
+     // 2. Plateau datasets second
      const aIsPlateau = a.categories && (a.categories.has('plateau') || a.categories.has('japan'));
      const bIsPlateau = b.categories && (b.categories.has('plateau') || b.categories.has('japan'));
      if (aIsPlateau && !bIsPlateau) return -1;

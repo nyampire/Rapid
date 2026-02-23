@@ -875,7 +875,10 @@
     "rapid_menu": {
       "remove": "削除",
       "category": {
-        "roads": "道路"
+        "roads": "道路",
+        "buildings": "建物",
+        "plateau": "Plateau",
+        "japan": "日本"
       },
       "plateauJapan": {
         "label": "Plateau 日本建物データ",

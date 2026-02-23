@@ -1152,6 +1152,8 @@ en:
       preview: preview
       roads: roads
       trees: trees
+      plateau: Plateau
+      japan: Japan
     fbRoads:
       label: Facebook Roads
       description: AI predicted roads detected from Maxar Premium imagery and available in over 80 countries.
@@ -1168,6 +1170,9 @@ en:
       ml_buildings:
         label: Microsoft ML + Google Open Buildings
         description: "ML-derived building footprints from Microsoft and Google Open Buildings, conflated by the Overture Maps Foundation."
+    plateauJapan:
+      label: Plateau Japan Buildings
+      description: Building footprints from Japan's PLATEAU 3D city model project, provided by OSMFJ.
     omdFootways:
       label: Open Data Footways
       description: Open footways data collected from various local government entities.
