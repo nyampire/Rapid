@@ -1428,6 +1428,7 @@
         "footways": "footways",
         "meta": "Meta",
         "microsoft": "Microsoft",
+        "google": "Google",
         "overture": "Overture",
         "places": "places",
         "preview": "preview",
@@ -1445,7 +1446,15 @@
       "overture": {
         "places": {
           "label": "Overture Places",
-          "description": "Contains over 53 million point representations of real-world entities: schools, businesses, hospitals, religious organizations, landmarks, mountain peaks, and much more."
+          "description": "Points of interest from Overture Maps, sourced from various commercial and community contributors."
+        },
+        "esri_buildings": {
+          "label": "Esri Community Maps Buildings",
+          "description": "Building footprints contributed by Esri's Community Maps program, available through the Overture Maps Foundation."
+        },
+        "ml_buildings": {
+          "label": "Microsoft ML + Google Open Buildings",
+          "description": "ML-derived building footprints from Microsoft and Google Open Buildings, conflated by the Overture Maps Foundation."
         }
       },
       "omdFootways": {
@@ -1455,6 +1464,17 @@
       "metaSyntheticFootways": {
         "label": "Synthetic Footways from Meta",
         "description": "Synthetic footways data collected from various local government entities."
+      },
+      "ignored_ids": {
+        "link": "{count} ignored Overture IDs",
+        "link_one": "{count} ignored Overture ID",
+        "title": "{count} Ignored Overture IDs",
+        "title_one": "{count} Ignored Overture ID",
+        "instructions": "These are the Overture GERS IDs of ML-derived building footprints you rejected / ignored this session. You can report them as false positives by opening an issue:",
+        "copy": "Copy to Clipboard",
+        "copied": "Copied!",
+        "download": "Download as file",
+        "more": "… and {count} more"
       }
     },
     "rapid_poweruser": {

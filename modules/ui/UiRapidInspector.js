@@ -264,6 +264,13 @@ export class UiRapidInspector {
     const editor = context.systems.editor;
     const l10n = context.systems.l10n;
 
+    // Store the GERS ID for later export
+    const gersID = datum.__gersid__;
+    if (gersID) {
+      const rapid = context.systems.rapid;
+      rapid.ignoredGersIDs.add(gersID);
+    }
+
     const annotation = {
       type: 'rapid_ignore_feature',
       description: l10n.t('rapid_inspector.option_ignore.annotation'),

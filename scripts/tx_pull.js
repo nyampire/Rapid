@@ -11,11 +11,22 @@ import { transifexApi as api } from '@transifex/api';
 import * as CLDR from './cldr.js';
 const localeCompare = new Intl.Collator('en').compare;
 
+// Parse CLI flags
+const CORE_ONLY = process.argv.includes('--core-only');
+if (CORE_ONLY) {
+  console.log(chalk.blue(`🔧  Running in --core-only mode (skipping openstreetmap.org resources)…`));
+}
 
 //
 // This script will download the latest supported locales and translations from Transifex.
 // see also: https://developers.transifex.com/reference/api-introduction
 // This script takes about a half hour to run to completion.
+//
+// Flags:
+//   --core-only   Only pull translations for the Rapid 'core' resource.
+//                  Skips fetching from the openstreetmap/id-editor project
+//                  (community, imagery, tagging) and preserves any existing
+//                  translation files for those resources.
 //
 
 // Create a file `transifex.auth` in the root folder of the Rapid project.
@@ -31,16 +42,17 @@ if (process.env.transifex_token) {
 }
 
 
-const ID_PROJECT = 'o:openstreetmap:p:id-editor';
 const RAPID_PROJECT = 'o:rapid-editor:p:rapid-editor';
 const CORE_RESOURCE = 'o:rapid-editor:p:rapid-editor:r:core';
+
+const ID_PROJECT = 'o:openstreetmap:p:id-editor';
 const COMMUNITY_RESOURCE = 'o:openstreetmap:p:id-editor:r:community';
 const IMAGERY_RESOURCE = 'o:openstreetmap:p:id-editor:r:imagery';
 const TAGGING_RESOURCE = 'o:openstreetmap:p:id-editor:r:presets';
 
-let project_id;          // project: id
 let project_rapid;       // project: rapid
 let resource_core;       // resource: rapid core
+let project_id;          // project: id
 let resource_community;  // resource: id community
 let resource_imagery;    // resource: id imagery
 let resource_tagging;    // resource: id tagging
@@ -63,16 +75,17 @@ Promise.resolve()
   .then(getRapidLanguageStats)
   .then(writeLocalesFile)
   .then(getCore)
-  .then(getCommunity)
-  .then(getImagery)
-  .then(getTagging)
+  .then(() => { if (!CORE_ONLY) return getCommunity(); })
+  .then(() => { if (!CORE_ONLY) return getImagery(); })
+  .then(() => { if (!CORE_ONLY) return getTagging(); })
   .then(() => {
     console.log(chalk.yellow(`✅  Done!`));
   });
 
 
 // startClean
-// Remove old files before starting
+// Remove old files before starting.
+// In --core-only mode, only remove core translation files — preserve community, imagery, and tagging.
 function startClean() {
   console.log(chalk.yellow(`🧼  Start clean…`));
 
@@ -80,8 +93,16 @@ function startClean() {
   if (!fs.existsSync('data/l10n'))  fs.mkdirSync('data/l10n', { recursive: true });
 
   shell.rm('-f', 'data/locales.json');
-  for (const file of globSync('data/l10n/*', { ignore: 'data/l10n/*.en.json' })) {
-    shell.rm('-f', file);
+
+  if (CORE_ONLY) {
+    // Only remove core translations; leave community, imagery, tagging files untouched
+    for (const file of globSync('data/l10n/core.*', { ignore: 'data/l10n/core.en.json' })) {
+      shell.rm('-f', file);
+    }
+  } else {
+    for (const file of globSync('data/l10n/*', { ignore: 'data/l10n/*.en.json' })) {
+      shell.rm('-f', file);
+    }
   }
 }
 
@@ -89,22 +110,28 @@ function startClean() {
 //
 async function getProjectDetails() {
   console.log(chalk.yellow(`📥  Fetching project details…`));
+
+  if (CORE_ONLY) {
+    return Promise.all([
+      api.Project.get(RAPID_PROJECT),
+      api.Resource.get(CORE_RESOURCE),
+    ])
+    .then(vals => {
+      [project_rapid, resource_core] = vals;
+    });
+  }
+
   return Promise.all([
-    api.Project.get(ID_PROJECT),
     api.Project.get(RAPID_PROJECT),
     api.Resource.get(CORE_RESOURCE),
+    api.Project.get(ID_PROJECT),
     api.Resource.get(COMMUNITY_RESOURCE),
     api.Resource.get(IMAGERY_RESOURCE),
     api.Resource.get(TAGGING_RESOURCE)
   ])
-  .then(vals => [
-    project_id,
-    project_rapid,
-    resource_core,
-    resource_community,
-    resource_imagery,
-    resource_tagging
-  ] = vals);
+  .then(vals => {
+    [project_rapid, resource_core, project_id, resource_community, resource_imagery, resource_tagging] = vals;
+  });
 }
 
 // example Language:

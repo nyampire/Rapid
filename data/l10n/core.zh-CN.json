@@ -18,20 +18,22 @@
       "undo_redo": "撤销 / 重做",
       "recent": "最近",
       "favorites": "收藏",
-      "add_feature": "添加要素"
+      "add_feature": "添加要素",
+      "rapid_features": "辅助"
     },
     "title": {
       "labeled_and_more": "{labeled}及另外{count}个"
     },
     "modes": {
       "add_area": {
-        "title": "区域"
+        "title": "区域",
+        "description": "新增建筑、公园、湖泊、或其他区域到地图上。"
       },
       "add_line": {
-        "title": "綫"
+        "description": "新增道路、人行通道、溪流，或其他线条到地图上。"
       },
       "add_point": {
-        "title": "點"
+        "description": "新增商家、垃圾桶、邮箱，或是其他节点到地图上。"
       },
       "add_note": {
         "title": "注记",
@@ -41,7 +43,6 @@
         "title": "添加 {feature}"
       },
       "browse": {
-        "title": "周圍睇",
         "description": "移动和缩放地图。"
       },
       "drag_node": {
@@ -96,16 +97,23 @@
       },
       "circularize": {
         "title": "环形化",
+        "description": "让这些特征环状化。",
         "annotation": {
           "feature": "环状化 {n} 个要素。"
-        }
+        },
+        "multiple_blockers": "因为多种原因这些特征无法环形化。",
+        "not_closed": "这些特征无法环形化，因为它们不是封闭的。",
+        "too_large": "无法将它们排列成环状，因为当前可见的部分不足。",
+        "connected_to_hidden": "无法将它们排列成环状，因为该特征连接到了其他隐藏的特征。",
+        "not_downloaded": "无法将它们排列成环状，因为这些要素有一部分未被下载"
       },
       "orthogonalize": {
         "title": "直角化",
         "annotation": {
           "corner": "直角化 {n} 个角落。",
           "feature": "直角化 {n} 个要素的角落。"
-        }
+        },
+        "connected_to_hidden": "因為有圖微連結到隱藏的要素而無法方角化。"
       },
       "straighten": {
         "description": {
@@ -116,10 +124,12 @@
         "annotation": {
           "point": "拉直 {n} 个点。",
           "line": "拉直 {n} 条线。"
-        }
+        },
+        "connected_to_hidden": "因為有要素連結到隱藏的要素而無法直線化。"
       },
       "delete": {
         "title": "刪",
+        "description": "永久刪除這些要素。",
         "annotation": {
           "point": "删除了一个点。",
           "vertex": "删除了路径上的一个节点。",
@@ -127,7 +137,13 @@
           "area": "删除了一个区域。",
           "relation": "删除了一个关系。",
           "feature": "删除 {n} 个要素。"
-        }
+        },
+        "too_large": "這些要素無法被刪除，因為檢視的部分並不夠。",
+        "incomplete_relation": "因為這些要素沒有完全下載下來，所以無法刪除這些要素。",
+        "part_of_relation": "因為這些要素是更大的關係的一部分，所以無法刪除。你必須先將他們從關係移除。",
+        "connected_to_hidden": "因為這些要素連結到隱藏的要素，所以無法刪除。",
+        "not_downloaded": "因為這些要素部分還未下載下來，所以無法刪除。",
+        "has_wikidata_tag": "因為這些要素帶有 Wikidata 標籤，所以無法刪除。"
       },
       "downgrade": {
         "title": "降级",
@@ -141,7 +157,8 @@
           "building": "将{n}个要素降级为基本建筑物。",
           "address": "将{n}个要素降级为地址。",
           "generic": "降级了{n}个要素。"
-        }
+        },
+        "has_wikidata_tag": "因為有些要素有 Wikidata 標籤而無法降級。"
       },
       "add_member": {
         "annotation": "向关系中添加了{n}个成员。"
@@ -231,6 +248,7 @@
       },
       "move": {
         "title": "搬",
+        "description": "移動這些要素到不同位置。",
         "annotation": {
           "point": "移动点。",
           "vertex": "移动路径中节点。",
@@ -238,12 +256,19 @@
           "area": "移动了一个区域",
           "relation": "移动一个关系。",
           "feature": "移动 {n} 个要素。"
-        }
+        },
+        "incomplete_relation": "因為這些要素沒有完全下載，所以無法移動。",
+        "connected_to_hidden": "因為有些要素連接到隱藏的要素，所以無法移動。",
+        "not_downloaded": "因為有些要素還沒有下載下來，所以無法移動。"
       },
       "reflect": {
         "title": {
           "long": "沿长轴翻转",
           "short": "沿短轴翻转"
+        },
+        "description": {
+          "long": "依據長軸翻轉要素。",
+          "short": "依據短軸翻轉要素。"
         },
         "annotation": {
           "long": {
@@ -252,16 +277,24 @@
           "short": {
             "feature": "沿其短轴翻转了 {n} 个要素。"
           }
-        }
+        },
+        "incomplete_relation": "因為這些要素還沒有完全下載，所以無法翻轉。",
+        "too_large": "因為這些要素無法檢視，所以無法翻轉。",
+        "connected_to_hidden": "因為這些要素連結到隱藏的要素，所以無法翻轉。",
+        "not_downloaded": "因為這些要素的一部分還沒有下載，所以無法翻轉。"
       },
       "rotate": {
         "title": "擰轉",
+        "description": "依據中心點翻轉這些要素。",
         "annotation": {
           "line": "旋转线。",
           "area": "旋转了一个区域。",
           "relation": "旋转一个关系。",
           "feature": "旋转 {n} 个要素。"
-        }
+        },
+        "incomplete_relation": "因為這些要素還沒有完全下載，所以無法旋轉。",
+        "connected_to_hidden": "因為這些要素連結到隱藏的要素，所以無法旋轉。",
+        "not_downloaded": "因為這些要素有部分還沒有下載，所以無法旋轉。"
       },
       "reverse": {
         "title": "倒向。",
@@ -286,7 +319,11 @@
           "up": {
             "feature": "放大了 {n} 个要素"
           }
-        }
+        },
+        "too_small": "因為這些要素太小了，所以無法縮小。",
+        "too_large": "因為這些要素檢視的部分不夠，所以無法縮放。",
+        "connected_to_hidden": "因為這些要素連結到隱藏的要素，所以無法縮放。",
+        "not_downloaded": "因為這些要素還有部分沒有下載，所以無法縮放。"
       },
       "split": {
         "title": "斬開",
@@ -331,11 +368,14 @@
       "extract": {
         "title": "提取",
         "description": {
+          "vertex": "從父要素抽取節點。",
           "feature": {
             "other": "从这些要素中提取节点。"
           }
         },
-        "annotation": "分离 {n} 个节点。"
+        "annotation": "分离 {n} 个节点。",
+        "too_large": "無法從這些要素截取點，因為沒有足夠可視的要素。",
+        "connected_to_hidden": "無法從這些要素截取點，因為有些連結的要素已經被隱藏了"
       }
     },
     "restriction": {
@@ -486,6 +526,7 @@
       "location_unavailable": "无法获取你的位置。"
     },
     "inspector": {
+      "tooltip": "啟用要素檢查器",
       "zoom_to": {
         "title": "缩放至选中要素",
         "no_selection": "没有可缩放至的东西。"
@@ -588,11 +629,16 @@
       "layers": {
         "osm": {
           "tooltip": "来自 OpenStreetMap 的地图数据",
-          "title": "OpenStreetMap 数据"
+          "title": "OpenStreetMap 数据",
+          "feature": "開放街圖要素"
         },
         "notes": {
           "tooltip": "来自 OpenStreetMap 的注记",
           "title": "OpenStreetMap 注记"
+        },
+        "rapid": {
+          "tooltip": "運用機器學習偵測的建議要素，以及開放資料，能夠運用來改進開放資料圖資",
+          "title": "Rapid 要素"
         },
         "maproulette": {
           "detail_title": "详情",
@@ -655,6 +701,10 @@
       }
     },
     "filters": {
+      "active": "有些要素已經被篩選了：",
+      "hidden_preset": {
+        "manual": "{features}個要素已經被篩選了，請在地圖資料面版啟用這些資料。"
+      },
       "points": {
         "description": "点",
         "tooltip": "兴趣点(POI)"
@@ -844,23 +894,51 @@
       "cancel": "唔做"
     },
     "splash": {
+      "text": "Rapid 是一款友好而强大的 OpenStreetMap 编辑器，OpenStreetMap 是一款免费的全球地图。如果您是第一次使用，请点击下方按钮开始教程。人人都能成为地图绘制者！\n\n更多信息请访问我们的 GitHub 更新日志（https://github.com/facebook/Rapid/blob/main/CHANGELOG.md#whats-new）和问题跟踪器（https://github.com/facebook/Rapid/issues）。祝您地图绘制愉快！👍",
       "start": "立即编辑"
+    },
+    "whats_new": {
+      "text_v24": "此次版本更新改进了 Rapid 的文本本地化功能，并简化了与 Mapillary 等街道级数据的交互。现在您可以查看检测到的对象，例如交通标志、人行横道、自行车架等等！\n\n所有详情请查看我们在 GitHub 上的[更新日志](https://github.com/facebook/Rapid/blob/main/CHANGELOG.md#whats-new)和[问题跟踪器](https://github.com/facebook/Rapid/issues)。祝您地图绘制愉快！👍"
     },
     "source_switch": {
       "dev": "製作之中",
       "live": "实况模式",
       "lose_changes": "您有尚未保存的编辑，切换地图服务器会失去这些编辑。您是否确定要切换服务器？"
     },
+    "rapid_splash": {
+      "text": "选择 {rapidicon}选项即可开始快速导览。如果您是 OSM 新手且之前没有绘制过地图，请选择第一个 {walkthrough}选项。最后，如果您想直接开始绘制地图，请点击最后一个{edit}选项。您之后也可以随时从帮助菜单访问导览。"
+    },
     "rapid_first_edit": {
+      "nice": "你剛加了你第一個{rapidicon}AI 輔助要素，很好。",
       "exploring": "我只是在探索"
     },
     "rapid_inspector": {
-      "tags": "标签"
+      "prompt": "針對這個選取的要素你要如何處理？",
+      "tags": "标签",
+      "option_accept": {
+        "label": "新增這個要素",
+        "description": "這看起來是正確的要素嗎？請確認之後選擇來開始連結、加標籤，然後儲存到開放街圖。👍",
+        "annotation": "新增 Rapid 要素。",
+        "tooltip": "新增這要素到地圖來開始編輯。",
+        "disabled": "为了帮助提高 OSM 数据质量，我们每次绘图会话仅允许添加{n}个 AI 功能\n。请先尽力修复你目前已做的编辑中存在的问题。保存后，你将可以继续添加更多 AI 功能。",
+        "disabled_flash": "要幫助改進開放街圖資料品質，我們只允許 {n}個 AI 要素加到每一次的畫地圖階段。"
+      },
+      "option_ignore": {
+        "label": "忽略這要素",
+        "description": "忽略這要素來幫助我們的機器學習機制。如果你不確定是否正確的話，請忽略就好，不會有東西儲存或是移除。👍",
+        "annotation": "忽略 Rapid 要素。",
+        "tooltip": "忽略這個要素。"
+      }
     },
     "rapid_menu": {
       "remove": "移走",
       "category": {
         "roads": "道路"
+      }
+    },
+    "rapid_poweruser": {
+      "allowLargeEdits": {
+        "description": "解除編輯不在目前檢範圍要素的限制"
       }
     },
     "tag_reference": {
@@ -1263,6 +1341,7 @@
       "overview": {
         "title": "概览",
         "navigation_h": "导览",
+        "navigation_zoom": "您可以使用{mouse_wheel_icon}鼠标滚轮或触控板滚动来放大或缩小地图，也可以{twofinger_zoom_icon}在触摸屏上使用双指进行缩放。此外，您还可以按地图侧边的{plus}加号/{minus}减号按钮或键盘上的“+”和“-”键。",
         "features_h": "地图要素",
         "features": "我们使用*要素*（*feature*）这个词来描述出现在地图上的事物，例如道路、建筑或兴趣点。任何真实世界的实物均可在 OpenStreetMap 上被映射为一个要素。地图要素在地图上使用*点*、*线*或*区域*进行表示。",
         "nodes_ways": "在 OpenStreetMap 中，点有时被称为 *节点* ，线和区域有时被称为 *路径* 。"
@@ -1270,9 +1349,13 @@
       "editing": {
         "title": "编辑和保存",
         "select_h": "选择",
+        "select_left_click": "{mouse_left_icon}按左鍵或是{onefinger_tap_icon}點一下要素來選取。這會高亮度顯示要素會閃耀發光，並能在要素檢視器看到要素詳細資訊。",
+        "select_right_click": "{mouse_right_icon}按右鍵或是{onefinger_tap_and_hold_icon}長按要素來顯示編輯選單，能夠顯示複製、旋轉和刪除等功能。",
         "select_space": "选择和绘图时，可以使用\"{space}\"键代替鼠标左键。",
         "multiselect_h": "多选",
         "multiselect": "同时选择多个要素可让您一次性快速编辑它们。",
+        "multiselect_shift_click": "在有滑鼠與鍵盤時，按住`{shift}`與對著要素{mouse_left_icon}按左鍵則能加入選取。在觸控螢幕時，{onefinger_tap_and_hold_icon}點與按住一個要素同時{onefinger_tap_icon}則用另外指頭點選額外的要素。",
+        "multiselect_lasso": "其他方式選取多個要素是按住`{shift}`鍵，接著點以及按住{mouse_left_icon}滑鼠左鍵，拖拉滑鼠來繪製選取範圍。所有範圍的點都會被選取。",
         "undo_redo_h": "撤销和重做",
         "undo_redo": "在您选择将编辑保存到OpenStreetMap服务器之前，您的编辑将存储在本地浏览器中。按下{undo_icon}**{undo}**按钮可以撤销编辑，按{redo_icon}**{redo}**按钮可以恢复编辑。",
         "save_h": "記低",
@@ -1316,9 +1399,12 @@
         "connect_line_h": "连接线",
         "connect_line": "正确连接道路对地图和对其提供行车路线至关重要。",
         "connect_line_display": "道路之间的连接点以灰色圆点显示。线的端点如果没有连接任何东西，则以较大的白色圆点显示。",
+        "connect_line_drag": "要連接線到其他要素，拖動其中一個線段的點到其他要素，直到兩個要素結合。小技巧：你可以按住`{option}`鍵來避免連結到其他要素。",
         "connect_line_tag": "如果您知道连接点是交通信号灯或人行横道，则可以通过选中该点并使用要素编辑器选择正确的要素类型来添加它们。",
         "disconnect_line_h": "分离线",
+        "disconnect_line_command": "要斷開道路與其他要素的連結，{mouse_right_icon}按右鍵或是{onefinger_tap_and_hold_icon}長按連結的節點，然後選擇編輯選單{disconnect_icon}**{disconnect}**操作。",
         "move_line_h": "移动线",
+        "move_line_connected": "線連結到其他要素會在移動線時同時移動到新位置，Rapid 可能會阻止你移動連結到其他線的線。",
         "delete_line_h": "删除线",
         "delete_line": "如果一条线完全不正确，例如现实世界中不存在的道路，则可以删除它。删除要素时要留意：您使用的背景影像可能已过时，一些看起来错误的道路可能只是最近建造的。"
       },
@@ -1330,6 +1416,7 @@
         "add_area_h": "添加区域",
         "add_area_finish": "要结束绘制区域，请再次点击第一个或最后一个节点，或按 `{return}`。",
         "square_area_h": "直角化区域",
+        "square_area_command": "許多要素例如建築有方角角落，要方角化區域的角落，請{mouse_right_icon}按右鍵或是{onefinger_tap_and_hold_icon}長按區域的角落以及從編輯選單選擇{orthogonalize_icon}**{orthogonalize}**操作。",
         "modify_area_h": "修改区域",
         "modify_area_dragnode": "通常您会见到形状不正确的区域，例如与背景影像不匹配的建筑物。要调整区域的形状，首先选中它，所有区域的节点都将呈现为小圆点。之后您可以拖动节点到更好的位置。",
         "delete_area_h": "删除区域",
@@ -1343,12 +1430,16 @@
         "edit_relation_add": "要向关系中添加要素，请先选择该要素，然后在要素编辑器的 \"{relations}\" 部分中点击 {plus} 添加按钮。您可以从附近的关系列表中选择，或选择 \"{new_relation}\" 选项。",
         "edit_relation_delete": "您还可以点击 {delete_icon} **{delete}** 按钮从关系中删除所选要素。如果您删除了关系中的所有成员，则将自动删除该关系。",
         "maintain_relation_h": "维护关系",
+        "maintain_relation": "對大部分的狀況來說，Rapid 會在你編輯時自動維護關聯。你應該在取代可能是關聯成員的要素特別小心。例如說，你刪除道路的一部分以及新繪製道路新的部分來取代，你應該將新的部分如同原來的，加到相同的關聯 (路線、轉彎限制等)。",
         "relation_types_h": "关系类型",
         "multipolygon_h": "复合多边形",
         "multipolygon": "*复合多边形* (*multipolygon*) 关系是单/多个 *外部* (*outer*) 要素和单/多个 *内部* (*inner*) 要素的组合。外部要素定义复合多边形的外部边缘，内部要素定义复合多边形内部切割出的子区域或孔洞。",
+        "multipolygon_create": "要新增多重多边形，例如一个带有孔洞的建筑物，请先将外边缘绘制，再将内边缘绘制为一条线或其他类型的面。然后`{shift}`+{mouse_left_icon}并单击鼠标左键以选择这两个要素，{mouse_right_icon}单击鼠标右键以显示编辑菜单，然后选择{merge_icon}**{merge}**操作。",
+        "multipolygon_merge": "合併多個線段與區域會新增這些選擇的區域為成員的多重多邊形。Rapid 會依據要素是否在側，自動選擇內圈與外圈角色。",
         "turn_restriction_h": "转向限制",
         "turn_restriction": "*转向限制* (*turn restriction*) 关系是一组位于交叉路口的几个路段。转向限制包含一条 *起始* (*from*) 道路、*经由* (*via*) 节点或道路和一条 *结束* (*to*) 道路。",
         "turn_restriction_field": "要编辑转向限制，先选择一个由两条或多条道路相交的交叉节点。要素编辑器将显示一个特殊的 \"转向限制\" 字段，其中包含该交叉路口的模型。",
+        "turn_restriction_editing": "在\"{turn_restrictions}\"字段中，选择一条“起点”道路，查看是否允许或限制转弯至任何“终点”道路。您可以点击转弯图标来切换允许和限制状态。Rapid 将根据您的选择自动创建关联关系并设置起点、途经和终点角色。",
         "route_h": "线路",
         "route": "*线路* (*route*) 关系是能形成线路网络的单/多个路径要素的组合，例如公共汽车线路、列车线路或公路线路。",
         "route_add": "要向线路关系中添加要素，请先选择该要素并向下滚动到要素编辑器的“关系”部分，然后点击 {plus} 添加按钮将此要素添加到附近的现有关系或新关系中。",
@@ -1357,6 +1448,7 @@
         "boundary_add": "要向边界关系中添加要素，请先选择该要素并向下滚动到要素编辑器的“关系”部分，然后点击 {plus} 添加按钮将此要素添加到附近的现有关系或新关系中。"
       },
       "operations": {
+        "intro": "\"操作\"是你能夠編輯圖時的特殊行動。{mouse_right_icon}點滑鼠右鍵或是{onefinger_tap_and_hold_icon}長按任何要素來檢視可用的操作。",
         "intro_2": "每个操作都有自己的键盘快捷键。大多数操作可以同时应用于多个特征。",
         "straighten": "{straighten_icon} **{straighten}** 消除路径的弯曲。其还可以将各组点排列成整齐的一行路径。",
         "orthogonalize": "{orthogonalize_icon} **{orthogonalize}** 将区域和路径的角度固定为90°。您能对单个角或整个特征进行平方化。",
@@ -1409,7 +1501,8 @@
         "title": "质量保证",
         "intro": "*质量保证* (Quality Assurance, Q/A) 工具可以发现错误的标签、断头路以及 OpenStreetMap 的其他问题，然后用户可以修复这些问题。 查看现有的质量问题，请打开 {data_icon} **{map_data}** 面板并，在这里可以启用特定的质量保证图层。",
         "tools_h": "工具",
-        "issues_h": "处理问题"
+        "issues_h": "处理问题",
+        "issues": "處理 Q/A 問題類似處理註記。選取標記以在側邊欄的要素檢測器檢視問題。每個工具都有其功能，但是一般來說你可以回應和/或關閉問題。"
       },
       "field": {
         "restrictions": {
@@ -2009,6 +2102,8 @@
         "features": "我们使用 *要素* 一词来描述在地图上出现的东西。现实世界上的任何东西都可以在 OpenStreetMap 中描绘成要素。",
         "points_lines_areas": "地图要素以 *点、线、区域* 的形式呈现。",
         "nodes_ways": "在 OpenStreetMap 中，点有时被称为 *节点* ，线和区域有时被称为 *路径* 。",
+        "click_townhall": "所有地圖上要素都能透過{mouse_left_icon}點滑鼠左鍵來選擇。**點一下來選擇該點。**",
+        "tap_townhall": "所有地圖上的要素都能透過{onefinger_tap_icon}點一下來選擇。**點一下來選擇該點。**",
         "selected_townhall": "很好！该点已经被选中了。选中的要素的周围会有光亮不停闪烁。",
         "editor_townhall": "当一个要素被选中时， *要素编辑器* 将会在地图旁边显示。",
         "preset_townhall": "要素编辑器的顶端显示该要素的类型。该点表示这是一所 {preset} 。",
@@ -2034,6 +2129,8 @@
         "reselect": "通常点已经存在，但有错误或不完整。我们可以编辑现有的点。**选择刚创建的咖啡馆**",
         "update": "让我们给这间咖啡馆加入更多的细节。您可以更改它的名称、添加菜系或填写地址。 **更改咖啡馆的细节。**",
         "update_close": "**当你更新完咖啡店，按 {button} 按钮，或者按键盘左上角的 `{esc}` 键关闭要素编辑器。**",
+        "rightclick": "您可以{mouse_right_icon}右键单击任何要素来查看“编辑菜单”，其中显示了可执行的编辑操作列表。{br}右键单击可能与按住 Control 键单击或双指单击的效果相同。**右键单击以选择您创建的点并显示编辑菜单。**",
+        "edit_menu_touch": "你可以對著任任要素{onefinger_tap_and_hold_icon}長按來檢視*編輯選單*，能夠顯示一系列能夠進行的編輯操作。**按住你新增的點來顯示編輯選單。**",
         "delete": "删除现实世界中不存在的要素是被允许的。{br}在 OpenStreetMap 中删除要素意味着它将会从每个人使用的地图中移除，所以您应该在删除前确保它真的已不复存在。 **点击 {delete_icon} {delete} 按钮来删除该点。**",
         "undo": "您可以在您向OpenStreetMap保存编辑前无限制的撤销任何您做出的修改。**按这个 {undo_icon} {undo} 按钮来让这个点回退到之前的状态。**",
         "play": "现在你知道如何创建和编辑点了，试着创建多几个点自己练习一下吧！**当你准备好前往下一个章节，按'{next}'。**"
@@ -2043,6 +2140,7 @@
         "add_playground": "*区域* 用来显示诸如湖泊、建筑物或居民区等要素的边界。{br}区域还可以用来绘制许多要素，这些要素能够包含更多细节，你平常可能会把这些要素绘制成点，相对来说没那么细节了。**点击 {area_icon} {area} 按钮来添加一个新的区域。**",
         "start_playground": "让我们用描绘一个区域的方式来添加这个游乐场吧。区域是通过在要素的外部轮廓上放置若干 *节点* 来描绘。",
         "starting_node_click": "**单击或者是按 `{space}` 空格键可以放置一个起始节点，这个节点要放置在游乐场的一个角落。**",
+        "continue_playground": "继续沿着游乐场边缘放置更多节点来绘制区域。可以将该区域与现有的步行路径连接起来。{br}提示：您可以按住 `{option}` 或 `{control} 键来阻止节点与其他元素连接。**继续绘制游乐场区域。**",
         "finish_area_click": "按 `{return}` 结束绘制区域，或再次点击第一个或最后一个节点。",
         "finish_playground": "**完成运动场区域描绘。**",
         "search_playground": "**搜索 '{preset}' 。**",
@@ -2113,6 +2211,15 @@
         "retry_circle": "您并未点击 {circularize_icon} {circularize} 按钮。请重试。",
         "play": "干得漂亮！练习勾画更多建筑物的轮廓，并尝试使用编辑菜单里的其他指令。 **当您准备好进入下一章节时，点击 '{next}' 。**"
       },
+      "rapid": {
+        "title": "Rapid 要素",
+        "start": "{rapid}“功能”是指那些可能缺失于 OpenStreetMap 的要素建议。这些要素来自开放数据集，或通过机器学习算法从影像中识别得到。本节教程将带你学习如何使用这些建议要素。",
+        "ai_roads": "Rapid 要素會以洋紅色的的套疊呈現，請按`OK`來啟用 Rapid 要素圖層。(這些要素圖層也可以在上面的{rapid}按鈕來啟用)。",
+        "add_road_h": "新增 Rapid 要素",
+        "add_road": "點一下'使用這個要素'按鈕來在工作地圖上新增道路。",
+        "select_road_again": "你也可以忽略不想新增到開放街圖的要素。**按左鍵再次選擇 Rapid 道路。**",
+        "done": "你已經完成了！最後的提醒 - Rapid 建議並不會出現在所有地方。要檢視可用要素的最新資訊，請點<a href=\"https://github.com/facebookmicrosites/Open-Mapping-At-Facebook/wiki/Available-Countries\" target=\"_blank\">可用的國家清單</a>。**點'{next}'來繼續。**"
+      },
       "startediting": {
         "title": "开始编辑",
         "help": "现在您可以编辑OpenStreetMap了！{br}按{help_icon}{help}按钮或{help\\u key}`键，您可以随时回看本教程或查看更多文档。",
@@ -2140,6 +2247,7 @@
       "with_features_selected": "对选中的要素",
       "with_node_selected": "对选中的节点",
       "with_way_selected": "对选中的路径",
+      "with_rapid_selected": "與選取的 Rapid 要素",
       "with_photo_selected": "选择照片",
       "drawing": "绘制",
       "commands": "命令",
@@ -2162,6 +2270,9 @@
         "edit_menu": {
           "label": "切换编辑菜单"
         },
+        "zoom_to": {
+          "label": "放大 / 縮小選取的要素"
+        },
         "first_node": {
           "label": "跳至起始节点"
         },
@@ -2176,6 +2287,12 @@
         },
         "select_children": {
           "label": "选择子节点"
+        },
+        "accept_feature": {
+          "label": "接受要素"
+        },
+        "ignore_feature": {
+          "label": "忽略要素"
         },
         "add_point": {
           "label": "'增加点' 模式"
@@ -2269,6 +2386,9 @@
         },
         "toggle_preferences": {
           "label": "切换用户偏好设置面板"
+        },
+        "toggle_inspector": {
+          "label": "切換要素檢查器"
         },
         "highlight_edits": {
           "label": "高亮未保存的编辑"

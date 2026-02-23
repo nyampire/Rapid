@@ -528,7 +528,8 @@
         "roads": "道路"
       },
       "omdFootways": {
-        "label": "人行通道的開放資料"
+        "label": "人行道的開放資料",
+        "description": "開啟從不同地方政府收集的人行道資料。"
       }
     },
     "tag_reference": {
@@ -666,6 +667,7 @@
       },
       "editing": {
         "title": "編輯及儲存",
+        "undo_redo": "你的編輯都會存在本地的瀏覽器裡，直到你選擇上傳到開放街圖伺服器上。你可以點{undo_icon}** {undo} 按鈕來復原先前的編輯，{redo_icon}** {redo}**按鍵來取消復原。",
         "save_h": "儲存",
         "save": "點 {save_icon} **{save}** 按鈕完成你的編輯並傳送到開放街圖。你應該記得你必須時常儲存你的成果！ ",
         "upload_h": "上傳",
