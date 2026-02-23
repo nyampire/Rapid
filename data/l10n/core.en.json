@@ -1433,7 +1433,9 @@
         "places": "places",
         "preview": "preview",
         "roads": "roads",
-        "trees": "trees"
+        "trees": "trees",
+        "plateau": "Plateau",
+        "japan": "Japan"
       },
       "fbRoads": {
         "label": "Facebook Roads",
@@ -1456,6 +1458,10 @@
           "label": "Microsoft ML + Google Open Buildings",
           "description": "ML-derived building footprints from Microsoft and Google Open Buildings, conflated by the Overture Maps Foundation."
         }
+      },
+      "plateauJapan": {
+        "label": "Plateau Japan Buildings",
+        "description": "Building footprints from Japan's PLATEAU 3D city model project, provided by OSMFJ."
       },
       "omdFootways": {
         "label": "Open Data Footways",

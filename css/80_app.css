@@ -5995,7 +5995,7 @@ bottom-left | bottom-middle | bottom-right
 
 /* osmf.jpブランディング */
 .osmf-branding {
-  background: linear-gradient(135deg, #4CAF50, #2196F3);
+  background: linear-gradient(135deg, #66BB6A, #2196F3);
   color: white;
   padding: 8px 16px;
   border-radius: 4px;
@@ -6015,29 +6015,29 @@ bottom-left | bottom-middle | bottom-right
 
 /* osmf.jpデータセットの特別スタイリング */
 .dataset-item.osmf {
-  border-left: 4px solid #4CAF50;
-  background: rgba(76, 175, 80, 0.1);
+  border-left: 4px solid #66BB6A;
+  background: rgba(102, 187, 106, 0.1);
 }
 
 /* osmf.jpデータセットを優先表示 */
 .preset-list .osmf-dataset {
-  border: 2px solid #4CAF50;
-  background: rgba(76, 175, 80, 0.05);
+  border: 2px solid #66BB6A;
+  background: rgba(102, 187, 106, 0.05);
   border-radius: 4px;
   margin-bottom: 5px;
 }
 
 .preset-list .osmf-dataset .preset-list-button .label {
-  background: rgba(76, 175, 80, 0.1);
+  background: rgba(102, 187, 106, 0.1);
 }
 
 /* osmf.jpデータセット有効化時の表示強化 */
 .layer-list li.osmf-layer {
-  border-left: 3px solid #4CAF50;
+  border-left: 3px solid #66BB6A;
 }
 
 .layer-list li.osmf-layer.active {
-  background: rgba(76, 175, 80, 0.1);
+  background: rgba(102, 187, 106, 0.1);
 }
 
 /* osmf.jpデータ読み込み中のインジケータ */
@@ -6064,44 +6064,37 @@ bottom-left | bottom-middle | bottom-right
 
 /* Rapid Catalog での osmf.jp セクション */
 .rapid-catalog .osmf-section {
-  border: 1px solid #4CAF50;
+  border: 1px solid #66BB6A;
   border-radius: 6px;
   margin: 10px 0;
   padding: 10px;
-  background: rgba(76, 175, 80, 0.02);
+  background: rgba(102, 187, 106, 0.02);
 }
-/* =============================================
-   Plateau Dataset Special Styling
-   ============================================= */
-
-/* Plateauデータセット基本スタイリング */
+/* Plateau Dataset Styling */
 .rapid-feature.plateau {
-  border-left: 4px solid #4CAF50 !important;
-  box-shadow: 0 2px 4px rgba(76, 175, 80, 0.2) !important;
+  border-left: 4px solid #66BB6A;
+  box-shadow: 0 2px 4px rgba(102, 187, 106, 0.2);
   position: relative;
 }
 
-/* Plateauデータセット サムネイル強調 */
 .rapid-feature.plateau .rapid-feature-label {
-  color: #66BB6A !important;  /* 明るい緑で視認性向上 */
-  font-weight: bold !important;
+  color: #66BB6A;
+  font-weight: bold;
 }
 
-/* ホバー効果 */
 .rapid-feature.plateau:hover {
   transform: translateY(-1px);
   transition: all 0.2s ease;
 }
 
-/* モバイル対応 */
 @media (max-width: 768px) {
   .rapid-feature.plateau {
-    border-left-width: 2px !important;
+    border-left-width: 2px;
   }
 }
 
 .rapid-catalog .osmf-section h3 {
-  color: #4CAF50;
+  color: #66BB6A;
   margin-bottom: 10px;
   font-size: 14px;
   font-weight: bold;
@@ -6109,14 +6102,14 @@ bottom-left | bottom-middle | bottom-right
 
 /* osmf.jpデータセットのアイコン調整 */
 .preset-icon-container .osmf-icon {
-  background: #4CAF50;
+  background: #66BB6A;
   border-radius: 3px;
   padding: 2px;
 }
 
 /* osmf.jpデータが選択された時のハイライト */
 .selected.osmf-feature {
-  stroke: #4CAF50 !important;
+  stroke: #66BB6A !important;
   stroke-width: 3px !important;
 }
 
@@ -6129,7 +6122,7 @@ bottom-left | bottom-middle | bottom-right
 
 .osmf-stats .count {
   font-weight: bold;
-  color: #4CAF50;
+  color: #66BB6A;
 }
 
 /* レスポンシブ対応 */
@@ -6151,7 +6144,7 @@ bottom-left | bottom-middle | bottom-right
   }
 
   .dataset-item.osmf {
-    background: rgba(76, 175, 80, 0.2);
+    background: rgba(102, 187, 106, 0.2);
   }
 
   .osmf-description {

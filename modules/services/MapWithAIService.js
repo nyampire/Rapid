@@ -100,7 +100,6 @@ export class MapWithAIService extends AbstractSystem {
       descriptionStringID: 'rapid_menu.fbRoads.description'
     });
 
-    // === Plateau日本 データセット追加 ここから ===
     const plateauJapan = new RapidDataset(context, {
       id: 'plateauJapan',
       conflated: false,
@@ -113,7 +112,6 @@ export class MapWithAIService extends AbstractSystem {
       labelStringID: 'rapid_menu.plateauJapan.label',
       descriptionStringID: 'rapid_menu.plateauJapan.description'
     });
-    // === Plateau日本 データセット追加 ここまで ===
 
     const omdFootways = new RapidDataset(context, {
       id: 'omdFootways',
@@ -347,8 +345,7 @@ export class MapWithAIService extends AbstractSystem {
       qs.result_type = 'road_building_vector_xml';
       qs.building_source = 'microsoft';
     }  else if (datasetID === 'plateauJapan') {
-      // === osmf.jp 独自処理 ===
-      // Facebook APIは使わず、直接osmf.jp APIを呼び出し
+      // Plateau Japan: bypass Facebook API, call local Plateau API directly
       const bbox = `${extent.min[0]},${extent.min[1]},${extent.max[0]},${extent.max[1]}`;
       const params = new URLSearchParams({
         bbox: bbox,

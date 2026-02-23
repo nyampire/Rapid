@@ -8,7 +8,7 @@ const OVERTURE_CYAN = '#00ffff';
 const RAPID_COLORS = [
   '#ff0000',  // red
   '#ffa500',  // orange
-  '#66BB6A',  // plateau green
+  '#66BB6A',  // green (plateau)
   '#00ff00',  // lime
   '#00ffff',  // cyan
   '#1e90ff',  // dodgerblue
