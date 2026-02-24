@@ -195,7 +195,6 @@ export class PixiFeaturePolygon extends AbstractFeature {
     const [minX, minY] = this.geometry.extent.min;
     const [maxX, maxY] = this.geometry.extent.max;
     const [w, h] = [maxX - minX, maxY - minY];
-
     this.sceneBounds.x = minX;
     this.sceneBounds.y = minY;
     this.sceneBounds.width = w;
@@ -289,7 +288,6 @@ export class PixiFeaturePolygon extends AbstractFeature {
     // redraw the shapes
     //
     const rings = this.geometry.flatCoords || [];  // outer, followed by holes if any
-
     this._bufferdata = null;
 
     // STROKES
