@@ -1,3 +1,4 @@
+import * as Polyclip from 'polyclip-ts';
 import { Tiler } from '@rapid-sdk/math';
 import { utilStringQs } from '@rapid-sdk/util';
 
@@ -32,6 +33,12 @@ export class MapWithAIService extends AbstractSystem {
     this._tiler = new Tiler().zoomRange(TILEZOOM);
     this._datasets = {};
     this._deferred = new Set();
+
+    // Cache for Plateau client-side conflation (overlap filtering with OSM buildings)
+    this._plateauConflationCache = {
+      checked: new Set(),    // Set(entityID) - already checked, not overlapping
+      rejected: new Set()    // Set(entityID) - overlapping with OSM
+    };
 
     // Ensure methods used as callbacks always have `this` bound correctly.
     this._parseNode = this._parseNode.bind(this);
@@ -77,6 +84,16 @@ export class MapWithAIService extends AbstractSystem {
    */
   startAsync() {
     this._started = true;
+
+    // Invalidate Plateau conflation cache when OSM data changes
+    const editor = this.context.systems.editor;
+    if (editor) {
+      editor.on('merge', () => {
+        this._plateauConflationCache.checked.clear();
+        this._plateauConflationCache.rejected.clear();
+      });
+    }
+
     return Promise.resolve();
   }
 
@@ -202,7 +219,18 @@ export class MapWithAIService extends AbstractSystem {
     if (!ds || !ds.tree || !ds.graph) return [];
 
     const extent = this.context.viewport.visibleExtent();
-    return ds.tree.intersects(extent, ds.graph);
+    let entities = ds.tree.intersects(extent, ds.graph);
+
+    // Plateau: client-side conflation to filter out buildings overlapping with OSM
+    const baseID = datasetID.replace(/-conflated$/, '');
+    if (baseID === 'plateauJapan') {
+      const useConflationStr = utilStringQs(window.location.hash).plateau_conflation;
+      if (useConflationStr !== 'false' && useConflationStr !== 'no') {
+        entities = this._filterPlateauOverlaps(entities, ds.graph);
+      }
+    }
+
+    return entities;
   }
 
 
@@ -304,6 +332,117 @@ export class MapWithAIService extends AbstractSystem {
   graph(datasetID) {
     const ds = this._datasets[datasetID];
     return ds?.graph;
+  }
+
+
+  /**
+   * _filterPlateauOverlaps
+   * Client-side conflation for Plateau buildings.
+   * Filters out Plateau entities that overlap with existing OSM buildings,
+   * using the same bbox + Polyclip polygon intersection approach as OvertureService.
+   * @param   {Array}  entities - Plateau entities from the tree
+   * @param   {Graph}  plateauGraph - The Plateau dataset graph (for resolving node coords)
+   * @return  {Array}  Filtered entities (non-overlapping only)
+   */
+  _filterPlateauOverlaps(entities, plateauGraph) {
+    const cache = this._plateauConflationCache;
+    const editor = this.context.systems.editor;
+    if (!editor?.staging?.graph) return entities;
+
+    const osmGraph = editor.staging.graph;
+    const extent = this.context.viewport.visibleExtent();
+
+    // 1. Collect OSM buildings in the visible extent
+    const osmEntities = editor.intersects(extent);
+    const osmBuildings = osmEntities.filter(entity =>
+      entity.type === 'way' &&
+      entity.tags.building &&
+      entity.tags.building !== 'no'
+    );
+
+    // 2. Prepare OSM building bounding boxes + polygon coordinates for fast filtering
+    const osmBuildingData = [];
+    for (const way of osmBuildings) {
+      try {
+        if (!way.isClosed()) continue;
+        const coords = way.nodes.map(nodeID => osmGraph.entity(nodeID).loc);
+        if (coords.length < 4) continue;  // Valid polygon needs at least 3 unique points + closing
+
+        let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
+        for (const c of coords) {
+          if (c[0] < minX) minX = c[0];
+          if (c[0] > maxX) maxX = c[0];
+          if (c[1] < minY) minY = c[1];
+          if (c[1] > maxY) maxY = c[1];
+        }
+        osmBuildingData.push({
+          coords: [coords],  // Polyclip expects [[ring]]
+          bbox: { minX, minY, maxX, maxY }
+        });
+      } catch (e) {
+        continue;
+      }
+    }
+
+    // If no OSM buildings in view, skip conflation
+    if (osmBuildingData.length === 0) return entities;
+
+    // 3. Filter each Plateau entity against OSM buildings
+    return entities.filter(entity => {
+      if (entity.type !== 'way') return true;  // Keep nodes (needed for way coordinate resolution)
+
+      // Cache hit - already determined
+      if (cache.rejected.has(entity.id)) return false;
+      if (cache.checked.has(entity.id)) return true;
+
+      try {
+        if (!entity.isClosed()) {
+          cache.checked.add(entity.id);
+          return true;
+        }
+
+        // Get Plateau building polygon coordinates
+        const coords = entity.nodes.map(nodeID => plateauGraph.entity(nodeID).loc);
+        if (coords.length < 4) {
+          cache.checked.add(entity.id);
+          return true;
+        }
+
+        // Compute bounding box for fast pre-filtering
+        let oMinX = Infinity, oMinY = Infinity, oMaxX = -Infinity, oMaxY = -Infinity;
+        for (const c of coords) {
+          if (c[0] < oMinX) oMinX = c[0];
+          if (c[0] > oMaxX) oMaxX = c[0];
+          if (c[1] < oMinY) oMinY = c[1];
+          if (c[1] > oMaxY) oMaxY = c[1];
+        }
+
+        // Check against each OSM building
+        for (const osm of osmBuildingData) {
+          const ob = osm.bbox;
+          // Fast bounding box rejection
+          if (oMaxX < ob.minX || oMinX > ob.maxX || oMaxY < ob.minY || oMinY > ob.maxY) {
+            continue;
+          }
+          // Full polygon intersection test
+          try {
+            const intersection = Polyclip.intersection([coords], osm.coords);
+            if (intersection && intersection.length > 0) {
+              cache.rejected.add(entity.id);
+              return false;
+            }
+          } catch (e) {
+            continue;  // Polyclip can throw on invalid geometries
+          }
+        }
+
+        cache.checked.add(entity.id);
+        return true;
+      } catch (e) {
+        cache.checked.add(entity.id);
+        return true;
+      }
+    });
   }
 
 
