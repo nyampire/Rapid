@@ -8,6 +8,7 @@ import { utilFetchResponse } from '../util/index.js';
 
 
 const APIROOT = 'https://mapwith.ai/maps/ml_roads';
+const PLATEAU_API_URL = 'https://rapid.nyampire.info/api/mapwithai/buildings';  // Production: nyampire/rapid_plateau_api
 const TILEZOOM = 16;
 
 
@@ -345,14 +346,17 @@ export class MapWithAIService extends AbstractSystem {
       qs.result_type = 'road_building_vector_xml';
       qs.building_source = 'microsoft';
     }  else if (datasetID === 'plateauJapan') {
-      // Plateau Japan: bypass Facebook API, call local Plateau API directly
+      // Plateau Japan: bypass Facebook API, call Plateau API directly
       const bbox = `${extent.min[0]},${extent.min[1]},${extent.max[0]},${extent.max[1]}`;
       const params = new URLSearchParams({
         bbox: bbox,
         use_intersects: 'true',
         limit: '1000'
       });
-      return `http://localhost:8000/api/mapwithai/buildings?${params.toString()}`;
+      // Support runtime override via URL hash (e.g. #plateau_api_url=http://localhost:8000/api/mapwithai/buildings)
+      const customPlateauUrl = utilStringQs(window.location.hash).plateau_api_url;
+      const plateauUrl = customPlateauUrl || PLATEAU_API_URL;
+      return `${plateauUrl}?${params.toString()}`;
     } else {
       qs.result_type = 'osm_xml';
       qs.sources = `esri_building.${datasetID}`;
