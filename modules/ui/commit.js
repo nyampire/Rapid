@@ -187,7 +187,7 @@ export function uiCommit(context) {
     const toRemove = [
       'aerial imagery', 'streetlevel imagery',
       'mapillary', 'kartaview', 'streetside',
-      'mapwithai', 'esri',
+      'mapwithai', 'esri', 'RapiD_Plateau_JP',
     ];
     for (const v of toRemove) {
       sources.delete(v);
@@ -238,6 +238,10 @@ export function uiCommit(context) {
         const match = v.match(/(mapwithai|esri)/i);
         if (match !== null) {
           sources.add(match[1]);
+        }
+        // Add Plateau-specific source tag when Plateau buildings data is used
+        if (/plateau/i.test(v)) {
+          sources.add('RapiD_Plateau_JP');
         }
       }
       setDataUsed = context.cleanTagValue(Array.from(used.data).filter(Boolean).join(';'));
