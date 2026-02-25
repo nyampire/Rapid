@@ -97,3 +97,4 @@ This fork adds integration with Japan's [PLATEAU 3D city model](https://www.mlit
 - **Dataset ID**: `plateauJapan`
 - **Color**: `#66BB6A` (green)
 - **URL Hash Override**: `#plateau_api_url=<url>` for development/testing
+- **Deploy Procedure**: See [DEPLOY.md](DEPLOY.md)
