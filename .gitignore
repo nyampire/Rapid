@@ -33,3 +33,4 @@ node_modules/
 # Debug scripts
 finder*.sh
 getsvg.sh
+.claude/
