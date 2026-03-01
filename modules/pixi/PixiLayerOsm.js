@@ -7,7 +7,7 @@ import { PixiFeatureLine } from './PixiFeatureLine.js';
 import { PixiFeaturePoint } from './PixiFeaturePoint.js';
 import { PixiFeaturePolygon } from './PixiFeaturePolygon.js';
 
-const MINZOOM = 12;
+const MINZOOM = 14;
 
 
 /**
