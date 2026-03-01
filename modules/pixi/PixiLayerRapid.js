@@ -7,7 +7,7 @@ import { PixiFeatureLine } from './PixiFeatureLine.js';
 import { PixiFeaturePoint } from './PixiFeaturePoint.js';
 import { PixiFeaturePolygon } from './PixiFeaturePolygon.js';
 
-const MINZOOM = 12;
+const MINZOOM = 15;
 
 
 /**
@@ -243,7 +243,7 @@ export class PixiLayerRapid extends AbstractLayer {
 
     /* Facebook AI/ML */
     if (dataset.service === 'mapwithai') {
-      if (zoom >= 15) {  // avoid firing off too many API requests
+      if (zoom >= 16) {  // avoid firing off too many API requests
         service.loadTiles(datasetID);  // fetch more
       }
 
