@@ -143,7 +143,7 @@ export class RapidSystem extends AbstractSystem {
         // Set some defaults
         if (!urlhash.initialHashParams.has('datasets')) {
           this._addedDatasetIDs = new Set(['fbRoads', 'esri-buildings', 'ml-buildings-overture', 'omdFootways', 'plateauJapan']);  // on menu
-          this._enabledDatasetIDs = new Set(['ml-buildings-overture', 'plateauJapan']);  // checked
+          this._enabledDatasetIDs = new Set(['plateauJapan']);  // checked
           this._datasetsChanged();
         }
 
