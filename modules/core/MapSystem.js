@@ -330,9 +330,9 @@ export class MapSystem extends AbstractSystem {
       if (typeof newMap === 'string') {
         [zoom, lat, lon, ang] = newMap.split('/', 4).map(Number);
       }
-      if (isNaN(zoom) || !isFinite(zoom)) zoom = 2;
-      if (isNaN(lat) || !isFinite(lat)) lat = 0;
-      if (isNaN(lon) || !isFinite(lon)) lon = 0;
+      if (isNaN(zoom) || !isFinite(zoom)) zoom = 5.52;
+      if (isNaN(lat) || !isFinite(lat)) lat = 36.934;
+      if (isNaN(lon) || !isFinite(lon)) lon = 139.144;
       if (isNaN(ang) || !isFinite(ang)) ang = 0;
 
       zoom = numClamp(zoom, MIN_Z, MAX_Z);
