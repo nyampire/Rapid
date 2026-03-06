@@ -67,6 +67,10 @@ export class UrlHashSystem extends AbstractSystem {
 **/
 
     const q = utilStringQs(window.location.hash);
+    // Set default map position to Japan if not specified in URL
+    if (!q.map) {
+      q.map = '5.52/36.934/139.144';
+    }
     this._initParams = new Map(Object.entries(q));
 
     this._currParams = new Map(this._initParams);  // make copy
@@ -303,6 +307,12 @@ export class UrlHashSystem extends AbstractSystem {
 
     if (!this._prevParams) {         // We haven't emitted `hashchange` yet
       this._prevParams = new Map();  // set previous to empty Map, so everything looks new
+      // Apply defaults from _initParams for any params not in the current hash
+      for (const [key, value] of this._initParams) {
+        if (q[key] === undefined) {
+          q[key] = value;
+        }
+      }
     } else {
       this._prevParams = this._currParams;   // copy current -> previous
     }
