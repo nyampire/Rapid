@@ -117,8 +117,8 @@ export class OsmService extends AbstractSystem {
     this._oauth = osmAuth({
       url: this._wwwroot,
       apiUrl: this._apiroot,
-      client_id: 'O3g0mOUuA2WY5Fs826j5tP260qR3DDX7cIIE2R2WWSc',
-      client_secret: 'b4aeHD1cNeapPPQTrvpPoExqQRjybit6JBlNnxh62uE',
+      client_id: 'XJ4C90NPfWl9EI0-zgFhVh13bcK5kM7pJiIG5i4JBq8',       // Plateau Rapid instance (registered on openstreetmap.org)
+      client_secret: '_-joqQGJdkb4DOpCFBRRROCzN_YzS4YLWkgtNFsMIys',   // Upstream default: O3g0mOUuA2WY5Fs826j5tP260qR3DDX7cIIE2R2WWSc
       scope: 'read_prefs write_prefs write_api read_gpx write_notes',
       redirect_uri: redirect_uri,
       loading: this._authLoading,
