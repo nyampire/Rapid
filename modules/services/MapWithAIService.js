@@ -40,6 +40,10 @@ export class MapWithAIService extends AbstractSystem {
       rejected: new Set()    // Set(entityID) - overlapping with OSM
     };
 
+    // Cache for Plateau coverage area GeoJSON (loaded once, used by PixiLayerPlateauCoverage)
+    this._coverageData = null;          // GeoJSON FeatureCollection or null
+    this._coveragePromise = null;       // Promise<FeatureCollection> when inflight
+
     // Ensure methods used as callbacks always have `this` bound correctly.
     this._parseNode = this._parseNode.bind(this);
     this._parseWay = this._parseWay.bind(this);
@@ -205,6 +209,56 @@ export class MapWithAIService extends AbstractSystem {
       };
     }
     return Promise.resolve();
+  }
+
+
+  /**
+   * loadCoverage
+   * Fetch Plateau coverage area GeoJSON once and cache it.
+   * Used by PixiLayerPlateauCoverage to display where Plateau data exists
+   * at zoom 5-14.
+   *
+   * The endpoint returns a FeatureCollection where each Feature is a
+   * convex-hull polygon of one city's buildings, with properties:
+   *   { city_code, building_count }
+   *
+   * @return {Promise<Object|null>}  GeoJSON FeatureCollection, or null on failure
+   */
+  loadCoverage() {
+    // Return cached data immediately if already loaded
+    if (this._coverageData) {
+      return Promise.resolve(this._coverageData);
+    }
+    // Return inflight promise to coalesce concurrent calls
+    if (this._coveragePromise) {
+      return this._coveragePromise;
+    }
+
+    // Derive coverage URL from the buildings URL
+    // PLATEAU_API_URL is .../api/mapwithai/buildings → .../api/mapwithai/coverage
+    const customPlateauUrl = utilStringQs(window.location.hash).plateau_api_url;
+    const buildingsUrl = customPlateauUrl || PLATEAU_API_URL;
+    const coverageUrl = buildingsUrl.replace(/\/buildings(\?.*)?$/, '/coverage');
+
+    this._coveragePromise = fetch(coverageUrl)
+      .then(utilFetchResponse)
+      .then(data => {
+        if (data && data.type === 'FeatureCollection') {
+          this._coverageData = data;
+          return data;
+        }
+        throw new Error('Invalid coverage response');
+      })
+      .catch(err => {
+        // Graceful degradation: log and return null so the layer can hide itself
+        console.warn('Failed to load Plateau coverage:', err);  // eslint-disable-line no-console
+        return null;
+      })
+      .finally(() => {
+        this._coveragePromise = null;
+      });
+
+    return this._coveragePromise;
   }
 
 
