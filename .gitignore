@@ -34,3 +34,4 @@ node_modules/
 finder*.sh
 getsvg.sh
 .claude/
+CLAUDE.md
