@@ -394,6 +394,12 @@ export class MapWithAIService extends AbstractSystem {
    * Client-side conflation for Plateau buildings.
    * Filters out Plateau entities that overlap with existing OSM buildings,
    * using the same bbox + Polyclip polygon intersection approach as OvertureService.
+   *
+   * Phase 4-A: PLATEAU LOD2 building は outline + parts + type=building relation で
+   * 1つの semantic 単位を成すため、relation のメンバー way は **outline の判定結果に従う**。
+   * outline と各 parts が個別に reject される結果として「親 outline が消えて parts だけ宙に浮く」
+   * 等のジオメトリ不整合を防ぐ。
+   *
    * @param   {Array}  entities - Plateau entities from the tree
    * @param   {Graph}  plateauGraph - The Plateau dataset graph (for resolving node coords)
    * @return  {Array}  Filtered entities (non-overlapping only)
@@ -441,62 +447,129 @@ export class MapWithAIService extends AbstractSystem {
     // If no OSM buildings in view, skip conflation
     if (osmBuildingData.length === 0) return entities;
 
+    // Phase 4-A: way_id → building relation のマップを構築。
+    // 並行して relation_id → outline way_id を記録 (outline で代表判定するため)。
+    const wayToBuildingRelation = new Map();        // way_id → relation entity
+    const buildingRelationOutline = new Map();      // relation_id → outline way_id (or undefined)
+    for (const e of entities) {
+      if (e.type !== 'relation') continue;
+      if (e.tags?.type !== 'building') continue;
+      let outlineWayId;
+      for (const m of e.members ?? []) {
+        if (m.type !== 'way') continue;
+        if (!wayToBuildingRelation.has(m.id)) {
+          wayToBuildingRelation.set(m.id, e);
+        }
+        if (m.role === 'outline' && outlineWayId === undefined) {
+          outlineWayId = m.id;
+        }
+      }
+      buildingRelationOutline.set(e.id, outlineWayId);
+    }
+
+    // relation 単位の判定結果キャッシュ (このバッチ内のみ)。
+    // outline の overlap 判定を1回行い、relation の全 member で再利用。
+    const relationOverlapDecision = new Map();  // relation_id → true (overlap) / false (no overlap) / null (unknown)
+
+    const evalRelationOverlap = (relation) => {
+      if (relationOverlapDecision.has(relation.id)) {
+        return relationOverlapDecision.get(relation.id);
+      }
+      const outlineWayId = buildingRelationOutline.get(relation.id);
+      if (!outlineWayId) {
+        relationOverlapDecision.set(relation.id, null);
+        return null;
+      }
+      const outlineWay = plateauGraph.hasEntity(outlineWayId);
+      if (!outlineWay) {
+        relationOverlapDecision.set(relation.id, null);
+        return null;
+      }
+      const decision = this._checkWayOverlapsOsmBuildings(outlineWay, plateauGraph, osmBuildingData);
+      // decision: true = overlap, false = no overlap, null = couldn't evaluate (open way etc.)
+      relationOverlapDecision.set(relation.id, decision);
+      return decision;
+    };
+
     // 3. Filter each Plateau entity against OSM buildings
     return entities.filter(entity => {
-      if (entity.type !== 'way') return true;  // Keep nodes (needed for way coordinate resolution)
+      if (entity.type === 'node') return true;  // Keep nodes (needed for way coordinate resolution)
+      if (entity.type === 'relation') return true;  // relations 自体は filter 対象外 (member way の判定で実質決まる)
+      if (entity.type !== 'way') return true;
 
-      // Cache hit - already determined
+      // Cache hit - already determined (across batches via _plateauConflationCache)
       if (cache.rejected.has(entity.id)) return false;
       if (cache.checked.has(entity.id)) return true;
 
-      try {
-        if (!entity.isClosed()) {
+      // Phase 4-A: building relation の member なら relation の判定結果を採用
+      const parentRel = wayToBuildingRelation.get(entity.id);
+      if (parentRel) {
+        const decision = evalRelationOverlap(parentRel);
+        if (decision === true) {
+          cache.rejected.add(entity.id);
+          return false;
+        }
+        if (decision === false) {
           cache.checked.add(entity.id);
           return true;
         }
-
-        // Get Plateau building polygon coordinates
-        const coords = entity.nodes.map(nodeID => plateauGraph.entity(nodeID).loc);
-        if (coords.length < 4) {
-          cache.checked.add(entity.id);
-          return true;
-        }
-
-        // Compute bounding box for fast pre-filtering
-        let oMinX = Infinity, oMinY = Infinity, oMaxX = -Infinity, oMaxY = -Infinity;
-        for (const c of coords) {
-          if (c[0] < oMinX) oMinX = c[0];
-          if (c[0] > oMaxX) oMaxX = c[0];
-          if (c[1] < oMinY) oMinY = c[1];
-          if (c[1] > oMaxY) oMaxY = c[1];
-        }
-
-        // Check against each OSM building
-        for (const osm of osmBuildingData) {
-          const ob = osm.bbox;
-          // Fast bounding box rejection
-          if (oMaxX < ob.minX || oMinX > ob.maxX || oMaxY < ob.minY || oMinY > ob.maxY) {
-            continue;
-          }
-          // Full polygon intersection test
-          try {
-            const intersection = Polyclip.intersection([coords], osm.coords);
-            if (intersection && intersection.length > 0) {
-              cache.rejected.add(entity.id);
-              return false;
-            }
-          } catch (e) {
-            continue;  // Polyclip can throw on invalid geometries
-          }
-        }
-
-        cache.checked.add(entity.id);
-        return true;
-      } catch (e) {
-        cache.checked.add(entity.id);
-        return true;
+        // decision === null → relation 判定不能、個別 way 判定にフォールバック
       }
+
+      // 個別 way 判定 (relation 非 member、または relation 判定不能のフォールバック)
+      const decision = this._checkWayOverlapsOsmBuildings(entity, plateauGraph, osmBuildingData);
+      if (decision === true) {
+        cache.rejected.add(entity.id);
+        return false;
+      }
+      // decision === false または null → pass として扱う (open way 等)
+      cache.checked.add(entity.id);
+      return true;
     });
+  }
+
+
+  /**
+   * _checkWayOverlapsOsmBuildings
+   * 1つの Plateau way が OSM 建物群と重複するか判定する純粋ロジック。
+   * `_filterPlateauOverlaps` から呼ばれ、個別判定と relation outline 代表判定で再利用される。
+   *
+   * @return {boolean | null} true = overlap, false = no overlap, null = couldn't evaluate (open way / invalid coords)
+   */
+  _checkWayOverlapsOsmBuildings(way, plateauGraph, osmBuildingData) {
+    try {
+      if (!way.isClosed()) return null;
+
+      const coords = way.nodes.map(nodeID => plateauGraph.entity(nodeID).loc);
+      if (coords.length < 4) return null;
+
+      let oMinX = Infinity, oMinY = Infinity, oMaxX = -Infinity, oMaxY = -Infinity;
+      for (const c of coords) {
+        if (c[0] < oMinX) oMinX = c[0];
+        if (c[0] > oMaxX) oMaxX = c[0];
+        if (c[1] < oMinY) oMinY = c[1];
+        if (c[1] > oMaxY) oMaxY = c[1];
+      }
+
+      for (const osm of osmBuildingData) {
+        const ob = osm.bbox;
+        if (oMaxX < ob.minX || oMinX > ob.maxX || oMaxY < ob.minY || oMinY > ob.maxY) {
+          continue;
+        }
+        try {
+          const intersection = Polyclip.intersection([coords], osm.coords);
+          if (intersection && intersection.length > 0) {
+            return true;
+          }
+        } catch (e) {
+          continue;  // Polyclip can throw on invalid geometries
+        }
+      }
+
+      return false;
+    } catch (e) {
+      return null;
+    }
   }
 
 
