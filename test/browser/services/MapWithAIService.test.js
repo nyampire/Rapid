@@ -124,6 +124,100 @@ describe('MapWithAIService', () => {
   });
 
 
+  describe('#_getMembers', () => {
+    it('extracts member references with type initial prefix and role', () => {
+      const xml = new DOMParser().parseFromString(
+        '<relation>' +
+          '<member type="way" ref="100" role="outline"/>' +
+          '<member type="way" ref="101" role="part"/>' +
+          '<member type="node" ref="200" role=""/>' +
+        '</relation>', 'text/xml'
+      ).documentElement;
+      const members = _service._getMembers(xml);
+      expect(members).to.eql([
+        { id: 'w100', type: 'way', role: 'outline' },
+        { id: 'w101', type: 'way', role: 'part' },
+        { id: 'n200', type: 'node', role: '' }
+      ]);
+    });
+
+    it('handles missing role attribute as empty string', () => {
+      const xml = new DOMParser().parseFromString(
+        '<relation><member type="way" ref="42"/></relation>', 'text/xml'
+      ).documentElement;
+      const members = _service._getMembers(xml);
+      expect(members[0].role).to.eql('');
+    });
+  });
+
+
+  describe('#_parseRelation', () => {
+    it('creates an osmRelation with tags and members', () => {
+      const xml = new DOMParser().parseFromString(
+        '<relation>' +
+          '<member type="way" ref="10" role="outline"/>' +
+          '<member type="way" ref="11" role="part"/>' +
+          '<tag k="type" v="building"/>' +
+          '<tag k="building" v="yes"/>' +
+          '<tag k="height" v="8.4"/>' +
+        '</relation>', 'text/xml'
+      ).documentElement;
+      const rel = _service._parseRelation(xml, 'r-100');
+      expect(rel.id).to.eql('r-100');
+      expect(rel.type).to.eql('relation');
+      expect(rel.tags).to.eql({ type: 'building', building: 'yes', height: '8.4' });
+      expect(rel.members).to.eql([
+        { id: 'w10', type: 'way', role: 'outline' },
+        { id: 'w11', type: 'way', role: 'part' }
+      ]);
+      expect(rel.visible).to.be.true;
+    });
+  });
+
+
+  describe('#_parseEntity for relations', () => {
+    // Phase 3-A: MapWithAIService が `<relation>` を取り込むかの統合テスト
+    const dataset = {
+      id: 'plateauJapan-test',
+      cache: { seen: new Set(), splitWays: new Map(), seenFirstNodeID: new Set() }
+    };
+
+    beforeEach(() => {
+      dataset.cache.seen.clear();
+      dataset.cache.splitWays.clear();
+      dataset.cache.seenFirstNodeID.clear();
+    });
+
+    it('parses a relation element into an osmRelation entity', () => {
+      const xml = new DOMParser().parseFromString(
+        '<relation id="-100">' +
+          '<member type="way" ref="-1" role="outline"/>' +
+          '<member type="way" ref="-2" role="part"/>' +
+          '<tag k="type" v="building"/>' +
+          '<tag k="building" v="yes"/>' +
+        '</relation>', 'text/xml'
+      ).documentElement;
+      const entity = _service._parseEntity(dataset, null, xml);
+      expect(entity).to.not.be.null;
+      expect(entity.id).to.eql('r-100');
+      expect(entity.type).to.eql('relation');
+      expect(entity.tags.type).to.eql('building');
+      expect(entity.members).to.have.length(2);
+      expect(dataset.cache.seen.has('r-100')).to.be.true;
+    });
+
+    it('skips duplicate relation IDs (cache.seen)', () => {
+      const xml = new DOMParser().parseFromString(
+        '<relation id="-100"><tag k="type" v="building"/></relation>', 'text/xml'
+      ).documentElement;
+      const first = _service._parseEntity(dataset, null, xml);
+      const second = _service._parseEntity(dataset, null, xml);
+      expect(first).to.not.be.null;
+      expect(second).to.be.null;
+    });
+  });
+
+
   describe('#_filterPlateauOverlaps', () => {
     // Helper: create an OSM closed way (building) in the graph
     function makeBuilding(graph, wayId, coords) {

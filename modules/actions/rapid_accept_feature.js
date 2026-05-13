@@ -74,7 +74,8 @@ function removeMetadata(entity) {
 
 export function actionRapidAcceptFeature(entityID, extGraph) {
     return function(graph) {
-        var seenRelations = {};    // keep track of seen relations to avoid infinite recursion
+        var seenRelations = {};       // 完了済 relation (relation→relation 再帰防止 + 結果キャッシュ)
+        var inProgressRelations = {}; // 処理中 relation (way→relation の再 cascade 防止)
         var extEntity = extGraph.entity(entityID);
 
         if (extEntity.type === 'node') {
@@ -103,6 +104,23 @@ export function actionRapidAcceptFeature(entityID, extGraph) {
 
 
         function acceptWay(extWay) {
+            // Phase 3: PLATEAU LOD2 等で `type=building` relation のメンバーとして
+            // 取り込まれた way は、relation 全体 (outline + parts + relation 自体) を
+            // 一括 accept する。これにより orphan building:part way が OSM に
+            // 上がるのを防ぎ、OSM Simple 3D Buildings の構造を維持する。
+            //
+            // 注意: acceptRelation の中で member 各 way に対し acceptWay を再帰呼びする
+            // ため、inProgressRelations で進行中の親 relation への二重 cascade を防ぐ。
+            var parents = extGraph.parentRelations(extWay);
+            for (var i = 0; i < parents.length; i++) {
+                var parent = parents[i];
+                if (parent.tags && parent.tags.type === 'building'
+                    && !seenRelations[parent.id]
+                    && !inProgressRelations[parent.id]) {
+                    return acceptRelation(parent);
+                }
+            }
+
             // copy way before modifying
             var way = osmWay(extWay);
             way.nodes = extWay.nodes.slice();
@@ -153,6 +171,9 @@ export function actionRapidAcceptFeature(entityID, extGraph) {
             var seen = seenRelations[extRelation.id];
             if (seen) return seen;
 
+            // 処理中マーク (member の acceptWay からの再 cascade を防ぐ)
+            inProgressRelations[extRelation.id] = true;
+
             // copy relation before modifying
             var relation = osmRelation(extRelation);
             relation.members = extRelation.members.slice();
@@ -161,6 +182,11 @@ export function actionRapidAcceptFeature(entityID, extGraph) {
 
             var members = relation.members.map(function(member) {
                 var extEntity = extGraph.entity(member.id);
+                if (!extEntity) {
+                    // メンバーが extGraph に存在しない場合 (bbox 外などで dataset graph に入っていない)
+                    // → そのメンバー参照は保持しつつ accept はスキップ
+                    return member;
+                }
                 var replacement;
 
                 if (extEntity.type === 'node') {
@@ -171,12 +197,14 @@ export function actionRapidAcceptFeature(entityID, extGraph) {
                     replacement = acceptRelation(extEntity);
                 }
 
+                if (!replacement) return member;
                 return Object.assign(member, { id: replacement.id });
             });
 
             relation = relation.update({ members: members });
             graph = graph.replace(relation);
             seenRelations[extRelation.id] = relation;
+            delete inProgressRelations[extRelation.id];
             return relation;
         }
 
