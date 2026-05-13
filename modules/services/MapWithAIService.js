@@ -4,7 +4,7 @@ import { utilStringQs } from '@rapid-sdk/util';
 
 import { AbstractSystem } from '../core/AbstractSystem.js';
 import { Graph, Tree, RapidDataset } from '../core/lib/index.js';
-import { osmEntity, osmNode, osmWay } from '../osm/index.js';
+import { osmEntity, osmNode, osmRelation, osmWay } from '../osm/index.js';
 import { utilFetchResponse } from '../util/index.js';
 
 
@@ -600,6 +600,25 @@ export class MapWithAIService extends AbstractSystem {
   }
 
 
+  /**
+   * _getMembers
+   * Parse `<member>` children of a relation element into Rapid's member objects.
+   * `id` is prefixed with the type's initial letter (n/w/r), matching osmEntity.id.fromOSM.
+   */
+  _getMembers(xml) {
+    const elems = Array.from(xml.getElementsByTagName('member'));
+    return elems.map(elem => {
+      const attrs = elem.attributes;
+      const type = attrs.type.value;
+      return {
+        id: type[0] + attrs.ref.value,
+        type: type,
+        role: attrs.role?.value ?? ''
+      };
+    });
+  }
+
+
   _getTags(xml) {
     const elems = Array.from(xml.getElementsByTagName('tag'));
     const tags = {};
@@ -647,6 +666,18 @@ export class MapWithAIService extends AbstractSystem {
     return way;
   }
 
+  _parseRelation(obj, uid) {
+    const attrs = obj.attributes;
+    const relation = new osmRelation({
+      id: uid,
+      visible: this._getVisible(attrs),
+      tags: this._getTags(obj),
+      members: this._getMembers(obj),
+    });
+
+    return relation;
+  }
+
 
   _parseXML(dataset, xml, tile, callback) {
     if (!xml || !xml.childNodes) {
@@ -678,7 +709,7 @@ export class MapWithAIService extends AbstractSystem {
     const cache = dataset.cache;
 
     const type = element.nodeName;
-    if (!['node', 'way'].includes(type)) return null;
+    if (!['node', 'way', 'relation'].includes(type)) return null;
 
     let entityID, entity;
     entityID = osmEntity.id.fromOSM(type, element.attributes.id.value);
@@ -718,6 +749,17 @@ export class MapWithAIService extends AbstractSystem {
             cache.seenFirstNodeID.add(firstNodeID);
           }
         }
+      }
+
+    } else if (type === 'relation') {
+      // Phase 3: PLATEAU LOD2 type=building relation (outline + parts) のような
+      // 構造をクライアント graph に取り込む。relation 単独では geometry を持たず
+      // メンバー way がレンダリングを担うため、parse + graph 追加だけで十分。
+      if (cache.seen.has(entityID)) {
+        return null;
+      } else {
+        entity = this._parseRelation(element, entityID);
+        cache.seen.add(entityID);
       }
 
     } else {
