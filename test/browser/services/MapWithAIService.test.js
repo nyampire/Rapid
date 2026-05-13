@@ -368,6 +368,202 @@ describe('MapWithAIService', () => {
       const result = _service._filterPlateauOverlaps([openWay], new Rapid.Graph());
       expect(result).to.have.lengthOf(1);
     });
+
+
+    // ----------------------------------------------------------------------
+    // Phase 4-A: relation-aware conflation
+    // PLATEAU LOD2 building (outline + parts + type=building relation) を
+    // relation 単位で表示 / 非表示判定する
+    // ----------------------------------------------------------------------
+
+    function makeBuildingRelationWithParts(plateauGraph, outlineId, partIds, outlineCoords, partCoordsArr) {
+      // outline way
+      let g = plateauGraph;
+      const outRes = makePlateauWay(g, outlineId, outlineCoords);
+      g = outRes.graph;
+      const outline = outRes.way;
+      // parts
+      const parts = [];
+      for (let i = 0; i < partIds.length; i++) {
+        const pRes = makePlateauWay(g, partIds[i], partCoordsArr[i]);
+        g = pRes.graph;
+        parts.push(pRes.way);
+      }
+      // relation
+      const members = [{ id: outline.id, type: 'way', role: 'outline' }];
+      for (const p of parts) members.push({ id: p.id, type: 'way', role: 'part' });
+      const relation = Rapid.osmRelation({
+        id: 'r_building_' + outlineId,
+        tags: { type: 'building', building: 'yes' },
+        members: members,
+      });
+      g = g.replace(relation);
+      return { graph: g, outline, parts, relation };
+    }
+
+    it('rejects all relation members when outline overlaps OSM building', () => {
+      // OSM building at (0,0)-(1,1)
+      let osmGraph = new Rapid.Graph();
+      const osmRes = makeBuilding(osmGraph, 'osmB1', [[0,0], [1,0], [1,1], [0,1]]);
+      _service.context.systems.editor._graph = osmRes.graph;
+      _service.context.systems.editor._entities = [osmRes.way];
+
+      // Plateau relation: outline overlaps OSM, parts inside outline
+      let plateauGraph = new Rapid.Graph();
+      const rel = makeBuildingRelationWithParts(
+        plateauGraph, 'pOutline', ['pPart1', 'pPart2'],
+        [[0.5,0.5], [1.5,0.5], [1.5,1.5], [0.5,1.5]],  // outline overlaps
+        [
+          [[0.6,0.6], [0.9,0.6], [0.9,0.9], [0.6,0.9]],  // part inside outline (overlaps OSM)
+          [[1.1,1.1], [1.4,1.1], [1.4,1.4], [1.1,1.4]],  // part outside OSM bbox (would normally pass)
+        ]
+      );
+      plateauGraph = rel.graph;
+
+      const entities = [rel.outline, rel.parts[0], rel.parts[1], rel.relation];
+      const result = _service._filterPlateauOverlaps(entities, plateauGraph);
+
+      // outline + parts は relation のおかげで一括 reject される
+      const wayResults = result.filter(e => e.type === 'way');
+      expect(wayResults).to.have.lengthOf(0);
+      // relation 自体は filter 対象外なので残る
+      const relResults = result.filter(e => e.type === 'relation');
+      expect(relResults).to.have.lengthOf(1);
+    });
+
+    it('keeps all relation members when outline does NOT overlap OSM building', () => {
+      // OSM building at (0,0)-(1,1)
+      let osmGraph = new Rapid.Graph();
+      const osmRes = makeBuilding(osmGraph, 'osmB1', [[0,0], [1,0], [1,1], [0,1]]);
+      _service.context.systems.editor._graph = osmRes.graph;
+      _service.context.systems.editor._entities = [osmRes.way];
+
+      // Plateau relation: outline at (10,10)-(11,11), away from OSM building
+      let plateauGraph = new Rapid.Graph();
+      const rel = makeBuildingRelationWithParts(
+        plateauGraph, 'pOutline2', ['pPart3'],
+        [[10,10], [11,10], [11,11], [10,11]],
+        [[[10.2,10.2], [10.8,10.2], [10.8,10.8], [10.2,10.8]]],
+      );
+      plateauGraph = rel.graph;
+
+      const entities = [rel.outline, rel.parts[0], rel.relation];
+      const result = _service._filterPlateauOverlaps(entities, plateauGraph);
+
+      const wayResults = result.filter(e => e.type === 'way');
+      expect(wayResults).to.have.lengthOf(2);  // outline + 1 part 両方残る
+    });
+
+    it('falls back to per-way check when relation has no outline member', () => {
+      // OSM building at (0,0)-(1,1)
+      let osmGraph = new Rapid.Graph();
+      const osmRes = makeBuilding(osmGraph, 'osmB1', [[0,0], [1,0], [1,1], [0,1]]);
+      _service.context.systems.editor._graph = osmRes.graph;
+      _service.context.systems.editor._entities = [osmRes.way];
+
+      // relation だが outline メンバー無し、parts のみ
+      let g = new Rapid.Graph();
+      const part1 = makePlateauWay(g, 'pPartA', [[0.5,0.5], [1.5,0.5], [1.5,1.5], [0.5,1.5]]); // overlaps
+      g = part1.graph;
+      const part2 = makePlateauWay(g, 'pPartB', [[10,10], [11,10], [11,11], [10,11]]); // no overlap
+      g = part2.graph;
+      const relation = Rapid.osmRelation({
+        id: 'r_no_outline',
+        tags: { type: 'building' },
+        members: [
+          { id: part1.way.id, type: 'way', role: 'part' },
+          { id: part2.way.id, type: 'way', role: 'part' },
+        ],
+      });
+      g = g.replace(relation);
+
+      const entities = [part1.way, part2.way, relation];
+      const result = _service._filterPlateauOverlaps(entities, g);
+
+      // outline 無しなので個別判定にフォールバック: pPartA は reject、pPartB は pass
+      const wayIds = result.filter(e => e.type === 'way').map(e => e.id);
+      expect(wayIds).to.not.include('pPartA');
+      expect(wayIds).to.include('pPartB');
+    });
+
+    it('non-building relation members are evaluated per-way', () => {
+      // OSM building at (0,0)-(1,1)
+      let osmGraph = new Rapid.Graph();
+      const osmRes = makeBuilding(osmGraph, 'osmB1', [[0,0], [1,0], [1,1], [0,1]]);
+      _service.context.systems.editor._graph = osmRes.graph;
+      _service.context.systems.editor._entities = [osmRes.way];
+
+      // 非 building relation (例: type=route) の member way → 個別判定
+      let g = new Rapid.Graph();
+      const w1 = makePlateauWay(g, 'pRouteWay', [[0.5,0.5], [1.5,0.5], [1.5,1.5], [0.5,1.5]]);
+      g = w1.graph;
+      const routeRel = Rapid.osmRelation({
+        id: 'r_route',
+        tags: { type: 'route', route: 'bus' },
+        members: [{ id: w1.way.id, type: 'way', role: '' }],
+      });
+      g = g.replace(routeRel);
+
+      const result = _service._filterPlateauOverlaps([w1.way, routeRel], g);
+      // route relation 経由の cascade は無し、個別 way 判定で reject
+      const wayResults = result.filter(e => e.type === 'way');
+      expect(wayResults).to.have.lengthOf(0);
+    });
+  });
+
+
+  // ----------------------------------------------------------------------
+  // _checkWayOverlapsOsmBuildings (pure helper)
+  // ----------------------------------------------------------------------
+
+  describe('#_checkWayOverlapsOsmBuildings', () => {
+    function makePlateauWay(graph, wayId, coords) {
+      const nodeIds = [];
+      for (let i = 0; i < coords.length; i++) {
+        const nodeId = wayId + '-n' + i;
+        nodeIds.push(nodeId);
+        graph = graph.replace(Rapid.osmNode({ id: nodeId, loc: coords[i] }));
+      }
+      nodeIds.push(nodeIds[0]);
+      const way = Rapid.osmWay({ id: wayId, nodes: nodeIds, tags: { building: 'yes' } });
+      graph = graph.replace(way);
+      return { graph, way };
+    }
+
+    function makeOsmBuildingData(coords) {
+      const closed = coords.concat([coords[0]]);
+      let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
+      for (const c of closed) {
+        if (c[0] < minX) minX = c[0];
+        if (c[0] > maxX) maxX = c[0];
+        if (c[1] < minY) minY = c[1];
+        if (c[1] > maxY) maxY = c[1];
+      }
+      return [{ coords: [closed], bbox: { minX, minY, maxX, maxY } }];
+    }
+
+    it('returns true when way overlaps OSM building', () => {
+      const plateauResult = makePlateauWay(new Rapid.Graph(),
+        'pW', [[0.5,0.5], [1.5,0.5], [1.5,1.5], [0.5,1.5]]);
+      const osmData = makeOsmBuildingData([[0,0], [1,0], [1,1], [0,1]]);
+      const result = _service._checkWayOverlapsOsmBuildings(plateauResult.way, plateauResult.graph, osmData);
+      expect(result).to.be.true;
+    });
+
+    it('returns false when way does NOT overlap OSM building', () => {
+      const plateauResult = makePlateauWay(new Rapid.Graph(),
+        'pW', [[10,10], [11,10], [11,11], [10,11]]);
+      const osmData = makeOsmBuildingData([[0,0], [1,0], [1,1], [0,1]]);
+      const result = _service._checkWayOverlapsOsmBuildings(plateauResult.way, plateauResult.graph, osmData);
+      expect(result).to.be.false;
+    });
+
+    it('returns null for open ways', () => {
+      const openWay = Rapid.osmWay({ id: 'pOpen', nodes: ['a', 'b', 'c'] });
+      const osmData = makeOsmBuildingData([[0,0], [1,0], [1,1], [0,1]]);
+      const result = _service._checkWayOverlapsOsmBuildings(openWay, new Rapid.Graph(), osmData);
+      expect(result).to.be.null;
+    });
   });
 
 });
