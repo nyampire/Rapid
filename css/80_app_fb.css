@@ -414,6 +414,19 @@ button.overture-inspector-close:hover {
   border-radius: 5px;
 }
 
+/* Phase 4-B-1: multi-section building 情報行 (PLATEAU LOD2 等) */
+.rapid-inspector-multi-section-building-info {
+  margin: -6px 10px 8px;
+  padding: 6px 8px;
+  font-size: 12px;
+  font-style: italic;
+  color: #555;
+  background: rgba(102, 187, 106, 0.15);  /* Plateau 緑の薄い背景 */
+  border-left: 3px solid #66BB6A;
+  border-radius: 3px;
+  text-align: left;
+}
+
 .rapid-inspector-choice {
   display: flex;
   flex: 0 0 0px;
