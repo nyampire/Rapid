@@ -192,4 +192,108 @@ describe('actionRapidAcceptFeature', () => {
         // 既存挙動: 単独 way のみ accept
         assert.ok(graph.hasEntity('w_solo'));
     });
+
+
+    // ----------------------------------------------------------------------
+    // Phase 4-C: skipCascade opt-out
+    // 「relation 全体ではなく、この way だけ追加したい」上級ユーザー向けオプション
+    // ----------------------------------------------------------------------
+
+    it('skipCascade=true adds only the way, not the parent building relation', () => {
+        const n1 = Rapid.osmNode({ id: 'n1', loc: [0, 0] });
+        const outline = Rapid.osmWay({ id: 'w_outline', nodes: ['n1'], tags: { building: 'yes' } });
+        const part = Rapid.osmWay({ id: 'w_part', nodes: ['n1'], tags: { 'building:part': 'yes' } });
+        const relation = Rapid.osmRelation({
+            id: 'r_building',
+            tags: { type: 'building', building: 'yes' },
+            members: [
+                { id: outline.id, type: 'way', role: 'outline' },
+                { id: part.id, type: 'way', role: 'part' },
+            ],
+        });
+        const extGraph = new Rapid.Graph([n1, outline, part, relation]);
+
+        // part に対して skipCascade=true で accept
+        const graph = Rapid.actionRapidAcceptFeature(part.id, extGraph, { skipCascade: true })(new Rapid.Graph());
+
+        // part だけが追加され、relation / outline は追加されない
+        assert.ok(graph.hasEntity('w_part'));
+        assert.ok(!graph.hasEntity('r_building'), 'relation should NOT be cascaded when skipCascade=true');
+        assert.ok(!graph.hasEntity('w_outline'), 'outline should NOT be cascaded when skipCascade=true');
+    });
+
+    it('skipCascade=true on outline adds only the outline, not parts or relation', () => {
+        const n1 = Rapid.osmNode({ id: 'n1', loc: [0, 0] });
+        const outline = Rapid.osmWay({ id: 'w_outline', nodes: ['n1'], tags: { building: 'yes' } });
+        const part = Rapid.osmWay({ id: 'w_part', nodes: ['n1'], tags: { 'building:part': 'yes' } });
+        const relation = Rapid.osmRelation({
+            id: 'r_building',
+            tags: { type: 'building' },
+            members: [
+                { id: outline.id, type: 'way', role: 'outline' },
+                { id: part.id, type: 'way', role: 'part' },
+            ],
+        });
+        const extGraph = new Rapid.Graph([n1, outline, part, relation]);
+
+        const graph = Rapid.actionRapidAcceptFeature(outline.id, extGraph, { skipCascade: true })(new Rapid.Graph());
+
+        assert.ok(graph.hasEntity('w_outline'));
+        assert.ok(!graph.hasEntity('r_building'));
+        assert.ok(!graph.hasEntity('w_part'));
+    });
+
+    it('skipCascade=false (or omitted) cascades to the parent building relation', () => {
+        const n1 = Rapid.osmNode({ id: 'n1', loc: [0, 0] });
+        const outline = Rapid.osmWay({ id: 'w_outline', nodes: ['n1'], tags: { building: 'yes' } });
+        const part = Rapid.osmWay({ id: 'w_part', nodes: ['n1'], tags: { 'building:part': 'yes' } });
+        const relation = Rapid.osmRelation({
+            id: 'r_building',
+            tags: { type: 'building' },
+            members: [
+                { id: outline.id, type: 'way', role: 'outline' },
+                { id: part.id, type: 'way', role: 'part' },
+            ],
+        });
+        const extGraph = new Rapid.Graph([n1, outline, part, relation]);
+
+        // skipCascade=false: 既存の Phase 3 挙動 (relation 全体追加)
+        const graphFalse = Rapid.actionRapidAcceptFeature(part.id, extGraph, { skipCascade: false })(new Rapid.Graph());
+        assert.ok(graphFalse.hasEntity('r_building'));
+        assert.ok(graphFalse.hasEntity('w_outline'));
+        assert.ok(graphFalse.hasEntity('w_part'));
+
+        // options 省略時: 同じ挙動 (cascade)
+        const graphOmit = Rapid.actionRapidAcceptFeature(part.id, extGraph)(new Rapid.Graph());
+        assert.ok(graphOmit.hasEntity('r_building'));
+        assert.ok(graphOmit.hasEntity('w_outline'));
+        assert.ok(graphOmit.hasEntity('w_part'));
+    });
+
+    it('skipCascade=true on a relation directly still processes the relation and its members', () => {
+        // user が直接 relation を accept した時、skipCascade は entry が way の場合のみ意味を持つ。
+        // relation の入口は acceptRelation で、その内部の acceptWay 再帰は inProgressRelations で
+        // 自然に cascade されないので、skipCascade=true でも relation の全体追加は機能する。
+        const n1 = Rapid.osmNode({ id: 'n1', loc: [0, 0] });
+        const outline = Rapid.osmWay({ id: 'w_outline', nodes: ['n1'], tags: { building: 'yes' } });
+        const part = Rapid.osmWay({ id: 'w_part', nodes: ['n1'], tags: { 'building:part': 'yes' } });
+        const relation = Rapid.osmRelation({
+            id: 'r_building',
+            tags: { type: 'building' },
+            members: [
+                { id: outline.id, type: 'way', role: 'outline' },
+                { id: part.id, type: 'way', role: 'part' },
+            ],
+        });
+        const extGraph = new Rapid.Graph([n1, outline, part, relation]);
+
+        const graph = Rapid.actionRapidAcceptFeature(relation.id, extGraph, { skipCascade: true })(new Rapid.Graph());
+
+        // relation を entry にした場合、skipCascade は単に「内部 acceptWay の冒頭 cascade 判定を bypass する」
+        // 効果しかなく、acceptRelation 自体は member を順に accept する。
+        // 結果として relation + 全 member が graph に入る。
+        assert.ok(graph.hasEntity('r_building'));
+        assert.ok(graph.hasEntity('w_outline'));
+        assert.ok(graph.hasEntity('w_part'));
+    });
 });

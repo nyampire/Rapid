@@ -72,7 +72,12 @@ function removeMetadata(entity) {
 }
 
 
-export function actionRapidAcceptFeature(entityID, extGraph) {
+export function actionRapidAcceptFeature(entityID, extGraph, options) {
+    // Phase 4-C: skipCascade=true で「外側の entry point の cascade のみ抑制」する。
+    // acceptRelation 内部の member 走査 (= 入れ子 acceptWay) は inProgressRelations で
+    // 自然に再 cascade されない構造なので、このフラグは entry 1段目だけに効けば十分。
+    var skipOuterCascade = !!(options && options.skipCascade);
+
     return function(graph) {
         var seenRelations = {};       // 完了済 relation (relation→relation 再帰防止 + 結果キャッシュ)
         var inProgressRelations = {}; // 処理中 relation (way→relation の再 cascade 防止)
@@ -111,13 +116,18 @@ export function actionRapidAcceptFeature(entityID, extGraph) {
             //
             // 注意: acceptRelation の中で member 各 way に対し acceptWay を再帰呼びする
             // ため、inProgressRelations で進行中の親 relation への二重 cascade を防ぐ。
-            var parents = extGraph.parentRelations(extWay);
-            for (var i = 0; i < parents.length; i++) {
-                var parent = parents[i];
-                if (parent.tags && parent.tags.type === 'building'
-                    && !seenRelations[parent.id]
-                    && !inProgressRelations[parent.id]) {
-                    return acceptRelation(parent);
+            //
+            // Phase 4-C: options.skipCascade で「relation を組まずこの way だけ追加」する
+            // opt-out を提供。relation cascade 検出ループ全体を bypass する。
+            if (!skipOuterCascade) {
+                var parents = extGraph.parentRelations(extWay);
+                for (var i = 0; i < parents.length; i++) {
+                    var parent = parents[i];
+                    if (parent.tags && parent.tags.type === 'building'
+                        && !seenRelations[parent.id]
+                        && !inProgressRelations[parent.id]) {
+                        return acceptRelation(parent);
+                    }
                 }
             }
 

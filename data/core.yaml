@@ -1119,6 +1119,11 @@ en:
       label: Add Entire Building
       description: This way is part of a multi-section building (outline + parts). Selecting this will add the outline, every part, and the relation together so the OSM structure stays consistent.
       tooltip: Add the entire building (outline and all parts) to the map.
+    option_accept_only_this:
+      label: Add Only This Feature
+      description: This way is part of a multi-section building, but you can also add just this one way without the rest of the structure. The outline and other parts will stay as suggestions.
+      annotation: Added a single feature from a Rapid building.
+      tooltip: Add only the selected way, without the rest of the building structure.
     multi_section_building_info:
       one: This way is part of a multi-section building ({n} part).
       other: This way is part of a multi-section building ({n} parts).
