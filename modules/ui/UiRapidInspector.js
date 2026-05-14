@@ -7,6 +7,7 @@ import { uiFlash } from './flash.js';
 //import { uiRapidFirstEditDialog } from './rapid_first_edit_dialog.js';
 import { uiTooltip } from './tooltip.js';
 import { utilKeybinding } from '../util/keybinding.js';
+import { utilBuildingRelationInfo } from '../util/building_relation.js';
 
 const ACCEPT_FEATURES_LIMIT = 50;
 
@@ -394,6 +395,23 @@ export class UiRapidInspector {
 
 
   /**
+   * _getBuildingRelationInfo
+   * Phase 4-B-1: 現在選択中の datum が `type=building` relation のメンバー way である場合、
+   * その relation の情報 (outline / parts のカウント) を返す。それ以外は null。
+   *
+   * @return {{relation: osmRelation, outlineCount: number, partCount: number} | null}
+   */
+  _getBuildingRelationInfo() {
+    const datum = this.datum;
+    if (!datum) return null;
+    const service = this.context.services[datum.__service__];
+    if (!service || typeof service.graph !== 'function') return null;
+    const graph = service.graph(datum.__datasetid__);
+    return utilBuildingRelationInfo(datum, graph);
+  }
+
+
+  /**
    * renderChoices
    * Renders the 'rapid-inspector-choices' section
    * @param {d3-selection} $selection - A d3-selection to a HTMLElement that this content should render itself into
@@ -402,12 +420,21 @@ export class UiRapidInspector {
     const context = this.context;
     const l10n = context.systems.l10n;
 
+    // Phase 4-B-1: building relation member の場合は label / description を切り替え
+    const buildingInfo = this._getBuildingRelationInfo();
+    const acceptLabelStringID = buildingInfo
+      ? 'rapid_inspector.option_accept_entire_building.label'
+      : 'rapid_inspector.option_accept.label';
+    const acceptReferenceStringID = buildingInfo
+      ? 'rapid_inspector.option_accept_entire_building.description'
+      : 'rapid_inspector.option_accept.description';
+
     const choiceData = [
       {
         key: 'accept',
         iconName: '#rapid-icon-rapid-plus-circle',
-        labelStringID: 'rapid_inspector.option_accept.label',
-        referenceStringID: 'rapid_inspector.option_accept.description',
+        labelStringID: acceptLabelStringID,
+        referenceStringID: acceptReferenceStringID,
         tooltip: this.AcceptTooltip,
         onClick: this.acceptFeature
       }, {
@@ -432,6 +459,11 @@ export class UiRapidInspector {
       .append('p')
       .attr('class', 'rapid-inspector-prompt');
 
+    // Phase 4-B-1: multi-section building info row (常時 DOM に存在させ、不要時は非表示)
+    $$choices
+      .append('p')
+      .attr('class', 'rapid-inspector-multi-section-building-info');
+
     $$choices.selectAll('.rapid-inspector-choice')
       .data(choiceData, d => d.key)
       .enter()
@@ -444,7 +476,22 @@ export class UiRapidInspector {
     $choices.selectAll('.rapid-inspector-prompt')
       .text(l10n.t('rapid_inspector.prompt'));
 
+    // multi-section building 情報行: 該当時のみ表示
+    const $multiInfo = $choices.selectAll('.rapid-inspector-multi-section-building-info');
+    if (buildingInfo) {
+      const partCount = buildingInfo.partCount;
+      $multiInfo
+        .style('display', null)
+        .text(l10n.t('rapid_inspector.multi_section_building_info', { n: partCount }));
+    } else {
+      $multiInfo
+        .style('display', 'none')
+        .text('');
+    }
+
+    // choices の labelStringID 等が building 文脈で切り替わるよう、毎回データを更新
     $choices.selectAll('.rapid-inspector-choice')
+      .data(choiceData, d => d.key)
       .each(this.renderChoice);
   }
 
