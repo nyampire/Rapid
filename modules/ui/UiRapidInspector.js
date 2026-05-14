@@ -160,7 +160,7 @@ export class UiRapidInspector {
    * acceptFeature
    * Called when the user presses Add Feature.
    * @param  {Event}  e?         - triggering event (if any)
-   * @param  {Object} d?         - object bound to the selection (i.e. the command) (not used)
+   * @param  {Object} d?         - object bound to the choice (Phase 4-C: skipCascade flag を読む)
    * @param  {string} nextMode?  - optional next mode to enter after accepting ('move' or 'rotate')
    */
   acceptFeature(e, d, nextMode) {
@@ -189,18 +189,22 @@ export class UiRapidInspector {
     const datasetID = datum.__datasetid__.replace('-conflated', '');
     const dataset = rapid.datasets.get(datasetID);
 
+    // Phase 4-C: choice の skipCascade フラグを action に渡す
+    const skipCascade = !!(d && d.skipCascade);
+    const annotationStringID = d?.annotationStringID || 'rapid_inspector.option_accept.annotation';
+
     // In place of a string annotation, this introduces an "object-style"
     // annotation, where "type" and "description" are standard keys,
     // and there may be additional properties. Note that this will be
     // serialized to JSON while saving undo/redo state in editor.save().
     const annotation = {
       type: 'rapid_accept_feature',
-      description: l10n.t('rapid_inspector.option_accept.annotation'),
+      description: l10n.t(annotationStringID),
       entityID: datum.id,
       dataUsed: dataset?.dataUsed || [datasetID]
     };
 
-    editor.perform(actionRapidAcceptFeature(datum.id, graph));
+    editor.perform(actionRapidAcceptFeature(datum.id, graph, { skipCascade }));
     editor.commit({ annotation: annotation, selectedIDs: [datum.id] });
 
     // What next
@@ -421,6 +425,7 @@ export class UiRapidInspector {
     const l10n = context.systems.l10n;
 
     // Phase 4-B-1: building relation member の場合は label / description を切り替え
+    // Phase 4-C: building relation member の場合は「この feature のみ追加」の opt-out を追加
     const buildingInfo = this._getBuildingRelationInfo();
     const acceptLabelStringID = buildingInfo
       ? 'rapid_inspector.option_accept_entire_building.label'
@@ -437,15 +442,31 @@ export class UiRapidInspector {
         referenceStringID: acceptReferenceStringID,
         tooltip: this.AcceptTooltip,
         onClick: this.acceptFeature
-      }, {
-        key: 'ignore',
-        iconName: '#rapid-icon-rapid-minus-circle',
-        labelStringID: 'rapid_inspector.option_ignore.label',
-        referenceStringID: 'rapid_inspector.option_ignore.description',
-        tooltip: this.IgnoreTooltip,
-        onClick: this.ignoreFeature
       }
     ];
+
+    // Phase 4-C: relation member 時は「この feature だけ追加」 (cascade なし) を追加
+    if (buildingInfo) {
+      choiceData.push({
+        key: 'accept_only_this',
+        iconName: '#rapid-icon-rapid-plus-circle',
+        labelStringID: 'rapid_inspector.option_accept_only_this.label',
+        referenceStringID: 'rapid_inspector.option_accept_only_this.description',
+        annotationStringID: 'rapid_inspector.option_accept_only_this.annotation',
+        tooltip: this.AcceptTooltip,
+        onClick: this.acceptFeature,
+        skipCascade: true
+      });
+    }
+
+    choiceData.push({
+      key: 'ignore',
+      iconName: '#rapid-icon-rapid-minus-circle',
+      labelStringID: 'rapid_inspector.option_ignore.label',
+      referenceStringID: 'rapid_inspector.option_ignore.description',
+      tooltip: this.IgnoreTooltip,
+      onClick: this.ignoreFeature
+    });
 
     let $choices = $selection.selectAll('.rapid-inspector-choices')
       .data([0]);
@@ -463,12 +484,6 @@ export class UiRapidInspector {
     $$choices
       .append('p')
       .attr('class', 'rapid-inspector-multi-section-building-info');
-
-    $$choices.selectAll('.rapid-inspector-choice')
-      .data(choiceData, d => d.key)
-      .enter()
-      .append('div')
-      .attr('class', d => `rapid-inspector-choice rapid-inspector-choice-${d.key}`);
 
     // update
     $choices = $choices.merge($$choices);
@@ -489,9 +504,17 @@ export class UiRapidInspector {
         .text('');
     }
 
-    // choices の labelStringID 等が building 文脈で切り替わるよう、毎回データを更新
-    $choices.selectAll('.rapid-inspector-choice')
-      .data(choiceData, d => d.key)
+    // Phase 4-C: choice の出入り (relation 文脈で 2→3 ボタン化) に対応する
+    // enter / update / exit パターン。labelStringID 切り替えと併せて毎回データ更新。
+    const $choiceItems = $choices.selectAll('.rapid-inspector-choice')
+      .data(choiceData, d => d.key);
+
+    $choiceItems.exit().remove();
+
+    $choiceItems.enter()
+      .append('div')
+      .attr('class', d => `rapid-inspector-choice rapid-inspector-choice-${d.key}`)
+      .merge($choiceItems)
       .each(this.renderChoice);
   }
 
