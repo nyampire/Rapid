@@ -5,7 +5,7 @@ import { utilStringQs } from '@rapid-sdk/util';
 import { AbstractSystem } from '../core/AbstractSystem.js';
 import { Graph, Tree, RapidDataset } from '../core/lib/index.js';
 import { osmEntity, osmNode, osmRelation, osmWay } from '../osm/index.js';
-import { utilFetchResponse } from '../util/index.js';
+import { utilFetchResponse, utilBuildingRelationInfo } from '../util/index.js';
 
 
 const APIROOT = 'https://mapwith.ai/maps/ml_roads';
@@ -44,9 +44,14 @@ export class MapWithAIService extends AbstractSystem {
     this._coverageData = null;          // GeoJSON FeatureCollection or null
     this._coveragePromise = null;       // Promise<FeatureCollection> when inflight
 
+    // Phase 4-B-2: hover で highlight class を set した relation member の ID 集合。
+    // 同じ ID 群を自分で unsetClass するための追跡用 (他用途の 'highlight' に干渉しない)。
+    this._hoveredRelationSiblings = new Set();
+
     // Ensure methods used as callbacks always have `this` bound correctly.
     this._parseNode = this._parseNode.bind(this);
     this._parseWay = this._parseWay.bind(this);
+    this._onHoverchange = this._onHoverchange.bind(this);
   }
 
 
@@ -98,7 +103,63 @@ export class MapWithAIService extends AbstractSystem {
       });
     }
 
+    // Phase 4-B-2: PLATEAU LOD2 multi-section building の relation member を
+    // hover した時、同じ relation の他 members も視覚的にハイライト。
+    // 'highlight' クラス (Pixi で blue glow) を流用、独自スタイル追加なし。
+    const hover = this.context.behaviors && this.context.behaviors.hover;
+    if (hover && typeof hover.on === 'function') {
+      hover.on('hoverchange', this._onHoverchange);
+    }
+
     return Promise.resolve();
+  }
+
+
+  /**
+   * _onHoverchange
+   * Phase 4-B-2: hover 対象が PLATEAU LOD2 building relation のメンバー way なら、
+   * 同 relation の他 members に 'highlight' クラスを set し、cascade 対象を視覚化する。
+   *
+   * 既存の `highlight` クラスは PixiFeaturePolygon 等で blue glow としてレンダリング済。
+   * 他用途 (edit_menu 等) と衝突しないよう、自分が set した ID は `_hoveredRelationSiblings`
+   * で追跡し、cleanup 時はその ID 群だけ unsetClass する (clearClass は使わない)。
+   */
+  _onHoverchange(eventData) {
+    const target = eventData && eventData.target;
+    const layer = target && target.layer;
+    const data = target && target.data;
+
+    // 1. 前回 set した siblings の highlight を解除 (自分が set した ID のみ)
+    if (this._hoveredRelationSiblings.size > 0) {
+      const scene = this.context.systems.gfx && this.context.systems.gfx.scene;
+      if (scene) {
+        for (const layerID of ['rapid', 'osm']) {
+          const l = scene.layers && scene.layers.get && scene.layers.get(layerID);
+          if (!l || typeof l.unsetClass !== 'function') continue;
+          for (const id of this._hoveredRelationSiblings) {
+            l.unsetClass('highlight', id);
+          }
+        }
+      }
+      this._hoveredRelationSiblings.clear();
+    }
+
+    // 2. hover 対象が無いか、自サービスの data でなければ何もしない
+    if (!layer || !data || data.__service__ !== 'mapwithai') return;
+    if (typeof layer.setClass !== 'function') return;
+
+    const datasetGraph = this.graph(data.__datasetid__);
+    if (!datasetGraph) return;
+
+    const info = utilBuildingRelationInfo(data, datasetGraph);
+    if (!info) return;
+
+    // 3. relation の他メンバー (自分以外) に highlight を set
+    for (const member of info.relation.members || []) {
+      if (!member || member.id === data.id) continue;
+      layer.setClass('highlight', member.id);
+      this._hoveredRelationSiblings.add(member.id);
+    }
   }
 
 

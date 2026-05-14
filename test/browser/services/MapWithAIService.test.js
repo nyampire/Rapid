@@ -566,4 +566,129 @@ describe('MapWithAIService', () => {
     });
   });
 
+
+  // ----------------------------------------------------------------------
+  // Phase 4-B-2: hover で relation member を視覚的にハイライト
+  // ----------------------------------------------------------------------
+
+  describe('#_onHoverchange', () => {
+    /**
+     * 必要な mock:
+     * - context.systems.gfx.scene.layers.get(layerID) → layer-like object
+     * - layer.setClass / layer.unsetClass を spy 対応
+     * - service の datasets[].graph に entity + relation を仕込む
+     * - hover data.__service__ === 'mapwithai', data.__datasetid__ === 'pj'
+     */
+    function makeLayerMock() {
+      const setCalls = [];
+      const unsetCalls = [];
+      return {
+        setClass(klass, id) { setCalls.push([klass, id]); },
+        unsetClass(klass, id) { unsetCalls.push([klass, id]); },
+        getSetCalls: () => setCalls,
+        getUnsetCalls: () => unsetCalls,
+      };
+    }
+
+    function makeBuildingRelationDataset(serviceInstance, datasetID) {
+      // outline / part / relation を datasets[datasetID].graph に仕込む
+      const outline = Rapid.osmWay({ id: 'w_outline', nodes: ['n1'], tags: { building: 'yes' } });
+      const part = Rapid.osmWay({ id: 'w_part', nodes: ['n1'], tags: { 'building:part': 'yes' } });
+      const relation = Rapid.osmRelation({
+        id: 'r_building',
+        tags: { type: 'building', building: 'yes' },
+        members: [
+          { id: outline.id, type: 'way', role: 'outline' },
+          { id: part.id, type: 'way', role: 'part' },
+        ],
+      });
+      const node = Rapid.osmNode({ id: 'n1', loc: [0, 0] });
+      let graph = new Rapid.Graph([node, outline, part, relation]);
+      serviceInstance._datasets[datasetID] = {
+        id: datasetID,
+        graph: graph,
+        tree: null,
+        cache: { inflight: {}, loaded: new Set(), seen: new Set(), seenFirstNodeID: new Set(), splitWays: new Map() },
+      };
+      // service.graph() が data.__datasetid__ から graph を返すように
+      // 既存の service.graph() メソッドがあれば自動的に動く想定。
+      // (MapWithAIService に graph(datasetID) メソッドがあることを前提)
+      return { outline, part, relation };
+    }
+
+    it('sets highlight on other relation members when hovering a member way', () => {
+      const layer = makeLayerMock();
+      const built = makeBuildingRelationDataset(_service, 'pj');
+
+      // hover 対象 = part の Plateau データ
+      // production と同じく way instance 自体に metadata を attach (prototype を残す)
+      const hoverData = built.part;
+      hoverData.__service__ = 'mapwithai';
+      hoverData.__datasetid__ = 'pj';
+
+      _service._onHoverchange({ target: { layer: layer, data: hoverData } });
+
+      const sets = layer.getSetCalls();
+      // outline と part のうち、自分 (part) 以外 = outline にだけ highlight が乗る
+      const highlightedIDs = sets
+        .filter(([klass, _]) => klass === 'highlight')
+        .map(([_, id]) => id);
+      expect(highlightedIDs).to.include('w_outline');
+      expect(highlightedIDs).to.not.include('w_part');
+    });
+
+    it('does nothing for hover targets not in the mapwithai service', () => {
+      const layer = makeLayerMock();
+      makeBuildingRelationDataset(_service, 'pj');
+
+      const hoverData = { id: 'w_other', type: 'way', __service__: 'osm', __datasetid__: 'pj' };
+
+      _service._onHoverchange({ target: { layer: layer, data: hoverData } });
+
+      expect(layer.getSetCalls()).to.have.lengthOf(0);
+    });
+
+    it('does nothing for ways with no parent building relation', () => {
+      const layer = makeLayerMock();
+      // dataset を仕込むが、way は relation の member ではない
+      const solo = Rapid.osmWay({ id: 'w_solo', nodes: [] });
+      const graph = new Rapid.Graph([solo]);
+      _service._datasets.pj_solo = { id: 'pj_solo', graph: graph, tree: null, cache: {} };
+
+      solo.__service__ = 'mapwithai';
+      solo.__datasetid__ = 'pj_solo';
+
+      _service._onHoverchange({ target: { layer: layer, data: solo } });
+      expect(layer.getSetCalls()).to.have.lengthOf(0);
+    });
+
+    it('clears previous siblings when hover moves to a different feature', () => {
+      const layer = makeLayerMock();
+
+      // scene mock を context に仕込む (cleanup の経路で必要)
+      const sceneLayers = new Map([['rapid', layer]]);
+      _service.context.systems.gfx = {
+        scene: { layers: sceneLayers },
+        deferredRedraw() {},
+        immediateRedraw() {},
+      };
+
+      const built = makeBuildingRelationDataset(_service, 'pj');
+
+      // 1回目: part を hover → outline に highlight
+      built.part.__service__ = 'mapwithai';
+      built.part.__datasetid__ = 'pj';
+      _service._onHoverchange({ target: { layer: layer, data: built.part } });
+
+      // 2回目: hover を外す (target が null)
+      _service._onHoverchange({ target: null });
+
+      const unsets = layer.getUnsetCalls();
+      const unsetIDs = unsets
+        .filter(([klass, _]) => klass === 'highlight')
+        .map(([_, id]) => id);
+      expect(unsetIDs).to.include('w_outline');
+    });
+  });
+
 });
