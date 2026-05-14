@@ -1115,6 +1115,13 @@ en:
       tooltip: Add this feature to the map to begin editing.
       disabled: To help improve OSM data quality, we only allow {n} AI features to be added in each mapping session. Please try to fix issues on your edits so far. You will be able to add more AI features after saving.
       disabled_flash: To help improve OSM data quality, we only allow {n} AI Features to be added in each mapping session.
+    option_accept_entire_building:
+      label: Add Entire Building
+      description: This way is part of a multi-section building (outline + parts). Selecting this will add the outline, every part, and the relation together so the OSM structure stays consistent.
+      tooltip: Add the entire building (outline and all parts) to the map.
+    multi_section_building_info:
+      one: This way is part of a multi-section building ({n} part).
+      other: This way is part of a multi-section building ({n} parts).
     option_ignore:
       label: Ignore This Feature
       description: Ignoring this feature helps us improve our machine learning. If you are unsure whether or not this is an accurate feature, feel free to leave it as is, nothing will be saved or lost. 👍
