@@ -78,6 +78,15 @@ export function actionRapidAcceptFeature(entityID, extGraph, options) {
     // 自然に再 cascade されない構造なので、このフラグは entry 1段目だけに効けば十分。
     var skipOuterCascade = !!(options && options.skipCascade);
 
+    // Phase 4-B-2 (描画修正): cascade で実際に accept された全 entity ID を集める。
+    // 呼び出し側 (UiRapidInspector) はこれを annotation.entityIDs に詰めて commit し、
+    // RapidSystem._stablechange でこの ID 群を一括 acceptIDs に追加することで、
+    // Rapid layer のフィルタが cascade 全 member に効くようにする。
+    var acceptedIDs = (options && Array.isArray(options.acceptedIDs)) ? options.acceptedIDs : null;
+    function recordAccepted(id) {
+        if (acceptedIDs && id) acceptedIDs.push(id);
+    }
+
     return function(graph) {
         var seenRelations = {};       // 完了済 relation (relation→relation 再帰防止 + 結果キャッシュ)
         var inProgressRelations = {}; // 処理中 relation (way→relation の再 cascade 防止)
@@ -104,6 +113,7 @@ export function actionRapidAcceptFeature(entityID, extGraph, options) {
             removeMetadata(node);
 
             graph = graph.replace(node);
+            recordAccepted(node.id);
             return node;
         }
 
@@ -173,6 +183,7 @@ export function actionRapidAcceptFeature(entityID, extGraph, options) {
 
             way = way.update({ nodes: nodes });
             graph = graph.replace(way);
+            recordAccepted(way.id);
             return way;
         }
 
@@ -191,10 +202,10 @@ export function actionRapidAcceptFeature(entityID, extGraph, options) {
             removeMetadata(relation);
 
             var members = relation.members.map(function(member) {
-                var extEntity = extGraph.entity(member.id);
+                // extGraph.entity() は見つからない場合 throw するため、hasEntity を使う。
+                // bbox 外や未ロードの member 参照は保持しつつ、accept 自体はスキップする。
+                var extEntity = extGraph.hasEntity(member.id);
                 if (!extEntity) {
-                    // メンバーが extGraph に存在しない場合 (bbox 外などで dataset graph に入っていない)
-                    // → そのメンバー参照は保持しつつ accept はスキップ
                     return member;
                 }
                 var replacement;
@@ -215,6 +226,7 @@ export function actionRapidAcceptFeature(entityID, extGraph, options) {
             graph = graph.replace(relation);
             seenRelations[extRelation.id] = relation;
             delete inProgressRelations[extRelation.id];
+            recordAccepted(relation.id);
             return relation;
         }
 

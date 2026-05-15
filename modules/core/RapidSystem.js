@@ -333,6 +333,11 @@ export class RapidSystem extends AbstractSystem {
    * _stablechange
    * This is called anytime the history changes, we recompute the accepted/ignored sets.
    * This can run on history change, undo, redo, or history restore.
+   *
+   * Phase 4-B-2 (描画修正): cascade accept で複数 entity が同時に受理された場合に対応するため
+   * annotation.entityIDs (配列) も読む。さらに 'stagingchange' (= MapSystem の redraw) が
+   * 先に発火するため、ここで acceptIDs を更新した後に gfx.deferredRedraw() を呼んで
+   * Rapid layer 等が新しい acceptIDs でフィルタを再評価できるよう確実に redraw を促す。
    */
   _stablechange() {
     const context = this.context;
@@ -351,10 +356,23 @@ export class RapidSystem extends AbstractSystem {
       const annotation = edit.annotation;
 
       if (annotation?.type === 'rapid_accept_feature') {
+        // Phase 4-B-2: cascade で受理された全 entity ID も追加
+        if (Array.isArray(annotation.entityIDs)) {
+          for (const id of annotation.entityIDs) {
+            if (id) this.acceptIDs.add(id);
+          }
+        }
         if (annotation.entityID)  this.acceptIDs.add(annotation.entityID);
       } else if (annotation?.type === 'rapid_ignore_feature') {
         if (annotation.entityID)  this.ignoreIDs.add(annotation.entityID);
       }
+    }
+
+    // acceptIDs / ignoreIDs 更新後に再描画を促す (stagingchange の先発で
+    // 古い acceptIDs のままレンダリングされた Rapid layer 等を最新状態にする)
+    const gfx = context.systems.gfx;
+    if (gfx && typeof gfx.deferredRedraw === 'function') {
+      gfx.deferredRedraw();
     }
   }
 
