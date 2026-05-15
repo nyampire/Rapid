@@ -193,6 +193,13 @@ export class UiRapidInspector {
     const skipCascade = !!(d && d.skipCascade);
     const annotationStringID = d?.annotationStringID || 'rapid_inspector.option_accept.annotation';
 
+    // Phase 4-B-2 (描画修正): cascade で受理した全 entity ID を集めて annotation に積む。
+    // RapidSystem._stablechange がこれを読み acceptIDs に追加することで、Rapid layer が
+    // cascade 全 member を即座にフィルタアウト (= 二重描画解消) する。
+    const acceptedIDs = [];
+
+    editor.perform(actionRapidAcceptFeature(datum.id, graph, { skipCascade, acceptedIDs }));
+
     // In place of a string annotation, this introduces an "object-style"
     // annotation, where "type" and "description" are standard keys,
     // and there may be additional properties. Note that this will be
@@ -201,10 +208,10 @@ export class UiRapidInspector {
       type: 'rapid_accept_feature',
       description: l10n.t(annotationStringID),
       entityID: datum.id,
+      entityIDs: acceptedIDs.length ? acceptedIDs.slice() : undefined,
       dataUsed: dataset?.dataUsed || [datasetID]
     };
 
-    editor.perform(actionRapidAcceptFeature(datum.id, graph, { skipCascade }));
     editor.commit({ annotation: annotation, selectedIDs: [datum.id] });
 
     // What next
