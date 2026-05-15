@@ -1395,9 +1395,9 @@
         "disabled_flash": "To help improve OSM data quality, we only allow {n} AI Features to be added in each mapping session."
       },
       "option_accept_entire_building": {
-        "label": "Add Entire Building",
+        "label": "Add Entire Feature",
         "description": "This way is part of a multi-section building (outline + parts). Selecting this will add the outline, every part, and the relation together so the OSM structure stays consistent.",
-        "tooltip": "Add the entire building (outline and all parts) to the map."
+        "tooltip": "Add the entire feature group (outline and all parts) to the map."
       },
       "option_accept_only_this": {
         "label": "Add Only This Feature",
