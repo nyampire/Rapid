@@ -1,533 +1,38 @@
 {
   "lv": {
-    "icons": {
-      "download": "lejupielādēt",
-      "remove": "noņemt ",
-      "undo": "atsaukt",
-      "zoom_to": "pietuvināt uz",
-      "copy": "kopēt",
-      "view_on": "skatīties uz [domain]",
-      "visit_website": "apmeklēt mājaslapu",
-      "favorite": "miļākais",
-      "list": "saraksts",
-      "text": "teksts"
-    },
-    "toolbar": {
-      "recent": "Nesenais",
-      "favorites": "Miļākie",
-      "add_feature": "Pievienot objektu"
-    },
-    "modes": {
-      "add_area": {
-        "title": "Apgabals"
-      },
-      "add_line": {
-        "title": "Līnija"
-      },
-      "add_point": {
-        "title": "Punkts"
-      },
-      "add_note": {
-        "title": "Piezīme",
-        "description": "Atradi kļūdu? Pabrīdini citus kartētājus par to."
-      },
-      "add_preset": {
-        "title": "Pievienot {feature}"
-      },
-      "browse": {
-        "title": "Pārlūkot",
-        "description": "Pārlūko karti."
-      },
-      "drag_node": {
-        "connected_to_hidden": "Šo nevar rediģēt, jo tas ir pievienots paslēptam objektam."
-      }
-    },
-    "operations": {
-      "add": {
-        "annotation": {
-          "point": "Punkts pievienots.",
-          "vertex": "Mezgls pievienots līnijai.",
-          "relation": "Relācija pievienota.",
-          "note": "Pievienota piezīme."
-        }
-      },
-      "start": {
-        "annotation": {
-          "line": "Līnija iesākta.",
-          "area": "Apgabals iesākts."
-        }
-      },
-      "continue": {
-        "title": "Turpināt ",
-        "description": "Turpināt šo līniju.",
-        "not_eligible": "Nevienu līniju nevar šeit turpināt.",
-        "annotation": {
-          "line": "Līnija turpināta.",
-          "area": "Apgabals turpināts."
-        }
-      },
-      "cancel_draw": {
-        "annotation": "Zīmēšana atcelta."
-      },
-      "change_tags": {
-        "annotation": "Apzīmējumi mainīti."
-      },
-      "copy": {
-        "title": "Kopēt"
-      },
-      "paste": {
-        "title": "Ielīmēt"
-      },
-      "circularize": {
-        "title": "Pārveidot par apļveida"
-      },
-      "orthogonalize": {
-        "title": "Kvadrāts"
-      },
-      "straighten": {
-        "title": "Iztaisnot",
-        "description": {
-          "points": "Iztaisnot šos punktus.",
-          "line": "Iztaisnot šo līniju.",
-          "lines": "Iztaisnot šīs līnijas."
-        }
-      },
-      "delete": {
-        "title": "Dzēst",
-        "annotation": {
-          "point": "Punkts dzēsts.",
-          "vertex": "Mezgls dzests.",
-          "line": "Līnija dzēsta.",
-          "area": "Apgabals dzēsts.",
-          "relation": "Relācija dzēsta."
-        }
-      },
-      "downgrade": {
-        "description": {
-          "building_address": "Dzēst visus apzīmējumus, kas nav adreses vai ēkas.",
-          "building": "Dzēst visus apzīmējumus, kas nav ēkas.",
-          "address": "Dzēst visus apzīmējumus, kas nav adreses.",
-          "generic": "Noņemt apzīmējumus."
-        }
-      },
-      "connect": {
-        "annotation": {
-          "from_vertex": {
-            "to_point": "Pievienoja līniju punktam.",
-            "to_vertex": "Pievienoja līniju citai."
-          }
-        },
-        "relation": "Šos objektus nevar savienot, jo tiem ir konfliktējošas relāciju lomas.",
-        "restriction": "Šos objektus nevar savienot, jo tas bojātu \"{relation}\" relāciju."
-      },
-      "disconnect": {
-        "title": "Atvienot",
-        "not_connected": "Šeit nav pietiekami daudz līniju/laukumu, lai tos atvienotu.",
-        "connected_to_hidden": "Šo nevar atvienot, jo tas ir pievienots pie paslēpta objekta.",
-        "relation": "Šo nevar atvienot, jo tas savienojas ar relācijas locekļiem."
-      },
-      "merge": {
-        "title": "Sapludināt",
-        "description": "Apvienot šos objektus.",
-        "not_eligible": "Šos objektus nevar apvienot.",
-        "relation": "Šos objektus nevar apvienot, jo tiem ir konfliktējošas relāciju lomas.",
-        "incomplete_relation": "Šos objektus nevar apvienot, jo vismaz viens nav pilnībā lejupielādēts.",
-        "conflicting_tags": "Šos objektu nevar apvienot, jo vairākiem to apzīmējumiem ir nesaskaņotas vērtības."
-      },
-      "move": {
-        "title": "Pārvietot",
-        "annotation": {
-          "point": "Punkts pārvietots.",
-          "vertex": "Mezgls pārvietots.",
-          "line": "Līnija pārvietota.",
-          "area": "Apgabals pārvietots."
-        }
-      },
-      "rotate": {
-        "title": "Pagriezt",
-        "annotation": {
-          "line": "Līnija pagriezta.",
-          "area": "Apgabals pagriezts."
-        }
-      },
-      "reverse": {
-        "title": "Mainīt virzienu"
-      },
-      "split": {
-        "title": "Sadalīt",
-        "not_eligible": "Līnijas nevar sadalīt to sākumā vai beigās."
-      },
-      "restriction": {
-        "annotation": {
-          "create": "Pievienoja pagriezienu aizliegumu",
-          "delete": "Izdzēsa pagriezienu aizliegumu"
-        }
-      }
-    },
-    "restriction": {
-      "controls": {
-        "distance": "Attālums",
-        "distance_up_to": "Līdz pat {distance}",
-        "via": "Ar"
-      },
-      "help": {
-        "indirect": "(netiešs)",
-        "from": "NO",
-        "via": "AR",
-        "to": "UZ"
-      }
-    },
-    "undo": {
-      "tooltip": "Atcelt: {action}",
-      "nothing": "Nav nekā, ko atcelt"
-    },
-    "redo": {
-      "tooltip": "Atgriezt: {action}",
-      "nothing": "Nav nekā, ko atsaukt"
-    },
-    "translate": {
-      "localized_translation_language": "Izvelties valodu",
-      "localized_translation_name": "Vārds"
-    },
-    "zoom_in_edit": "Pietuvini lai labotu",
-    "login": "Ienākt",
-    "logout": "Iziet",
-    "loading_auth": "Savienojas ar OpenStreetMap...",
-    "report_a_bug": "Ziņot par kļūdu",
-    "help_translate": "Palīdzi tulkot",
-    "status": {
-      "retry": "Mēģināt vēlreiz"
-    },
-    "commit": {
-      "title": "Augšupielādē uz OpenStreetMap",
-      "upload_explanation": "Izmaiņas, kuras jūs augšupielādējat būs pieejamas visās kartēs, kuras izmanto OpenStreetMap datus.",
-      "upload_explanation_with_user": "Izmaiņas, kuras jūs augšupielādējat kā {user}, būs pieejamas visās kartēs, kuras izmanto OpenStreetMap datus.",
-      "request_review": "Es vēlos lai kāds pārbauda manus labojumus.",
-      "request_review_info": "Neesi pārliecināts? Pieaicini pieredzējušu kartētāju, kas pārbaudīs tavus labojumus pēc to publicēšanas.",
-      "save": "Augšupielādēt",
-      "cancel": "Atcelt",
-      "changes": "Izmaiņas",
-      "download_changes": "Lejupielādēt osmChange failu",
-      "errors": "Kļūdas",
-      "warnings": "Brīdinājumi",
-      "modified": "Mainīts",
-      "deleted": "Dzēsts",
-      "created": "Izveidots",
-      "about_changeset_comments": "Par izmaiņu komentāriem",
-      "google_warning": "Tu pieminēji Google šajā komentārā. Atceries ka kopēšana no Google Kartēm ir stingri aizliegta. "
-    },
-    "contributors": {
-      "list": "Rediģēja {users}"
-    },
-    "info_panels": {
-      "background": {
-        "title": "Fons",
-        "zoom": "Tuvinājums",
-        "vintage": "Uzņemšanas datums",
-        "source": "Avots",
-        "description": "Apraksts",
-        "resolution": "Izšķirtspēja",
-        "accuracy": "Precizitāte",
-        "show_tiles": "Rādīt Kvadrātus",
-        "hide_tiles": "Paslēpt Kvadrātus"
-      },
-      "history": {
-        "title": "Vēsture",
-        "no_history": "Nav vēstures (jauns objekts)",
-        "version": "Versija",
-        "last_edit": "Pēdējais labojums",
-        "edited_by": "Laboja",
-        "changeset": "Izmaiņas",
-        "note_no_history": "Nav vēstures (Jauna piezīme)",
-        "note_comments": "Komentāri",
-        "note_created_date": "Izveidošanas datums",
-        "note_created_user": "Izveidoja",
-        "note_link_text": "Piezīme no openstreetmap.org"
-      },
-      "location": {
-        "title": "Atrašanās vieta",
-        "unknown_location": "Nezināma atrašanās vieta"
-      },
-      "measurement": {
-        "title": "Mērvienība",
-        "geometry": "Ģeometrija",
-        "center": "Centrs",
-        "perimeter": "Perimetrs",
-        "length": "Garums",
-        "distance": "Attālums",
-        "area": "Platība",
-        "location": "Atrašanās vieta",
-        "metric": "Metriskā",
-        "imperial": "Imperiālā"
-      }
-    },
-    "geometry": {
-      "point": "punkts",
-      "relation": "relācija",
-      "note": "piezīme"
-    },
-    "geocoder": {
-      "search": "Meklēt pasaulē...",
-      "no_results_worldwide": "Nav rezultātu"
-    },
-    "geolocate": {
-      "title": "Parādīt manu atrašanās vietu",
-      "locating": "Nosakām atrašanās vietu, uzgaidiet..."
-    },
-    "inspector": {
-      "show_more": "Rādīt vairāk",
-      "view_on_osm": "Apskatīt openstreetmap.org",
-      "feature_type": "Objekta Veids",
-      "tags": "Apzīmējumi",
-      "relations": "Relācijas",
-      "new_relation": "Jauna relācija...",
-      "role": "Loma",
-      "choose": "Izvēlieties objekta tipu",
-      "type": "Tips",
-      "details": "Detaļas",
-      "remove": "Noņemt ",
-      "search": "Meklēt",
-      "unknown": "Nezināms",
-      "incomplete": "<nav lejuplādēts>",
-      "feature_list": "Meklēt objektus",
-      "check": {
-        "yes": "Jā",
-        "no": "Nē"
-      },
-      "radio": {
-        "structure": {
-          "default": "Noklusējuma",
-          "layer": "Slānis"
-        }
-      },
-      "add": "Pievienot",
-      "none": "Nav",
-      "relation": "Relācija",
-      "location": "Atrašanās vieta",
-      "add_fields": "Pievienot lauku:"
-    },
-    "background": {
-      "title": "Fons",
-      "backgrounds": "Foni",
-      "none": "Nav",
-      "best_imagery": "Labākais zināmais attēlu avots šai vietai",
-      "switch": "Pārslēgties atpakaļ uz šo fonu",
-      "custom": "Pielāgots",
-      "overlays": "Pārklāji",
-      "reset": "Atiestatīt",
-      "display_options": "Displeja iespējas",
-      "brightness": "Spilgtums",
-      "contrast": "Kontrasts",
-      "saturation": "Piesātinājums",
-      "sharpness": "Asums",
-      "minimap": {
-        "description": "Rādīt Mini Karti",
-        "tooltip": "Parādīt attālinātu skatu lai palīdzētu atrast pašlaik redzamo vietu."
-      },
-      "offset": "Velc jebkur zemāk esošajā pelēkajā reģionā lai regulētu attēlu nobīdi, vai ievadi nobīdes attālumu numerātiski."
-    },
-    "map_data": {
-      "title": "Kartes Dati",
-      "description": "Kartes Dati",
-      "data_layers": "Datu slāņi",
-      "layers": {
-        "osm": {
-          "tooltip": "Kartes dati no OpenStreetMap"
-        },
-        "notes": {
-          "tooltip": "Piezīmju dati no OpenSteetMap"
-        },
-        "maproulette": {
-          "detail_title": "Detaļas",
-          "cancel": "Atcelt"
-        },
-        "custom": {
-          "tooltip": "Pārvelc un iemet datu failu šajā lapā, vai nospied pogu lai uzstādītu",
-          "title": "Pielāgoti Karšu Dati",
-          "zoom": "Pietuvināt līdz datiem"
-        }
-      },
-      "autohidden": "Šie objekti tika automātiski paslēpti, jo pārāk daudz būtu parādijušies uz ekrāna. Pietuvini karti, lai tos parādītu.",
-      "osmhidden": "Šie objekti tika automātiski paslēpti jo OpenStreetMap slānis ir paslēpts."
-    },
-    "filters": {
-      "points": {
-        "description": "Punkti",
-        "tooltip": "Intereses Punkti"
-      },
-      "service_roads": {
-        "description": "Servisa ceļi"
-      },
-      "paths": {
-        "description": "Takas"
-      },
-      "buildings": {
-        "description": "Ēkas"
-      },
-      "landuse": {
-        "description": "Zemes Izmantojuma Veidi"
-      },
-      "boundaries": {
-        "description": "Robežas",
-        "tooltip": "Administratīvās Robežas"
-      },
-      "water": {
-        "description": "Ūdens veidi"
-      },
-      "rail": {
-        "description": "Dzelzceļu veidi",
-        "tooltip": "Dzelzceļi"
-      },
-      "power": {
-        "description": "Elektroenerģijas veidi"
-      },
-      "others": {
-        "tooltip": "Viss pārējais"
-      }
-    },
-    "area_fill": {
-      "wireframe": {
-        "description": "Bez Pildījuma (Līnijattēls)",
-        "tooltip": "Iespējojot līnijattēla režīmu ir iespējams padarīt fona attēlu redzamību labāku. "
-      },
-      "partial": {
-        "description": "Daļējs Pildījums",
-        "tooltip": "Laukumi tiek zīmēti ar krāsas pildījumu tikai apkārt to malām. (Ieteicams iesācējiem)"
-      },
-      "full": {
-        "description": "Pilnīgs Pildījums",
-        "tooltip": "Laukumi tiek zīmēti pilnībā piepildīti."
-      }
-    },
-    "settings": {
-      "custom_background": {
-        "tooltip": "Rediģēt pielāgoto fonu",
-        "template": {
-          "placeholder": "Ievadi url veidni"
-        }
-      },
-      "custom_data": {
-        "tooltip": "Rediģēt pielāgoto datu slāni",
-        "file": {
-          "label": "Pārlūkot datnes"
-        },
-        "or": "Vai",
-        "url": {
-          "placeholder": "Ievadi url"
-        }
-      }
-    },
-    "preferences": {
-      "color_selection": {
-        "default": "Noklusējuma"
-      }
-    },
-    "restore": {
-      "heading": "Jums ir nesaglabātas izmaiņas"
-    },
-    "save": {
-      "title": "Saglabāt",
-      "help": "Pārbaudi savas izmaiņas un augšupielādē tās uz OpenStreetMap, padarot tās redzamas citiem lietotājiem.",
-      "no_changes": "Nav izmaiņu, ko saglabāt.",
-      "error": "Saglabāšanas laikā radās kļūdas",
-      "status_code": "Serveris atgrieza statusa kodu {code}",
-      "unknown_error_details": "Pārliecienies vai tev ir interneta pieslēgums.",
-      "uploading": "Augšupielādē izmaiņas uz OpenStreetMap...",
-      "conflict_progress": "Pārbaudam konfliktus: {num} no {total}",
-      "unsaved_changes": "Jums ir nesaglabātas izmaiņas",
-      "conflict": {
-        "header": "Salabot konfliktējošo rediģējumu",
-        "count": "Konfliktē {num} no {total}",
-        "previous": "< Iepriekšējais",
-        "next": "Nākošais >",
-        "keep_local": "Paturēt manu",
-        "keep_remote": "Izmantot viņu",
-        "restore": "Atjaunot",
-        "delete": "Atstāt izdzēstu",
-        "download_changes": "Vai lejupielādē osmChange failu",
-        "done": "Visi konflikti salaboti"
-      }
-    },
-    "merge_remote_changes": {
-      "conflict": {
-        "deleted": "Šo objektu izdzēsa {user}.",
-        "location": "Šo objektu pārvietoji gan tu, gan {user}.",
-        "nodelist": "Mezglus pārveidoji gan tu, gan {user}.",
-        "memberlist": "Relāciju locekļus redigēja gan jūs, gan arī {user}."
-      }
-    },
-    "success": {
-      "help_link_text": "Detaļas",
-      "view_on_osm": "Apskatīt izmaiņas OSM",
-      "like_osm": "Patīk OpenStreetMap? Sazinies ar citiem:",
-      "more": "Vairāk",
-      "events": "Notikumi",
-      "languages": "Valodas: {languages}",
-      "tell_us": "Pastāsti mums!"
-    },
-    "confirm": {
-      "okay": "Labi",
-      "cancel": "Atcelt"
-    },
-    "source_switch": {
-      "lose_changes": "Jums ir nesaglabātas izmaiņas. Tās tiks zaudētas mainot karšu serveri. Vai tiešām vēlaties mainīt karšu serveri?"
-    },
-    "rapid_inspector": {
-      "tags": "Apzīmējumi"
-    },
-    "rapid_menu": {
-      "remove": "Noņemt "
-    },
-    "tag_reference": {
-      "description": "Apraksts",
-      "on_wiki": "{tag} wiki.osm.org",
-      "used_with": "izmantots kopā ar {type}"
-    },
     "QA": {
-      "osmose": {
-        "detail_title": "Detaļas"
-      },
       "keepRight": {
-        "detail_description": "Apraksts",
+        "close_comment": "Aizvērt un komentēt",
         "comment": "Komentēt",
         "comment_placeholder": "Ieraksti komentāru, kuru dalīt ar citiem lietotājiem.",
-        "close_comment": "Aizvērt un komentēt",
-        "error_parts": {
-          "highway": "lielceļš",
-          "railway": "dzelzceļš",
-          "waterway": "ūdensceļš",
-          "cycleway": "veloceliņš",
-          "cycleway_footpath": "veloceliņš/ietve",
-          "riverbank": "upmala",
-          "pub": "krogs",
-          "restaurant": "restorāns",
-          "school": "skola",
-          "university": "universitāte/augstskola",
-          "hospital": "slimnīca",
-          "library": "bibliotēka",
-          "theatre": "teātris",
-          "courthouse": "tiesas nams",
-          "bank": "banka",
-          "cinema": "kinoteātris",
-          "pharmacy": "aptieka",
-          "cafe": "kafejnīca",
-          "fast_food": "ātrās uzkodas",
-          "fuel": "degviela",
-          "from": "no",
-          "to": "līdz"
-        },
+        "detail_description": "Apraksts",
         "errorTypes": {
-          "<60>": {
+          "60": {
             "title": "Novecojis apzīmējums"
           },
-          "<70>": {
+          "70": {
             "title": "Trūkst apzīmējuma"
           },
-          "<71>": {
+          "71": {
             "description": "{var1} nav apzīmējumu."
           },
-          "<90>": {
+          "90": {
             "title": "Autoceļš bez atsauces apzīmējuma"
+          },
+          "150": {
+            "title": "Dzelzceļa pārbrauktuve bez apzīmējuma"
+          },
+          "220": {
+            "title": "Kļūda apzīmējuma nosaukumā"
+          },
+          "300": {
+            "title": "Nav norādīts maksimālais ātrums (maxspeed)"
+          },
+          "400": {
+            "title": "Ģeometriska problēma"
+          },
+          "401": {
+            "title": "Trūkst pagrieziena ierobežojuma"
           },
           "<150>": {
             "title": "Dzelzceļa pārbrauktuve bez apzīmējuma"
@@ -540,188 +45,500 @@
           },
           "<400>": {
             "title": "Ģeometriska problēma"
+          },
+          "<60>": {
+            "title": "Novecojis apzīmējums"
+          },
+          "<70>": {
+            "title": "Trūkst apzīmējuma"
+          },
+          "<71>": {
+            "description": "{var1} nav apzīmējumu."
+          },
+          "<90>": {
+            "title": "Autoceļš bez atsauces apzīmējuma"
           }
+        },
+        "error_parts": {
+          "bank": "banka",
+          "cafe": "kafejnīca",
+          "cinema": "kinoteātris",
+          "courthouse": "tiesas nams",
+          "cycleway": "veloceliņš",
+          "cycleway_footpath": "veloceliņš/ietve",
+          "fast_food": "ātrās uzkodas",
+          "from": "no",
+          "fuel": "degviela",
+          "highway": "lielceļš",
+          "hospital": "slimnīca",
+          "library": "bibliotēka",
+          "pharmacy": "aptieka",
+          "pub": "krogs",
+          "railway": "dzelzceļš",
+          "restaurant": "restorāns",
+          "riverbank": "upmala",
+          "school": "skola",
+          "theatre": "teātris",
+          "this_turn_restriction": "šis pagrieziena ierobežojums",
+          "to": "līdz",
+          "university": "universitāte/augstskola",
+          "waterway": "ūdensceļš"
         }
+      },
+      "osmose": {
+        "detail_title": "Detaļas"
       }
     },
-    "photos": {
-      "hires": "Augsta izšķirtspēja"
-    },
-    "streetside": {
-      "tooltip": "Ielas līmeņa attēli no Microsoft"
-    },
-    "mapillary": {
-      "tooltip": "Ielas līmeņa attēli no Mapillary"
-    },
-    "note": {
-      "note": "Piezīme",
-      "title": "Rediģēt piezīmi",
-      "anonymous": "anonīms",
-      "closed": "(Aizvērts)",
-      "commentTitle": "Komentāri",
-      "status": {
-        "opened": "atvērts {when}",
-        "reopened": "atkārtoti atvērts {when}",
-        "commented": "komentēts {when}",
-        "closed": "aizvērts {when}"
+    "area_fill": {
+      "full": {
+        "description": "Pilnīgs Pildījums",
+        "tooltip": "Laukumi tiek zīmēti pilnībā piepildīti."
       },
-      "newComment": "Jauns komentārs",
-      "inputPlaceholder": "Ieraksti komentāru, kuru dalīt ar citiem lietotājiem.",
-      "close": "Aizvērt Piezīmi",
-      "open": "Atkārtoti atvērt Piezīmi",
-      "comment": "Komentēt",
-      "close_comment": "Aizvērt un komentēt",
-      "open_comment": "Atkārtoti atvērt un komentēt",
-      "report": "Ziņot",
-      "new": "Jauna piezīme",
-      "newDescription": "Izskaidro problēmu.",
-      "save": "Saglabāt piezīmi",
-      "login": "Tev ir jāieiet lai rediģētu vai komentētu uz šīs piezīmes.",
-      "upload_explanation": "Tavi komentāri būs publiski redzami visiem OpenStreetMap lietotājiem.",
-      "upload_explanation_with_user": "Tavi komentāri kā {user} būs publiski redzami visiem OpenStreetMap lietotājiem."
+      "partial": {
+        "description": "Daļējs Pildījums",
+        "tooltip": "Laukumi tiek zīmēti ar krāsas pildījumu tikai apkārt to malām. (Ieteicams iesācējiem)"
+      },
+      "wireframe": {
+        "description": "Bez Pildījuma (Līnijattēls)",
+        "tooltip": "Iespējojot līnijattēla režīmu ir iespējams padarīt fona attēlu redzamību labāku. "
+      }
     },
-    "help": {
-      "title": "Palīdzība",
-      "help": {
-        "title": "Palīdzība",
-        "open_data_h": "Atvērti dati",
-        "before_start_h": "Pirms tu sāc",
-        "open_source_h": "Atvērta Pirmkoda"
+    "background": {
+      "backgrounds": "Foni",
+      "best_imagery": "Labākais zināmais attēlu avots šai vietai",
+      "brightness": "Spilgtums",
+      "contrast": "Kontrasts",
+      "custom": "Pielāgots",
+      "description": "Fona iestatījumi",
+      "display_options": "Displeja iespējas",
+      "fix_misalignment": "Aerofoto nobīde",
+      "imagery_problem_faq": "Ziņot par attēlu problēmu",
+      "location_panel": {
+        "description": "Rādīt atrašanās vietas paneli"
       },
-      "overview": {
-        "title": "Pārskats",
-        "navigation_h": "Navigācija",
-        "features_h": "Kartes Objekti"
+      "minimap": {
+        "description": "Rādīt Mini Karti",
+        "tooltip": "Parādīt attālinātu skatu lai palīdzētu atrast pašlaik redzamo vietu."
       },
-      "editing": {
-        "title": "Rediģēšana un saglabāšana",
-        "select_h": "Izvēle",
-        "save_h": "Saglabāšana",
-        "upload_h": "Augšupielādēt",
-        "backups_h": "Automātiska rezerves kopija",
-        "keyboard_h": "Klavietūras Īsinājumtaustiņi"
+      "none": "Nav",
+      "offset": "Velc jebkur zemāk esošajā pelēkajā reģionā lai regulētu attēlu nobīdi, vai ievadi nobīdes attālumu numerātiski.",
+      "overlays": "Pārklāji",
+      "panel": {
+        "description": "Rādīt fona paneli"
       },
-      "feature_editor": {
-        "title": "Objektu Redaktors",
-        "type_h": "Objekta Veids",
-        "tags_h": "Apzīmējumi"
+      "reset": "Atiestatīt",
+      "reset_all": "Atiestatīt visu",
+      "saturation": "Piesātinājums",
+      "sharpness": "Asums",
+      "switch": "Pārslēgties atpakaļ uz šo fonu",
+      "title": "Fons"
+    },
+    "commit": {
+      "about_changeset_comments": "Par izmaiņu komentāriem",
+      "about_changeset_comments_link": "//wiki.openstreetmap.org/wiki/Good_changeset_comments",
+      "cancel": "Atcelt",
+      "changes": "Izmaiņas",
+      "created": "Izveidots",
+      "deleted": "Dzēsts",
+      "download_changes": "Lejupielādēt osmChange failu",
+      "errors": "Kļūdas",
+      "google_warning": "Tu pieminēji Google šajā komentārā. Atceries ka kopēšana no Google Kartēm ir stingri aizliegta. ",
+      "modified": "Mainīts",
+      "request_review": "Es vēlos lai kāds pārbauda manus labojumus.",
+      "request_review_info": "Neesi pārliecināts? Pieaicini pieredzējušu kartētāju, kas pārbaudīs tavus labojumus pēc to publicēšanas.",
+      "save": "Augšupielādēt",
+      "title": "Augšupielādē uz OpenStreetMap",
+      "upload_explanation": "Izmaiņas, kuras jūs augšupielādējat būs pieejamas visās kartēs, kuras izmanto OpenStreetMap datus.",
+      "upload_explanation_with_user": "Izmaiņas, kuras jūs augšupielādējat kā {user}, būs pieejamas visās kartēs, kuras izmanto OpenStreetMap datus.",
+      "warnings": "Brīdinājumi"
+    },
+    "confirm": {
+      "cancel": "Atcelt",
+      "okay": "Labi"
+    },
+    "contributors": {
+      "list": "Rediģēja {users}"
+    },
+    "feature_info": {
+      "hidden_warning": {
+        "one": "{count} slēpts objekts",
+        "other": "{count} slēpti objekti"
+      }
+    },
+    "filters": {
+      "boundaries": {
+        "description": "Robežas",
+        "tooltip": "Administratīvās Robežas"
+      },
+      "buildings": {
+        "description": "Ēkas"
+      },
+      "landuse": {
+        "description": "Zemes Izmantojuma Veidi"
+      },
+      "others": {
+        "tooltip": "Viss pārējais"
+      },
+      "paths": {
+        "description": "Takas"
       },
       "points": {
-        "title": "Punkti",
-        "add_point_h": "Punktu pievienošana",
-        "move_point_h": "Punktu pārvietošana",
-        "delete_point_h": "Punktu dzēšana"
+        "description": "Punkti",
+        "tooltip": "Intereses Punkti"
       },
-      "lines": {
-        "title": "Līnijas",
-        "add_line_h": "Līniju pievienošana",
-        "modify_line_h": "Līniju rediģēšana",
-        "connect_line_h": "Līniju savienošana",
-        "disconnect_line_h": "Līniju atvienošana",
-        "move_line_h": "Līniju pārvietošana",
-        "delete_line_h": "Līniju dzēšana"
+      "power": {
+        "description": "Elektroenerģijas veidi"
       },
+      "rail": {
+        "description": "Dzelzceļu veidi",
+        "tooltip": "Dzelzceļi"
+      },
+      "service_roads": {
+        "description": "Servisa ceļi"
+      },
+      "water": {
+        "description": "Ūdens veidi"
+      }
+    },
+    "geocoder": {
+      "no_results_worldwide": "Nav rezultātu",
+      "search": "Meklēt pasaulē..."
+    },
+    "geolocate": {
+      "locating": "Nosakām atrašanās vietu, uzgaidiet...",
+      "title": "Parādīt manu atrašanās vietu"
+    },
+    "geometry": {
+      "note": "piezīme",
+      "point": "punkts",
+      "relation": "relācija"
+    },
+    "help": {
       "areas": {
-        "title": "Apgabali",
-        "point_or_area_h": "Punkti vai laukumi?",
         "add_area_h": "Laukumu pievienošana",
-        "square_area_h": "Taisnlenķa stūri",
+        "delete_area_h": "Laukumu dzēšana",
         "modify_area_h": "Laukumu rediģēšana",
-        "delete_area_h": "Laukumu dzēšana"
+        "point_or_area_h": "Punkti vai laukumi?",
+        "square_area_h": "Taisnlenķa stūri",
+        "title": "Apgabali"
       },
-      "relations": {
-        "title": "Relācijas",
-        "edit_relation_h": "Relāciju rediģēšana",
-        "maintain_relation_h": "Relāciju uzturēšana",
-        "relation_types_h": "Relāciju veidi",
-        "multipolygon_h": "Multipoligoni",
-        "turn_restriction_h": "Pagriezienu aizliegumi",
-        "boundary_h": "Robežas"
+      "editing": {
+        "backups_h": "Automātiska rezerves kopija",
+        "keyboard_h": "Klavietūras Īsinājumtaustiņi",
+        "save_h": "Saglabāšana",
+        "save_validation": "Saglabāšanas ekrānā tev būs iespēja pārskatīt ko esi izmainījis. iD arī veiks vienkāršas pārbaudes par trūkstošiem datiem un var dot svarīgus ieteikumus un brīdinājumus ja kaut kas šķiet nepareizs.",
+        "select_h": "Izvēle",
+        "title": "Rediģēšana un saglabāšana",
+        "upload_h": "Augšupielādēt"
       },
-      "notes": {
-        "title": "Piezīmes",
-        "add_note_h": "Piezīmju pievienošana",
-        "update_note_h": "Aizvēršana, Atkārtota atvēršana un komentēšana",
-        "save_note_h": "Piezīmju saglabāšana"
-      },
-      "imagery": {
-        "title": "Fona attēlojums",
-        "sources_h": "Attēlu avoti",
-        "offsets_h": "Pieregulē Fona Nobīdi"
-      },
-      "streetlevel": {
-        "title": "Ielas līmeņa attēli",
-        "using_h": "Ielas līmeņa attēlu izmantošana"
-      },
-      "gps": {
-        "title": "GPS Treki",
-        "using_h": "GPS Treku izmantošana",
-        "tracing": "GPS Treks netiek nosūtīts uz OpenStreetMap - labākais veids, kā to izmantot ir zīmējot uz kartes, izmantojot to kā gidu priekš jauniem objektiem, ko tu pievieno."
-      },
-      "qa": {
-        "tools_h": "Rīki"
+      "feature_editor": {
+        "fields_h": "Lauki",
+        "tags_h": "Apzīmējumi",
+        "title": "Objektu Redaktors",
+        "type_h": "Objekta Veids"
       },
       "field": {
         "restrictions": {
-          "title": "Pagriezienu Aizliegumu Palīdzība",
           "about": {
+            "about": "Šis lauks ļauj jums pārbaudīt un modificēt pagriezienu ierobežojumus. Tas attēlo atlasītā krustojuma modeli, iekļaujot citus tuvumā esošos savienotos ceļus.",
+            "from_via_to": "Pagrieziena ierobežojums vienmēr satur: vienu **NO ceļa**, vienu **UZ ceļa**, un vai nu vienu **CAUR mezglu**, vai vienu vai vairākus **CAUR ceļus**.",
+            "maxdist": "\"{distField}\" slīdnis kontrolē, cik tālu meklēt papildu savienotos ceļus.",
+            "maxvia": "\"{viaField}\" slīdnis regulē, cik daudz \"caur ceļu\" var tikt iekļauti meklēšanā. (Padoms: vienkāršāk ir labāk)",
             "title": "Par"
           },
           "inspecting": {
+            "about": "Turiet kursoru virs jebkura **NO** segmenta, lai redzētu, vai tam ir kādi pagriezienu ierobežojumi. Katrs iespējamais **UZ** galamērķis tiks uzzīmēts ar krāsainu ēnu, kas parāda, vai pastāv ierobežojums.",
             "title": "Pārbaudīšana"
           },
           "modifying": {
+            "about": "Lai modificētu pagriezienu ierobežojumus, vispirms klikšķiniet uz jebkura sākuma **NO** segmenta, lai to atlasītu. Atlasītais segments pulsēs, un visi iespējamie **UZ** galamērķi parādīsies kā pagriezienu simboli.",
+            "indicators": "Pēc tam noklikšķiniet uz pagrieziena simbola, lai pārslēgtu to starp \"Atļauts\", \"Ierobežots\" un \"Tikai\".",
             "title": "Rediģēšana"
           },
           "tips": {
+            "indirect": "**Daži ierobežojumi attēlo tekstu \"(netiešs)\" un ir uzzīmēti gaišāk.**",
+            "indirect_example": "Šie ierobežojumi pastāv cita tuvumā esoša ierobežojuma dēļ. Piemēram, \"Tikai taisni\" ierobežojums netieši izveidos \"Aizliegts pagriezties\" ierobežojumus visiem pārējiem ceļiem caur krustojumu.",
+            "indirect_noedit": "Jūs nevarat rediģēt netiešos ierobežojumus. Tā vietā rediģējiet tuvumā esošo tiešo ierobežojumu.",
+            "simple": "**Dodiet priekšroku vienkāršiem ierobežojumiem, nevis sarežģītiem.**",
+            "simple_example": "Piemēram, izvairieties no caur-ceļa ierobežojuma izveidošanas, ja pietiek ar vienkāršāku caur-mezgla pagrieziena ierobežojumu.",
             "title": "Padomi"
-          }
+          },
+          "title": "Pagriezienu Aizliegumu Palīdzība"
         }
+      },
+      "gps": {
+        "title": "GPS Treki",
+        "tracing": "GPS Treks netiek nosūtīts uz OpenStreetMap - labākais veids, kā to izmantot ir zīmējot uz kartes, izmantojot to kā gidu priekš jauniem objektiem, ko tu pievieno.",
+        "using_h": "GPS Treku izmantošana"
+      },
+      "help": {
+        "before_start": "Jums būtu jāpārzina OpenStreetMap un šis redaktors, pirms sākat rediģēšanu. iD satur ceļvedi, lai jums iemācītu OpenStreetMap rediģēšanas pamatus. Nospiediet \"{start_the_walkthrough}\" pogu šajā ekrānā, lai sāktu apmācību — tā aizņem tikai aptuveni 15 minūtes.",
+        "before_start_h": "Pirms tu sāc",
+        "open_data": "Labojumi, ko veicat šajā kartē, būs redzami visiem, kas izmanto OpenStreetMap. Jūsu labojumi var balstīties uz personīgām zināšanām, apsekošanu uz vietas vai attēliem, kas iegūti no aerofoto vai ielu līmeņa fotogrāfijām. Kopēšana no komerciāliem avotiem, piemēram, Google Maps, ir [stingri aizliegta](https://www.openstreetmap.org/copyright).",
+        "open_data_h": "Atvērti dati",
+        "open_source": "iD redaktors ir kopienas atvērta koda projekts, un tu pašlaik izmanto versiju {version}. Pirmkods ir pieejams [GitHubā](https://github.com/openstreetmap/iD).",
+        "open_source_h": "Atvērta Pirmkoda",
+        "open_source_help": "Tu vari palīdzēt iD [tulkojot](https://github.com/openstreetmap/iD/blob/develop/CONTRIBUTING.md#translating) vai [ziņojot par kļūdām](https://github.com/openstreetmap/iD/issues).",
+        "title": "Palīdzība",
+        "welcome": "Esiet sveicināti iD [OpenStreetMap](https://www.openstreetmap.org/) rediģētājā. Ar šo rediģētāju jūs varat rediģēt OpenStreetMap savā pārlūkprogrammā."
+      },
+      "imagery": {
+        "offsets_h": "Pieregulē Fona Nobīdi",
+        "sources_h": "Attēlu avoti",
+        "title": "Fona attēlojums"
+      },
+      "key": "H",
+      "lines": {
+        "add_line_h": "Līniju pievienošana",
+        "connect_line_h": "Līniju savienošana",
+        "delete_line_h": "Līniju dzēšana",
+        "disconnect_line_h": "Līniju atvienošana",
+        "modify_line_h": "Līniju rediģēšana",
+        "move_line_h": "Līniju pārvietošana",
+        "title": "Līnijas"
+      },
+      "notes": {
+        "add_note_h": "Piezīmju pievienošana",
+        "save_note_h": "Piezīmju saglabāšana",
+        "title": "Piezīmes",
+        "update_note_h": "Aizvēršana, Atkārtota atvēršana un komentēšana"
+      },
+      "operations": {
+        "title": "Operācijas"
+      },
+      "overview": {
+        "features_h": "Kartes Objekti",
+        "navigation_h": "Navigācija",
+        "title": "Pārskats"
+      },
+      "points": {
+        "add_point_h": "Punktu pievienošana",
+        "delete_point_h": "Punktu dzēšana",
+        "move_point_h": "Punktu pārvietošana",
+        "title": "Punkti"
+      },
+      "qa": {
+        "title": "Kvalitātes nodrošināšana",
+        "tools_h": "Rīki"
+      },
+      "relations": {
+        "boundary_h": "Robežas",
+        "edit_relation_h": "Relāciju rediģēšana",
+        "maintain_relation_h": "Relāciju uzturēšana",
+        "multipolygon_h": "Multipoligoni",
+        "relation_types_h": "Relāciju veidi",
+        "route_h": "Maršruti",
+        "title": "Relācijas",
+        "turn_restriction_h": "Pagriezienu aizliegumi"
+      },
+      "streetlevel": {
+        "photos": "Kad ieslēgta, fotoattēlu pārklājums attēlo līniju gar fotoattēlu secību. Augstākos tālummaiņas līmeņos aplis atzīmē katru fotoattēla atrašanās vietu, un vēl augstākos tālummaiņas līmeņos konuss norāda virzienu, kurā kamera bija vērsta, kad fotoattēls tika uzņemts.",
+        "title": "Ielas līmeņa attēli",
+        "using": "Lai izmantotu ielu līmeņa fotogrāfijas kartēšanai, atveriet {data_icon} **{map_data}** paneli kartes malā, lai ieslēgtu vai izslēgtu pieejamos fotoattēlu pārklājumus.",
+        "using_h": "Ielas līmeņa attēlu izmantošana",
+        "viewer": "Kad jūs izvēlaties vienu no fotoattēlu atrašanās vietām, kartes apakšējā stūrī parādās fotoattēlu skatītājs. Fotoattēlu skatītājs satur vadīklas, lai pārvietotos uz priekšu un atpakaļ attēlu secībā. Tajā redzams arī lietotājvārds personai, kas uzņēma attēlu, datums, kad tas tika uzņemts, un saite, lai skatītu attēlu sākotnējā vietnē."
+      },
+      "title": "Palīdzība"
+    },
+    "help_translate": "Palīdzi tulkot",
+    "icons": {
+      "copy": "kopēt",
+      "deselect": "noņemt atlasi",
+      "download": "lejupielādēt",
+      "favorite": "miļākais",
+      "information": "info",
+      "list": "saraksts",
+      "remove": "noņemt ",
+      "text": "teksts",
+      "undo": "atsaukt",
+      "view_on": "skatīties uz [domain]",
+      "visit_website": "apmeklēt mājaslapu",
+      "zoom_to": "pietuvināt uz"
+    },
+    "info_panels": {
+      "background": {
+        "accuracy": "Precizitāte",
+        "description": "Apraksts",
+        "hide_tiles": "Paslēpt Kvadrātus",
+        "resolution": "Izšķirtspēja",
+        "show_tiles": "Rādīt Kvadrātus",
+        "source": "Avots",
+        "title": "Fons",
+        "vintage": "Uzņemšanas datums",
+        "zoom": "Tuvinājums"
+      },
+      "history": {
+        "changeset": "Izmaiņas",
+        "edited_by": "Laboja",
+        "last_edit": "Pēdējais labojums",
+        "no_history": "Nav vēstures (jauns objekts)",
+        "note_comments": "Komentāri",
+        "note_created_date": "Izveidošanas datums",
+        "note_created_user": "Izveidoja",
+        "note_link_text": "Piezīme no openstreetmap.org",
+        "note_no_history": "Nav vēstures (Jauna piezīme)",
+        "title": "Vēsture",
+        "version": "Versija"
+      },
+      "location": {
+        "title": "Atrašanās vieta",
+        "unknown_location": "Nezināma atrašanās vieta"
+      },
+      "measurement": {
+        "area": "Platība",
+        "center": "Centrs",
+        "distance": "Attālums",
+        "geometry": "Ģeometrija",
+        "imperial": "Imperiālā",
+        "length": "Garums",
+        "location": "Atrašanās vieta",
+        "metric": "Metriskā",
+        "perimeter": "Perimetrs",
+        "title": "Mērvienība"
+      }
+    },
+    "inspector": {
+      "add": "Pievienot",
+      "add_fields": "Pievienot lauku:",
+      "add_to_relation": "Pievienot relācijai",
+      "back_tooltip": "Mainīt objekta veidu",
+      "check": {
+        "no": "Nē",
+        "reverser": "Mainīt virzienu",
+        "yes": "Jā"
+      },
+      "choose": "Izvēlieties objekta tipu",
+      "details": "Detaļas",
+      "display_name": {
+        "from_to_via": "no{from}uz{to}ar{via}"
+      },
+      "edit": "Rediģēt objektu",
+      "feature_list": "Meklēt objektus",
+      "feature_type": "Objekta Veids",
+      "fields": "Lauki",
+      "incomplete": "<nav lejuplādēts>",
+      "location": "Atrašanās vieta",
+      "lock": {
+        "suggestion": "Lauks \"{label}\" ir bloķēts, jo pastāv Wikidata apzīmējums. Jūs varat to izdzēst vai rediģēt tagus sadaļā \"Apzīmējumi\"."
+      },
+      "new_relation": "Jauna relācija...",
+      "no_documentation_key": "Nav pieejama dokumentācija.",
+      "none": "Nav",
+      "radio": {
+        "structure": {
+          "default": "Noklusējuma",
+          "layer": "Slānis"
+        }
+      },
+      "relation": "Relācija",
+      "relations": "Relācijas",
+      "remove": "Noņemt ",
+      "results": {
+        "one": "{n} rezultāts meklējumam {search}",
+        "other": "{n}rezultāti meklējumam {search}"
+      },
+      "role": "Loma",
+      "search": "Meklēt",
+      "show_more": "Rādīt vairāk",
+      "tags": "Apzīmējumi",
+      "type": "Tips",
+      "unknown": "Nezināms",
+      "view_on_osm": "Apskatīt openstreetmap.org",
+      "wiki_en_reference": "Skatīt dokumentāciju angļu valodā",
+      "wiki_reference": "Skatīt dokumentāciju",
+      "zoom_to": {
+        "title": "Pietuvināt atlasītajam"
+      }
+    },
+    "intro": {
+      "areas": {
+        "title": "Apgabali"
+      },
+      "buildings": {
+        "done_square": "Redzi kā ēkas stūri tika automātiski ievirzīti vietā? Iemācīsimies vēl vienu parocīgu triku.",
+        "title": "Ēkas"
+      },
+      "done": "pabeigts",
+      "graph": {
+        "block_number": "<value for addr:block_number>",
+        "countrycode": "lv",
+        "county": "<value for addr:county>",
+        "district": "<value for addr:district>",
+        "hamlet": "<value for addr:hamlet>",
+        "name": {
+          "armitage-street": "Brīvības iela",
+          "pizza-hut": "Čilli pica",
+          "portage-avenue": "Gaujas iela",
+          "portage-river": "Gaujas upe"
+        },
+        "neighbourhood": "<value for addr:neighbourhood>",
+        "province": "<value for addr:province>",
+        "quarter": "<value for addr:quarter>",
+        "state": "<value for addr:state>",
+        "subdistrict": "<value for addr:subdistrict>",
+        "suburb": "<value for addr:suburb>"
+      },
+      "lines": {
+        "title": "Līnijas"
+      },
+      "navigation": {
+        "title": "Navigācija"
+      },
+      "ok": "Labi",
+      "points": {
+        "title": "Punkti"
+      },
+      "startediting": {
+        "save": "Neizmirstiet regulāri saglabāt izmaiņas!",
+        "start": "Sāc kartēt!",
+        "title": "Sākt rediģēt"
+      },
+      "welcome": {
+        "title": "Laipni lūdzam"
       }
     },
     "issues": {
-      "errors": "Kļūdas",
-      "warnings": "Brīdinājumi",
-      "missing_tag": {
-        "title": "Trūkstoši apzīmējumi"
-      },
-      "outdated_tags": {
-        "title": "Novecojuši apzīmējumi"
-      },
-      "private_data": {
-        "title": "Privāta informācija"
-      },
-      "impossible_oneway": {
-        "title": "Neiespējami vienvirziena objekti",
-        "highway": {
-          "start": {
-            "reference": "Vienvirziena ceļiem jābūt pieejamiem caur citiem ceļiem."
-          }
+      "crossing_ways": {
+        "highway-highway": {
+          "reference": "Šķērsojošiem autoceļiem būtu jāizmanto tilti, tuneļi vai krustojumi."
+        },
+        "highway-waterway": {
+          "reference": "Šoseju šķērsojumiem ar ūdensceļiem jāizmanto tilti, tuneļi vai brasli."
         }
       },
+      "errors": "Kļūdas",
       "fix": {
         "add_a_bridge": {
-          "title": "Pievienot tiltu",
-          "annotation": "Tilts pievienots."
+          "annotation": "Tilts pievienots.",
+          "title": "Pievienot tiltu"
         },
         "add_a_tunnel": {
-          "title": "Pievienot tuneli",
-          "annotation": "Tunelis pievienots."
+          "annotation": "Tunelis pievienots.",
+          "title": "Pievienot tuneli"
+        },
+        "connect_features": {
+          "title": "Savienot objektus"
+        },
+        "ignore_issue": {
+          "title": "Ignorēt šo problēmu"
         },
         "move_tags": {
-          "title": "Pārvietot apzīmējumus",
-          "annotation": "Apzīmējumi pārvietoti."
+          "annotation": "Apzīmējumi pārvietoti.",
+          "title": "Pārvietot apzīmējumus"
         },
         "remove_tag": {
-          "title": "Noņemt apzīmējumu",
-          "annotation": "Apzīmējums noņemts."
+          "annotation": "Apzīmējums noņemts.",
+          "title": "Noņemt apzīmējumu"
         },
         "remove_tags": {
           "title": "Dzēst apzīmējumus."
         },
+        "reposition_features": {
+          "title": "Pārvietot objektus"
+        },
         "tag_as_disconnected": {
-          "title": "Atzīmēt kā atvienotu",
-          "annotation": "Ļoti tuvu esoši objekti atzīmēti kā atvienoti."
+          "annotation": "Ļoti tuvu esoši objekti atzīmēti kā atvienoti.",
+          "title": "Atzīmēt kā atvienotu"
         },
         "tag_this_as_higher": {
           "title": "Atzīmēt kā augstāk esošu"
@@ -730,87 +547,58 @@
           "title": "Atzīmēt kā zemāk esošu"
         },
         "upgrade_tags": {
-          "title": "Atjaunināt apzīmējumus",
-          "annotation": "Vecie apzīmējumi atjaunināti."
-        }
-      }
-    },
-    "intro": {
-      "done": "pabeigts",
-      "ok": "Labi",
-      "graph": {
-        "state": "<value for addr:state>",
-        "countrycode": "lv",
-        "name": {
-          "armitage-street": "Brīvības iela",
-          "pizza-hut": "Čilli pica",
-          "portage-avenue": "Gaujas iela",
-          "portage-river": "Gaujas upe"
+          "annotation": "Vecie apzīmējumi atjaunināti.",
+          "title": "Atjaunināt apzīmējumus"
         }
       },
-      "welcome": {
-        "title": "Laipni lūdzam"
+      "generic_name": {
+        "message": "{feature} ir aizdomīgs nosaukums \"{name}\"",
+        "reference": "Nosaukumiem jābūt faktiskajiem, uz vietas esošajiem objektu nosaukumiem."
       },
-      "navigation": {
-        "title": "Navigācija"
+      "impossible_oneway": {
+        "highway": {
+          "start": {
+            "reference": "Vienvirziena ceļiem jābūt pieejamiem caur citiem ceļiem."
+          }
+        },
+        "title": "Neiespējami vienvirziena objekti"
       },
-      "points": {
-        "title": "Punkti"
+      "missing_tag": {
+        "title": "Trūkstoši apzīmējumi"
       },
-      "areas": {
-        "title": "Apgabali"
-      },
-      "lines": {
-        "title": "Līnijas"
-      },
-      "buildings": {
-        "title": "Ēkas",
-        "done_square": "Redzi kā ēkas stūri tika automātiski ievirzīti vietā? Iemācīsimies vēl vienu parocīgu triku."
-      },
-      "startediting": {
-        "title": "Sākt rediģēt",
-        "save": "Neizmirstiet regulāri saglabāt izmaiņas!",
-        "start": "Sāc kartēt!"
-      }
-    },
-    "shortcuts": {
-      "title": "Klavietūras Īsinājumtaustiņi",
-      "tooltip": "Rādīt īsinājumtaustiņu ekrānu.",
-      "key": {
-        "delete": "Dzēst"
-      },
-      "navigation": "Navigācija",
-      "help": "Palīdzība",
-      "info": "Informācija",
-      "command": {
-        "lasso": {
-          "label": "Uzzīmēt izvēlnes laso ap objektiem"
+      "no_issues": {
+        "hidden_issues": {
+          "everything_else": "Problēmas ar visu pārējo: {count}"
         },
-        "copy": {
-          "label": "Kopēt izvēlētos objektus"
-        },
-        "paste": {
-          "label": "Ielīmēt kopētos objektus"
-        },
-        "find": {
-          "label": "Atrast objektus, kas atbilst meklētajam tekstam"
-        },
-        "merge": {
-          "label": "Apvienot (apkopot) izvēlētos objektus"
-        },
-        "move": {
-          "label": "Pārvietot izvēlētos objektus"
-        },
-        "rotate": {
-          "label": "Pagriezt izvēlētos objektus"
-        },
-        "delete": {
-          "label": "Dzēst izvēlētos objektus"
+        "message": {
+          "no_edits": "Jums nav nesaglabātu izmaiņu"
         }
-      }
-    },
-    "wikidata": {
-      "description": "Apraksts"
+      },
+      "options": {
+        "what": {
+          "all": "Viss",
+          "edited": "Mani labojumi",
+          "title": "Pārbaudīt:"
+        },
+        "where": {
+          "all": "Visur",
+          "title": "Kur:",
+          "visible": "Skatā"
+        }
+      },
+      "outdated_tags": {
+        "incomplete": {
+          "message": "\"{feature}\" ir nepilnīgas birkas",
+          "reference": "Dažiem elementiem jābūt papildu tagiem."
+        },
+        "title": "Novecojuši apzīmējumi"
+      },
+      "private_data": {
+        "title": "Privāta informācija"
+      },
+      "suggested": "Ieteicamās izmaiņas:",
+      "title": "Problēmas",
+      "warnings": "Brīdinājumi"
     },
     "languageNames": {
       "aa": "afāru",
@@ -1372,6 +1160,355 @@
       "zun": "zunju",
       "zza": "zazaki"
     },
+    "loading_auth": "Savienojas ar OpenStreetMap...",
+    "login": "Ienākt",
+    "logout": "Iziet",
+    "map_data": {
+      "autohidden": "Šie objekti tika automātiski paslēpti, jo pārāk daudz būtu parādijušies uz ekrāna. Pietuvini karti, lai tos parādītu.",
+      "data_layers": "Datu slāņi",
+      "description": "Kartes Dati",
+      "history_panel": {
+        "title": "Rādīt vēstures paneli"
+      },
+      "layers": {
+        "custom": {
+          "title": "Pielāgoti Karšu Dati",
+          "tooltip": "Pārvelc un iemet datu failu šajā lapā, vai nospied pogu lai uzstādītu",
+          "zoom": "Pietuvināt līdz datiem"
+        },
+        "keepRight": {
+          "title": "KeepRight problēmas",
+          "tooltip": "Vietnē keepright.at konstatētās datu problēmas"
+        },
+        "maproulette": {
+          "cancel": "Atcelt",
+          "detail_title": "Detaļas"
+        },
+        "notes": {
+          "title": "OpenStreetMap piezīmes",
+          "tooltip": "Piezīmju dati no OpenSteetMap"
+        },
+        "osm": {
+          "title": "OpenStreetMap dati",
+          "tooltip": "Kartes dati no OpenStreetMap"
+        },
+        "osmose": {
+          "title": "Osmose problēmas",
+          "tooltip": "Vietnē osmose.openstreetmap.fr konstatētās datu problēmas"
+        }
+      },
+      "measurement_panel": {
+        "title": "Rādīt mērījumu paneli"
+      },
+      "osmhidden": "Šie objekti tika automātiski paslēpti jo OpenStreetMap slānis ir paslēpts.",
+      "style_options": "Stila opcijas",
+      "title": "Kartes Dati"
+    },
+    "mapillary": {
+      "tooltip": "Ielas līmeņa attēli no Mapillary",
+      "view_on_mapillary": "Skatīt šo attēlu Mapillary"
+    },
+    "merge_remote_changes": {
+      "conflict": {
+        "deleted": "Šo objektu izdzēsa {user}.",
+        "location": "Šo objektu pārvietoji gan tu, gan {user}.",
+        "memberlist": "Relāciju locekļus redigēja gan jūs, gan arī {user}.",
+        "nodelist": "Mezglus pārveidoji gan tu, gan {user}."
+      }
+    },
+    "modes": {
+      "add_area": {
+        "description": "Pievieno parkus, ēkas, ezerus un citus apgabalus.",
+        "title": "Apgabals"
+      },
+      "add_line": {
+        "description": "Pievieno ceļus, ielas, takas kanālus un citas līnijas.",
+        "title": "Līnija"
+      },
+      "add_note": {
+        "description": "Atradi kļūdu? Pabrīdini citus kartētājus par to.",
+        "title": "Piezīme"
+      },
+      "add_point": {
+        "description": "Pievieno restorānus, pieminekļus, veikalus un citus punktus.",
+        "title": "Punkts"
+      },
+      "add_preset": {
+        "title": "Pievienot {feature}"
+      },
+      "browse": {
+        "description": "Pārlūko karti.",
+        "title": "Pārlūkot"
+      },
+      "drag_node": {
+        "connected_to_hidden": "Šo nevar rediģēt, jo tas ir pievienots paslēptam objektam."
+      }
+    },
+    "note": {
+      "anonymous": "anonīms",
+      "close": "Aizvērt Piezīmi",
+      "close_comment": "Aizvērt un komentēt",
+      "closed": "(Aizvērts)",
+      "comment": "Komentēt",
+      "commentTitle": "Komentāri",
+      "inputPlaceholder": "Ieraksti komentāru, kuru dalīt ar citiem lietotājiem.",
+      "login": "Tev ir jāieiet lai rediģētu vai komentētu uz šīs piezīmes.",
+      "new": "Jauna piezīme",
+      "newComment": "Jauns komentārs",
+      "newDescription": "Izskaidro problēmu.",
+      "note": "Piezīme",
+      "open": "Atkārtoti atvērt Piezīmi",
+      "open_comment": "Atkārtoti atvērt un komentēt",
+      "report": "Ziņot",
+      "save": "Saglabāt piezīmi",
+      "status": {
+        "closed": "aizvērts {when}",
+        "commented": "komentēts {when}",
+        "opened": "atvērts {when}",
+        "reopened": "atkārtoti atvērts {when}"
+      },
+      "title": "Rediģēt piezīmi",
+      "upload_explanation": "Tavi komentāri būs publiski redzami visiem OpenStreetMap lietotājiem.",
+      "upload_explanation_with_user": "Tavi komentāri kā {user} būs publiski redzami visiem OpenStreetMap lietotājiem."
+    },
+    "operations": {
+      "add": {
+        "annotation": {
+          "note": "Pievienota piezīme.",
+          "point": "Punkts pievienots.",
+          "relation": "Relācija pievienota.",
+          "vertex": "Mezgls pievienots līnijai."
+        }
+      },
+      "cancel_draw": {
+        "annotation": "Zīmēšana atcelta."
+      },
+      "change_tags": {
+        "annotation": "Apzīmējumi mainīti."
+      },
+      "circularize": {
+        "title": "Pārveidot par apļveida"
+      },
+      "connect": {
+        "annotation": {
+          "from_vertex": {
+            "to_area": "Līnija savienota ar apgabalu.",
+            "to_line": "Līnija savienota ar līniju.",
+            "to_point": "Pievienoja līniju punktam.",
+            "to_vertex": "Pievienoja līniju citai."
+          }
+        },
+        "relation": "Šos objektus nevar savienot, jo tiem ir konfliktējošas relāciju lomas.",
+        "restriction": "Šos objektus nevar savienot, jo tas bojātu \"{relation}\" relāciju."
+      },
+      "continue": {
+        "annotation": {
+          "area": "Apgabals turpināts.",
+          "line": "Līnija turpināta."
+        },
+        "description": "Turpināt šo līniju.",
+        "multiple": "Šeit var turpināt vairākas līnijas. Pievienojiet vienu atlasei, lai turpinātu.",
+        "not_eligible": "Nevienu līniju nevar šeit turpināt.",
+        "title": "Turpināt "
+      },
+      "copy": {
+        "title": "Kopēt"
+      },
+      "delete": {
+        "annotation": {
+          "area": "Apgabals dzēsts.",
+          "line": "Līnija dzēsta.",
+          "point": "Punkts dzēsts.",
+          "relation": "Relācija dzēsta.",
+          "vertex": "Mezgls dzests."
+        },
+        "title": "Dzēst"
+      },
+      "disconnect": {
+        "connected_to_hidden": "Šo nevar atvienot, jo tas ir pievienots pie paslēpta objekta.",
+        "description": {
+          "single_point": {
+            "no_ways": "Atvienot objektus šajā punktā."
+          }
+        },
+        "not_connected": "Šeit nav pietiekami daudz līniju/laukumu, lai tos atvienotu.",
+        "relation": "Šo nevar atvienot, jo tas savienojas ar relācijas locekļiem.",
+        "title": "Atvienot"
+      },
+      "downgrade": {
+        "description": {
+          "address": "Dzēst visus apzīmējumus, kas nav adreses.",
+          "building": "Dzēst visus apzīmējumus, kas nav ēkas.",
+          "building_address": "Dzēst visus apzīmējumus, kas nav adreses vai ēkas.",
+          "generic": "Noņemt apzīmējumus."
+        }
+      },
+      "merge": {
+        "conflicting_tags": "Šos objektu nevar apvienot, jo vairākiem to apzīmējumiem ir nesaskaņotas vērtības.",
+        "damage_relation": "Šos objektus nevar apvienot, jo tas bojātu \"{relation}\" relāciju.",
+        "description": "Apvienot šos objektus.",
+        "incomplete_relation": "Šos objektus nevar apvienot, jo vismaz viens nav pilnībā lejupielādēts.",
+        "not_eligible": "Šos objektus nevar apvienot.",
+        "relation": "Šos objektus nevar apvienot, jo tiem ir konfliktējošas relāciju lomas.",
+        "title": "Sapludināt"
+      },
+      "move": {
+        "annotation": {
+          "area": "Apgabals pārvietots.",
+          "line": "Līnija pārvietota.",
+          "point": "Punkts pārvietots.",
+          "vertex": "Mezgls pārvietots."
+        },
+        "title": "Pārvietot"
+      },
+      "orthogonalize": {
+        "title": "Kvadrāts"
+      },
+      "paste": {
+        "title": "Ielīmēt"
+      },
+      "restriction": {
+        "annotation": {
+          "create": "Pievienoja pagriezienu aizliegumu",
+          "delete": "Izdzēsa pagriezienu aizliegumu"
+        }
+      },
+      "reverse": {
+        "description": {
+          "line": "Mainīt līnijas virzienu."
+        },
+        "title": "Mainīt virzienu"
+      },
+      "rotate": {
+        "annotation": {
+          "area": "Apgabals pagriezts.",
+          "line": "Līnija pagriezta."
+        },
+        "title": "Pagriezt"
+      },
+      "split": {
+        "description": {
+          "line": {
+            "single": {
+              "single_node": "Sadalīt līniju šajā punktā divās daļās."
+            }
+          }
+        },
+        "not_eligible": "Līnijas nevar sadalīt to sākumā vai beigās.",
+        "title": "Sadalīt"
+      },
+      "start": {
+        "annotation": {
+          "area": "Apgabals iesākts.",
+          "line": "Līnija iesākta."
+        }
+      },
+      "straighten": {
+        "description": {
+          "line": "Iztaisnot šo līniju.",
+          "lines": "Iztaisnot šīs līnijas.",
+          "points": "Iztaisnot šos punktus."
+        },
+        "title": "Iztaisnot"
+      }
+    },
+    "photo_overlays": {
+      "date_filter": {
+        "fromDate": {
+          "title": "No"
+        },
+        "toDate": {
+          "title": "Uz"
+        }
+      },
+      "title": "Foto pārklājumi",
+      "username_filter": {
+        "title": "Lietotājvārds"
+      }
+    },
+    "photos": {
+      "hires": "Augsta izšķirtspēja"
+    },
+    "preferences": {
+      "color_selection": {
+        "default": "Noklusējuma"
+      },
+      "privacy": {
+        "privacy_link": "Skatīt iD privātuma politiku",
+        "third_party_icons": {
+          "description": "Rādīt trešo pušu ikonas",
+          "tooltip": "Noņemiet atzīmi šai izvēles rūtiņai, lai izvairītos no ikonu ielādes no trešo pušu vietnēm, piemēram, Wikimedia Commons, Facebook vai Twitter."
+        },
+        "title": "Privātums"
+      }
+    },
+    "rapid_inspector": {
+      "tags": "Apzīmējumi"
+    },
+    "rapid_menu": {
+      "remove": "Noņemt "
+    },
+    "redo": {
+      "nothing": "Nav nekā, ko atsaukt",
+      "tooltip": "Atgriezt: {action}"
+    },
+    "report_a_bug": "Ziņot par kļūdu",
+    "restore": {
+      "heading": "Jums ir nesaglabātas izmaiņas",
+      "reset": "Atmest manas izmaiņas",
+      "restore": "Atjaunot manas izmaiņas"
+    },
+    "restriction": {
+      "controls": {
+        "distance": "Attālums",
+        "distance_up_to": "Līdz pat {distance}",
+        "via": "Ar"
+      },
+      "help": {
+        "from": "NO",
+        "indirect": "(netiešs)",
+        "to": "UZ",
+        "toggle": "Noklikšķiniet, lai {turn}",
+        "turn": {
+          "allowed_left_turn": "Kreisais pagrieziens atļauts{indirect}",
+          "allowed_right_turn": "Labais pagrieziens atļauts{indirect}",
+          "allowed_straight_on": "Braukšana taisni atļauta{indirect}",
+          "allowed_u_turn": "Apgriešanās atļauta{indirect}",
+          "no_left_turn": "Kreisais pagrieziens aizliegts{indirect}",
+          "no_right_turn": "Labais pagrieziens aizliegts{indirect}",
+          "no_straight_on": "Braukšana taisni aizliegta{indirect}",
+          "no_u_turn": "Apgriešanās aizliegta{indirect}",
+          "only_left_turn": "Atļauts tikai kreisais pagrieziens{indirect}",
+          "only_right_turn": "Atļauts tikai labais pagrieziens{indirect}",
+          "only_straight_on": "Atļauta tikai braukšana taisni{indirect}",
+          "only_u_turn": "Atļauta tikai apgriešanās{indirect}"
+        },
+        "via": "AR"
+      }
+    },
+    "save": {
+      "conflict": {
+        "count": "Konfliktē {num} no {total}",
+        "delete": "Atstāt izdzēstu",
+        "done": "Visi konflikti salaboti",
+        "download_changes": "Vai lejupielādē osmChange failu",
+        "header": "Salabot konfliktējošo rediģējumu",
+        "keep_local": "Paturēt manu",
+        "keep_remote": "Izmantot viņu",
+        "next": "Nākošais >",
+        "previous": "< Iepriekšējais",
+        "restore": "Atjaunot"
+      },
+      "conflict_progress": "Pārbaudam konfliktus: {num} no {total}",
+      "error": "Saglabāšanas laikā radās kļūdas",
+      "help": "Pārbaudi savas izmaiņas un augšupielādē tās uz OpenStreetMap, padarot tās redzamas citiem lietotājiem.",
+      "no_changes": "Nav izmaiņu, ko saglabāt.",
+      "status_code": "Serveris atgrieza statusa kodu {code}",
+      "title": "Saglabāt",
+      "unknown_error_details": "Pārliecienies vai tev ir interneta pieslēgums.",
+      "unsaved_changes": "Jums ir nesaglabātas izmaiņas",
+      "uploading": "Augšupielādē izmaiņas uz OpenStreetMap..."
+    },
     "scriptNames": {
       "Adlm": "adlama",
       "Arab": "arābu",
@@ -1460,6 +1597,173 @@
       "Zxxx": "bez rakstības",
       "Zyyy": "vispārējā",
       "Zzzz": "nezināma rakstība"
-    }
+    },
+    "settings": {
+      "custom_background": {
+        "header": "Pielāgota fona iestatījumi",
+        "instructions": {
+          "info": "Tālāk ievadiet flīžu URL veidni.",
+          "tms": {
+            "tokens": {
+              "flipped_y": "`{-y}` vai `{ty}`: apgrieztas TMS stila Y koordinātas",
+              "quadtile": "`{u}`: quadtile (Bing) shēma",
+              "scale_factor": "`{@2x}` vai `{r}`: izšķirtspējas mēroga faktors",
+              "switch": "`{switch:a,b,c}`: DNS servera multipleksēšana",
+              "xyz": "`{zoom}` vai `{z}`, `{x}`, `{y}`: Z/X/Y mozaīkas koordinātas"
+            },
+            "tokens_label": "Atbalstītie TMS parametri:"
+          },
+          "wms": {
+            "tokens": {
+              "bbox": "`{bbox}`: pieprasītais ierobežojošais rāmis (piem., `minX,minY,maxX,maxY`)",
+              "dimensions": "`{width}`, `{height}`: pieprasītie attēla izmēri (tikai `256`)",
+              "proj": "`{proj}`: pieprasītā projekcija (tikai `EPSG:3857`)",
+              "wkid": "`{wkid}`: tas pats, kas proj, bet bez EPSG (tikai `3857`)"
+            },
+            "tokens_label": "Atbalstītie WMS parametri:"
+          }
+        },
+        "template": {
+          "placeholder": "Ievadi url veidni"
+        },
+        "tooltip": "Rediģēt pielāgoto fonu"
+      },
+      "custom_data": {
+        "file": {
+          "label": "Pārlūkot datnes"
+        },
+        "or": "Vai",
+        "tooltip": "Rediģēt pielāgoto datu slāni",
+        "url": {
+          "placeholder": "Ievadi url"
+        }
+      }
+    },
+    "shortcuts": {
+      "command": {
+        "copy": {
+          "label": "Kopēt izvēlētos objektus"
+        },
+        "delete": {
+          "label": "Dzēst izvēlētos objektus"
+        },
+        "find": {
+          "label": "Atrast objektus, kas atbilst meklētajam tekstam"
+        },
+        "lasso": {
+          "label": "Uzzīmēt izvēlnes laso ap objektiem"
+        },
+        "merge": {
+          "label": "Apvienot (apkopot) izvēlētos objektus"
+        },
+        "move": {
+          "label": "Pārvietot izvēlētos objektus"
+        },
+        "paste": {
+          "label": "Ielīmēt kopētos objektus"
+        },
+        "rotate": {
+          "label": "Pagriezt izvēlētos objektus"
+        }
+      },
+      "help": "Palīdzība",
+      "info": "Informācija",
+      "key": {
+        "alt": "Alt",
+        "delete": "Dzēst"
+      },
+      "navigation": "Navigācija",
+      "title": "Klavietūras Īsinājumtaustiņi",
+      "tooltip": "Rādīt īsinājumtaustiņu ekrānu."
+    },
+    "source_switch": {
+      "dev": "dev",
+      "live": "live",
+      "lose_changes": "Jums ir nesaglabātas izmaiņas. Tās tiks zaudētas mainot karšu serveri. Vai tiešām vēlaties mainīt karšu serveri?"
+    },
+    "splash": {
+      "start": "Rediģēt tagad",
+      "text": "iD ir draudzīgs, bet spēcīgs rīks ar ko var dot savu ieguldījumu pasaules labākajai brīvajai pasaules kartei. Šī ir versija {version}. Papildus informācijai varat skatīt {website} un ziņot par kļūdām {github}.",
+      "walkthrough": "Sākt ceļvedi",
+      "welcome": "Laipni lūgti iD OpenStreetMap redaktorā"
+    },
+    "status": {
+      "retry": "Mēģināt vēlreiz"
+    },
+    "streetside": {
+      "tooltip": "Ielas līmeņa attēli no Microsoft"
+    },
+    "success": {
+      "events": "Notikumi",
+      "help_link_text": "Detaļas",
+      "help_link_url": "https://wiki.openstreetmap.org/wiki/FAQ#I_have_just_made_some_changes_to_the_map._How_do_I_get_to_see_my_changes.3F",
+      "just_edited": "Jūs nupat rediģējāt OpenStreetMap",
+      "languages": "Valodas: {languages}",
+      "like_osm": "Patīk OpenStreetMap? Sazinies ar citiem:",
+      "missing": "Vai kaut kas šajā sarakstā trūkst?",
+      "more": "Vairāk",
+      "tell_us": "Pastāsti mums!",
+      "thank_you": "Paldies par kartes uzlabošanu.",
+      "thank_you_location": "Paldies ka uzlabojāt karti {where} apkārtnē.",
+      "view_on_osm": "Apskatīt izmaiņas OSM"
+    },
+    "tag_reference": {
+      "description": "Apraksts",
+      "on_wiki": "{tag} wiki.osm.org",
+      "used_with": "izmantots kopā ar {type}"
+    },
+    "title": {
+      "format": {
+        "changes": "({changes}) {base}",
+        "changes_context": "({changes}) {base} – {context}",
+        "context": "{base} – {context}"
+      },
+      "labeled_and_more": {
+        "one": "{labeled} un {count} vairāk",
+        "other": "{labeled} un {count} vairāk"
+      }
+    },
+    "toolbar": {
+      "add_feature": "Pievienot objektu",
+      "favorites": "Miļākie",
+      "inspect": "Sānjosla",
+      "recent": "Nesenais",
+      "undo_redo": "Atpakaļ / Uz priekšu"
+    },
+    "tooltip_keyhint": "Īsinājumtaustiņš:",
+    "translate": {
+      "localized_translation_label": "Daudzvalodu nosaukums",
+      "localized_translation_language": "Izvelties valodu",
+      "localized_translation_name": "Vārds",
+      "translate": "Pievienot daudzvalodu nosaukumu"
+    },
+    "undo": {
+      "nothing": "Nav nekā, ko atcelt",
+      "tooltip": "Atcelt: {action}"
+    },
+    "units": {
+      "east": "E",
+      "north": "N",
+      "south": "S",
+      "west": "W"
+    },
+    "version": {
+      "whats_new": "Kas jauns iD {version}"
+    },
+    "visual_diff": {
+      "highlight_edits": {
+        "description": "Izcelt izmaiņas"
+      }
+    },
+    "wikidata": {
+      "description": "Apraksts",
+      "identifier": "Identifikators",
+      "label": "Etiķete"
+    },
+    "zoom": {
+      "in": "Pietuvināt",
+      "out": "Attālināt"
+    },
+    "zoom_in_edit": "Pietuvini lai labotu"
   }
 }

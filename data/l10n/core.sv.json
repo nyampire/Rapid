@@ -1395,11 +1395,6 @@
         "label": "Microsoft-byggnader",
         "description": "Avtryck av öppna byggnader från hela världen. Upptäckt från Bing Maps-bilder mellan 2014 och 2024, inklusive bilder från Maxar, Airbus och IGN France."
       },
-      "overture": {
-        "places": {
-          "description": "Innehåller över 53 miljoner punktrepresentationer av verkliga enheter: skolor, företag, sjukhus, religiösa organisationer, landmärken, bergstoppar och mycket mer."
-        }
-      },
       "omdFootways": {
         "label": "Öppna data Gångvägar",
         "description": "Data om öppna gångvägar insamlad från olika lokala myndigheter."

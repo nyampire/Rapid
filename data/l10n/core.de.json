@@ -1399,7 +1399,18 @@
       },
       "overture": {
         "places": {
-          "description": "Enthält über 53 Millionen Punktdarstellungen von realen Objekten: Schulen, Unternehmen, Krankenhäuser, religiöse Organisationen, Landmarken, Berggipfel und vieles mehr."
+          "description": "Sehenswürdigkeiten von Overture Maps, die von verschiedenen kommerziellen und kommunalen Anbietern bereitgestellt werden."
+        },
+        "esri_buildings": {
+          "label": "Esri Community Maps Gebäude",
+          "description": "Die Umrisse der Gebäude kommen vom Community Maps-Programm von Esri und sind über die Overture Maps Foundation verfügbar."
+        },
+        "ml_buildings": {
+          "label": "Microsoft ML + Google Open Gebäude",
+          "description": "ML-abgeleitete Gebäudeflächen von Microsoft und Google Open Buildings, zusammengestellt von der Overture Maps Foundation."
+        },
+        "tomtom_roads": {
+          "description": "Straßennetzdaten von TomTom, verfügbar über die Overture Maps Foundation."
         }
       },
       "omdFootways": {
@@ -1409,6 +1420,17 @@
       "metaSyntheticFootways": {
         "label": "Synthetische Fußwege von Meta",
         "description": "Daten über synthetische Fußwege, die von verschiedenen lokalen Behörden gesammelt wurden."
+      },
+      "ignored_ids": {
+        "link": "{count} ignorierte Overture-IDs",
+        "link_one": "{count} ignorierte Overture-ID",
+        "title": "{count} Ignorierte Overture-IDs",
+        "title_one": "{count} Ignorierte Overture-ID",
+        "instructions": "Das sind die Overture GERS-IDs von ML-abgeleiteten Gebäudeflächen, die du in dieser Sitzung abgelehnt/ignoriert hast. Du kannst sie als Fehlalarme melden, indem du ein Ticket erstellst:",
+        "copy": "In die Zwischenablage kopieren",
+        "copied": "Kopiert!",
+        "download": "Als Datei runterladen",
+        "more": "… und {count} weitere"
       }
     },
     "rapid_poweruser": {

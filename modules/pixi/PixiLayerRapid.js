@@ -243,35 +243,34 @@ export class PixiLayerRapid extends AbstractLayer {
     // Gather data
     const data = { points: [], vertices: new Set(), lines: [], polygons: [] };
 
-    /* Facebook AI/ML */
+    /* Facebook AI/ML Roads (PMTiles) and Tutorial (rapid_intro_graph) */
     if (dataset.service === 'mapwithai') {
-      if (zoom >= 16) {  // avoid firing off too many API requests
-        service.loadTiles(datasetID);  // fetch more
+      if (zoom >= 14) {
+        service.loadTiles(datasetID);
       }
 
-      // Skip features already accepted/ignored by the user
-      const entities = service.getData(datasetID)
-        .filter(entity => entity.type === 'way' && !isAcceptedOrIgnored(entity));
+      const entities = service.getData(datasetID);
 
-      // fb_ai service gives us roads and buildings together,
-      // so filter further according to which dataset we're drawing
-      if (dataset.id === 'fbRoads'
-          || dataset.id === 'omdFootways'
-          || dataset.id === 'metaSyntheticFootways'
-          || dataset.id === 'rapid_intro_graph') {
-        data.lines = entities.filter(d => d.geometry(dsGraph) === 'line' && !!d.tags.highway);
+      for (const entity of entities) {
+        if (isAcceptedOrIgnored(entity)) continue;
 
-        // Gather endpoint vertices, we will render these also
-        for (const way of data.lines) {
-          const first = dsGraph.entity(way.first());
-          const last = dsGraph.entity(way.last());
-          data.vertices.add(first);
-          data.vertices.add(last);
+        if (entity.type === 'way') {
+          data.lines.push(entity);
+          const graph = service.graph(datasetID);
+          if (graph) {
+            try {
+              const first = graph.entity(entity.first());
+              const last = graph.entity(entity.last());
+              data.vertices.add(first);
+              data.vertices.add(last);
+            } catch (e) {
+              // Skip if we can't resolve endpoint nodes
+            }
+          }
         }
-
-      } else {  // ms buildings or esri buildings through conflation service
-        data.polygons = entities.filter(d => d.geometry(dsGraph) === 'area');
       }
+
+      dsGraph = service.graph(datasetID);
 
     /* ESRI ArcGIS */
     } else if (dataset.service === 'esri') {
@@ -312,12 +311,28 @@ export class PixiLayerRapid extends AbstractLayer {
           if (entity.type === 'way') {
             data.polygons.push(entity);
           }
+        } else if (datasetID.includes('roads')) {
+          // Lines for roads (OSM entities from OvertureService)
+          if (entity.type === 'way') {
+            data.lines.push(entity);
+            const graph = service.graph(dataset.id);
+            if (graph) {
+              try {
+                const first = graph.entity(entity.first());
+                const last = graph.entity(entity.last());
+                data.vertices.add(first);
+                data.vertices.add(last);
+              } catch (e) {
+                // Skip if we can't resolve endpoint nodes
+              }
+            }
+          }
         }
       }
 
-      // For buildings, we need the graph to resolve node coordinates
-      if (datasetID.includes('buildings')) {
-        dsGraph = service.graph(datasetID);
+      // For buildings and roads, we need the graph to resolve node coordinates
+      if (datasetID.includes('buildings') || datasetID.includes('roads')) {
+        dsGraph = service.graph(dataset.id);
       }
 
     /* Plateau (Japan 3D building data from nyampire/rapid_plateau_api) */

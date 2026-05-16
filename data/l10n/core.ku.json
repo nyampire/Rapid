@@ -1,130 +1,89 @@
 {
   "ku": {
-    "icons": {
-      "download": "daxîne"
-    },
-    "modes": {
-      "add_area": {
-        "title": "Qad"
-      },
-      "add_line": {
-        "title": "Xêz"
-      },
-      "add_point": {
-        "title": "Nuqte"
+    "QA": {
+      "keepRight": {
+        "detail_description": "Danasîn"
       }
     },
-    "operations": {
-      "continue": {
-        "title": "Bidomîne"
-      },
-      "orthogonalize": {
-        "title": "Çarçik"
-      },
-      "delete": {
-        "title": "Jê bibe"
-      }
+    "background": {
+      "key": "B"
     },
-    "translate": {
-      "localized_translation_name": "Nav"
-    },
-    "zoom_in_edit": "Ji bo guherandinê nêzîk bike",
     "commit": {
-      "save": "Bişîne",
       "cancel": "Betal bike",
+      "created": "Hate afirandin",
       "deleted": "Hate jêbirin",
-      "created": "Hate afirandin"
+      "save": "Bişîne"
+    },
+    "confirm": {
+      "cancel": "Betal bike"
     },
     "contributors": {
       "list": "Guherînên {users}"
-    },
-    "info_panels": {
-      "background": {
-        "source": "Çavkanî",
-        "description": "Danasîn"
-      },
-      "history": {
-        "title": "Dîrok",
-        "version": "Guherto",
-        "edited_by": "Hat guherîn ji alî"
-      },
-      "measurement": {
-        "area": "Qad"
-      }
-    },
-    "geometry": {
-      "area": "qad"
-    },
-    "geolocate": {
-      "title": "Cihê min nîşan bide"
-    },
-    "inspector": {
-      "search": "Lêbigere",
-      "feature_list": "Li bireseran bigere",
-      "check": {
-        "yes": "Erê",
-        "no": "Na"
-      }
-    },
-    "map_data": {
-      "title": "Daneyên nexşeyê",
-      "description": "Daneyên nexşeyê",
-      "layers": {
-        "maproulette": {
-          "cancel": "Betal bike"
-        }
-      }
     },
     "filters": {
       "points": {
         "description": "Nuqte"
       }
     },
-    "save": {
-      "title": "Qeyd bike"
+    "geolocate": {
+      "title": "Cihê min nîşan bide"
     },
-    "confirm": {
-      "cancel": "Betal bike"
-    },
-    "tag_reference": {
-      "description": "Danasîn"
-    },
-    "QA": {
-      "keepRight": {
-        "detail_description": "Danasîn"
-      }
+    "geometry": {
+      "area": "qad"
     },
     "help": {
-      "title": "Alîkarî",
-      "help": {
-        "title": "Alîkarî"
-      },
       "editing": {
         "save_h": "Qeyd bike",
         "upload_h": "Bar bike"
       },
+      "help": {
+        "title": "Alîkarî"
+      },
+      "key": "H",
       "points": {
         "title": "Nuqte"
+      },
+      "title": "Alîkarî"
+    },
+    "icons": {
+      "download": "daxîne"
+    },
+    "info_panels": {
+      "background": {
+        "description": "Danasîn",
+        "source": "Çavkanî"
+      },
+      "history": {
+        "edited_by": "Hat guherîn ji alî",
+        "title": "Dîrok",
+        "version": "Guherto"
+      },
+      "location": {
+        "title": "شوێن"
+      },
+      "measurement": {
+        "area": "Qad",
+        "center": "ناوەند",
+        "length": "درێژی",
+        "location": "شوێن"
       }
+    },
+    "inspector": {
+      "check": {
+        "no": "Na",
+        "yes": "Erê"
+      },
+      "feature_list": "Li bireseran bigere",
+      "location": "شوێن",
+      "search": "Lêbigere"
     },
     "intro": {
       "points": {
         "title": "Nuqte"
       }
     },
-    "shortcuts": {
-      "key": {
-        "delete": "Jê bibe"
-      },
-      "help": "Alîkarî",
-      "command": {
-        "save": {
-          "label": "Guherandinan qeyd bike"
-        }
-      }
-    },
-    "wikidata": {
-      "description": "Danasîn"
+    "issues": {
+      "key": "I"
     },
     "languageNames": {
       "aa": "afarî",
@@ -581,6 +540,40 @@
       "zun": "zunîyî",
       "zza": "zazakî (kirdkî, kirmanckî)"
     },
+    "map_data": {
+      "description": "Daneyên nexşeyê",
+      "layers": {
+        "maproulette": {
+          "cancel": "Betal bike"
+        }
+      },
+      "title": "Daneyên nexşeyê"
+    },
+    "modes": {
+      "add_area": {
+        "title": "Qad"
+      },
+      "add_line": {
+        "title": "Xêz"
+      },
+      "add_point": {
+        "title": "Nuqte"
+      }
+    },
+    "operations": {
+      "continue": {
+        "title": "Bidomîne"
+      },
+      "delete": {
+        "title": "Jê bibe"
+      },
+      "orthogonalize": {
+        "title": "Çarçik"
+      }
+    },
+    "save": {
+      "title": "Qeyd bike"
+    },
     "scriptNames": {
       "Arab": "erebî",
       "Aran": "nestalîq",
@@ -630,6 +623,30 @@
       "Zxxx": "nenivîskî",
       "Zyyy": "hevpar",
       "Zzzz": "alfabeya nenas"
-    }
+    },
+    "shortcuts": {
+      "command": {
+        "save": {
+          "label": "Guherandinan qeyd bike"
+        }
+      },
+      "help": "Alîkarî",
+      "key": {
+        "delete": "Jê bibe"
+      }
+    },
+    "tag_reference": {
+      "description": "Danasîn"
+    },
+    "translate": {
+      "localized_translation_name": "Nav"
+    },
+    "units": {
+      "south": "S"
+    },
+    "wikidata": {
+      "description": "Danasîn"
+    },
+    "zoom_in_edit": "Ji bo guherandinê nêzîk bike"
   }
 }

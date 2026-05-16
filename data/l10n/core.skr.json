@@ -1,20 +1,27 @@
 {
   "skr": {
+    "background": {
+      "none": "کوئی وی کائنی"
+    },
     "icons": {
       "download": "ڈاؤن لوڈ",
       "information": "ڄاݨکاری",
-      "remove": "ہٹاؤ",
-      "list": "تندیر"
+      "list": "تندیر",
+      "remove": "ہٹاؤ"
     },
-    "toolbar": {
-      "recent": "حالیہ"
+    "inspector": {
+      "none": "کوئی وی کائنی",
+      "unknown": "نامعلوم"
+    },
+    "languageNames": {
+      "skr": "سرائیکی"
     },
     "modes": {
-      "add_point": {
-        "title": "نقطہ"
-      },
       "add_note": {
         "title": "نوٹ"
+      },
+      "add_point": {
+        "title": "نقطہ"
       },
       "browse": {
         "title": "براؤز کرو"
@@ -23,8 +30,8 @@
     "note": {
       "note": "نوٹ"
     },
-    "languageNames": {
-      "skr": "سرائیکی"
+    "toolbar": {
+      "recent": "حالیہ"
     }
   }
 }

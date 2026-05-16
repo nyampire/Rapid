@@ -1,101 +1,23 @@
 {
   "or": {
     "icons": {
-      "download": "ଡାଉନଲୋଡ",
-      "information": "ସୂଚନା",
-      "remove": "ବାହାର କରନ୍ତୁ",
-      "undo": "ଅନଡୁ",
-      "zoom_to": "ବଡ଼ କରନ୍ତୁ",
       "copy": "ଛାପନ୍ତୁ",
+      "deselect": "ଅଣ-ବଛା କରନ୍ତୁ",
+      "download": "ଡାଉନଲୋଡ",
+      "favorite": "ପ୍ରିୟ",
+      "information": "ସୂଚନା",
+      "list": "ସାରଣୀ",
+      "remove": "ବାହାର କରନ୍ତୁ",
+      "text": "ଲେଖା",
+      "undo": "ଅନଡୁ",
       "view_on": "{domain}ରେ ଦେଖନ୍ତୁ",
       "visit_website": "ୱେବସାଇଟ ଦେଖନ୍ତୁ",
-      "favorite": "ପ୍ରିୟ",
-      "list": "ସାରଣୀ",
-      "text": "ଲେଖା",
-      "deselect": "ଅଣ-ବଛା କରନ୍ତୁ"
-    },
-    "toolbar": {
-      "inspect": "ନିରୀକ୍ଷଣ",
-      "undo_redo": "ଅଣ୍ଡୁ /ରିଡୁ ",
-      "recent": "ସାମ୍ପ୍ରତିକ",
-      "favorites": "ପସନ୍ଦ",
-      "add_feature": "ପସନ୍ଦ ଯୋଡ଼ନ୍ତୁ"
-    },
-    "title": {
-      "labeled_and_more": {
-        "one": "{labeled} ଏବଂ {count} more",
-        "other": "{labeled} ଏବଂ {count} ଅଧିକ"
-      }
-    },
-    "modes": {
-      "add_area": {
-        "title": "ସ୍ଥାନ"
-      },
-      "add_line": {
-        "title": "ରେଖା"
-      },
-      "add_point": {
-        "title": "ବିନ୍ଦୁ"
-      },
-      "add_note": {
-        "title": "ଟିପ୍ପଣୀ"
-      },
-      "add_preset": {
-        "title": "{feature} ଯୋଡ଼ନ୍ତୁ"
-      },
-      "browse": {
-        "title": "ବ୍ରାଉଜ"
-      }
-    },
-    "operations": {
-      "add": {
-        "annotation": {
-          "point": "ବିନ୍ଦୁ ଯୋଡ଼ାଗଲା",
-          "vertex": "ଏକ ନୋଡ଼ ଏକ ମାର୍ଗକୁ ଯୋଡ଼ିଲା",
-          "relation": "ଏକ ସମ୍ପର୍କ ଯୋଡ଼ିହେଲା",
-          "note": "ଏକ ଟିପ୍ପଣୀ ଯୋଡ଼ିହେଲା"
-        }
-      },
-      "start": {
-        "annotation": {
-          "line": "ଏକ ରେଖା ଆରମ୍ଭ ହେଲା",
-          "area": "ଏକ ସ୍ଥାନ ଆରମ୍ଭ ହେଲା"
-        }
-      },
-      "continue": {
-        "title": "ଚାଲୁ ରଖନ୍ତୁ",
-        "description": "ରେଖା ଚାଲୁ ରଖନ୍ତୁ",
-        "not_eligible": "କୌଣସି ରେଖା ଏଠାରୁ ଆଗକୁ ଯାଇପାରିବନି",
-        "annotation": {
-          "line": "ଏକ ରେଖା ଚାଲୁହେଲା",
-          "area": "ଏକ ସ୍ଥାନ ଚାଲୁହେଲା"
-        }
-      },
-      "copy": {
-        "title": "ନକଲ"
-      },
-      "paste": {
-        "title": "ଛାପନ୍ତୁ"
-      },
-      "orthogonalize": {
-        "title": "ବର୍ଗ"
-      },
-      "straighten": {
-        "title": "ସଳଖାନ୍ତୁ",
-        "description": {
-          "points": "ଏହି ବିନ୍ଦୁଗୁଡ଼ିକୁ ସଳଖାନ୍ତୁ",
-          "line": "ଏହି ରେଖାକୁ ସଳଖାନ୍ତୁ",
-          "lines": "ଏହି ରେଖାଗୁଡ଼ିକୁ ସଳଖାନ୍ତୁ"
-        }
-      }
+      "zoom_to": "ବଡ଼ କରନ୍ତୁ"
     },
     "info_panels": {
       "measurement": {
         "area": "ସ୍ଥାନ"
       }
-    },
-    "note": {
-      "note": "ଟିପ୍ପଣୀ"
     },
     "languageNames": {
       "aa": "ଅଫାର୍",
@@ -649,6 +571,72 @@
       "zun": "ଜୁନୀ",
       "zza": "ଜାଜା"
     },
+    "modes": {
+      "add_area": {
+        "description": "ମାନଚିତ୍ରରେ ଉଦ୍ୟାନ, କୋଠା, ହ୍ରଦ କିମ୍ବା ଅନ୍ୟାନ୍ୟ ସ୍ଥାନ ଯୋଡ଼ନ୍ତୁ।",
+        "title": "ସ୍ଥାନ"
+      },
+      "add_line": {
+        "title": "ରେଖା"
+      },
+      "add_note": {
+        "title": "ଟିପ୍ପଣୀ"
+      },
+      "add_point": {
+        "title": "ବିନ୍ଦୁ"
+      },
+      "add_preset": {
+        "title": "{feature} ଯୋଡ଼ନ୍ତୁ"
+      },
+      "browse": {
+        "title": "ବ୍ରାଉଜ"
+      }
+    },
+    "note": {
+      "note": "ଟିପ୍ପଣୀ"
+    },
+    "operations": {
+      "add": {
+        "annotation": {
+          "note": "ଏକ ଟିପ୍ପଣୀ ଯୋଡ଼ିହେଲା",
+          "point": "ବିନ୍ଦୁ ଯୋଡ଼ାଗଲା",
+          "relation": "ଏକ ସମ୍ପର୍କ ଯୋଡ଼ିହେଲା",
+          "vertex": "ଏକ ନୋଡ଼ ଏକ ମାର୍ଗକୁ ଯୋଡ଼ିଲା"
+        }
+      },
+      "continue": {
+        "annotation": {
+          "area": "ଏକ ସ୍ଥାନ ଚାଲୁହେଲା",
+          "line": "ଏକ ରେଖା ଚାଲୁହେଲା"
+        },
+        "description": "ରେଖା ଚାଲୁ ରଖନ୍ତୁ",
+        "not_eligible": "କୌଣସି ରେଖା ଏଠାରୁ ଆଗକୁ ଯାଇପାରିବନି",
+        "title": "ଚାଲୁ ରଖନ୍ତୁ"
+      },
+      "copy": {
+        "title": "ନକଲ"
+      },
+      "orthogonalize": {
+        "title": "ବର୍ଗ"
+      },
+      "paste": {
+        "title": "ଛାପନ୍ତୁ"
+      },
+      "start": {
+        "annotation": {
+          "area": "ଏକ ସ୍ଥାନ ଆରମ୍ଭ ହେଲା",
+          "line": "ଏକ ରେଖା ଆରମ୍ଭ ହେଲା"
+        }
+      },
+      "straighten": {
+        "description": {
+          "line": "ଏହି ରେଖାକୁ ସଳଖାନ୍ତୁ",
+          "lines": "ଏହି ରେଖାଗୁଡ଼ିକୁ ସଳଖାନ୍ତୁ",
+          "points": "ଏହି ବିନ୍ଦୁଗୁଡ଼ିକୁ ସଳଖାନ୍ତୁ"
+        },
+        "title": "ସଳଖାନ୍ତୁ"
+      }
+    },
     "scriptNames": {
       "Adlm": "ଆଡଲମ୍",
       "Arab": "ଆରବିକ୍",
@@ -786,6 +774,28 @@
       "Zxxx": "ଅଲିଖିତ",
       "Zyyy": "ସାଧାରଣ",
       "Zzzz": "ଅଜଣା ଲିପି"
+    },
+    "title": {
+      "format": {
+        "changes": "({changes}) {base}",
+        "changes_context": "({changes}) {base} – {context}",
+        "context": "{base} – {context}"
+      },
+      "labeled_and_more": {
+        "one": "{labeled} ଏବଂ {count} more",
+        "other": "{labeled} ଏବଂ {count} ଅଧିକ"
+      }
+    },
+    "toolbar": {
+      "add_feature": "ପସନ୍ଦ ଯୋଡ଼ନ୍ତୁ",
+      "favorites": "ପସନ୍ଦ",
+      "inspect": "ନିରୀକ୍ଷଣ",
+      "recent": "ସାମ୍ପ୍ରତିକ",
+      "undo_redo": "ଅଣ୍ଡୁ /ରିଡୁ "
+    },
+    "units": {
+      "north": "N",
+      "south": "S"
     }
   }
 }

@@ -1472,19 +1472,15 @@
         "ml_buildings": {
           "label": "Microsoft ML + Google Open Buildings",
           "description": "ML-derived building footprints from Microsoft and Google Open Buildings, conflated by the Overture Maps Foundation."
+        },
+        "tomtom_roads": {
+          "label": "TomTom Roads",
+          "description": "Road network data sourced from TomTom, available through the Overture Maps Foundation."
         }
       },
       "plateauJapan": {
         "label": "Plateau Japan Buildings",
         "description": "Building footprints from Japan's PLATEAU 3D city model project, provided by OSMFJ."
-      },
-      "omdFootways": {
-        "label": "Open Data Footways",
-        "description": "Open footways data collected from various local government entities."
-      },
-      "metaSyntheticFootways": {
-        "label": "Synthetic Footways from Meta",
-        "description": "Synthetic footways data collected from various local government entities."
       },
       "ignored_ids": {
         "link": "{count} ignored Overture IDs",

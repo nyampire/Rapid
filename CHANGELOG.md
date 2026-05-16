@@ -39,6 +39,16 @@ _Breaking developer changes, which may affect downstream projects or sites that 
 [id-tagging-schema#xxxx]: https://github.com/openstreetmap/id-tagging-schema/issues/xxxx
 [@xxxx]: https://github.com/xxxx
 -->
+# [2.5.7](https://github.com/facebook/Rapid/releases/tag/rapid-2.5.7)
+#### 2026-Apr-15
+
+#### :bug: More XSS Vulnerability fixes
+* Sanitizes HTML before rendering to mitigate XSS vulnerabilities.
+
+#### :hammer: Remove dependency on conflation through `https://mapwith.ai`
+
+
+
 # [2.5.6](https://github.com/facebook/Rapid/releases/tag/rapid-2.5.6)
 #### 2026-Feb-03
 
