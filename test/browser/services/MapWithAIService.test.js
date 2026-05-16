@@ -689,6 +689,163 @@ describe('MapWithAIService', () => {
         .map(([_, id]) => id);
       expect(unsetIDs).to.include('w_outline');
     });
+
+    it('does not unset highlight on IDs that the select handler still claims', () => {
+      const layer = makeLayerMock();
+      const sceneLayers = new Map([['rapid', layer]]);
+      _service.context.systems.gfx = {
+        scene: { layers: sceneLayers },
+        deferredRedraw() {},
+        immediateRedraw() {},
+      };
+
+      const built = makeBuildingRelationDataset(_service, 'pj');
+      built.part.__service__ = 'mapwithai';
+      built.part.__datasetid__ = 'pj';
+
+      // select 側が outline を claim している状態を再現
+      _service._selectedRelationSiblings.add('w_outline');
+      _service._hoveredRelationSiblings.add('w_outline');
+
+      // hover を外す (cleanup)
+      _service._onHoverchange({ target: null });
+
+      const unsetIDs = layer.getUnsetCalls()
+        .filter(([klass, _]) => klass === 'highlight')
+        .map(([_, id]) => id);
+      expect(unsetIDs).to.not.include('w_outline');
+    });
+  });
+
+
+  describe('#_onModeChange', () => {
+    /**
+     * Phase 4-B-3: select 時に relation の他 members を highlight するハンドラ。
+     * MockContext には selectedData / mode が無いので必要なものを生やして検証する。
+     */
+    function makeLayerMock() {
+      const setCalls = [];
+      const unsetCalls = [];
+      return {
+        setClass(klass, id) { setCalls.push([klass, id]); },
+        unsetClass(klass, id) { unsetCalls.push([klass, id]); },
+        getSetCalls: () => setCalls,
+        getUnsetCalls: () => unsetCalls,
+      };
+    }
+
+    function attachScene(serviceInstance, rapidLayer) {
+      const sceneLayers = new Map([['rapid', rapidLayer]]);
+      serviceInstance.context.systems.gfx = {
+        scene: { layers: sceneLayers },
+        deferredRedraw() {},
+        immediateRedraw() {},
+      };
+    }
+
+    function makeBuildingRelationDataset(serviceInstance, datasetID) {
+      const outline = Rapid.osmWay({ id: 'w_outline', nodes: ['n1'], tags: { building: 'yes' } });
+      const part = Rapid.osmWay({ id: 'w_part', nodes: ['n1'], tags: { 'building:part': 'yes' } });
+      const relation = Rapid.osmRelation({
+        id: 'r_building',
+        tags: { type: 'building', building: 'yes' },
+        members: [
+          { id: outline.id, type: 'way', role: 'outline' },
+          { id: part.id, type: 'way', role: 'part' },
+        ],
+      });
+      const node = Rapid.osmNode({ id: 'n1', loc: [0, 0] });
+      let graph = new Rapid.Graph([node, outline, part, relation]);
+      serviceInstance._datasets[datasetID] = {
+        id: datasetID,
+        graph: graph,
+        tree: null,
+        cache: { inflight: {}, loaded: new Set(), seen: new Set(), seenFirstNodeID: new Set(), splitWays: new Map() },
+      };
+      return { outline, part, relation };
+    }
+
+    it('sets highlight on other relation members when selecting a Plateau member way', () => {
+      const layer = makeLayerMock();
+      attachScene(_service, layer);
+      const built = makeBuildingRelationDataset(_service, 'pj');
+
+      built.part.__service__ = 'mapwithai';
+      built.part.__datasetid__ = 'pj';
+      const selectedData = new Map([[built.part.id, built.part]]);
+      _service.context.selectedData = () => selectedData;
+
+      _service._onModeChange({ id: 'select' });
+
+      const highlightedIDs = layer.getSetCalls()
+        .filter(([klass, _]) => klass === 'highlight')
+        .map(([_, id]) => id);
+      expect(highlightedIDs).to.include('w_outline');
+      expect(highlightedIDs).to.not.include('w_part');
+    });
+
+    it('does nothing when no Plateau feature is selected', () => {
+      const layer = makeLayerMock();
+      attachScene(_service, layer);
+      makeBuildingRelationDataset(_service, 'pj');
+
+      _service.context.selectedData = () => new Map();
+      _service._onModeChange({ id: 'select' });
+
+      expect(layer.getSetCalls()).to.have.lengthOf(0);
+    });
+
+    it('ignores non-select modes (browse, draw, save) and only cleans previous highlights', () => {
+      const layer = makeLayerMock();
+      attachScene(_service, layer);
+      makeBuildingRelationDataset(_service, 'pj');
+
+      // 過去の select で立てた sibling が残っている状態
+      _service._selectedRelationSiblings.add('w_outline');
+
+      _service._onModeChange({ id: 'browse' });
+
+      // browse モードでは select-time highlight をしない
+      expect(layer.getSetCalls()).to.have.lengthOf(0);
+      // 過去 claim 分は unset される
+      const unsetIDs = layer.getUnsetCalls()
+        .filter(([klass, _]) => klass === 'highlight')
+        .map(([_, id]) => id);
+      expect(unsetIDs).to.include('w_outline');
+      expect(_service._selectedRelationSiblings.size).to.eql(0);
+    });
+
+    it('does not unset highlight on IDs that hover still claims', () => {
+      const layer = makeLayerMock();
+      attachScene(_service, layer);
+      makeBuildingRelationDataset(_service, 'pj');
+
+      // hover と select が同じ outline を claim している状態
+      _service._selectedRelationSiblings.add('w_outline');
+      _service._hoveredRelationSiblings.add('w_outline');
+
+      _service._onModeChange({ id: 'browse' });
+
+      const unsetIDs = layer.getUnsetCalls()
+        .filter(([klass, _]) => klass === 'highlight')
+        .map(([_, id]) => id);
+      expect(unsetIDs).to.not.include('w_outline');
+    });
+
+    it('ignores selected entities that do not belong to a building relation', () => {
+      const layer = makeLayerMock();
+      attachScene(_service, layer);
+
+      const solo = Rapid.osmWay({ id: 'w_solo', nodes: [], tags: { building: 'yes' } });
+      _service._datasets.pj_solo = { id: 'pj_solo', graph: new Rapid.Graph([solo]), tree: null, cache: {} };
+      solo.__service__ = 'mapwithai';
+      solo.__datasetid__ = 'pj_solo';
+
+      _service.context.selectedData = () => new Map([[solo.id, solo]]);
+      _service._onModeChange({ id: 'select' });
+
+      expect(layer.getSetCalls()).to.have.lengthOf(0);
+    });
   });
 
 });
