@@ -112,7 +112,7 @@ export class PixiLayerRapid extends AbstractLayer {
   get supported() {
     // return true if any of these are installed
     const services = this.context.services;
-    return !!(services.mapwithai || services.esri || services.overture);
+    return !!(services.mapwithai || services.esri || services.overture || services.plateau);
   }
 
 
@@ -137,6 +137,7 @@ export class PixiLayerRapid extends AbstractLayer {
     const esri = context.services.esri;
     const mapwithai = context.services.mapwithai;
     const overture = context.services.overture;
+    const plateau = context.services.plateau;
 
     // This code is written in a way that we can work with whatever
     // data-providing services are installed.
@@ -144,6 +145,7 @@ export class PixiLayerRapid extends AbstractLayer {
     if (esri)      services.push(esri);
     if (mapwithai) services.push(mapwithai);
     if (overture)  services.push(overture);
+    if (plateau)   services.push(plateau);
 
     if (val && services.length) {
       Promise.all(services.map(service => service.startAsync()))
@@ -317,6 +319,20 @@ export class PixiLayerRapid extends AbstractLayer {
       if (datasetID.includes('buildings')) {
         dsGraph = service.graph(datasetID);
       }
+
+    /* Plateau (Japan 3D building data from nyampire/rapid_plateau_api) */
+    } else if (dataset.service === 'plateau') {
+      if (zoom >= 16) {  // avoid firing off too many API requests
+        service.loadTiles(datasetID);
+      }
+
+      // PlateauService.getData applies its own conflation; here we only need
+      // to filter out features the user already accepted or ignored and keep
+      // the polygonal members (outline + parts).
+      const entities = service.getData(datasetID)
+        .filter(entity => entity.type === 'way' && !isAcceptedOrIgnored(entity));
+
+      data.polygons = entities.filter(d => d.geometry(dsGraph) === 'area');
     }
 
     const pointsContainer = this.scene.groups.get('points');
