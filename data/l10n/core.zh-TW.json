@@ -527,9 +527,17 @@
       "category": {
         "roads": "道路"
       },
+      "overture": {
+        "tomtom_roads": {
+          "description": "透過 Overture 地圖基金會取得，從 TomTom 來的道路網路資料。"
+        }
+      },
       "omdFootways": {
         "label": "人行道的開放資料",
         "description": "開啟從不同地方政府收集的人行道資料。"
+      },
+      "ignored_ids": {
+        "link_one": "已忽略 {count}個 Overture 編號"
       }
     },
     "tag_reference": {

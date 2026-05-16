@@ -1,199 +1,224 @@
 {
   "nb": {
+    "QA": {
+      "keepRight": {
+        "comment": "Kommentar",
+        "detail_description": "Beskrivelse"
+      },
+      "osmose": {
+        "detail_title": "Detaljer"
+      }
+    },
+    "area_fill": {
+      "wireframe": {
+        "tooltip": "Når du slår på trådramme-modus, blir det enklere å se bakgrunnsbildene."
+      }
+    },
+    "background": {
+      "backgrounds": "Bakgrunner",
+      "contrast": "Kontrast",
+      "custom": "Egendefinert",
+      "description": "Bakgrunnsinnstillinger",
+      "panel": {
+        "description": "Vis bakgrunnspanelet",
+        "tooltip": "Vis avansert bakgrunnsinformasjon."
+      },
+      "switch": "Bytt tilbake til denne bakgrunnen",
+      "title": "Bakgrunn"
+    },
+    "commit": {
+      "cancel": "Avbryt",
+      "changes": "Endringer",
+      "created": "Laget",
+      "save": "Last opp"
+    },
+    "confirm": {
+      "cancel": "Avbryt",
+      "okay": "OK"
+    },
+    "geocoder": {
+      "search": "Søk globalt..."
+    },
+    "geolocate": {
+      "title": "Vis Min Posisjon"
+    },
+    "help": {
+      "editing": {
+        "save_h": "Lagre",
+        "upload_h": "Last opp"
+      },
+      "feature_editor": {
+        "tags_h": "Egenskaper"
+      },
+      "field": {
+        "restrictions": {
+          "about": {
+            "title": "Om"
+          }
+        }
+      },
+      "help": {
+        "title": "Hjelp"
+      },
+      "imagery": {
+        "title": "Bakgrunnsbilder"
+      },
+      "notes": {
+        "title": "Notater"
+      },
+      "relations": {
+        "title": "Relasjoner"
+      },
+      "title": "Hjelp"
+    },
+    "help_translate": "Hjelp oversette",
     "icons": {
-      "remove": "fjern",
-      "undo": "angre",
-      "zoom_to": "zoom inn",
       "copy": "kopier",
-      "view_on": "se på {domene}",
-      "visit_website": "besøk nettside",
+      "deselect": "velg bort",
+      "download": "Last ned",
       "favorite": "favoritt",
       "list": "liste",
+      "remove": "fjern",
       "text": "tekst",
-      "deselect": "velg bort"
-    },
-    "toolbar": {
-      "inspect": "sjekk",
-      "undo_redo": "Angre / Gjør om",
-      "recent": "Nylig",
-      "favorites": "Favoritter",
-      "add_feature": "Legg til Egenskap"
-    },
-    "title": {
-      "format": {
-        "changes": "({endringer}) {base}"
-      }
-    },
-    "modes": {
-      "add_area": {
-        "title": "Område"
-      },
-      "add_line": {
-        "title": "Linje"
-      },
-      "add_point": {
-        "title": "Punkt"
-      },
-      "add_note": {
-        "title": "Notat"
-      },
-      "add_preset": {
-        "title": "Legg til {egenskap}"
-      }
-    },
-    "operations": {
-      "add": {
-        "annotation": {
-          "point": "Legg til et punkt.",
-          "vertex": "La til node til en vei.",
-          "relation": "La til relasjon.",
-          "note": "La til en notat."
-        }
-      },
-      "start": {
-        "annotation": {
-          "line": "Startet ei linje.",
-          "area": "Startet et område."
-        }
-      },
-      "continue": {
-        "title": "Forsett",
-        "description": "Forsett denne linja.",
-        "not_eligible": "Ingen linje kan foresette her.",
-        "annotation": {
-          "line": "Forsatte ei linje.",
-          "area": "Forsatte et område."
-        }
-      },
-      "cancel_draw": {
-        "annotation": "Avbrøt tegning."
-      },
-      "change_tags": {
-        "annotation": "Endrede tagger."
-      },
-      "copy": {
-        "title": "Kopier",
-        "annotation": {
-          "one": "Kopiert en egenskap.",
-          "other": "Kopiert {n} egenskaper."
-        }
-      },
-      "paste": {
-        "title": "Lim inn",
-        "annotation": {
-          "one": "Limte inn en egenskap.",
-          "other": "Limte inn {n} egenskaper."
-        },
-        "nothing_copied": "Ingen egenskaper har blitt kopiert."
-      },
-      "orthogonalize": {
-        "annotation": {
-          "corner": {
-            "one": "Rettet ut et hjørne.",
-            "other": "Rettet ut {n} hjørner."
-          },
-          "feature": {
-            "one": "Rettet ut hjørnene av en egenskap.",
-            "other": "Rettet ut hjørnene av {n} egenskaper."
-          }
-        }
-      },
-      "straighten": {
-        "title": "Rettet ut.",
-        "description": {
-          "points": "Rett ut isse punktene.",
-          "line": "Rett ut denne linja.",
-          "lines": "Rett opp disse linjene."
-        },
-        "annotation": {
-          "point": {
-            "one": "Rettet et punkt.",
-            "other": "Rettet ut {n} punker."
-          },
-          "line": {
-            "one": "Rettet ut ei linje.",
-            "other": "Rettet ut {n} linjer."
-          }
-        }
-      },
-      "delete": {
-        "title": "Slett",
-        "annotation": {
-          "point": "Slett et punkt.",
-          "vertex": "Slett en node fra en vei.",
-          "line": "Slett ei linje.",
-          "area": "Slett et område.",
-          "relation": "Slett en relasjon."
-        }
-      },
-      "downgrade": {
-        "title": "Nedgrader"
-      },
-      "disconnect": {
-        "title": "Koble fra",
-        "description": {
-          "no_points": {
-            "single_way": {
-              "line": "Koble fra denne linja fra andre egenskaper.",
-              "area": "Koble fra dette området fra andre egenskaper."
-            },
-            "multiple_ways": {
-              "conjoined": "Koble fra disse egenskapene fra hverandre.",
-              "separate": "Koble fra disse egenskapene fra alt."
-            }
-          },
-          "single_point": {
-            "no_ways": "Koble fra egenskapene på dette punktet.",
-            "single_way": {
-              "line": "Koble fra valgte linje på dette punktet.",
-              "area": "Koble fra valgte området på dette punktet."
-            },
-            "multiple_ways": "Koble fra valgte egenskaper på dette punktet."
-          },
-          "multiple_points": {
-            "no_ways": "Koble fra valgte egenskaper på disse punktene.",
-            "single_way": {
-              "line": "Koble fra valgte linje på disse punktene.",
-              "area": "Koble fra valgte området på disse punktene."
-            },
-            "multiple_ways": "Koble fra valgte egenskapene på disse punktene."
-          }
-        },
-        "annotation": {
-          "features": "Frakoblede egenskaper.",
-          "from_each_other": "Frakoblet egenskaper fra hverandre."
-        },
-        "too_large": {
-          "single": "Dette kan ikke bli frakoblet fordi det er ikke nok av det synlig.",
-          "multiple": "Disse kan ikke bli frakoblet fordi det er ikke nok av det synlig nå."
-        }
-      },
-      "merge": {
-        "title": "Slå sammen",
-        "description": "Slå sammen disse egenskapene.",
-        "annotation": {
-          "one": "Sammenslo {n} egenskap.",
-          "other": "Sammenslo {n} egenskaper."
-        }
-      },
-      "move": {
-        "title": "Flytt",
-        "annotation": {
-          "point": "Flyttet et punkt"
-        }
-      }
+      "undo": "angre",
+      "view_on": "se på {domene}",
+      "visit_website": "besøk nettside",
+      "zoom_to": "zoom inn"
     },
     "info_panels": {
+      "background": {
+        "accuracy": "Nøyaktighet",
+        "description": "Beskrivelse",
+        "title": "Bakgrunn",
+        "zoom": "Zoom"
+      },
+      "history": {
+        "title": "Historikk",
+        "version": "Versjon"
+      },
       "measurement": {
-        "area": "Område"
+        "area": "Område",
+        "distance": "Distanse"
       }
     },
-    "note": {
-      "note": "Notat"
+    "inspector": {
+      "add": "Legg til",
+      "feature_list": "Søk etter objekter",
+      "members": "Medlemmer",
+      "relation": "Relasjon",
+      "relations": "Relasjoner",
+      "results": {
+        "one": "{n} Resultater for {search}",
+        "other": "{n} Resultater for {search}"
+      },
+      "role": "Rolle",
+      "tags": "Egenskaper"
     },
-    "shortcuts": {
-      "key": {
-        "delete": "Slett"
+    "intro": {
+      "areas": {
+        "search_playground": "**Søk for '{preset}'.**"
+      },
+      "buildings": {
+        "choose_category_building": "**Velg {category} fra lista.**",
+        "search_tank": "**Søk for '{preset}'.**",
+        "title": "Bygninger"
+      },
+      "lines": {
+        "multi_delete": "**Press {delete_icon} {delete} knappen for å fjerne ekstra linjene.**",
+        "multi_edit_menu_touch": "**{longpress_icon} Lang-trykk på en linjene for å vise redigeringsmenyen**",
+        "multi_rightclick": "**{rightclick} Høyre-klikk på en av linjene for å vise redigeringsmenyen.**",
+        "multi_select_success": "Bra! Begge linjene for sletting er nå valgt.",
+        "retry_delete": "Du presset ikke {delete_icon} {delete} knappen. Prøv igjen."
+      },
+      "startediting": {
+        "save": "Ikke glem å regelmessig lagre dine endringer!",
+        "start": "Start kartlegging!",
+        "title": "Begynn Redigering"
+      }
+    },
+    "issues": {
+      "fix": {
+        "add_a_bridge": {
+          "annotation": "La til en bro",
+          "title": "Legg til bru"
+        },
+        "add_a_tunnel": {
+          "title": "Legg til en tunnel"
+        },
+        "address_the_concern": {
+          "title": "Ta tak i bekymringen"
+        },
+        "continue_from_end": {
+          "title": "Forsett å tegne fra slutten"
+        },
+        "convert_to_line": {
+          "title": "Konverter dette til en linje"
+        },
+        "ignore_issue": {
+          "title": "Ignorer dette problemet"
+        },
+        "merge_close_vertices": {
+          "annotation": "Sammenslo hver nærme punkt i en vei"
+        },
+        "merge_points": {
+          "title": "Sammenslå disse punktene"
+        },
+        "move_points_apart": {
+          "title": "Flytt disse punktene fra hverandre"
+        },
+        "move_tags": {
+          "annotation": "Flyttet tagger.",
+          "title": "Flytt taggene"
+        },
+        "remove_from_relation": {
+          "title": "Fjernet fra relasjon"
+        },
+        "remove_generic_name": {
+          "annotation": "Fjernet et generelt navn."
+        },
+        "remove_proprietary_data": {
+          "title": "Fjern eventuelle proprietære data"
+        },
+        "remove_tag": {
+          "annotation": "Fjernet tagg.",
+          "title": "Fjern taggen"
+        },
+        "remove_tags": {
+          "title": "Fjern taggene"
+        },
+        "remove_the_name": {
+          "title": "Fjern navnet"
+        },
+        "select_preset": {
+          "title": "Velg egenskaptype"
+        },
+        "select_road_type": {
+          "title": "Velg veitype"
+        },
+        "set_as_inner": {
+          "title": "Sett som indre"
+        },
+        "set_as_outer": {
+          "title": "Sett som ytre"
+        },
+        "square_feature": {
+          "title": "Rett opp denne egenskapen"
+        },
+        "tag_as_disconnected": {
+          "title": "Tagg som frakoblet"
+        },
+        "tag_this_as_higher": {
+          "title": "Tagg dette som høyere"
+        },
+        "tag_this_as_lower": {
+          "title": "Tagg dette som lavere"
+        }
+      },
+      "help_request": {
+        "title": "Hjelpeforespørsler"
+      },
+      "private_data": {
+        "title": "Privat informasjon"
       }
     },
     "languageNames": {
@@ -832,6 +857,225 @@
       "zun": "zuni",
       "zza": "zazaisk"
     },
+    "map_data": {
+      "description": "Kartdata",
+      "layers": {
+        "custom": {
+          "title": "Egendefinerte kartdata"
+        },
+        "notes": {
+          "tooltip": "Merk data fra OpenStreetMap"
+        },
+        "osm": {
+          "title": "OpenStreetMap-data",
+          "tooltip": "Kartdata fra OpenStreetMap"
+        }
+      },
+      "title": "Kartdata"
+    },
+    "modes": {
+      "add_area": {
+        "title": "Område"
+      },
+      "add_line": {
+        "title": "Linje"
+      },
+      "add_note": {
+        "title": "Notat"
+      },
+      "add_point": {
+        "title": "Punkt"
+      },
+      "add_preset": {
+        "title": "Legg til {egenskap}"
+      }
+    },
+    "note": {
+      "anonymous": "anonymt",
+      "comment": "Kommentar",
+      "commentTitle": "Kommentarer",
+      "newComment": "Ny kommentar",
+      "newDescription": "Beskriv problemet.",
+      "note": "Notat",
+      "open_comment": "Åpne på nytt og kommenter",
+      "report": "Rapporter",
+      "status": {
+        "closed": "Lukket {when}",
+        "commented": "Kommentert {when}",
+        "opened": "Åpnet {when}",
+        "reopened": "Gjenåpnet {when}"
+      },
+      "title": "Rediger Notaten"
+    },
+    "operations": {
+      "add": {
+        "annotation": {
+          "note": "La til en notat.",
+          "point": "Legg til et punkt.",
+          "relation": "La til relasjon.",
+          "vertex": "La til node til en vei."
+        }
+      },
+      "cancel_draw": {
+        "annotation": "Avbrøt tegning."
+      },
+      "change_tags": {
+        "annotation": "Endrede tagger."
+      },
+      "continue": {
+        "annotation": {
+          "area": "Forsatte et område.",
+          "line": "Forsatte ei linje."
+        },
+        "description": "Forsett denne linja.",
+        "not_eligible": "Ingen linje kan foresette her.",
+        "title": "Forsett"
+      },
+      "copy": {
+        "annotation": {
+          "one": "Kopiert en egenskap.",
+          "other": "Kopiert {n} egenskaper."
+        },
+        "title": "Kopier"
+      },
+      "delete": {
+        "annotation": {
+          "area": "Slett et område.",
+          "line": "Slett ei linje.",
+          "point": "Slett et punkt.",
+          "relation": "Slett en relasjon.",
+          "vertex": "Slett en node fra en vei."
+        },
+        "title": "Slett"
+      },
+      "disconnect": {
+        "annotation": {
+          "features": "Frakoblede egenskaper.",
+          "from_each_other": "Frakoblet egenskaper fra hverandre."
+        },
+        "description": {
+          "multiple_points": {
+            "multiple_ways": "Koble fra valgte egenskapene på disse punktene.",
+            "no_ways": "Koble fra valgte egenskaper på disse punktene.",
+            "single_way": {
+              "area": "Koble fra valgte området på disse punktene.",
+              "line": "Koble fra valgte linje på disse punktene."
+            }
+          },
+          "no_points": {
+            "multiple_ways": {
+              "conjoined": "Koble fra disse egenskapene fra hverandre.",
+              "separate": "Koble fra disse egenskapene fra alt."
+            },
+            "single_way": {
+              "area": "Koble fra dette området fra andre egenskaper.",
+              "line": "Koble fra denne linja fra andre egenskaper."
+            }
+          },
+          "single_point": {
+            "multiple_ways": "Koble fra valgte egenskaper på dette punktet.",
+            "no_ways": "Koble fra egenskapene på dette punktet.",
+            "single_way": {
+              "area": "Koble fra valgte området på dette punktet.",
+              "line": "Koble fra valgte linje på dette punktet."
+            }
+          }
+        },
+        "title": "Koble fra",
+        "too_large": {
+          "multiple": "Disse kan ikke bli frakoblet fordi det er ikke nok av det synlig nå.",
+          "single": "Dette kan ikke bli frakoblet fordi det er ikke nok av det synlig."
+        }
+      },
+      "downgrade": {
+        "title": "Nedgrader"
+      },
+      "merge": {
+        "annotation": {
+          "one": "Sammenslo {n} egenskap.",
+          "other": "Sammenslo {n} egenskaper."
+        },
+        "description": "Slå sammen disse egenskapene.",
+        "title": "Slå sammen"
+      },
+      "move": {
+        "annotation": {
+          "point": "Flyttet et punkt"
+        },
+        "title": "Flytt"
+      },
+      "orthogonalize": {
+        "annotation": {
+          "corner": {
+            "one": "Rettet ut et hjørne.",
+            "other": "Rettet ut {n} hjørner."
+          },
+          "feature": {
+            "one": "Rettet ut hjørnene av en egenskap.",
+            "other": "Rettet ut hjørnene av {n} egenskaper."
+          }
+        }
+      },
+      "paste": {
+        "annotation": {
+          "one": "Limte inn en egenskap.",
+          "other": "Limte inn {n} egenskaper."
+        },
+        "nothing_copied": "Ingen egenskaper har blitt kopiert.",
+        "title": "Lim inn"
+      },
+      "reverse": {
+        "title": "Snu"
+      },
+      "rotate": {
+        "title": "Roter"
+      },
+      "split": {
+        "title": "Kløyv"
+      },
+      "start": {
+        "annotation": {
+          "area": "Startet et område.",
+          "line": "Startet ei linje."
+        }
+      },
+      "straighten": {
+        "annotation": {
+          "line": {
+            "one": "Rettet ut ei linje.",
+            "other": "Rettet ut {n} linjer."
+          },
+          "point": {
+            "one": "Rettet et punkt.",
+            "other": "Rettet ut {n} punker."
+          }
+        },
+        "description": {
+          "line": "Rett ut denne linja.",
+          "lines": "Rett opp disse linjene.",
+          "points": "Rett ut isse punktene."
+        },
+        "title": "Rettet ut."
+      }
+    },
+    "preferences": {
+      "description": "Innstillingar",
+      "privacy": {
+        "title": "Personvern"
+      },
+      "title": "Innstillingar"
+    },
+    "redo": {
+      "title": "Gjenta"
+    },
+    "restriction": {
+      "controls": {
+        "distance": "Distanse"
+      }
+    },
+    "save": {
+      "title": "Lagre"
+    },
     "scriptNames": {
       "Adlm": "adlam",
       "Afak": "afaka",
@@ -1007,6 +1251,77 @@
       "Zxxx": "språk uten skrift",
       "Zyyy": "felles",
       "Zzzz": "ukjent skrift"
+    },
+    "settings": {
+      "custom_background": {
+        "header": "Egendefinert Bakgrunnsinnstillinger",
+        "tooltip": "Rediger egendefinert bakgrunn"
+      },
+      "custom_data": {
+        "header": "Egendefinerte Kartdata Innstillinger"
+      }
+    },
+    "shortcuts": {
+      "gesture": {
+        "drag": "dra"
+      },
+      "key": {
+        "alt": "Alt",
+        "backspace": "Backspace",
+        "cmd": "Cmd",
+        "ctrl": "Ctrl",
+        "del": "Del",
+        "delete": "Slett",
+        "end": "End",
+        "enter": "Enter",
+        "esc": "Esc",
+        "home": "Home",
+        "menu": "Menu",
+        "option": "Option",
+        "pause": "Pause",
+        "pgdn": "PgDn",
+        "pgup": "PgUp",
+        "return": "Return",
+        "shift": "Shift"
+      },
+      "title": "Hurtigtaster"
+    },
+    "success": {
+      "help_link_text": "Detaljer"
+    },
+    "tag_reference": {
+      "description": "Beskrivelse"
+    },
+    "title": {
+      "format": {
+        "changes": "({endringer}) {base}"
+      },
+      "labeled_and_more": {
+        "one": "{labeled} og {count} flere",
+        "other": "{labeled} og {count} flere"
+      }
+    },
+    "toolbar": {
+      "add_feature": "Legg til Egenskap",
+      "favorites": "Favoritter",
+      "inspect": "sjekk",
+      "recent": "Nylig",
+      "undo_redo": "Angre / Gjør om"
+    },
+    "translate": {
+      "localized_translation_name": "Navn"
+    },
+    "undo": {
+      "title": "Gjør om"
+    },
+    "units": {
+      "east": "Ø",
+      "north": "N",
+      "south": "S",
+      "west": "V"
+    },
+    "wikidata": {
+      "description": "Beskrivelse"
     }
   }
 }

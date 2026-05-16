@@ -2,8 +2,17 @@
   "ia": {
     "intro": {
       "graph": {
+        "block_number": "<value for addr:block_number>",
+        "countrycode": "none",
+        "county": "<value for addr:county>",
+        "district": "<value for addr:district>",
+        "hamlet": "<value for addr:hamlet>",
+        "neighbourhood": "<value for addr:neighbourhood>",
+        "province": "<value for addr:province>",
+        "quarter": "<value for addr:quarter>",
         "state": "<value for addr:state>",
-        "countrycode": "none"
+        "subdistrict": "<value for addr:subdistrict>",
+        "suburb": "<value for addr:suburb>"
       }
     },
     "languageNames": {

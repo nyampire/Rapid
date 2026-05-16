@@ -1,109 +1,5 @@
 {
   "hi": {
-    "icons": {
-      "download": "डाउनलोड",
-      "information": "जानकारी",
-      "remove": "हटाना",
-      "undo": "पूर्ववत",
-      "zoom_to": "तक ज़ूम करें<br><br>",
-      "copy": "प्रतिलिपि",
-      "favorite": "पसंदीदा",
-      "list": "सूची",
-      "deselect": "अचयनित"
-    },
-    "toolbar": {
-      "inspect": "निरीक्षण",
-      "undo_redo": "पूर्ववत करें / फिर से करें"
-    },
-    "modes": {
-      "add_area": {
-        "title": "एरिया"
-      },
-      "add_line": {
-        "title": "रेखा"
-      },
-      "add_point": {
-        "title": "बिंदु"
-      },
-      "browse": {
-        "title": "ब्राउज़"
-      }
-    },
-    "operations": {
-      "add": {
-        "annotation": {
-          "point": "बिंदू जोड़ दिया"
-        }
-      },
-      "start": {
-        "annotation": {
-          "line": "एक रॆखा शुरू कर दी",
-          "area": "एक श्रॆत्र शुरू कर दिया ।"
-        }
-      },
-      "continue": {
-        "title": "ज़ारी रख्खें",
-        "description": "इस रेखा को ज़ारी रख्खें ।"
-      },
-      "circularize": {
-        "title": "परिपत्र फेरना"
-      },
-      "orthogonalize": {
-        "title": "चौकोर"
-      },
-      "straighten": {
-        "title": "सीधा करें ।"
-      },
-      "delete": {
-        "title": "मिटायें"
-      },
-      "merge": {
-        "title": "मिलायें"
-      },
-      "rotate": {
-        "title": "घुमायॆं"
-      }
-    },
-    "translate": {
-      "localized_translation_language": "भाषा चुनें",
-      "localized_translation_name": "नाम"
-    },
-    "info_panels": {
-      "measurement": {
-        "area": "एरिया"
-      }
-    },
-    "geometry": {
-      "line": "रेखा",
-      "area": "क्षेत्र"
-    },
-    "inspector": {
-      "show_more": "और दिखायें",
-      "remove": "हटायें",
-      "check": {
-        "yes": "हॉं",
-        "no": "नहीं"
-      },
-      "add": "जोड़े",
-      "way": "रास्ता"
-    },
-    "filters": {
-      "points": {
-        "description": "बिंद"
-      },
-      "paths": {
-        "description": "रास्ते"
-      },
-      "buildings": {
-        "description": "इमारतें"
-      }
-    },
-    "rapid_menu": {
-      "remove": "हटायें",
-      "category": {
-        "roads": "सड़कें"
-      }
-    },
     "QA": {
       "keepRight": {
         "error_parts": {
@@ -111,57 +7,82 @@
         }
       }
     },
+    "background": {
+      "none": "कुछ भी नहीं"
+    },
+    "filters": {
+      "buildings": {
+        "description": "इमारतें"
+      },
+      "paths": {
+        "description": "रास्ते"
+      },
+      "points": {
+        "description": "बिंद"
+      }
+    },
+    "geometry": {
+      "area": "क्षेत्र",
+      "line": "रेखा"
+    },
     "help": {
-      "title": "सहायता",
       "help": {
         "title": "सहायता"
       },
       "points": {
         "title": "बिंद"
+      },
+      "title": "सहायता"
+    },
+    "icons": {
+      "copy": "प्रतिलिपि",
+      "deselect": "अचयनित",
+      "download": "डाउनलोड",
+      "favorite": "पसंदीदा",
+      "information": "जानकारी",
+      "list": "सूची",
+      "remove": "हटाना",
+      "undo": "पूर्ववत",
+      "zoom_to": "तक ज़ूम करें<br><br>"
+    },
+    "info_panels": {
+      "measurement": {
+        "area": "एरिया"
       }
     },
-    "intro": {
-      "graph": {
-        "state": "<value for addr:state>",
-        "countrycode": "in"
+    "inspector": {
+      "add": "जोड़े",
+      "check": {
+        "no": "नहीं",
+        "yes": "हॉं"
       },
-      "welcome": {
-        "title": "स्वागतम"
+      "none": "कुछ भी नहीं",
+      "remove": "हटायें",
+      "show_more": "और दिखायें",
+      "way": "रास्ता"
+    },
+    "intro": {
+      "buildings": {
+        "title": "इमारतें"
+      },
+      "graph": {
+        "block_number": "<value for addr:block_number>",
+        "countrycode": "in",
+        "county": "<value for addr:county>",
+        "district": "<value for addr:district>",
+        "hamlet": "<value for addr:hamlet>",
+        "neighbourhood": "<value for addr:neighbourhood>",
+        "province": "<value for addr:province>",
+        "quarter": "<value for addr:quarter>",
+        "state": "<value for addr:state>",
+        "subdistrict": "<value for addr:subdistrict>",
+        "suburb": "<value for addr:suburb>"
       },
       "points": {
         "title": "बिंद"
       },
-      "buildings": {
-        "title": "इमारतें"
-      }
-    },
-    "shortcuts": {
-      "key": {
-        "delete": "मिटायें"
-      },
-      "or": "या",
-      "drawing": "चित्रांकन",
-      "commands": "आदेश",
-      "help": "सहायता",
-      "command": {
-        "accept_feature": {
-          "key": "अ"
-        },
-        "continue_line": {
-          "key": "अ"
-        },
-        "rotate": {
-          "key": "र"
-        },
-        "circularize": {
-          "key": "अो"
-        },
-        "toggle_osm_data": {
-          "key": "अो"
-        },
-        "toggle_rapid_data": {
-          "key": "र"
-        }
+      "welcome": {
+        "title": "स्वागतम"
       }
     },
     "languageNames": {
@@ -727,6 +648,66 @@
       "zun": "ज़ूनी",
       "zza": "ज़ाज़ा"
     },
+    "modes": {
+      "add_area": {
+        "description": "पार्क, बिल्डिंग, झील या अन्य क्षेत्रों को नक़्शे पर डालें।",
+        "title": "एरिया"
+      },
+      "add_line": {
+        "description": "राजमार्ग, गलियों, पैदल पथ, नहरों या अन्य रैखिक चीजों को नक़्शे पर डालें।",
+        "title": "रेखा"
+      },
+      "add_point": {
+        "title": "बिंदु"
+      },
+      "browse": {
+        "title": "ब्राउज़"
+      }
+    },
+    "operations": {
+      "add": {
+        "annotation": {
+          "point": "बिंदू जोड़ दिया"
+        }
+      },
+      "circularize": {
+        "title": "परिपत्र फेरना"
+      },
+      "continue": {
+        "description": "इस रेखा को ज़ारी रख्खें ।",
+        "title": "ज़ारी रख्खें"
+      },
+      "delete": {
+        "title": "मिटायें"
+      },
+      "merge": {
+        "title": "मिलायें"
+      },
+      "orthogonalize": {
+        "title": "चौकोर"
+      },
+      "rotate": {
+        "title": "घुमायॆं"
+      },
+      "start": {
+        "annotation": {
+          "area": "एक श्रॆत्र शुरू कर दिया ।",
+          "line": "एक रॆखा शुरू कर दी"
+        }
+      },
+      "straighten": {
+        "description": {
+          "line": "इस रेखा को सीधा करें ।"
+        },
+        "title": "सीधा करें ।"
+      }
+    },
+    "rapid_menu": {
+      "category": {
+        "roads": "सड़कें"
+      },
+      "remove": "हटायें"
+    },
     "scriptNames": {
       "Adlm": "ऐडलम",
       "Arab": "अरबी",
@@ -866,6 +847,43 @@
       "Zxxx": "अलिखित",
       "Zyyy": "सामान्य",
       "Zzzz": "अज्ञात लिपि"
+    },
+    "shortcuts": {
+      "command": {
+        "accept_feature": {
+          "key": "अ"
+        },
+        "circularize": {
+          "key": "अो"
+        },
+        "continue_line": {
+          "key": "अ"
+        },
+        "rotate": {
+          "key": "र"
+        },
+        "toggle_osm_data": {
+          "key": "अो"
+        },
+        "toggle_rapid_data": {
+          "key": "र"
+        }
+      },
+      "commands": "आदेश",
+      "drawing": "चित्रांकन",
+      "help": "सहायता",
+      "key": {
+        "delete": "मिटायें"
+      },
+      "or": "या"
+    },
+    "toolbar": {
+      "inspect": "निरीक्षण",
+      "undo_redo": "पूर्ववत करें / फिर से करें"
+    },
+    "translate": {
+      "localized_translation_language": "भाषा चुनें",
+      "localized_translation_name": "नाम"
     }
   }
 }

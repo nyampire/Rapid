@@ -121,9 +121,9 @@ export class RapidSystem extends AbstractSystem {
     // This code is written in a way that we can work with whatever
     // data-providing services are installed.
     const services = [];
+    if (overture)  services.push(overture);
     if (esri)      services.push(esri);
     if (mapwithai) services.push(mapwithai);
-    if (overture)  services.push(overture);
 
     const prerequisites = Promise.all(services.map(service => service.startAsync()));
 
@@ -142,8 +142,10 @@ export class RapidSystem extends AbstractSystem {
 
         // Set some defaults
         if (!urlhash.initialHashParams.has('datasets')) {
-          this._addedDatasetIDs = new Set(['fbRoads', 'esri-buildings', 'ml-buildings-overture', 'omdFootways', 'plateauJapan']);  // on menu
-          this._enabledDatasetIDs = new Set(['plateauJapan']);  // checked
+          // upstream defaults plus Japan-focused Plateau dataset; omdFootways was
+          // removed in upstream (mapwith.ai endpoint sunsetting).
+          this._addedDatasetIDs = new Set(['fbRoads', 'ml-buildings-overture', 'esri-buildings', 'plateauJapan']);  // on menu
+          this._enabledDatasetIDs = new Set(['plateauJapan']);  // checked (Japan focus)
           this._datasetsChanged();
         }
 
@@ -419,7 +421,7 @@ export class RapidSystem extends AbstractSystem {
       const nowAdded = this._addedDatasetIDs.has(datasetID);
       // Ensure that the familiar RAPID_MAGENTA color is used for the ML buildings
       if (!wasAdded && nowAdded && dataset.color === RAPID_MAGENTA) {  // being added right now with the default color
-        if (dataset.categories.has('meta') || dataset.categories.has('microsoft') || dataset.categories.has('google')) {
+        if (dataset.categories.has('meta') || dataset.categories.has('microsoft') || dataset.categories.has('google') || dataset.categories.has('tomtom')) {
           dataset.color = RAPID_MAGENTA;
         } else if (dataset.categories.has('overture')) {
           dataset.color = OVERTURE_CYAN;

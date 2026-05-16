@@ -1,163 +1,45 @@
 {
   "sat": {
-    "icons": {
-      "download": "ᱟᱹᱛᱩᱨ ᱟᱬᱜᱚ",
-      "information": "ᱞᱟᱹᱭ ᱥᱚᱫᱚᱨ",
-      "remove": "ᱚᱰᱚᱠ",
-      "undo": "ᱯᱟᱪᱷᱞᱟᱭ ᱢᱮ",
-      "zoom_to": "ᱡᱩᱢ ᱛᱮ",
-      "copy": "ᱱᱚᱠᱚᱞ",
-      "view_on": "{domain} ᱨᱮ ᱫᱮᱠᱷᱟᱣᱢᱮ",
-      "favorite": "ᱠᱩᱥᱤᱠᱚ",
-      "list": "ᱛᱟᱞᱠᱟ",
-      "text": "ᱚᱞ ᱠᱚ",
-      "deselect": "ᱟᱞᱚ ᱪᱚᱭᱚᱱ"
-    },
-    "toolbar": {
-      "inspect": "ᱯᱟᱱᱛᱮ",
-      "undo_redo": "ᱢᱟᱲᱟᱝ / ᱨᱩᱟᱹᱲ ᱟᱹᱜᱩ",
-      "recent": "ᱱᱤᱛᱚᱜᱼᱟ",
-      "favorites": "ᱠᱩᱥᱤᱠᱚ",
-      "add_feature": "ᱯᱷᱤᱪᱚᱨ ᱮᱢ ᱥᱮᱞᱮᱫ ᱢᱮ"
-    },
-    "modes": {
-      "add_area": {
-        "title": "ᱴᱚᱴᱷᱟ"
+    "QA": {
+      "keepRight": {
+        "comment": "ᱚᱠᱛᱟᱭ ᱢᱮ",
+        "detail_description": "ᱵᱤᱵᱨᱚᱱ",
+        "error_parts": {
+          "bank": "ᱵᱮᱸᱠ",
+          "cafe": "ᱠᱮᱯᱷᱮ",
+          "cinema": "ᱥᱤᱱᱮᱢᱟ",
+          "courthouse": "ᱱᱭᱟᱞᱚᱭ ᱚᱲᱟᱜ",
+          "fuel": "ᱥᱩᱱᱩᱢ",
+          "hospital": "ᱦᱚᱥᱯᱤᱴᱟᱹᱞ",
+          "library": "ᱯᱩᱛᱷᱤ ᱚᱲᱟᱜ",
+          "pharmacy": "ᱯᱷᱟᱨᱢᱮᱥᱤ",
+          "theatre": "ᱛᱷᱤᱭᱮᱴᱟᱹᱨ"
+        },
+        "save_comment": "ᱚᱠᱛᱟ ᱥᱟᱸᱪᱟᱣ ᱢᱮ"
       },
-      "add_line": {
-        "title": "ᱜᱟᱨ"
-      },
-      "add_point": {
-        "title": "ᱵᱤᱸᱫᱩ"
-      },
-      "add_note": {
-        "title": "ᱱᱚᱴ"
-      },
-      "add_preset": {
-        "title": "{feature} ᱥᱮᱞᱮᱫ ᱢᱮ"
-      },
-      "browse": {
-        "title": "ᱵᱨᱟᱩᱡ"
+      "osmose": {
+        "detail_title": "ᱵᱤᱵᱨᱚᱱ",
+        "elems_title": "ᱜᱩᱱᱠᱚ"
       }
-    },
-    "operations": {
-      "add": {
-        "annotation": {
-          "note": "ᱠᱷᱟᱴᱚ ᱠᱟᱛᱷᱟ ᱥᱮᱞᱮᱫ ᱮᱱᱟ ᱾"
-        }
-      },
-      "continue": {
-        "title": "ᱞᱮᱛᱟᱲ"
-      },
-      "copy": {
-        "title": "ᱱᱚᱠᱚᱞ ᱢᱮ"
-      },
-      "paste": {
-        "title": "ᱞᱟᱴᱷᱟ"
-      },
-      "delete": {
-        "title": "ᱜᱮᱫ ᱜᱤᱰᱤ"
-      }
-    },
-    "translate": {
-      "localized_translation_name": "ᱧᱩᱛᱩᱢ"
-    },
-    "commit": {
-      "save": "ᱞᱟᱫᱮᱢᱮ",
-      "cancel": "ᱵᱟ.ᱲᱨᱟᱹ",
-      "changes": "ᱵᱚᱫᱚᱞᱠᱚ",
-      "errors": "ᱵᱷᱩᱞᱠᱚ",
-      "warnings": "ᱪᱮᱛᱟᱣᱠᱚ",
-      "deleted": "ᱢᱮᱴᱟᱣᱮᱱᱟ"
-    },
-    "info_panels": {
-      "background": {
-        "description": "ᱵᱤᱵᱨᱚᱱ"
-      },
-      "history": {
-        "title": "ᱦᱤᱛᱟᱹᱞ",
-        "last_edit": "ᱢᱩᱪᱟᱹᱛ ᱥᱟᱯᱲᱟᱣ",
-        "note_no_history": "ᱦᱤᱛᱟᱹᱞ ᱵᱟᱹᱱᱩᱜ-ᱟ (ᱱᱟᱶᱟ ᱠᱷᱟᱴᱟᱹ ᱚᱞ)",
-        "note_comments": "ᱚᱠᱛᱟᱠᱚ"
-      },
-      "location": {
-        "title": "ᱡᱟᱭᱜᱟ",
-        "unknown_location": "ᱵᱟᱝ ᱵᱟᱲᱟᱭ ᱡᱟᱭᱜᱟ"
-      },
-      "measurement": {
-        "center": "ᱛᱟᱞᱟ ᱨᱮ",
-        "area": "ᱴᱚᱴᱷᱟ",
-        "location": "ᱡᱟᱭᱜᱟ"
-      }
-    },
-    "geometry": {
-      "relation": "ᱥᱟᱹᱜᱟᱹᱭ",
-      "note": "ᱠᱷᱟᱴᱟᱹ ᱚᱞ"
-    },
-    "geolocate": {
-      "title": "ᱤᱧᱟᱜ ᱡᱟᱭᱜᱟ ᱩᱫᱩᱜ ᱛᱤᱝ ᱢᱮ"
-    },
-    "inspector": {
-      "show_more": "ᱵᱟᱹᱲᱛᱤ ᱩᱱᱩᱫᱩᱜ",
-      "feature_type": "ᱜᱩᱱ ᱯᱨᱟᱹᱠᱟᱨ",
-      "features": "ᱜᱩᱱᱠᱚ",
-      "type": "ᱯᱨᱟᱹᱠᱟᱨ",
-      "details": "ᱵᱤᱵᱨᱚᱱ",
-      "remove": "ᱚᱪᱚᱜ ᱢᱮ",
-      "search": "ᱥᱮᱸᱫᱽᱨᱟ",
-      "unknown": "ᱵᱟᱝ ᱵᱟᱲᱟᱭ",
-      "feature_list": "ᱥᱮᱸᱫᱽᱨᱟ ᱨᱮᱭᱟᱜ ᱜᱩᱱᱠᱚ",
-      "check": {
-        "yes": "ᱦᱮᱸ",
-        "no": "ᱵᱟᱝ"
-      },
-      "radio": {
-        "structure": {
-          "default": "ᱢᱩᱞ ᱯᱷᱮᱲᱟᱛ",
-          "layer": "ᱯᱚᱨᱚᱛ"
-        }
-      },
-      "add": "ᱥᱮᱞᱮᱫ ᱢᱮ",
-      "way": "ᱦᱚᱨ",
-      "location": "ᱡᱟᱭᱜᱟ"
     },
     "background": {
-      "custom": "ᱠᱩᱥᱤᱭᱟᱜ",
-      "brightness": "ᱪᱷᱚᱠᱢᱚᱠ"
+      "brightness": "ᱪᱷᱚᱠᱢᱚᱠ",
+      "custom": "ᱠᱩᱥᱤᱭᱟᱜ"
     },
-    "map_data": {
-      "title": "ᱱᱚᱠᱥᱟ ᱨᱮᱭᱟᱜ ᱥᱟᱹᱠᱷᱤᱭᱟᱹᱛ",
-      "description": "ᱱᱚᱠᱥᱟ ᱨᱮᱭᱟᱜ ᱥᱟᱹᱠᱷᱤᱭᱟᱹᱛ",
-      "layers": {
-        "osm": {
-          "title": "OpenStreetMap ᱥᱟᱹᱠᱷᱤᱭᱟᱹᱛ"
-        },
-        "notes": {
-          "title": "OpenStreetMap ᱠᱷᱟᱴᱚ ᱵᱤᱪᱟᱹᱨ"
-        },
-        "maproulette": {
-          "detail_title": "ᱵᱤᱵᱨᱚᱱ",
-          "cancel": "ᱵᱟ.ᱲᱨᱟᱹ"
-        }
-      }
+    "bearing": {
+      "n": "ᱩ"
     },
-    "photo_overlays": {
-      "photo_type": {
-        "flat": {
-          "title": "ᱪᱟᱯᱲᱟ ᱪᱤᱛᱟᱹᱨᱠᱚ"
-        },
-        "panoramic": {
-          "tooltip": "᱓᱖᱐° ᱪᱤᱛᱟᱹᱨᱠᱚ"
-        }
-      },
-      "date_filter": {
-        "fromDate": {
-          "title": "ᱠᱷᱚᱱ"
-        }
-      },
-      "username_filter": {
-        "title": "ᱵᱮᱵᱷᱟᱨᱤᱡ ᱧᱩᱛᱩᱢ"
-      }
+    "commit": {
+      "cancel": "ᱵᱟ.ᱲᱨᱟᱹ",
+      "changes": "ᱵᱚᱫᱚᱞᱠᱚ",
+      "deleted": "ᱢᱮᱴᱟᱣᱮᱱᱟ",
+      "errors": "ᱵᱷᱩᱞᱠᱚ",
+      "save": "ᱞᱟᱫᱮᱢᱮ",
+      "warnings": "ᱪᱮᱛᱟᱣᱠᱚ"
+    },
+    "confirm": {
+      "cancel": "ᱵᱟᱹᱰᱨᱟ",
+      "okay": "ᱴᱷᱤᱠ"
     },
     "filters": {
       "boundaries": {
@@ -167,120 +49,114 @@
         "description": "ᱮᱴᱟᱜ-ᱟ ᱜᱩᱱᱠᱚ"
       }
     },
-    "settings": {
-      "custom_data": {
-        "file": {
-          "label": "ᱨᱮᱫ ᱵᱨᱟᱩᱡ ᱢᱮ"
-        },
-        "or": "ᱵᱟᱝᱠᱷᱟᱱ",
-        "url": {
-          "placeholder": "ᱢᱤᱫ ᱴᱟᱝ url ᱟᱫᱮᱨ ᱢᱮ"
-        }
-      }
+    "geolocate": {
+      "title": "ᱤᱧᱟᱜ ᱡᱟᱭᱜᱟ ᱩᱫᱩᱜ ᱛᱤᱝ ᱢᱮ"
     },
-    "preferences": {
-      "privacy": {
-        "title": "ᱱᱤᱡᱮᱨᱟᱜ ᱫᱟᱱᱟᱝ"
-      },
-      "color_selection": {
-        "default": "ᱢᱩᱞ ᱯᱷᱮᱲᱟᱛ"
-      }
-    },
-    "save": {
-      "title": "ᱥᱟᱸᱪᱟᱣ ᱢᱮ",
-      "conflict": {
-        "previous": "< ᱛᱟᱭᱚᱢ",
-        "next": "ᱤᱱᱟ ᱛᱟᱭᱚᱢ >",
-        "keep_local": "ᱤᱧ ᱫᱚᱦᱚᱭ ᱢᱮ",
-        "keep_remote": "ᱩᱱᱠᱩ-ᱟ ᱵᱮᱵᱷᱟᱨ ᱢᱮ"
-      }
-    },
-    "success": {
-      "help_link_text": "ᱵᱤᱵᱨᱚᱱ",
-      "more": "ᱵᱟᱹᱲᱛᱤ",
-      "languages": "ᱯᱟᱹᱨᱥᱤᱠᱚ: {languages}",
-      "tell_us": "ᱟᱞᱮ ᱞᱟᱹᱭ ᱟᱞᱮ ᱯᱮ!"
-    },
-    "confirm": {
-      "okay": "ᱴᱷᱤᱠ",
-      "cancel": "ᱵᱟᱹᱰᱨᱟ"
-    },
-    "splash": {
-      "start": "ᱱᱤᱛᱟᱹᱜ ᱥᱟᱯᱲᱟᱣ ᱢᱮ"
-    },
-    "rapid_menu": {
-      "remove": "ᱚᱪᱚᱜ ᱢᱮ"
-    },
-    "tag_reference": {
-      "description": "ᱵᱤᱵᱨᱚᱱ"
-    },
-    "bearing": {
-      "n": "ᱩ"
-    },
-    "QA": {
-      "osmose": {
-        "detail_title": "ᱵᱤᱵᱨᱚᱱ",
-        "elems_title": "ᱜᱩᱱᱠᱚ"
-      },
-      "keepRight": {
-        "detail_description": "ᱵᱤᱵᱨᱚᱱ",
-        "comment": "ᱚᱠᱛᱟᱭ ᱢᱮ",
-        "save_comment": "ᱚᱠᱛᱟ ᱥᱟᱸᱪᱟᱣ ᱢᱮ",
-        "error_parts": {
-          "hospital": "ᱦᱚᱥᱯᱤᱴᱟᱹᱞ",
-          "library": "ᱯᱩᱛᱷᱤ ᱚᱲᱟᱜ",
-          "theatre": "ᱛᱷᱤᱭᱮᱴᱟᱹᱨ",
-          "courthouse": "ᱱᱭᱟᱞᱚᱭ ᱚᱲᱟᱜ",
-          "bank": "ᱵᱮᱸᱠ",
-          "cinema": "ᱥᱤᱱᱮᱢᱟ",
-          "pharmacy": "ᱯᱷᱟᱨᱢᱮᱥᱤ",
-          "cafe": "ᱠᱮᱯᱷᱮ",
-          "fuel": "ᱥᱩᱱᱩᱢ"
-        }
-      }
-    },
-    "note": {
-      "note": "ᱱᱚᱴ",
-      "closed": "(ᱵᱚᱸᱫᱚ ᱢᱮᱱᱟᱜ-ᱟ)",
-      "commentTitle": "ᱚᱠᱛᱟᱠᱚ",
-      "newComment": "ᱱᱟᱶᱟ ᱚᱠᱛᱟ",
-      "comment": "ᱚᱠᱛᱟ",
-      "report": "ᱨᱤᱯᱚᱴ",
-      "new": "ᱱᱟᱶᱟ ᱱᱚᱴ"
+    "geometry": {
+      "note": "ᱠᱷᱟᱴᱟᱹ ᱚᱞ",
+      "relation": "ᱥᱟᱹᱜᱟᱹᱭ"
     },
     "help": {
-      "title": "ᱜᱚᱲᱚ",
-      "help": {
-        "title": "ᱜᱚᱲᱚ",
-        "open_data_h": "ᱮᱦᱚᱵ ᱞᱟᱦᱟ ᱨᱮ",
-        "before_start_h": "ᱮᱦᱚᱵ ᱞᱟᱦᱟ ᱨᱮ"
-      },
-      "overview": {
-        "features_h": "ᱱᱚᱠᱥᱟ ᱨᱮᱭᱟᱜ ᱜᱩᱱᱠᱚ"
-      },
       "editing": {
-        "select_h": "ᱵᱟᱪᱷᱟᱣ ᱢᱮ",
         "save_h": "ᱥᱟᱸᱪᱟᱣ ᱢᱮ",
+        "select_h": "ᱵᱟᱪᱷᱟᱣ ᱢᱮ",
         "upload_h": "ᱞᱟᱫᱮᱢᱮ"
       },
       "feature_editor": {
         "type_h": "ᱜᱩᱱ ᱯᱨᱟᱹᱠᱟᱨ"
       },
-      "relations": {
-        "boundary_h": "ᱜᱷᱮᱨᱟᱠᱚ"
+      "help": {
+        "before_start_h": "ᱮᱦᱚᱵ ᱞᱟᱦᱟ ᱨᱮ",
+        "open_data_h": "ᱮᱦᱚᱵ ᱞᱟᱦᱟ ᱨᱮ",
+        "title": "ᱜᱚᱲᱚ"
       },
       "notes": {
-        "title": "ᱠᱷᱟᱴᱚ ᱵᱤᱪᱟᱹᱨ",
         "add_note_h": "ᱠᱷᱟᱴᱚ ᱵᱤᱪᱟᱹᱨ ᱥᱮᱞᱮᱫ",
-        "save_note_h": "ᱠᱷᱟᱴᱚ ᱵᱤᱪᱟᱹᱨ ᱥᱟᱱᱪᱟᱣ"
+        "save_note_h": "ᱠᱷᱟᱴᱚ ᱵᱤᱪᱟᱹᱨ ᱥᱟᱱᱪᱟᱣ",
+        "title": "ᱠᱷᱟᱴᱚ ᱵᱤᱪᱟᱹᱨ"
+      },
+      "overview": {
+        "features_h": "ᱱᱚᱠᱥᱟ ᱨᱮᱭᱟᱜ ᱜᱩᱱᱠᱚ"
       },
       "qa": {
         "tools_h": "ᱴᱩᱞᱠᱚ"
+      },
+      "relations": {
+        "boundary_h": "ᱜᱷᱮᱨᱟᱠᱚ"
+      },
+      "title": "ᱜᱚᱲᱚ"
+    },
+    "icons": {
+      "copy": "ᱱᱚᱠᱚᱞ",
+      "deselect": "ᱟᱞᱚ ᱪᱚᱭᱚᱱ",
+      "download": "ᱟᱹᱛᱩᱨ ᱟᱬᱜᱚ",
+      "favorite": "ᱠᱩᱥᱤᱠᱚ",
+      "information": "ᱞᱟᱹᱭ ᱥᱚᱫᱚᱨ",
+      "list": "ᱛᱟᱞᱠᱟ",
+      "remove": "ᱚᱰᱚᱠ",
+      "text": "ᱚᱞ ᱠᱚ",
+      "undo": "ᱯᱟᱪᱷᱞᱟᱭ ᱢᱮ",
+      "view_on": "{domain} ᱨᱮ ᱫᱮᱠᱷᱟᱣᱢᱮ",
+      "zoom_to": "ᱡᱩᱢ ᱛᱮ"
+    },
+    "info_panels": {
+      "background": {
+        "description": "ᱵᱤᱵᱨᱚᱱ"
+      },
+      "history": {
+        "last_edit": "ᱢᱩᱪᱟᱹᱛ ᱥᱟᱯᱲᱟᱣ",
+        "note_comments": "ᱚᱠᱛᱟᱠᱚ",
+        "note_no_history": "ᱦᱤᱛᱟᱹᱞ ᱵᱟᱹᱱᱩᱜ-ᱟ (ᱱᱟᱶᱟ ᱠᱷᱟᱴᱟᱹ ᱚᱞ)",
+        "title": "ᱦᱤᱛᱟᱹᱞ"
+      },
+      "location": {
+        "title": "ᱡᱟᱭᱜᱟ",
+        "unknown_location": "ᱵᱟᱝ ᱵᱟᱲᱟᱭ ᱡᱟᱭᱜᱟ"
+      },
+      "measurement": {
+        "area": "ᱴᱚᱴᱷᱟ",
+        "center": "ᱛᱟᱞᱟ ᱨᱮ",
+        "location": "ᱡᱟᱭᱜᱟ"
+      }
+    },
+    "inspector": {
+      "add": "ᱥᱮᱞᱮᱫ ᱢᱮ",
+      "check": {
+        "no": "ᱵᱟᱝ",
+        "yes": "ᱦᱮᱸ"
+      },
+      "details": "ᱵᱤᱵᱨᱚᱱ",
+      "edit": "ᱜᱩᱱ ᱥᱟᱯᱲᱟᱣ ᱢᱮ",
+      "feature_list": "ᱥᱮᱸᱫᱽᱨᱟ ᱨᱮᱭᱟᱜ ᱜᱩᱱᱠᱚ",
+      "feature_type": "ᱜᱩᱱ ᱯᱨᱟᱹᱠᱟᱨ",
+      "features": "ᱜᱩᱱᱠᱚ",
+      "location": "ᱡᱟᱭᱜᱟ",
+      "radio": {
+        "structure": {
+          "default": "ᱢᱩᱞ ᱯᱷᱮᱲᱟᱛ",
+          "layer": "ᱯᱚᱨᱚᱛ"
+        }
+      },
+      "remove": "ᱚᱪᱚᱜ ᱢᱮ",
+      "search": "ᱥᱮᱸᱫᱽᱨᱟ",
+      "show_more": "ᱵᱟᱹᱲᱛᱤ ᱩᱱᱩᱫᱩᱜ",
+      "type": "ᱯᱨᱟᱹᱠᱟᱨ",
+      "unknown": "ᱵᱟᱝ ᱵᱟᱲᱟᱭ",
+      "way": "ᱦᱚᱨ"
+    },
+    "intro": {
+      "done": "ᱦᱚᱭᱮᱱᱟ",
+      "ok": "ᱴᱷᱤᱠ",
+      "startediting": {
+        "start": "ᱱᱚᱠᱥᱟ ᱛᱮᱭᱟᱨ ᱮᱦᱚᱵ ᱢᱮ!",
+        "title": "ᱥᱟᱯᱲᱟᱣ ᱮᱦᱚᱵ ᱢᱮ"
+      },
+      "welcome": {
+        "title": "ᱥᱟᱹᱜᱩᱱ ᱫᱟᱨᱟᱢ"
       }
     },
     "issues": {
       "errors": "ᱵᱷᱩᱞᱠᱚ",
-      "warnings": "ᱪᱮᱛᱟᱣᱠᱚ",
       "options": {
         "what": {
           "edited": "ᱤᱧᱟᱜ ᱥᱟᱯᱲᱟᱣᱠᱚ"
@@ -288,58 +164,8 @@
         "where": {
           "title": "ᱚᱠᱟᱨᱮ:"
         }
-      }
-    },
-    "intro": {
-      "done": "ᱦᱚᱭᱮᱱᱟ",
-      "ok": "ᱴᱷᱤᱠ",
-      "welcome": {
-        "title": "ᱥᱟᱹᱜᱩᱱ ᱫᱟᱨᱟᱢ"
       },
-      "startediting": {
-        "title": "ᱥᱟᱯᱲᱟᱣ ᱮᱦᱚᱵ ᱢᱮ",
-        "start": "ᱱᱚᱠᱥᱟ ᱛᱮᱭᱟᱨ ᱮᱦᱚᱵ ᱢᱮ!"
-      }
-    },
-    "shortcuts": {
-      "key": {
-        "delete": "ᱢᱮᱴᱟᱣ",
-        "home": "ᱚᱲᱟᱜ",
-        "menu": "ᱢᱮᱱᱩ"
-      },
-      "help": "ᱜᱚᱲᱚ",
-      "command": {
-        "add_note": {
-          "key": "ᱩ"
-        },
-        "save": {
-          "label": "ᱵᱚᱫᱚᱞᱠᱚ ᱥᱟᱺᱪᱟᱣ ᱢᱮ"
-        },
-        "extract": {
-          "key": "ᱯ"
-        },
-        "straighten": {
-          "key": "ᱫ"
-        },
-        "wireframe": {
-          "key": "ᱯᱚ"
-        },
-        "toggle_osm_notes": {
-          "key": "ᱩ"
-        },
-        "toggle_streetside": {
-          "key": "ᱫ"
-        }
-      }
-    },
-    "units": {
-      "north": "ᱩ",
-      "south": "ᱫ",
-      "east": "ᱯ",
-      "west": "ᱯᱚ"
-    },
-    "wikidata": {
-      "description": "ᱵᱤᱵᱨᱚᱱ"
+      "warnings": "ᱪᱮᱛᱟᱣᱠᱚ"
     },
     "languageNames": {
       "ab": "ᱟᱹᱵᱠᱷᱟᱡᱤᱭᱟᱹᱱ",
@@ -387,6 +213,109 @@
       "zh-Hans": "ᱟᱞᱜᱟᱣᱟᱠᱟᱱ ᱢᱟᱫᱟᱨᱤᱱ ᱪᱟᱭᱱᱤᱡᱽ",
       "zh-Hant": "ᱴᱨᱮᱰᱤᱥᱱᱟᱞ ᱢᱟᱫᱟᱨᱤᱱ ᱪᱟᱭᱱᱤᱡᱽ"
     },
+    "map_data": {
+      "description": "ᱱᱚᱠᱥᱟ ᱨᱮᱭᱟᱜ ᱥᱟᱹᱠᱷᱤᱭᱟᱹᱛ",
+      "layers": {
+        "maproulette": {
+          "cancel": "ᱵᱟ.ᱲᱨᱟᱹ",
+          "detail_title": "ᱵᱤᱵᱨᱚᱱ"
+        },
+        "notes": {
+          "title": "OpenStreetMap ᱠᱷᱟᱴᱚ ᱵᱤᱪᱟᱹᱨ"
+        },
+        "osm": {
+          "title": "OpenStreetMap ᱥᱟᱹᱠᱷᱤᱭᱟᱹᱛ"
+        }
+      },
+      "title": "ᱱᱚᱠᱥᱟ ᱨᱮᱭᱟᱜ ᱥᱟᱹᱠᱷᱤᱭᱟᱹᱛ"
+    },
+    "modes": {
+      "add_area": {
+        "description": "ᱯᱟᱨᱠ, ᱯᱟᱠᱟ ᱚᱲᱟᱜ, ᱫᱚᱨᱮᱭᱟ ᱟᱨ ᱵᱟᱝ ᱚᱞᱜᱟ ᱡᱟᱭᱜᱟ ᱱᱚᱠᱥᱟ ᱨᱮ ᱥᱮᱞᱮᱫ ᱢᱮ ᱾",
+        "title": "ᱴᱚᱴᱷᱟ"
+      },
+      "add_line": {
+        "title": "ᱜᱟᱨ"
+      },
+      "add_note": {
+        "title": "ᱱᱚᱴ"
+      },
+      "add_point": {
+        "title": "ᱵᱤᱸᱫᱩ"
+      },
+      "add_preset": {
+        "title": "{feature} ᱥᱮᱞᱮᱫ ᱢᱮ"
+      },
+      "browse": {
+        "title": "ᱵᱨᱟᱩᱡ"
+      }
+    },
+    "note": {
+      "closed": "(ᱵᱚᱸᱫᱚ ᱢᱮᱱᱟᱜ-ᱟ)",
+      "comment": "ᱚᱠᱛᱟ",
+      "commentTitle": "ᱚᱠᱛᱟᱠᱚ",
+      "new": "ᱱᱟᱶᱟ ᱱᱚᱴ",
+      "newComment": "ᱱᱟᱶᱟ ᱚᱠᱛᱟ",
+      "note": "ᱱᱚᱴ",
+      "report": "ᱨᱤᱯᱚᱴ"
+    },
+    "operations": {
+      "add": {
+        "annotation": {
+          "note": "ᱠᱷᱟᱴᱚ ᱠᱟᱛᱷᱟ ᱥᱮᱞᱮᱫ ᱮᱱᱟ ᱾"
+        }
+      },
+      "continue": {
+        "title": "ᱞᱮᱛᱟᱲ"
+      },
+      "copy": {
+        "title": "ᱱᱚᱠᱚᱞ ᱢᱮ"
+      },
+      "delete": {
+        "title": "ᱜᱮᱫ ᱜᱤᱰᱤ"
+      },
+      "paste": {
+        "title": "ᱞᱟᱴᱷᱟ"
+      }
+    },
+    "photo_overlays": {
+      "date_filter": {
+        "fromDate": {
+          "title": "ᱠᱷᱚᱱ"
+        }
+      },
+      "photo_type": {
+        "flat": {
+          "title": "ᱪᱟᱯᱲᱟ ᱪᱤᱛᱟᱹᱨᱠᱚ"
+        },
+        "panoramic": {
+          "tooltip": "᱓᱖᱐° ᱪᱤᱛᱟᱹᱨᱠᱚ"
+        }
+      },
+      "username_filter": {
+        "title": "ᱵᱮᱵᱷᱟᱨᱤᱡ ᱧᱩᱛᱩᱢ"
+      }
+    },
+    "preferences": {
+      "color_selection": {
+        "default": "ᱢᱩᱞ ᱯᱷᱮᱲᱟᱛ"
+      },
+      "privacy": {
+        "title": "ᱱᱤᱡᱮᱨᱟᱜ ᱫᱟᱱᱟᱝ"
+      }
+    },
+    "rapid_menu": {
+      "remove": "ᱚᱪᱚᱜ ᱢᱮ"
+    },
+    "save": {
+      "conflict": {
+        "keep_local": "ᱤᱧ ᱫᱚᱦᱚᱭ ᱢᱮ",
+        "keep_remote": "ᱩᱱᱠᱩ-ᱟ ᱵᱮᱵᱷᱟᱨ ᱢᱮ",
+        "next": "ᱤᱱᱟ ᱛᱟᱭᱚᱢ >",
+        "previous": "< ᱛᱟᱭᱚᱢ"
+      },
+      "title": "ᱥᱟᱸᱪᱟᱣ ᱢᱮ"
+    },
     "scriptNames": {
       "Arab": "ᱟᱨᱵᱤᱠ",
       "Cyrl": "ᱥᱤᱨᱤᱞᱤᱠ",
@@ -397,6 +326,86 @@
       "Olck": "ᱚᱞ ᱪᱤᱠᱤ",
       "Zxxx": "ᱵᱟᱝ ᱚᱞ ᱟᱠᱟᱱ",
       "Zzzz": "ᱵᱟᱝ ᱩᱨᱩᱢ ᱪᱤᱠᱤ"
+    },
+    "settings": {
+      "custom_data": {
+        "file": {
+          "label": "ᱨᱮᱫ ᱵᱨᱟᱩᱡ ᱢᱮ"
+        },
+        "or": "ᱵᱟᱝᱠᱷᱟᱱ",
+        "url": {
+          "placeholder": "ᱢᱤᱫ ᱴᱟᱝ url ᱟᱫᱮᱨ ᱢᱮ"
+        }
+      }
+    },
+    "shortcuts": {
+      "command": {
+        "add_note": {
+          "key": "ᱩ"
+        },
+        "extract": {
+          "key": "ᱯ"
+        },
+        "save": {
+          "label": "ᱵᱚᱫᱚᱞᱠᱚ ᱥᱟᱺᱪᱟᱣ ᱢᱮ"
+        },
+        "straighten": {
+          "key": "ᱫ"
+        },
+        "toggle_osm_notes": {
+          "key": "ᱩ"
+        },
+        "toggle_streetside": {
+          "key": "ᱫ"
+        },
+        "wireframe": {
+          "key": "ᱯᱚ"
+        }
+      },
+      "help": "ᱜᱚᱲᱚ",
+      "key": {
+        "delete": "ᱢᱮᱴᱟᱣ",
+        "home": "ᱚᱲᱟᱜ",
+        "menu": "ᱢᱮᱱᱩ"
+      }
+    },
+    "splash": {
+      "start": "ᱱᱤᱛᱟᱹᱜ ᱥᱟᱯᱲᱟᱣ ᱢᱮ"
+    },
+    "success": {
+      "help_link_text": "ᱵᱤᱵᱨᱚᱱ",
+      "languages": "ᱯᱟᱹᱨᱥᱤᱠᱚ: {languages}",
+      "more": "ᱵᱟᱹᱲᱛᱤ",
+      "tell_us": "ᱟᱞᱮ ᱞᱟᱹᱭ ᱟᱞᱮ ᱯᱮ!"
+    },
+    "tag_reference": {
+      "description": "ᱵᱤᱵᱨᱚᱱ"
+    },
+    "title": {
+      "format": {
+        "changes": "({changes}) {base}",
+        "changes_context": "({changes}) {base} – {context}",
+        "context": "{base} – {context}"
+      }
+    },
+    "toolbar": {
+      "add_feature": "ᱯᱷᱤᱪᱚᱨ ᱮᱢ ᱥᱮᱞᱮᱫ ᱢᱮ",
+      "favorites": "ᱠᱩᱥᱤᱠᱚ",
+      "inspect": "ᱯᱟᱱᱛᱮ",
+      "recent": "ᱱᱤᱛᱚᱜᱼᱟ",
+      "undo_redo": "ᱢᱟᱲᱟᱝ / ᱨᱩᱟᱹᱲ ᱟᱹᱜᱩ"
+    },
+    "translate": {
+      "localized_translation_name": "ᱧᱩᱛᱩᱢ"
+    },
+    "units": {
+      "east": "ᱯ",
+      "north": "ᱩ",
+      "south": "ᱫ",
+      "west": "ᱯᱚ"
+    },
+    "wikidata": {
+      "description": "ᱵᱤᱵᱨᱚᱱ"
     }
   }
 }

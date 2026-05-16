@@ -1,347 +1,92 @@
 {
   "ta": {
-    "icons": {
-      "download": "டவுன்லோட்",
-      "information": "தகவல்",
-      "remove": "நீக்குக",
-      "undo": "திருப்புக",
-      "text": "உரை"
-    },
-    "modes": {
-      "add_area": {
-        "title": "பரப்பளவு"
+    "QA": {
+      "keepRight": {
+        "comment": "பின்னூட்டமிடு",
+        "detail_description": "விளக்கம்"
       },
-      "add_line": {
-        "title": "கோடு"
-      },
-      "add_point": {
-        "title": "புள்ளி"
-      },
-      "add_note": {
-        "title": "குறிப்பு",
-        "description": "தவறு ஒன்றைக் கண்டீரா? ஏனைய வரைவாளர்களுக்கு அறியத்தருக."
-      },
-      "browse": {
-        "title": "உலவ"
+      "osmose": {
+        "detail_title": "விவரங்கள்"
       }
-    },
-    "operations": {
-      "add": {
-        "annotation": {
-          "point": "ஒரு புள்ளி சேர்க்கப்பட்டது.",
-          "vertex": "ஒரு வழியில் ஒரு முனை சேர்க்கப்பட்டது.",
-          "relation": "ஒரு உறவு சேர்க்கப்பட்டது.",
-          "note": "குறிப்பு ஒன்று சேர்க்கப்பட்டது."
-        }
-      },
-      "start": {
-        "annotation": {
-          "line": "வரி தொடங்கியது",
-          "area": "பகுதி தொடங்கியது"
-        }
-      },
-      "continue": {
-        "title": "ஒரு உறவு சேர்க்கப்பட்டது.",
-        "description": "இந்த வரியில் தொடர்க.",
-        "annotation": {
-          "line": "வரி தொ ங்கியது"
-        }
-      },
-      "cancel_draw": {
-        "annotation": "வரைவது தவிர்கபட்டது "
-      },
-      "change_tags": {
-        "annotation": "குறிச்சொற்கள் மாற்றப்பட்டது."
-      },
-      "circularize": {
-        "title": "வட்டமிடுக"
-      },
-      "orthogonalize": {
-        "title": "சதுரம்"
-      },
-      "straighten": {
-        "title": "நேராக்கப்பட்டது"
-      },
-      "delete": {
-        "title": "நீக்கு",
-        "annotation": {
-          "point": "புள்ளி நீக்கப்பட்டது.",
-          "line": "கோடு நீக்கப்பட்டது.",
-          "area": "பரப்பளவு நீக்கப்பட்டது.",
-          "relation": "தொடர்பு நீக்கப்பட்டது."
-        }
-      },
-      "disconnect": {
-        "title": "தொடர்பை -துண்டி"
-      },
-      "merge": {
-        "title": "இணை",
-        "description": "இந்த சிறப்பியல்புகளை இணை."
-      },
-      "move": {
-        "title": "நகர்த்து",
-        "annotation": {
-          "point": "புள்ளி நகர்த்தப்பட்டது",
-          "line": "கோடு நகர்த்தப்பட்டது.",
-          "area": "பரப்பை நகர்த்தபட்டது "
-        }
-      },
-      "rotate": {
-        "title": "திருப்பு"
-      },
-      "reverse": {
-        "title": "தலைகீழாக்கு"
-      },
-      "split": {
-        "title": "பிரி"
-      }
-    },
-    "restriction": {
-      "controls": {
-        "distance": "தூரம்",
-        "via": "வழியாக"
-      },
-      "help": {
-        "from": "இருந்து",
-        "via": "வழியாக",
-        "to": "இல்"
-      }
-    },
-    "redo": {
-      "tooltip": "மீண்டும் செய்: {action}"
-    },
-    "translate": {
-      "localized_translation_language": "மொழியை தேர்ந்தெடு",
-      "localized_translation_name": "பெயர்"
-    },
-    "login": "உள்நுழை",
-    "logout": "விடுபதிகை",
-    "report_a_bug": "வழுவை முறையிடுக",
-    "help_translate": "மொழிப்பெயர்க்க  உதவவும்.",
-    "commit": {
-      "save": "பதிவேற்றுக",
-      "cancel": "ரத்து",
-      "warnings": "எச்சரிக்கைகள்",
-      "modified": "திருத்தப்பட்ட",
-      "deleted": "நீக்கப்பட்டது",
-      "created": "உருவாக்கப்பட்டது"
-    },
-    "info_panels": {
-      "background": {
-        "title": "பின்னணி",
-        "zoom": "பெரிதாக்குக",
-        "source": "மூலம்",
-        "description": "விளக்கம்"
-      },
-      "history": {
-        "title": "வரலாறு",
-        "version": "பதிப்பு",
-        "note_comments": "பின்னூட்டங்கள்",
-        "note_created_date": "தொங்கியத் தேதி",
-        "note_created_user": "தொடங்கியவர்"
-      },
-      "location": {
-        "title": "இடம்",
-        "unknown_location": "தெரியாத இடம்"
-      },
-      "measurement": {
-        "title": "அளவு",
-        "center": "மையம்",
-        "length": "நீளம்",
-        "distance": "தூரம்",
-        "area": "பகுதி",
-        "location": "இடம்"
-      }
-    },
-    "geometry": {
-      "point": "புள்ளி",
-      "vertex": "உச்சி",
-      "line": "கோடு",
-      "area": "பரப்பளவு",
-      "relation": "தொடர்பு",
-      "note": "குறிப்பு"
-    },
-    "geocoder": {
-      "search": "உலகமுழுவதும் தேட...",
-      "no_results_worldwide": "முடிவுகள் எதுவும் இல்லை"
-    },
-    "geolocate": {
-      "title": "எனது இருப்பிடம் காட்டு"
-    },
-    "inspector": {
-      "show_more": "மேலும் காட்டு",
-      "view_on_osm": "openstreetmap.org இல் பார்",
-      "tags": "குறிச்சொற்கள்",
-      "new_relation": "புது தொடர்பு...",
-      "role": "செயல்பங்கு",
-      "type": "வகை",
-      "details": "விவரங்கள்",
-      "remove": "நீக்கு",
-      "search": "தேடு",
-      "unknown": "தெரியாதவை",
-      "incomplete": "<பதிவிறக்கம் செய்யப்படவில்லை>",
-      "check": {
-        "yes": "ஆம்",
-        "no": "இல்லை"
-      },
-      "radio": {
-        "structure": {
-          "default": "இயல்பிருப்பு"
-        }
-      },
-      "add": "சேர்",
-      "none": "எதுவுமில்லை",
-      "node": "முனை",
-      "way": "வழி",
-      "relation": "தொடர்பு",
-      "location": "இடம்"
     },
     "background": {
-      "title": "பின்னணி",
-      "none": "எதுவுமில்லை",
       "custom": "தனிப்பயன்",
-      "reset": "மீட்டமைக்க"
-    },
-    "map_data": {
-      "title": "வரைபடத் தரவு",
-      "description": "வரைபடத் தரவு",
-      "layers": {
-        "maproulette": {
-          "detail_title": "விவரங்கள்",
-          "cancel": "ரத்து"
-        }
-      }
-    },
-    "filters": {
-      "points": {
-        "description": "புள்ளிகள்",
-        "tooltip": "ஆர்வம் மிகுந்த இடங்கள்"
-      },
-      "traffic_roads": {
-        "tooltip": "நெடுஞ்சாலைகள், வீதிகள், முதலியன"
-      },
-      "service_roads": {
-        "description": "சேவை சாலைகள்"
-      },
-      "paths": {
-        "description": "பாதைகள்"
-      },
-      "buildings": {
-        "description": "கட்டிடங்கள்"
-      },
-      "boundaries": {
-        "description": "எல்லைகள்",
-        "tooltip": "அலுவல்பூர்வ எல்லைகள்"
-      },
-      "water": {
-        "description": "நீர் அம்சங்கள்"
-      },
-      "rail": {
-        "tooltip": "இரயில்வே"
-      }
-    },
-    "settings": {
-      "custom_data": {
-        "or": "அல்லது"
-      }
-    },
-    "preferences": {
-      "color_selection": {
-        "default": "இயல்பிருப்பு"
-      }
-    },
-    "save": {
-      "title": "சேமி",
-      "no_changes": "சேமிப்பதற்கான மாற்றங்கள் இல்லை.",
-      "conflict": {
-        "previous": "< முந்தைய",
-        "next": " அடுத்த >",
-        "keep_local": "எனதை விடு",
-        "restore": "மீட்டமை",
-        "done": "அனைத்து முரண்பாடுகள் தீர்க்கப்பட்டன"
-      }
-    },
-    "success": {
-      "help_link_text": "விவரங்கள்",
-      "more": "மேலும்",
-      "events": "நிகழ்வுகள்",
-      "languages": "மொழிகள்: {languages}"
-    },
-    "confirm": {
-      "okay": "சரி",
-      "cancel": "ரத்து"
-    },
-    "source_switch": {
-      "live": "நேரலை"
-    },
-    "rapid_inspector": {
-      "tags": "குறிச்சொற்கள்"
-    },
-    "rapid_menu": {
-      "remove": "நீக்கு"
-    },
-    "tag_reference": {
-      "description": "விளக்கம்"
+      "key": "B",
+      "none": "எதுவுமில்லை",
+      "reset": "மீட்டமைக்க",
+      "title": "பின்னணி"
     },
     "bearing": {
       "n": "என் "
     },
-    "QA": {
-      "osmose": {
-        "detail_title": "விவரங்கள்"
+    "commit": {
+      "cancel": "ரத்து",
+      "created": "உருவாக்கப்பட்டது",
+      "deleted": "நீக்கப்பட்டது",
+      "modified": "திருத்தப்பட்ட",
+      "save": "பதிவேற்றுக",
+      "warnings": "எச்சரிக்கைகள்"
+    },
+    "confirm": {
+      "cancel": "ரத்து",
+      "okay": "சரி"
+    },
+    "filters": {
+      "boundaries": {
+        "description": "எல்லைகள்",
+        "tooltip": "அலுவல்பூர்வ எல்லைகள்"
       },
-      "keepRight": {
-        "detail_description": "விளக்கம்",
-        "comment": "பின்னூட்டமிடு"
+      "buildings": {
+        "description": "கட்டிடங்கள்"
+      },
+      "paths": {
+        "description": "பாதைகள்"
+      },
+      "points": {
+        "description": "புள்ளிகள்",
+        "tooltip": "ஆர்வம் மிகுந்த இடங்கள்"
+      },
+      "rail": {
+        "tooltip": "இரயில்வே"
+      },
+      "service_roads": {
+        "description": "சேவை சாலைகள்"
+      },
+      "traffic_roads": {
+        "tooltip": "நெடுஞ்சாலைகள், வீதிகள், முதலியன"
+      },
+      "water": {
+        "description": "நீர் அம்சங்கள்"
       }
     },
-    "note": {
+    "geocoder": {
+      "no_results_worldwide": "முடிவுகள் எதுவும் இல்லை",
+      "search": "உலகமுழுவதும் தேட..."
+    },
+    "geolocate": {
+      "title": "எனது இருப்பிடம் காட்டு"
+    },
+    "geometry": {
+      "area": "பரப்பளவு",
+      "line": "கோடு",
       "note": "குறிப்பு",
-      "commentTitle": "பின்னூட்டங்கள்",
-      "newComment": "புதிய பின்னூட்டம்",
-      "comment": "பின்னூட்டமிடு",
-      "new": "புதியக் குறிப்பு",
-      "save": "குறிப்பைச் சேமி"
+      "point": "புள்ளி",
+      "relation": "தொடர்பு",
+      "vertex": "உச்சி"
     },
     "help": {
-      "title": "உதவி",
-      "help": {
-        "title": "உதவி",
-        "open_data_h": "திறத் தரவு",
-        "before_start_h": "தொடங்குவதற்கு முன்",
-        "open_source_h": "திற மூலம்"
-      },
-      "overview": {
-        "navigation_h": "வழிசெலுத்தல்"
+      "areas": {
+        "delete_area_h": "நீக்கப்படும் பகுதிகள்",
+        "modify_area_h": "திருத்தப்படும் பகுதிகள்",
+        "title": "பகுதிகள்"
       },
       "editing": {
-        "select_h": "தேர்ந்தெடு",
         "save_h": "சேமி",
+        "select_h": "தேர்ந்தெடு",
         "upload_h": "பதிவேற்றம்"
       },
       "feature_editor": {
         "tags_h": "குறிச்சொற்கள்"
-      },
-      "points": {
-        "title": "புள்ளிகள்",
-        "add_point_h": "புள்ளிகள் சேர்க்கப்படுகிறது"
-      },
-      "lines": {
-        "title": "கோடுகள்",
-        "add_line_h": "கோடுகள் சேர்க்கப்படுகிறது"
-      },
-      "areas": {
-        "title": "பகுதிகள்",
-        "modify_area_h": "திருத்தப்படும் பகுதிகள்",
-        "delete_area_h": "நீக்கப்படும் பகுதிகள்"
-      },
-      "relations": {
-        "boundary_h": "எல்லைகள்"
-      },
-      "notes": {
-        "title": "குறிப்புகள்",
-        "add_note_h": "குறிப்புகளை சேர்க்கிறது",
-        "save_note_h": "குறிப்புகளைச் சேமிக்கிறது"
       },
       "field": {
         "restrictions": {
@@ -349,16 +94,119 @@
             "title": "பற்றி"
           }
         }
+      },
+      "help": {
+        "before_start_h": "தொடங்குவதற்கு முன்",
+        "open_data_h": "திறத் தரவு",
+        "open_source_h": "திற மூலம்",
+        "title": "உதவி"
+      },
+      "lines": {
+        "add_line_h": "கோடுகள் சேர்க்கப்படுகிறது",
+        "title": "கோடுகள்"
+      },
+      "notes": {
+        "add_note_h": "குறிப்புகளை சேர்க்கிறது",
+        "save_note_h": "குறிப்புகளைச் சேமிக்கிறது",
+        "title": "குறிப்புகள்"
+      },
+      "overview": {
+        "navigation_h": "வழிசெலுத்தல்"
+      },
+      "points": {
+        "add_point_h": "புள்ளிகள் சேர்க்கப்படுகிறது",
+        "title": "புள்ளிகள்"
+      },
+      "relations": {
+        "boundary_h": "எல்லைகள்"
+      },
+      "title": "உதவி"
+    },
+    "help_translate": "மொழிப்பெயர்க்க  உதவவும்.",
+    "icons": {
+      "download": "டவுன்லோட்",
+      "information": "தகவல்",
+      "remove": "நீக்குக",
+      "text": "உரை",
+      "undo": "திருப்புக"
+    },
+    "info_panels": {
+      "background": {
+        "description": "விளக்கம்",
+        "source": "மூலம்",
+        "title": "பின்னணி",
+        "zoom": "பெரிதாக்குக"
+      },
+      "history": {
+        "note_comments": "பின்னூட்டங்கள்",
+        "note_created_date": "தொங்கியத் தேதி",
+        "note_created_user": "தொடங்கியவர்",
+        "title": "வரலாறு",
+        "version": "பதிப்பு"
+      },
+      "location": {
+        "title": "இடம்",
+        "unknown_location": "தெரியாத இடம்"
+      },
+      "measurement": {
+        "area": "பகுதி",
+        "center": "மையம்",
+        "centroid": "திணிவு",
+        "distance": "தூரம்",
+        "geometry": "வடிவியல்",
+        "imperial": "இம்பீரியல்",
+        "length": "நீளம்",
+        "location": "இடம்",
+        "metric": "மெட்ரிக்",
+        "perimeter": "சுற்றளவு",
+        "title": "அளவு"
       }
     },
-    "issues": {
-      "warnings": "எச்சரிக்கைகள்"
+    "inspector": {
+      "add": "சேர்",
+      "check": {
+        "no": "இல்லை",
+        "yes": "ஆம்"
+      },
+      "details": "விவரங்கள்",
+      "edit": "அம்சத்தைப் மாற்ற",
+      "incomplete": "<பதிவிறக்கம் செய்யப்படவில்லை>",
+      "location": "இடம்",
+      "new_relation": "புது தொடர்பு...",
+      "node": "முனை",
+      "none": "எதுவுமில்லை",
+      "radio": {
+        "structure": {
+          "default": "இயல்பிருப்பு",
+          "layer": "அடுக்கு"
+        }
+      },
+      "relation": "தொடர்பு",
+      "remove": "நீக்கு",
+      "role": "செயல்பங்கு",
+      "search": "தேடு",
+      "show_more": "மேலும் காட்டு",
+      "tags": "குறிச்சொற்கள்",
+      "type": "வகை",
+      "unknown": "தெரியாதவை",
+      "view_on_osm": "openstreetmap.org இல் பார்",
+      "way": "வழி"
     },
     "intro": {
+      "areas": {
+        "title": "பகுதிகள்"
+      },
+      "buildings": {
+        "title": "கட்டிடங்கள்"
+      },
       "done": "முடிந்தது",
-      "ok": "சரி",
       "graph": {
+        "block_number": "<value for addr:block_number>",
         "city": "மூன்று ஆறுகள்",
+        "countrycode": "us",
+        "county": "<value for addr:county>",
+        "district": "<value for addr:district>",
+        "hamlet": "<value for addr:hamlet>",
         "name": {
           "market-street": "கடைத்தெரு",
           "middle-street": "நடுத்தெரு",
@@ -369,81 +217,36 @@
           "three-rivers": "மூன்று ஆறுகள்",
           "washington-street": "வாஷிங்டன் தெரு",
           "west-street": "மேற்குத் தெரு"
-        }
-      },
-      "welcome": {
-        "title": "வருக"
-      },
-      "navigation": {
-        "title": "வழிசெலுத்தல்"
-      },
-      "points": {
-        "title": "புள்ளிகள்"
-      },
-      "areas": {
-        "title": "பகுதிகள்"
+        },
+        "neighbourhood": "<value for addr:neighbourhood>",
+        "postcode": "49093",
+        "province": "<value for addr:province>",
+        "quarter": "<value for addr:quarter>",
+        "state": "MI",
+        "subdistrict": "<value for addr:subdistrict>",
+        "suburb": "<value for addr:suburb>"
       },
       "lines": {
         "title": "கோடுகள்"
       },
-      "buildings": {
-        "title": "கட்டிடங்கள்"
+      "navigation": {
+        "title": "வழிசெலுத்தல்"
+      },
+      "ok": "சரி",
+      "points": {
+        "title": "புள்ளிகள்"
       },
       "startediting": {
-        "title": "திருத்தம் செய்ய தொடங்கவும் ",
-        "start": "மேப் செய்ய தொடங்கவும்! "
-      }
-    },
-    "shortcuts": {
-      "key": {
-        "delete": "நீக்கு"
+        "start": "மேப் செய்ய தொடங்கவும்! ",
+        "title": "திருத்தம் செய்ய தொடங்கவும் "
       },
-      "or": "-அல்லது-",
-      "browsing": "உலவுதல்",
-      "navigation": "வழிசெலுத்தல்",
-      "commands": "கட்டளைகள்",
-      "help": "உதவி",
-      "info": "குறிப்பு",
-      "command": {
-        "add_note": {
-          "key": "வ"
-        },
-        "extract": {
-          "key": "கி"
-        },
-        "straighten": {
-          "key": "தெ"
-        },
-        "wireframe": {
-          "key": "மே"
-        },
-        "toggle_osm_notes": {
-          "key": "வ"
-        },
-        "toggle_streetside": {
-          "key": "தெ"
-        }
+      "welcome": {
+        "title": "வருக"
       }
     },
-    "units": {
-      "feet": "{quantity} அடி",
-      "miles": "{quantity} மை",
-      "square_feet": "{quantity} ச அடி",
-      "square_miles": "{quantity} ச மை",
-      "meters": "{quantity} மீ",
-      "kilometers": "{quantity} கிமீ",
-      "square_meters": "{quantity} மீ²",
-      "square_kilometers": "{quantity} கீமீ²",
-      "hectares": "{quantity} ஹெ",
-      "arcdegrees": "{quantity}″",
-      "arcminutes": "{quantity}″",
-      "north": "வ",
-      "south": "தெ",
-      "east": "கி",
-      "west": "மே"
-    },
-    "wikidata": {
-      "description": "விளக்கம்"
+    "issues": {
+      "key": "I",
+      "warnings": "எச்சரிக்கைகள்"
     },
     "languageNames": {
       "aa": "அஃபார்",
@@ -1013,6 +816,161 @@
       "zun": "ஜூனி",
       "zza": "ஜாஜா"
     },
+    "login": "உள்நுழை",
+    "logout": "விடுபதிகை",
+    "map_data": {
+      "description": "வரைபடத் தரவு",
+      "layers": {
+        "maproulette": {
+          "cancel": "ரத்து",
+          "detail_title": "விவரங்கள்"
+        }
+      },
+      "title": "வரைபடத் தரவு"
+    },
+    "modes": {
+      "add_area": {
+        "description": "வரைப்படத்தில் பூங்காக்கள், கட்டிடங்கள், ஏரிகள் அல்லது மற்ற பகுதிகளைச் சேர்க்கவும்.",
+        "title": "பரப்பளவு"
+      },
+      "add_line": {
+        "description": "வரைப்படத்தில் நெடுஞ்சாலைகள், தெருக்கள், பாதசாரி பாதைகள், கால்வாய்கள் அல்லது மற்ற கோடுகளை சேர்க்கவும்.",
+        "title": "கோடு"
+      },
+      "add_note": {
+        "description": "தவறு ஒன்றைக் கண்டீரா? ஏனைய வரைவாளர்களுக்கு அறியத்தருக.",
+        "title": "குறிப்பு"
+      },
+      "add_point": {
+        "description": "வரைபடத்தை உணவகங்கள், நினைவு சின்னங்கள், தபால் பெட்டிகள் அல்லது மற்ற சேர்க்கவும்.",
+        "title": "புள்ளி"
+      },
+      "browse": {
+        "title": "உலவ"
+      }
+    },
+    "note": {
+      "comment": "பின்னூட்டமிடு",
+      "commentTitle": "பின்னூட்டங்கள்",
+      "new": "புதியக் குறிப்பு",
+      "newComment": "புதிய பின்னூட்டம்",
+      "note": "குறிப்பு",
+      "save": "குறிப்பைச் சேமி"
+    },
+    "operations": {
+      "add": {
+        "annotation": {
+          "note": "குறிப்பு ஒன்று சேர்க்கப்பட்டது.",
+          "point": "ஒரு புள்ளி சேர்க்கப்பட்டது.",
+          "relation": "ஒரு உறவு சேர்க்கப்பட்டது.",
+          "vertex": "ஒரு வழியில் ஒரு முனை சேர்க்கப்பட்டது."
+        }
+      },
+      "cancel_draw": {
+        "annotation": "வரைவது தவிர்கபட்டது "
+      },
+      "change_tags": {
+        "annotation": "குறிச்சொற்கள் மாற்றப்பட்டது."
+      },
+      "circularize": {
+        "title": "வட்டமிடுக"
+      },
+      "continue": {
+        "annotation": {
+          "line": "வரி தொ ங்கியது"
+        },
+        "description": "இந்த வரியில் தொடர்க.",
+        "title": "ஒரு உறவு சேர்க்கப்பட்டது."
+      },
+      "delete": {
+        "annotation": {
+          "area": "பரப்பளவு நீக்கப்பட்டது.",
+          "line": "கோடு நீக்கப்பட்டது.",
+          "point": "புள்ளி நீக்கப்பட்டது.",
+          "relation": "தொடர்பு நீக்கப்பட்டது."
+        },
+        "title": "நீக்கு"
+      },
+      "disconnect": {
+        "title": "தொடர்பை -துண்டி"
+      },
+      "merge": {
+        "description": "இந்த சிறப்பியல்புகளை இணை.",
+        "title": "இணை"
+      },
+      "move": {
+        "annotation": {
+          "area": "பரப்பை நகர்த்தபட்டது ",
+          "line": "கோடு நகர்த்தப்பட்டது.",
+          "point": "புள்ளி நகர்த்தப்பட்டது"
+        },
+        "title": "நகர்த்து"
+      },
+      "orthogonalize": {
+        "title": "சதுரம்"
+      },
+      "reverse": {
+        "title": "தலைகீழாக்கு"
+      },
+      "rotate": {
+        "title": "திருப்பு"
+      },
+      "split": {
+        "title": "பிரி"
+      },
+      "start": {
+        "annotation": {
+          "area": "பகுதி தொடங்கியது",
+          "line": "வரி தொடங்கியது"
+        }
+      },
+      "straighten": {
+        "description": {
+          "line": "இந்தக் கோடு நேராக்கப்பட்டது."
+        },
+        "title": "நேராக்கப்பட்டது"
+      }
+    },
+    "preferences": {
+      "color_selection": {
+        "default": "இயல்பிருப்பு"
+      }
+    },
+    "rapid_inspector": {
+      "tags": "குறிச்சொற்கள்"
+    },
+    "rapid_menu": {
+      "remove": "நீக்கு"
+    },
+    "redo": {
+      "tooltip": "மீண்டும் செய்: {action}"
+    },
+    "report_a_bug": "வழுவை முறையிடுக",
+    "restriction": {
+      "controls": {
+        "distance": "தூரம்",
+        "via": "வழியாக"
+      },
+      "help": {
+        "from": "இருந்து",
+        "from_name": "{from} {fromName}",
+        "from_name_to_name": "{from} {fromName} {to} {toName}",
+        "to": "இல்",
+        "via": "வழியாக",
+        "via_names": "{via} {viaNames}"
+      }
+    },
+    "save": {
+      "conflict": {
+        "done": "அனைத்து முரண்பாடுகள் தீர்க்கப்பட்டன",
+        "keep_local": "எனதை விடு",
+        "next": " அடுத்த >",
+        "previous": "< முந்தைய",
+        "restore": "மீட்டமை"
+      },
+      "no_changes": "சேமிப்பதற்கான மாற்றங்கள் இல்லை.",
+      "title": "சேமி"
+    },
     "scriptNames": {
       "Adlm": "அட்லாம்",
       "Arab": "அரபிக்",
@@ -1150,6 +1108,104 @@
       "Zxxx": "எழுதப்படாதது",
       "Zyyy": "பொது",
       "Zzzz": "அறியப்படாத ஸ்கிரிப்ட்"
+    },
+    "settings": {
+      "custom_data": {
+        "or": "அல்லது"
+      }
+    },
+    "shortcuts": {
+      "browsing": "உலவுதல்",
+      "command": {
+        "add_note": {
+          "key": "வ"
+        },
+        "extract": {
+          "key": "கி"
+        },
+        "straighten": {
+          "key": "தெ"
+        },
+        "toggle_osm_notes": {
+          "key": "வ"
+        },
+        "toggle_streetside": {
+          "key": "தெ"
+        },
+        "wireframe": {
+          "key": "மே"
+        }
+      },
+      "commands": "கட்டளைகள்",
+      "gesture": {
+        "drag": "drag"
+      },
+      "help": "உதவி",
+      "info": "குறிப்பு",
+      "key": {
+        "alt": "Alt",
+        "backspace": "Backspace",
+        "cmd": "Cmd",
+        "ctrl": "Ctrl",
+        "del": "Del",
+        "delete": "நீக்கு",
+        "end": "End",
+        "enter": "Enter",
+        "esc": "Esc",
+        "home": "Home",
+        "option": "Option",
+        "pause": "Pause",
+        "pgdn": "PgDn",
+        "pgup": "PgUp",
+        "return": "Return",
+        "shift": "Shift",
+        "space": "Space"
+      },
+      "navigation": "வழிசெலுத்தல்",
+      "or": "-அல்லது-"
+    },
+    "source_switch": {
+      "live": "நேரலை"
+    },
+    "success": {
+      "events": "நிகழ்வுகள்",
+      "help_link_text": "விவரங்கள்",
+      "languages": "மொழிகள்: {languages}",
+      "more": "மேலும்"
+    },
+    "tag_reference": {
+      "description": "விளக்கம்"
+    },
+    "tooltip_keyhint": "குறுக்கு வழி:",
+    "translate": {
+      "localized_translation_language": "மொழியை தேர்ந்தெடு",
+      "localized_translation_name": "பெயர்"
+    },
+    "units": {
+      "acres": "{quantity} ac",
+      "arcdegrees": "{quantity}″",
+      "arcminutes": "{quantity}″",
+      "arcseconds": "{quantity}″",
+      "area_pair": "{area1} ({area2})",
+      "coordinate": "{coordinate}{direction}",
+      "coordinate_pair": "{latitude}, {longitude}",
+      "east": "கி",
+      "feet": "{quantity} அடி",
+      "hectares": "{quantity} ஹெ",
+      "kilometers": "{quantity} கிமீ",
+      "meters": "{quantity} மீ",
+      "miles": "{quantity} மை",
+      "north": "வ",
+      "south": "தெ",
+      "square_feet": "{quantity} ச அடி",
+      "square_kilometers": "{quantity} கீமீ²",
+      "square_meters": "{quantity} மீ²",
+      "square_miles": "{quantity} ச மை",
+      "west": "மே",
+      "year_month_day": "YYYY-MM-DD"
+    },
+    "wikidata": {
+      "description": "விளக்கம்"
     }
   }
 }

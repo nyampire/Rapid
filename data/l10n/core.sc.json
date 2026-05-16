@@ -1,30 +1,18 @@
 {
   "sc": {
-    "modes": {
-      "browse": {
-        "title": "Circa"
-      }
-    },
-    "operations": {
-      "delete": {
-        "title": "Boga"
-      },
-      "move": {
-        "title": "Movi"
-      },
-      "split": {
-        "title": "Sperra"
-      }
-    },
     "intro": {
       "graph": {
+        "block_number": "<value for addr:block_number>",
+        "countrycode": "it",
+        "county": "<value for addr:county>",
+        "district": "<value for addr:district>",
+        "hamlet": "<value for addr:hamlet>",
+        "neighbourhood": "<value for addr:neighbourhood>",
+        "province": "<value for addr:province>",
+        "quarter": "<value for addr:quarter>",
         "state": "<value for addr:state>",
-        "countrycode": "it"
-      }
-    },
-    "shortcuts": {
-      "key": {
-        "delete": "Boga"
+        "subdistrict": "<value for addr:subdistrict>",
+        "suburb": "<value for addr:suburb>"
       }
     },
     "languageNames": {
@@ -470,6 +458,22 @@
       "zun": "zuni",
       "zza": "zazaki"
     },
+    "modes": {
+      "browse": {
+        "title": "Circa"
+      }
+    },
+    "operations": {
+      "delete": {
+        "title": "Boga"
+      },
+      "move": {
+        "title": "Movi"
+      },
+      "split": {
+        "title": "Sperra"
+      }
+    },
     "scriptNames": {
       "Adlm": "adlam",
       "Aghb": "albanesu caucàsicu",
@@ -648,6 +652,11 @@
       "Zxxx": "no iscritu",
       "Zyyy": "comune",
       "Zzzz": "iscritura disconnota"
+    },
+    "shortcuts": {
+      "key": {
+        "delete": "Boga"
+      }
     }
   }
 }

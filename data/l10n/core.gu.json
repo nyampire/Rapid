@@ -1,122 +1,34 @@
 {
   "gu": {
-    "modes": {
-      "add_area": {
-        "title": "વિસ્તાર"
-      },
-      "add_line": {
-        "title": "રેખા"
-      },
-      "add_point": {
-        "title": "બિંદુ"
-      },
-      "browse": {
-        "title": "બ્રાઉઝ",
-        "description": "નક્શા ને પૅન અને ઝૂમ કરો."
-      }
-    },
-    "operations": {
-      "add": {
-        "annotation": {
-          "point": "સ્થાન ઉમેરો.",
-          "vertex": "રસ્તામાં જોડાણ ઉમેરો.",
-          "relation": "સંબંધ ઉમેરો."
-        }
-      },
-      "start": {
-        "annotation": {
-          "line": "એક રેખા શરૂ કરી.",
-          "area": "વિસ્તાર શરૂ કર્યો."
-        }
-      },
-      "continue": {
-        "title": "ચાલુ રાખો",
-        "description": "આ રેખા ચાલુ રાખો.",
-        "not_eligible": "અહીં કોઇ રેખા સળંગ નહી રહી શકે.",
-        "annotation": {
-          "line": "રેખા ચાલુ રાખો.",
-          "area": "વિસ્તાર ચાલુ રાખો."
-        }
-      },
-      "cancel_draw": {
-        "annotation": "દોરવાનુ બંધ કર્યું."
-      },
-      "change_tags": {
-        "annotation": "ટૅગ્સ બદલાયા છે."
-      },
-      "circularize": {
-        "title": "ગોળાકાર બનાવો."
-      },
-      "orthogonalize": {
-        "title": "ચોરસ"
-      },
-      "straighten": {
-        "title": "સીધું કરો"
-      },
-      "delete": {
-        "title": "દૂર કરો",
-        "annotation": {
-          "point": "સ્થાનને દૂર કર્યું.",
-          "vertex": "રસ્તા પરથી જોડાણ દૂર કર્યું.",
-          "line": "રેખાને દૂર કરી.",
-          "area": "વિસ્તારને દૂર કરી.",
-          "relation": "સંબંધને દૂર કર્યો."
-        }
-      },
-      "move": {
-        "title": "ખસેડો",
-        "annotation": {
-          "point": "સ્થાન ખસેડ્યું.",
-          "line": "રેખા ખસેડી.",
-          "area": "વિસ્તાર ખસેડ્યો."
-        }
-      },
-      "rotate": {
-        "title": "ફેરવો"
-      }
-    },
-    "translate": {
-      "localized_translation_language": "ભાષા પસંદ કરો",
-      "localized_translation_name": "નામ"
-    },
-    "loading_auth": "ઓપનસ્ટ્રીટમેપ સાથે જોડાય છે...",
-    "report_a_bug": "ક્ષતિની નોંધ કરાવો",
-    "help_translate": "ભાષાંતર કરવામાં મદદ કરો",
     "commit": {
       "cancel": "રદ કરો",
-      "warnings": "ચેતવણીઓ",
-      "modified": "બદલેલ",
+      "created": "બનાવેલ",
       "deleted": "દૂર કરેલ",
-      "created": "બનાવેલ"
+      "modified": "બદલેલ",
+      "warnings": "ચેતવણીઓ"
+    },
+    "confirm": {
+      "cancel": "રદ કરો"
     },
     "contributors": {
       "list": "{users} વડે ફેરફારો"
     },
-    "info_panels": {
-      "history": {
-        "version": "આવૃત્તિ",
-        "last_edit": "છેલ્લો ફેરફાર"
+    "filters": {
+      "boundaries": {
+        "description": "સીમાઓ"
       },
-      "location": {
-        "title": "સ્થાન",
-        "unknown_location": "અજાણ્યું સ્થાન"
+      "buildings": {
+        "description": "ઇમારતો"
       },
-      "measurement": {
-        "title": "માપ",
-        "center": "કેન્દ્ર",
-        "perimeter": "પરિમિતિ",
-        "length": "લંબાઈ",
-        "area": "વિસ્તાર",
-        "location": "સ્થાન",
-        "metric": "મેટ્રિક",
-        "imperial": "ઇમ્પિરિયલ"
+      "others": {
+        "tooltip": "બીજું બધું"
+      },
+      "points": {
+        "description": "બિંદુઓ"
+      },
+      "rail": {
+        "tooltip": "રેલ્વે"
       }
-    },
-    "geometry": {
-      "point": "બિંદુ",
-      "line": "રેખા",
-      "area": "વિસ્તાર",
-      "relation": "સંબંધ"
     },
     "geocoder": {
       "no_results_worldwide": "કોઇ પરિણામ મળ્યું નહી"
@@ -124,73 +36,18 @@
     "geolocate": {
       "title": "મારું સ્થાન દર્શાવો"
     },
-    "inspector": {
-      "show_more": "વધુ દર્શાવો",
-      "type": "પ્રકાર",
-      "remove": "દૂર કરો",
-      "search": "શોધો",
-      "unknown": "અજાણ્યું",
-      "check": {
-        "yes": "હા",
-        "no": "ા"
-      },
-      "radio": {
-        "structure": {
-          "default": "મૂળભૂત",
-          "layer": "સ્તર"
-        }
-      },
-      "add": "ઉમેરો",
-      "location": "સ્થાન"
-    },
-    "map_data": {
-      "title": "નકશાની માહિતી",
-      "description": "નકશાની માહિતી",
-      "data_layers": "માહિતી સ્તરો",
-      "layers": {
-        "maproulette": {
-          "cancel": "રદ કરો"
-        }
-      }
-    },
-    "filters": {
-      "points": {
-        "description": "બિંદુઓ"
-      },
-      "buildings": {
-        "description": "ઇમારતો"
-      },
-      "boundaries": {
-        "description": "સીમાઓ"
-      },
-      "rail": {
-        "tooltip": "રેલ્વે"
-      },
-      "others": {
-        "tooltip": "બીજું બધું"
-      }
-    },
-    "preferences": {
-      "color_selection": {
-        "default": "મૂળભૂત"
-      }
-    },
-    "save": {
-      "title": "સંગ્રહો",
-      "no_changes": "સંગ્રહ કરવા માટે કોઇ ફેરફારો નથી."
-    },
-    "confirm": {
-      "cancel": "રદ કરો"
-    },
-    "rapid_menu": {
-      "remove": "દૂર કરો"
+    "geometry": {
+      "area": "વિસ્તાર",
+      "line": "રેખા",
+      "point": "બિંદુ",
+      "relation": "સંબંધ"
     },
     "help": {
-      "overview": {
-        "features_h": "નકશાની લાક્ષણિકતાઓ"
-      },
       "editing": {
         "save_h": "સંગ્રહો"
+      },
+      "overview": {
+        "features_h": "નકશાની લાક્ષણિકતાઓ"
       },
       "points": {
         "title": "બિંદુઓ"
@@ -199,25 +56,69 @@
         "boundary_h": "સીમાઓ"
       }
     },
-    "issues": {
-      "warnings": "ચેતવણીઓ"
+    "help_translate": "ભાષાંતર કરવામાં મદદ કરો",
+    "info_panels": {
+      "history": {
+        "last_edit": "છેલ્લો ફેરફાર",
+        "version": "આવૃત્તિ"
+      },
+      "location": {
+        "title": "સ્થાન",
+        "unknown_location": "અજાણ્યું સ્થાન"
+      },
+      "measurement": {
+        "area": "વિસ્તાર",
+        "center": "કેન્દ્ર",
+        "imperial": "ઇમ્પિરિયલ",
+        "length": "લંબાઈ",
+        "location": "સ્થાન",
+        "metric": "મેટ્રિક",
+        "perimeter": "પરિમિતિ",
+        "title": "માપ"
+      }
+    },
+    "inspector": {
+      "add": "ઉમેરો",
+      "check": {
+        "no": "ા",
+        "yes": "હા"
+      },
+      "location": "સ્થાન",
+      "radio": {
+        "structure": {
+          "default": "મૂળભૂત",
+          "layer": "સ્તર"
+        }
+      },
+      "remove": "દૂર કરો",
+      "search": "શોધો",
+      "show_more": "વધુ દર્શાવો",
+      "type": "પ્રકાર",
+      "unknown": "અજાણ્યું"
     },
     "intro": {
+      "buildings": {
+        "title": "ઇમારતો"
+      },
       "graph": {
+        "block_number": "<value for addr:block_number>",
+        "countrycode": "in",
+        "county": "<value for addr:county>",
+        "district": "<value for addr:district>",
+        "hamlet": "<value for addr:hamlet>",
+        "neighbourhood": "<value for addr:neighbourhood>",
+        "province": "<value for addr:province>",
+        "quarter": "<value for addr:quarter>",
         "state": "<value for addr:state>",
-        "countrycode": "in"
+        "subdistrict": "<value for addr:subdistrict>",
+        "suburb": "<value for addr:suburb>"
       },
       "points": {
         "title": "બિંદુઓ"
-      },
-      "buildings": {
-        "title": "ઇમારતો"
       }
     },
-    "shortcuts": {
-      "key": {
-        "delete": "દૂર કરો"
-      }
+    "issues": {
+      "warnings": "ચેતવણીઓ"
     },
     "languageNames": {
       "aa": "અફાર",
@@ -789,6 +690,115 @@
       "zun": "ઝૂની",
       "zza": "ઝાઝા"
     },
+    "loading_auth": "ઓપનસ્ટ્રીટમેપ સાથે જોડાય છે...",
+    "map_data": {
+      "data_layers": "માહિતી સ્તરો",
+      "description": "નકશાની માહિતી",
+      "layers": {
+        "maproulette": {
+          "cancel": "રદ કરો"
+        }
+      },
+      "title": "નકશાની માહિતી"
+    },
+    "modes": {
+      "add_area": {
+        "description": "બગીચાઓ, ઈમારતો, તળાવો અથવા અન્ય વિસ્તારો નક્શામાં ઉમેરો.",
+        "title": "વિસ્તાર"
+      },
+      "add_line": {
+        "description": "હાઇવે, શેરીઓ, ફૂટપાથ, નહેર અથવા અન્ય રેખાઓને નક્શામાં ઉમેરો.",
+        "title": "રેખા"
+      },
+      "add_point": {
+        "description": "હોટેલ,  સ્મારકો, પોસ્ટ બૉક્સ અને અન્ય વસ્તુઓને નકશામાં ઉમેરો.",
+        "title": "બિંદુ"
+      },
+      "browse": {
+        "description": "નક્શા ને પૅન અને ઝૂમ કરો.",
+        "title": "બ્રાઉઝ"
+      }
+    },
+    "operations": {
+      "add": {
+        "annotation": {
+          "point": "સ્થાન ઉમેરો.",
+          "relation": "સંબંધ ઉમેરો.",
+          "vertex": "રસ્તામાં જોડાણ ઉમેરો."
+        }
+      },
+      "cancel_draw": {
+        "annotation": "દોરવાનુ બંધ કર્યું."
+      },
+      "change_tags": {
+        "annotation": "ટૅગ્સ બદલાયા છે."
+      },
+      "circularize": {
+        "title": "ગોળાકાર બનાવો."
+      },
+      "continue": {
+        "annotation": {
+          "area": "વિસ્તાર ચાલુ રાખો.",
+          "line": "રેખા ચાલુ રાખો."
+        },
+        "description": "આ રેખા ચાલુ રાખો.",
+        "not_eligible": "અહીં કોઇ રેખા સળંગ નહી રહી શકે.",
+        "title": "ચાલુ રાખો"
+      },
+      "delete": {
+        "annotation": {
+          "area": "વિસ્તારને દૂર કરી.",
+          "line": "રેખાને દૂર કરી.",
+          "point": "સ્થાનને દૂર કર્યું.",
+          "relation": "સંબંધને દૂર કર્યો.",
+          "vertex": "રસ્તા પરથી જોડાણ દૂર કર્યું."
+        },
+        "title": "દૂર કરો"
+      },
+      "move": {
+        "annotation": {
+          "area": "વિસ્તાર ખસેડ્યો.",
+          "line": "રેખા ખસેડી.",
+          "point": "સ્થાન ખસેડ્યું."
+        },
+        "title": "ખસેડો"
+      },
+      "orthogonalize": {
+        "title": "ચોરસ"
+      },
+      "rotate": {
+        "title": "ફેરવો"
+      },
+      "start": {
+        "annotation": {
+          "area": "વિસ્તાર શરૂ કર્યો.",
+          "line": "એક રેખા શરૂ કરી."
+        }
+      },
+      "straighten": {
+        "description": {
+          "line": "આ રેખા ને સીધી કરો."
+        },
+        "title": "સીધું કરો"
+      }
+    },
+    "preferences": {
+      "color_selection": {
+        "default": "મૂળભૂત"
+      }
+    },
+    "rapid_menu": {
+      "remove": "દૂર કરો"
+    },
+    "report_a_bug": "ક્ષતિની નોંધ કરાવો",
+    "restore": {
+      "reset": "મારા ફેરફારો અવગણો",
+      "restore": "મારા ફેરફારો પાછા લાવો"
+    },
+    "save": {
+      "no_changes": "સંગ્રહ કરવા માટે કોઇ ફેરફારો નથી.",
+      "title": "સંગ્રહો"
+    },
     "scriptNames": {
       "Adlm": "એડલમ",
       "Arab": "અરબી",
@@ -925,6 +935,22 @@
       "Zxxx": "અલિખિત",
       "Zyyy": "સામાન્ય",
       "Zzzz": "અજ્ઞાત લિપિ"
+    },
+    "shortcuts": {
+      "key": {
+        "delete": "દૂર કરો"
+      }
+    },
+    "splash": {
+      "welcome": "ઓપેનસ્ટ્રીટમેપના આઇડી સંપાદકમાં આપનું સ્વાગત છે."
+    },
+    "tooltip_keyhint": "ટૂંકાણ:",
+    "translate": {
+      "localized_translation_language": "ભાષા પસંદ કરો",
+      "localized_translation_name": "નામ"
+    },
+    "units": {
+      "south": "S"
     }
   }
 }
