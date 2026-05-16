@@ -48,10 +48,15 @@ export class MapWithAIService extends AbstractSystem {
     // 同じ ID 群を自分で unsetClass するための追跡用 (他用途の 'highlight' に干渉しない)。
     this._hoveredRelationSiblings = new Set();
 
+    // Phase 4-B-3: select で highlight class を set した relation member の ID 集合。
+    // hover と同じ 'highlight' クラスを共有するため、cleanup 時に互いの claim を尊重する。
+    this._selectedRelationSiblings = new Set();
+
     // Ensure methods used as callbacks always have `this` bound correctly.
     this._parseNode = this._parseNode.bind(this);
     this._parseWay = this._parseWay.bind(this);
     this._onHoverchange = this._onHoverchange.bind(this);
+    this._onModeChange = this._onModeChange.bind(this);
   }
 
 
@@ -111,6 +116,13 @@ export class MapWithAIService extends AbstractSystem {
       hover.on('hoverchange', this._onHoverchange);
     }
 
+    // Phase 4-B-3: クリック選択時も relation の他 members を hover と同じ blue glow で
+    // 視覚化する。hover を外しても選択中は highlight が残るよう、cleanup は
+    // `_hoveredRelationSiblings` / `_selectedRelationSiblings` 間で互いの claim を尊重。
+    if (typeof this.context.on === 'function') {
+      this.context.on('modechange', this._onModeChange);
+    }
+
     return Promise.resolve();
   }
 
@@ -129,7 +141,8 @@ export class MapWithAIService extends AbstractSystem {
     const layer = target && target.layer;
     const data = target && target.data;
 
-    // 1. 前回 set した siblings の highlight を解除 (自分が set した ID のみ)
+    // 1. 前回 set した siblings の highlight を解除 (自分が set した ID のみ)。
+    //    ただし select 側がまだ claim している ID は select cleanup に任せるので残す。
     if (this._hoveredRelationSiblings.size > 0) {
       const scene = this.context.systems.gfx && this.context.systems.gfx.scene;
       if (scene) {
@@ -137,6 +150,7 @@ export class MapWithAIService extends AbstractSystem {
           const l = scene.layers && scene.layers.get && scene.layers.get(layerID);
           if (!l || typeof l.unsetClass !== 'function') continue;
           for (const id of this._hoveredRelationSiblings) {
+            if (this._selectedRelationSiblings.has(id)) continue;  // select が claim 中
             l.unsetClass('highlight', id);
           }
         }
@@ -159,6 +173,71 @@ export class MapWithAIService extends AbstractSystem {
       if (!member || member.id === data.id) continue;
       layer.setClass('highlight', member.id);
       this._hoveredRelationSiblings.add(member.id);
+    }
+  }
+
+
+  /**
+   * _onModeChange
+   * Phase 4-B-3: モード遷移時に、select 中の PLATEAU LOD2 building relation
+   * メンバーがあれば同 relation の他 members に 'highlight' を set する。
+   * hover とは別の集合 (`_selectedRelationSiblings`) で追跡し、
+   * cleanup 時に hover が claim している ID は残す。
+   *
+   * @param  {Object|undefined} mode  新しいモードオブジェクト ({ id, ... })
+   */
+  _onModeChange(mode) {
+    const scene = this.context.systems.gfx && this.context.systems.gfx.scene;
+
+    // 1. 前回 set した select siblings の highlight を解除。
+    //    hover が同じ ID をまだ claim していたら、それは hover cleanup に任せる。
+    if (this._selectedRelationSiblings.size > 0) {
+      if (scene) {
+        for (const layerID of ['rapid', 'osm']) {
+          const l = scene.layers && scene.layers.get && scene.layers.get(layerID);
+          if (!l || typeof l.unsetClass !== 'function') continue;
+          for (const id of this._selectedRelationSiblings) {
+            if (this._hoveredRelationSiblings.has(id)) continue;
+            l.unsetClass('highlight', id);
+          }
+        }
+      }
+      this._selectedRelationSiblings.clear();
+    }
+
+    // 2. select 系モードでなければここで終了 (browse / draw / save 等は無視)
+    const modeID = mode && mode.id;
+    if (!modeID || !/^select/.test(modeID)) return;
+
+    // 3. 選択中の entity から PLATEAU LOD2 building relation のメンバーを探す
+    const selectedData = typeof this.context.selectedData === 'function'
+      ? this.context.selectedData()
+      : null;
+    if (!selectedData || typeof selectedData.values !== 'function') return;
+
+    const rapidLayer = scene && scene.layers && scene.layers.get && scene.layers.get('rapid');
+    if (!rapidLayer || typeof rapidLayer.setClass !== 'function') return;
+
+    for (const datum of selectedData.values()) {
+      if (!datum || datum.__service__ !== 'mapwithai') continue;
+
+      const datasetGraph = this.graph(datum.__datasetid__);
+      if (!datasetGraph) continue;
+
+      const info = utilBuildingRelationInfo(datum, datasetGraph);
+      if (!info) continue;
+
+      for (const member of info.relation.members || []) {
+        if (!member || member.id === datum.id) continue;
+        rapidLayer.setClass('highlight', member.id);
+        this._selectedRelationSiblings.add(member.id);
+      }
+    }
+
+    // 4. setClass はそれ自体では再描画を起こさないので、念のため redraw を要求。
+    const gfx = this.context.systems.gfx;
+    if (gfx && typeof gfx.deferredRedraw === 'function' && this._selectedRelationSiblings.size > 0) {
+      gfx.deferredRedraw();
     }
   }
 
