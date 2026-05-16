@@ -1,0 +1,42 @@
+{
+  "kab": {
+    "help": {
+      "field": {
+        "restrictions": {
+          "about": {
+            "title": "Ɣef"
+          }
+        }
+      }
+    },
+    "icons": {
+      "copy": "nɣel",
+      "list": "tabdart",
+      "remove": "kkes",
+      "text": "aḍris"
+    },
+    "operations": {
+      "copy": {
+        "title": "Nɣel"
+      },
+      "delete": {
+        "title": "Kkes"
+      },
+      "paste": {
+        "title": "Senṭeḍ"
+      }
+    },
+    "photo_overlays": {
+      "username_filter": {
+        "title": "Isem n useqdac"
+      }
+    },
+    "title": {
+      "format": {
+        "changes": "({changes}) {base}",
+        "changes_context": "({changes}) {base} – {context}",
+        "context": "{base} – {context}"
+      }
+    }
+  }
+}

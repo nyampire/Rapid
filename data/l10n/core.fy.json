@@ -1,39 +1,7 @@
 {
   "fy": {
-    "toolbar": {
-      "inspect": "Trochsjen",
-      "undo_redo": "Werom / Opnij",
-      "add_feature": "Skaaimerk taheakje"
-    },
-    "modes": {
-      "add_area": {
-        "title": "Flak"
-      },
-      "add_point": {
-        "title": "Punt"
-      }
-    },
-    "operations": {
-      "change_tags": {
-        "annotation": "feroare lebels."
-      }
-    },
-    "undo": {
-      "tooltip": "Weromsette: {action}",
-      "nothing": "Neat werom te setten."
-    },
-    "redo": {
-      "tooltip": "Opnij dwaan: {action}",
-      "nothing": "Neat opnij te dwaan."
-    },
-    "zoom_in_edit": "Sûm yn om te bewurkjen",
-    "report_a_bug": "Programmaflater melde",
-    "help_translate": "Helpe mei oersetten",
-    "feature_info": {
-      "hidden_warning": {
-        "one": "{count} ferburgen skaaimerk",
-        "other": "{count} ferburgen skaaimerken"
-      }
+    "background": {
+      "description": "Eftergrûnynstellings"
     },
     "contributors": {
       "list": "Bewurkings fan {users}",
@@ -42,62 +10,52 @@
         "other": "Bewurkings fan {users} en {count} oaren"
       }
     },
+    "feature_info": {
+      "hidden_warning": {
+        "one": "{count} ferburgen skaaimerk",
+        "other": "{count} ferburgen skaaimerken"
+      }
+    },
+    "filters": {
+      "buildings": {
+        "description": "Gebouwen"
+      },
+      "points": {
+        "description": "Punten"
+      }
+    },
+    "geocoder": {
+      "no_results_worldwide": "Gjin treffers fûn",
+      "search": "Wrâldwiid sykje ..."
+    },
+    "help": {
+      "editing": {
+        "save_h": "Bewarje"
+      },
+      "help": {
+        "title": "Help"
+      },
+      "points": {
+        "title": "Punten"
+      },
+      "title": "Help"
+    },
+    "help_translate": "Helpe mei oersetten",
     "info_panels": {
       "measurement": {
         "area": "Flak"
       }
     },
-    "geocoder": {
-      "search": "Wrâldwiid sykje ...",
-      "no_results_worldwide": "Gjin treffers fûn"
-    },
     "inspector": {
+      "feature_list": "Skaaimerken sykje",
+      "search": "Sykje",
       "zoom_to": {
         "no_selection": "Neat op yn te sûmen."
-      },
-      "search": "Sykje",
-      "feature_list": "Skaaimerken sykje"
+      }
     },
-    "background": {
-      "description": "Eftergrûnynstellings"
-    },
-    "map_data": {
-      "title": "Kaartdata",
-      "description": "Kaartdata"
-    },
-    "filters": {
-      "points": {
-        "description": "Punten"
-      },
+    "intro": {
       "buildings": {
-        "description": "Gebouwen"
-      }
-    },
-    "preferences": {
-      "title": "Foarkarren",
-      "description": "Foarkarren",
-      "privacy": {
-        "third_party_icons": {
-          "description": "Ikoanen fan tredden werjaan",
-          "tooltip": "Utfinkjen behinderet it laden fan ikoanen fan websteeën om utens, lykas Wikimedia Commons, Facebook as Twitter."
-        }
-      }
-    },
-    "save": {
-      "title": "Bewarje",
-      "help": "Besjoch jo feroarings nochris en set se op OpenStreetMap, sadat oaren it sjen kinne.",
-      "no_changes": "Gjin feroarings te bewarjen."
-    },
-    "splash": {
-      "start": "No bewurkje"
-    },
-    "zoom": {
-      "in": "Ynsûme",
-      "out": "Utsûme"
-    },
-    "help": {
-      "editing": {
-        "save_h": "Bewarje"
+        "title": "Gebouwen"
       },
       "points": {
         "title": "Punten"
@@ -105,14 +63,6 @@
     },
     "issues": {
       "title": "Knyppunten"
-    },
-    "intro": {
-      "points": {
-        "title": "Punten"
-      },
-      "buildings": {
-        "title": "Gebouwen"
-      }
     },
     "languageNames": {
       "ab": "Abchazysk",
@@ -369,6 +319,49 @@
       "zh-Hans": "Ferienfâldich Sineesk",
       "zh-Hant": "Tradisjoneel Sineesk"
     },
+    "map_data": {
+      "description": "Kaartdata",
+      "title": "Kaartdata"
+    },
+    "modes": {
+      "add_area": {
+        "description": "Heakje parken, gebouwen, marren of oare flakken oan 'e kaart ta.",
+        "title": "Flak"
+      },
+      "add_line": {
+        "description": "Heakje grutte wegen, strjitten, fuotpaden, kanalen of oare linen oan 'e kaart ta.",
+        "title": "Line"
+      },
+      "add_point": {
+        "description": "Heakje restaurants, monuminten, brievebussen of oare punten oan 'e kaart ta.",
+        "title": "Punt"
+      }
+    },
+    "operations": {
+      "change_tags": {
+        "annotation": "feroare lebels."
+      }
+    },
+    "preferences": {
+      "description": "Foarkarren",
+      "privacy": {
+        "third_party_icons": {
+          "description": "Ikoanen fan tredden werjaan",
+          "tooltip": "Utfinkjen behinderet it laden fan ikoanen fan websteeën om utens, lykas Wikimedia Commons, Facebook as Twitter."
+        }
+      },
+      "title": "Foarkarren"
+    },
+    "redo": {
+      "nothing": "Neat opnij te dwaan.",
+      "tooltip": "Opnij dwaan: {action}"
+    },
+    "report_a_bug": "Programmaflater melde",
+    "save": {
+      "help": "Besjoch jo feroarings nochris en set se op OpenStreetMap, sadat oaren it sjen kinne.",
+      "no_changes": "Gjin feroarings te bewarjen.",
+      "title": "Bewarje"
+    },
     "scriptNames": {
       "Afak": "Defaka",
       "Arab": "Arabysk",
@@ -449,6 +442,29 @@
       "Zxxx": "Ongeschreven",
       "Zyyy": "Algemeen",
       "Zzzz": "Onbekend schriftsysteem"
-    }
+    },
+    "splash": {
+      "privacy": "{updateMessage} Mei it brûken fan dizze programmatuer, geane jo akkoart en doch dat ûnder {privacyLink}.",
+      "privacy_update": "Us privacybelied is koartlyn oanpast.",
+      "start": "No bewurkje",
+      "text": "iD is freonlik mar krêftich ark foar it bydragen oan 'e bêste frije wrâldkaart dy't der is. Dit is ferzje {version}. Besjoch {website} foar mear ynfo, en meld flaters op {github}.",
+      "walkthrough": "Mei de útlis begjinne",
+      "welcome": "Wolkom by de OpenStreetMap-bewurker iD"
+    },
+    "toolbar": {
+      "add_feature": "Skaaimerk taheakje",
+      "inspect": "Trochsjen",
+      "undo_redo": "Werom / Opnij"
+    },
+    "tooltip_keyhint": "Fluchtoets:",
+    "undo": {
+      "nothing": "Neat werom te setten.",
+      "tooltip": "Weromsette: {action}"
+    },
+    "zoom": {
+      "in": "Ynsûme",
+      "out": "Utsûme"
+    },
+    "zoom_in_edit": "Sûm yn om te bewurkjen"
   }
 }

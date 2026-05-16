@@ -1,353 +1,59 @@
 {
   "ro": {
-    "icons": {
-      "download": "descarcă",
-      "information": "informaţii",
-      "remove": "Şterge",
-      "undo": "anulează",
-      "zoom_to": "măriți la",
-      "copy": "copiază",
-      "view_on": "vezi pe (domeniu)",
-      "visit_website": "vizitează websiteul",
-      "list": "listare",
-      "deselect": "deselectați"
-    },
-    "toolbar": {
-      "inspect": "examinează",
-      "undo_redo": "Anula / Reface",
-      "favorites": "Preferate",
-      "add_feature": "Adăugați Funcție"
-    },
-    "modes": {
-      "add_area": {
-        "title": "Suprafață"
+    "QA": {
+      "keepRight": {
+        "detail_description": "Descriere"
       },
-      "add_line": {
-        "title": "Linie"
-      },
-      "add_point": {
-        "title": "Punct"
-      },
-      "add_note": {
-        "title": "Notiță",
-        "description": "Ați găsit o problemă? Anunțați alți cartografi."
-      },
-      "add_preset": {
-        "title": "Adăugați"
-      },
-      "browse": {
-        "title": "Navighează",
-        "description": "Mișcă și mărește harta."
-      },
-      "drag_node": {
-        "connected_to_hidden": "Aceasta nu poate fi modificată, deoarece este conectată la o caracteristică ascunsă."
+      "osmose": {
+        "detail_title": "Detalii"
       }
     },
-    "operations": {
-      "add": {
-        "annotation": {
-          "point": "Am adăugat un punct.",
-          "vertex": "Am adăugat un nod la o cale",
-          "relation": "Am adăugat o relație.",
-          "note": "Ați adăugat o notă."
-        }
+    "area_fill": {
+      "full": {
+        "description": "Umplere în întregime",
+        "tooltip": "Suprafețe sunt desenate umplute în întregime."
       },
-      "start": {
-        "annotation": {
-          "line": "Am pornit o linie.",
-          "area": "Am pornit o suprafață."
-        }
-      },
-      "continue": {
-        "title": "Continuă",
-        "description": "Continuă linia",
-        "not_eligible": "Nicio linie nu poate fi continuată aici",
-        "annotation": {
-          "line": "Am continuat o linie.",
-          "area": "Am continuat o suprafață. "
-        }
-      },
-      "cancel_draw": {
-        "annotation": "Am anulat desenul."
-      },
-      "change_role": {
-        "annotation": {
-          "one": "S-a schimbat rolul unui membru al relației.",
-          "few": "S-au schimbat rolurile a {n} membri ai relației.",
-          "other": "S-au schimbat rolurile a {n} de membri ai relației."
-        }
-      },
-      "change_tags": {
-        "annotation": "Tag-uri schimbate."
-      },
-      "copy": {
-        "title": "Copiază"
-      },
-      "circularize": {
-        "title": "Circularizează"
-      },
-      "orthogonalize": {
-        "title": "Pătrat"
-      },
-      "straighten": {
-        "title": "Întărește ",
-        "description": {
-          "points": "Corectează aceste puncte.",
-          "line": "Corectează această linie."
-        }
-      },
-      "delete": {
-        "title": "Șterge",
-        "annotation": {
-          "point": "Șterge un punct.",
-          "vertex": "Șterge un nod dintr-o cale.",
-          "line": "Șterge o linie.",
-          "area": "Șterge o suprafață.",
-          "relation": "Șterge o relație."
-        }
-      },
-      "downgrade": {
-        "title": "Revenire",
-        "description": {
-          "building_address": "Eliminați toate etichetele clădirilor și adreselor inexistente.",
-          "building": "Eliminați toate etichetele clădirilor inexistente.",
-          "address": "Eliminați toate etichetele adreselor inexistente."
-        }
-      },
-      "disconnect": {
-        "title": "Deconectează",
-        "not_downloaded": "Acesta nu poate fi deconectat deoarece unele părți nu au fost încă descărcate.",
-        "connected_to_hidden": "Acesta nu poate fi deconectat deoarece este conectat la o caracteristică ascunsă.",
-        "relation": "Acesta nu poate fi deconectat deoarece conectează membrii unei structuri."
-      },
-      "merge": {
-        "title": "Unește",
-        "description": "Unește aceste obiecte.",
-        "annotation": {
-          "one": "S-a îmbinat un element.",
-          "few": "S-au îmbinat [n] elemente.",
-          "other": "S-au îmbinat [n] elemente."
-        },
-        "not_eligible": "Aceste obiecte nu pot fi unite.",
-        "not_adjacent": "Aceste caracteristici nu pot fi îmbinate deoarece punctele lor finale nu sunt conectate."
-      },
-      "move": {
-        "title": "Mută",
-        "annotation": {
-          "point": "Am mutat un punct.",
-          "vertex": "Am mutat un nod intr-o cale.",
-          "line": "Am mutat o linie.",
-          "area": "Am mutat o suprafață."
-        }
-      },
-      "rotate": {
-        "title": "Rotește",
-        "annotation": {
-          "line": "Am rotit o linie.",
-          "area": "Am rotit o suprafață."
-        }
-      },
-      "reverse": {
-        "title": "Întoarce",
-        "description": {
-          "point": "Rotiți direcția acestui punct.",
-          "points": "Rotiți direcția acestor puncte.",
-          "line": "Orientați această linie în direcția opusă.",
-          "lines": "Orientați aceste linii în direcția opusă.",
-          "features": "Ajustați direcțiile acestor caracteristici."
-        }
-      },
-      "split": {
-        "title": "Separă"
+      "partial": {
+        "description": "Umplere Parțială"
       }
     },
-    "restriction": {
-      "controls": {
-        "distance": "Distanţă",
-        "distance_up_to": "Până la {distance}",
-        "via": "Prin",
-        "via_node_only": "doar nodul",
-        "via_up_to_one": "Sens unic",
-        "via_up_to_two": "Ambele sensuri"
-      },
-      "help": {
-        "turn": {
-          "no_left_turn": "Interzis virajul la stânga {indirect}",
-          "no_right_turn": "Interzis virajul la dreapta {indirect}",
-          "no_u_turn": "Interzisă întoarcerea la stânga {indirect}",
-          "no_straight_on": "Interzis înainte {indirect}",
-          "only_left_turn": "Obligatoriu la stânga {indirect}",
-          "only_right_turn": "Obligatoriu la dreapta {indirect}",
-          "only_u_turn": "Obligatoriu întoarcerea dintr-o mișcare {indirect}",
-          "only_straight_on": "Obligatoriu înainte {indirect}",
-          "allowed_left_turn": "Virajul la stânga permis {indirect}",
-          "allowed_right_turn": "Virajul la dreapta permis {indirect}",
-          "allowed_u_turn": "Întoarcerea dintr-o mișcare permisă {indirect}",
-          "allowed_straight_on": "Permis înainte {indirect}"
-        },
-        "from": "DIN",
-        "via": "PRIN",
-        "to": "LA",
-        "select_from": "Faceți clic pentru a selecta un {from} segment",
-        "select_from_name": "Faceți clic pentru a selecta {from} {fromName}",
-        "toggle": "Apăsați pentru \"{turn}\""
-      }
+    "background": {
+      "best_imagery": "Cea mai cunoscută sursă de imagine pentru această locație",
+      "custom": "Personalizat",
+      "description": "Setări Fundal",
+      "fix_misalignment": "Aliniere imagini de fundal",
+      "key": "B",
+      "none": "Niciunul",
+      "reset": "resetează",
+      "switch": "Schimbă înapoi la acest fundal",
+      "title": "Fundal"
     },
-    "undo": {
-      "tooltip": "Înapoi: {action}",
-      "nothing": "Nu există nimic de refăcut."
-    },
-    "redo": {
-      "tooltip": "Reface: {action}",
-      "nothing": "Nu există nimic de refăcut."
-    },
-    "translate": {
-      "localized_translation_label": "Nume multilingv",
-      "localized_translation_language": "Alege limba",
-      "localized_translation_name": "Nume"
-    },
-    "zoom_in_edit": "Măriți pentru a edita",
-    "login": "Autentificare",
-    "logout": "Deconectați-vă",
-    "loading_auth": "Conectare la OpenStreetMap..",
-    "report_a_bug": "Raportează o greșeală",
-    "help_translate": "Ajută la traducere",
     "commit": {
+      "cancel": "Renunță",
+      "created": "Creat",
+      "deleted": "Șters",
+      "modified": "Modificat",
+      "save": "Încarcă",
       "title": "Încarcă în OpenStreetMap",
       "upload_explanation": "Modificările aduse de dumneavoastră vor fi vizibile pe toate hărțile bazate pe OpenStreetMap.",
-      "save": "Încarcă",
+      "warnings": "Atenționări"
+    },
+    "confirm": {
       "cancel": "Renunță",
-      "warnings": "Atenționări",
-      "modified": "Modificat",
-      "deleted": "Șters",
-      "created": "Creat"
+      "okay": "OK"
     },
     "contributors": {
       "list": "Editări făcute de {user}",
       "truncated_list": {
-        "one": "Editat de {users} și încă unul",
         "few": "Editat de {users} și încă {count}",
+        "one": "Editat de {users} și încă unul",
         "other": "Editat de {users} și încă {count}"
       }
     },
-    "info_panels": {
-      "background": {
-        "title": "Fundal",
-        "description": "Descriere",
-        "show_tiles": "Arată Plăci",
-        "hide_tiles": "Ascunde Plăci"
-      },
-      "history": {
-        "title": "Istoric",
-        "version": "Versiune",
-        "last_edit": "Ultima editare",
-        "edited_by": "Editat de",
-        "changeset": "Schimbări"
-      },
-      "location": {
-        "title": "Locație",
-        "unknown_location": "Locație Necunoscută"
-      },
-      "measurement": {
-        "title": "Măsurare",
-        "geometry": "Geometrie",
-        "center": "Centru",
-        "perimeter": "Perimetru",
-        "length": "Lungime",
-        "distance": "Distanţă",
-        "area": "Suprafață",
-        "location": "Locație"
-      }
-    },
-    "geometry": {
-      "point": "punct",
-      "line": "linie",
-      "area": "suprafață",
-      "relation": "relație "
-    },
-    "geocoder": {
-      "search": "Caută la nivel mondial...",
-      "no_results_worldwide": "Nu s-a găsit nici un rezultat"
-    },
-    "geolocate": {
-      "title": "Arată locația mea ",
-      "locating": "Localizare, te rugăm să aștepți..."
-    },
-    "inspector": {
-      "show_more": "Arată mai mult",
-      "view_on_osm": "Vezi pe openstreetmap.org",
-      "new_relation": "Relație nouă",
-      "role": "Rol",
-      "choose": "Selectează tip de obiect",
-      "results": {
-        "one": "{n} rezultat pentru {search}",
-        "few": "{n} rezultate pentru {search}",
-        "other": "{n} rezultate pentru {search}"
-      },
-      "no_documentation_key": "Nu este disponibilă documentația.",
-      "back_tooltip": "Schimbă tipul obiectului",
-      "type": "Tip",
-      "details": "Detalii",
-      "remove": "Şterge",
-      "search": "Caută",
-      "unknown": "Necunoscut",
-      "feature_list": "Caută obiecte",
-      "check": {
-        "yes": "Da",
-        "no": "Nu",
-        "reverser": "Schimbă direcție"
-      },
-      "radio": {
-        "structure": {
-          "default": "Implicit",
-          "layer": "Strat"
-        }
-      },
-      "add": "Adaugă",
-      "none": "Niciunul",
-      "node": "Nod",
-      "way": "Drum",
-      "relation": "Relație",
-      "location": "Locație",
-      "add_fields": "Adaugă câmp:"
-    },
-    "background": {
-      "title": "Fundal",
-      "description": "Setări Fundal",
-      "none": "Niciunul",
-      "best_imagery": "Cea mai cunoscută sursă de imagine pentru această locație",
-      "switch": "Schimbă înapoi la acest fundal",
-      "custom": "Personalizat",
-      "reset": "resetează",
-      "fix_misalignment": "Aliniere imagini de fundal"
-    },
-    "map_data": {
-      "title": "Date de Hartă",
-      "description": "Date de Hartă",
-      "data_layers": "Straturi de Date",
-      "layers": {
-        "maproulette": {
-          "detail_title": "Detalii",
-          "cancel": "Renunță"
-        }
-      }
-    },
     "filters": {
-      "points": {
-        "description": "Puncte",
-        "tooltip": "Puncte de interes"
-      },
-      "traffic_roads": {
-        "description": "Străzi Trafic",
-        "tooltip": "Drumuri, Străzi, etc."
-      },
-      "service_roads": {
-        "description": "Străzi de Serviciu",
-        "tooltip": "Străzi de Serviciu, Alei de Parcare, Trasee, etc."
-      },
-      "paths": {
-        "description": "Poteci",
-        "tooltip": "Trotuare, Poteci, Piste de biciclete, etc"
+      "boundaries": {
+        "description": "Granițe",
+        "tooltip": "Granițe Administrative"
       },
       "buildings": {
         "description": "Clădiri",
@@ -356,133 +62,198 @@
       "landuse": {
         "description": "Utilizarea Terenului"
       },
-      "boundaries": {
-        "description": "Granițe",
-        "tooltip": "Granițe Administrative"
+      "others": {
+        "tooltip": "Orice Altceva"
       },
-      "water": {
-        "description": "Ape",
-        "tooltip": "Râuri, Lacuri, Iazuri, Bazine, etc."
+      "paths": {
+        "description": "Poteci",
+        "tooltip": "Trotuare, Poteci, Piste de biciclete, etc"
+      },
+      "points": {
+        "description": "Puncte",
+        "tooltip": "Puncte de interes"
       },
       "rail": {
         "description": "Căi Ferate",
         "tooltip": "Căi Ferate"
       },
-      "others": {
-        "tooltip": "Orice Altceva"
-      }
-    },
-    "area_fill": {
-      "partial": {
-        "description": "Umplere Parțială"
+      "service_roads": {
+        "description": "Străzi de Serviciu",
+        "tooltip": "Străzi de Serviciu, Alei de Parcare, Trasee, etc."
       },
-      "full": {
-        "description": "Umplere în întregime",
-        "tooltip": "Suprafețe sunt desenate umplute în întregime."
-      }
-    },
-    "preferences": {
-      "color_selection": {
-        "default": "Implicit"
-      }
-    },
-    "restore": {
-      "heading": "Ai modificări nesalvate."
-    },
-    "save": {
-      "title": "Salveaza",
-      "no_changes": "Nici o modificare de salvat.",
-      "error": "S-a produs o eroare în timpul încărcării",
-      "uploading": "Încarcă modificările în OpenStreetMap",
-      "unsaved_changes": "Ai modificări nesalvate.",
-      "conflict": {
-        "header": "Rezolvă editări conflictuoase",
-        "count": "Conflictul {num} din {total}",
-        "previous": "< Ultimul",
-        "next": "Următorul >",
-        "keep_local": "Păstrează al meu",
-        "keep_remote": "Folosește cel de-al lor",
-        "restore": "Restaurează",
-        "delete": "Lasă șterse",
-        "done": "Toate conflictele au fost rezolvate!"
-      }
-    },
-    "merge_remote_changes": {
-      "conflict": {
-        "deleted": "Acest obiect a fost șters de utilizatorul {user}."
-      }
-    },
-    "success": {
-      "help_link_text": "Detalii"
-    },
-    "confirm": {
-      "cancel": "Renunță"
-    },
-    "source_switch": {
-      "lose_changes": "Ai modificări nesalvate. Schimbând serverul de harți, le vei pierde. Ești sigur(ă) ca vrei să schimbi serverele ?"
-    },
-    "rapid_menu": {
-      "remove": "Şterge"
-    },
-    "tag_reference": {
-      "description": "Descriere",
-      "on_wiki": "{tag} pe wiki.osm.org",
-      "used_with": "folosit cu {type}"
-    },
-    "zoom": {
-      "in": "Mărește",
-      "out": "Micșorează"
-    },
-    "QA": {
-      "osmose": {
-        "detail_title": "Detalii"
+      "traffic_roads": {
+        "description": "Străzi Trafic",
+        "tooltip": "Drumuri, Străzi, etc."
       },
-      "keepRight": {
-        "detail_description": "Descriere"
+      "water": {
+        "description": "Ape",
+        "tooltip": "Râuri, Lacuri, Iazuri, Bazine, etc."
       }
     },
-    "note": {
-      "note": "Notiță"
+    "geocoder": {
+      "no_results_worldwide": "Nu s-a găsit nici un rezultat",
+      "search": "Caută la nivel mondial..."
+    },
+    "geolocate": {
+      "locating": "Localizare, te rugăm să aștepți...",
+      "title": "Arată locația mea "
+    },
+    "geometry": {
+      "area": "suprafață",
+      "line": "linie",
+      "point": "punct",
+      "relation": "relație ",
+      "vertex": "vertex"
     },
     "help": {
-      "title": "Ajutor",
-      "help": {
-        "title": "Ajutor"
-      },
-      "overview": {
-        "navigation_h": "Navigare",
-        "features_h": "Funcționalitățile Hărții"
+      "areas": {
+        "title": "Suprafețe"
       },
       "editing": {
         "save_h": "Salveaza",
         "upload_h": "Încarcă"
       },
-      "points": {
-        "title": "Puncte"
+      "field": {
+        "restrictions": {
+          "about": {
+            "title": "Despre"
+          }
+        }
       },
+      "help": {
+        "title": "Ajutor"
+      },
+      "key": "H",
       "lines": {
         "title": "Linii"
       },
-      "areas": {
-        "title": "Suprafețe"
+      "operations": {
+        "title": "Operațiuni"
+      },
+      "overview": {
+        "features_h": "Funcționalitățile Hărții",
+        "navigation_h": "Navigare"
+      },
+      "points": {
+        "title": "Puncte"
+      },
+      "qa": {
+        "tools_h": "Unelte"
       },
       "relations": {
         "boundary_h": "Granițe"
       },
-      "qa": {
-        "tools_h": "Unelte"
+      "title": "Ajutor"
+    },
+    "help_translate": "Ajută la traducere",
+    "icons": {
+      "copy": "copiază",
+      "deselect": "deselectați",
+      "download": "descarcă",
+      "favorite": "favorite",
+      "information": "informaţii",
+      "list": "listare",
+      "remove": "Şterge",
+      "text": "text",
+      "undo": "anulează",
+      "view_on": "vezi pe (domeniu)",
+      "visit_website": "vizitează websiteul",
+      "zoom_to": "măriți la"
+    },
+    "info_panels": {
+      "background": {
+        "description": "Descriere",
+        "hide_tiles": "Ascunde Plăci",
+        "show_tiles": "Arată Plăci",
+        "source": "Sursă",
+        "title": "Fundal",
+        "vintage": "Vintage",
+        "zoom": "Zoom"
+      },
+      "history": {
+        "changeset": "Schimbări",
+        "edited_by": "Editat de",
+        "last_edit": "Ultima editare",
+        "title": "Istoric",
+        "version": "Versiune"
+      },
+      "location": {
+        "title": "Locație",
+        "unknown_location": "Locație Necunoscută"
+      },
+      "measurement": {
+        "area": "Suprafață",
+        "center": "Centru",
+        "centroid": "Centroid",
+        "distance": "Distanţă",
+        "geometry": "Geometrie",
+        "imperial": "Imperial",
+        "length": "Lungime",
+        "location": "Locație",
+        "metric": "Metric",
+        "perimeter": "Perimetru",
+        "title": "Măsurare"
       }
     },
-    "issues": {
-      "warnings": "Atenționări"
+    "inspector": {
+      "add": "Adaugă",
+      "add_fields": "Adaugă câmp:",
+      "back_tooltip": "Schimbă tipul obiectului",
+      "check": {
+        "no": "Nu",
+        "reverser": "Schimbă direcție",
+        "yes": "Da"
+      },
+      "choose": "Selectează tip de obiect",
+      "details": "Detalii",
+      "edit": "Editează obiect",
+      "feature_list": "Caută obiecte",
+      "incomplete": "<not downloaded>",
+      "location": "Locație",
+      "new_relation": "Relație nouă",
+      "no_documentation_key": "Nu este disponibilă documentația.",
+      "node": "Nod",
+      "none": "Niciunul",
+      "radio": {
+        "structure": {
+          "default": "Implicit",
+          "layer": "Strat"
+        }
+      },
+      "relation": "Relație",
+      "remove": "Şterge",
+      "results": {
+        "few": "{n} rezultate pentru {search}",
+        "one": "{n} rezultat pentru {search}",
+        "other": "{n} rezultate pentru {search}"
+      },
+      "role": "Rol",
+      "search": "Caută",
+      "show_more": "Arată mai mult",
+      "type": "Tip",
+      "unknown": "Necunoscut",
+      "view_on_osm": "Vezi pe openstreetmap.org",
+      "way": "Drum"
     },
     "intro": {
+      "areas": {
+        "title": "Suprafețe"
+      },
+      "buildings": {
+        "title": "Clădiri"
+      },
       "done": "gata",
       "graph": {
+        "block_number": "<value for addr:block_number>",
         "city": "Trei Râuri",
-        "state": "<value for addr:state>",
         "countrycode": "ro",
+        "county": "<value for addr:county>",
+        "district": "<value for addr:district>",
+        "hamlet": "<value for addr:hamlet>",
         "name": {
+          "10th-avenue": "Strada 10",
+          "11th-avenue": "Strada 11",
+          "12th-avenue": "Strada 12",
           "1st-avenue": "Strada 1",
           "2nd-avenue": "Strada 2",
           "4th-avenue": "Strada 4",
@@ -492,9 +263,6 @@
           "7th-avenue": "Strada 7",
           "8th-avenue": "Strada 8",
           "9th-avenue": "Strada 9",
-          "10th-avenue": "Strada 10",
-          "11th-avenue": "Strada 11",
-          "12th-avenue": "Strada 12",
           "access-point-employment": "Punct de acces pentru muncă",
           "adams-street": "Strada lui Adam",
           "andrews-elementary-school": "Școala Generală Andrei",
@@ -529,8 +297,8 @@
           "maple-street": "Strada Maple",
           "marina-park": "Parcul Marina",
           "market-street": "Strada Pieței",
-          "memory-isle-park": "Parcul Insula Memorialului",
           "memory-isle": "Insula Memorialului",
+          "memory-isle-park": "Parcul Insula Memorialului",
           "michigan-avenue": "Calea Michigan",
           "middle-street": "Strada de Mijloc",
           "millard-street": "Strada Miliard",
@@ -539,6 +307,7 @@
           "mural-mall": "Mallul Mural",
           "pealer-street": "Strada Pealer",
           "pine-street": "Strada Pinilor",
+          "pizza-hut": "Pizza Hut",
           "portage-avenue": "Calea Portaj",
           "portage-river": "Râul Portaj",
           "river-drive": "Bulevardul Râului",
@@ -551,6 +320,7 @@
           "scouter-park": "Parcul Scouter",
           "south-street": "Strada de Sud",
           "spring-street": "Strada Primăverii",
+          "three-rivers": "Trei Râuri",
           "three-rivers-city-hall": "Primăria Trei Râuri",
           "three-rivers-elementary-school": "Școala Generală Trei Râuri",
           "three-rivers-fire-department": "Pompieri Trei Râuri",
@@ -559,7 +329,6 @@
           "three-rivers-municipal-airport": "Aeroportul Municipal Trei Râuri",
           "three-rivers-post-office": "Oficiul Poștal Trei Râuri",
           "three-rivers-public-library": "Librăria Trei Râuri",
-          "three-rivers": "Trei Râuri",
           "unique-jewelry": "Giuvaer Unique",
           "walnut-street": "Strada Alunelor",
           "washington-street": "Strada Washington",
@@ -569,87 +338,40 @@
           "willow-drive": "Bulevardul Willow",
           "wood-street": "Strada Lemnului",
           "world-fare": "Tariful Lumii"
-        }
-      },
-      "welcome": {
-        "title": "Bun Venit",
-        "welcome": "Bine ați venit! Acest ghid vă va învăța elementele de bază ale editării pe OpenStreetMap.",
-        "practice": "Toate datele din acest ghid sunt doar pentru practicare, și orice modificări pe care le faceți în ghid nu vor fi salvate.",
-        "words": "Acest ghid va introduce câteva cuvinte și concepte noi. Când introducem un cuvânt nou, vom folosi *italics*."
-      },
-      "navigation": {
-        "title": "Navigare"
-      },
-      "points": {
-        "title": "Puncte"
-      },
-      "areas": {
-        "title": "Suprafețe"
+        },
+        "neighbourhood": "<value for addr:neighbourhood>",
+        "postcode": "49093",
+        "province": "<value for addr:province>",
+        "quarter": "<value for addr:quarter>",
+        "state": "<value for addr:state>",
+        "subdistrict": "<value for addr:subdistrict>",
+        "suburb": "<value for addr:suburb>"
       },
       "lines": {
         "title": "Linii"
       },
-      "buildings": {
-        "title": "Clădiri"
+      "navigation": {
+        "title": "Navigare"
+      },
+      "ok": "OK",
+      "points": {
+        "title": "Puncte"
       },
       "startediting": {
-        "title": "Începe editarea",
         "save": "Nu uita să salvezi periodic modificările. ",
-        "start": "Începe cartografierea!"
-      }
-    },
-    "shortcuts": {
-      "key": {
-        "delete": "Șterge",
-        "option": "Opțiuni",
-        "pause": "Pauză",
-        "return": "Înapoi"
+        "start": "Începe cartografierea!",
+        "title": "Începe editarea"
       },
-      "or": "-sau-",
-      "browsing": "Căutare",
-      "editing": "Editare",
-      "navigation": "Navigare",
-      "selecting_features": "Selectare obiecte",
-      "drawing": "Desenare",
-      "commands": "Comenzi",
-      "help": "Ajutor",
-      "display_options": "Afișează opțiuni",
-      "info": "Informație",
-      "command": {
-        "pan": {
-          "label": "Mișcă harta"
-        },
-        "select_one": {
-          "label": "Selectează un singur obiect"
-        },
-        "select_multi": {
-          "label": "Selectează mai multe obiecte"
-        },
-        "first_node": {
-          "label": "Sari la primul nod"
-        },
-        "last_node": {
-          "label": "Sari la ultimul nod"
-        },
-        "copy": {
-          "label": "Copiază obiecte selectate"
-        },
-        "paste": {
-          "label": "Lipește obiecte selectate"
-        },
-        "undo": {
-          "label": "Anulează ultima acțiune"
-        },
-        "redo": {
-          "label": "Refă ultima acțiune"
-        },
-        "save": {
-          "label": "Salvează modificările"
-        }
+      "welcome": {
+        "practice": "Toate datele din acest ghid sunt doar pentru practicare, și orice modificări pe care le faceți în ghid nu vor fi salvate.",
+        "title": "Bun Venit",
+        "welcome": "Bine ați venit! Acest ghid vă va învăța elementele de bază ale editării pe OpenStreetMap.",
+        "words": "Acest ghid va introduce câteva cuvinte și concepte noi. Când introducem un cuvânt nou, vom folosi *italics*."
       }
     },
-    "wikidata": {
-      "description": "Descriere"
+    "issues": {
+      "key": "I",
+      "warnings": "Atenționări"
     },
     "languageNames": {
       "aa": "afar",
@@ -1213,6 +935,263 @@
       "zun": "zuni",
       "zza": "zaza"
     },
+    "loading_auth": "Conectare la OpenStreetMap..",
+    "login": "Autentificare",
+    "logout": "Deconectați-vă",
+    "map_data": {
+      "data_layers": "Straturi de Date",
+      "description": "Date de Hartă",
+      "layers": {
+        "maproulette": {
+          "cancel": "Renunță",
+          "detail_title": "Detalii"
+        }
+      },
+      "title": "Date de Hartă"
+    },
+    "mapillary": {
+      "view_on_mapillary": "Vezi această imagine pe Mapillary"
+    },
+    "merge_remote_changes": {
+      "conflict": {
+        "deleted": "Acest obiect a fost șters de utilizatorul {user}."
+      }
+    },
+    "modes": {
+      "add_area": {
+        "description": "Adaugă hărți: parcuri, clădiri, lacuri sau alte suprafețe",
+        "title": "Suprafață"
+      },
+      "add_line": {
+        "description": "Adaugă hărți: autostrăzi, străzi, cai pietonale, canale sau alte linii.",
+        "title": "Linie"
+      },
+      "add_note": {
+        "description": "Ați găsit o problemă? Anunțați alți cartografi.",
+        "title": "Notiță"
+      },
+      "add_point": {
+        "description": "Adauga restaurante, monumente, cutii poștale sau alte puncte pe hartă.",
+        "title": "Punct"
+      },
+      "add_preset": {
+        "title": "Adăugați"
+      },
+      "browse": {
+        "description": "Mișcă și mărește harta.",
+        "title": "Navighează"
+      },
+      "drag_node": {
+        "connected_to_hidden": "Aceasta nu poate fi modificată, deoarece este conectată la o caracteristică ascunsă."
+      }
+    },
+    "note": {
+      "note": "Notiță"
+    },
+    "operations": {
+      "add": {
+        "annotation": {
+          "note": "Ați adăugat o notă.",
+          "point": "Am adăugat un punct.",
+          "relation": "Am adăugat o relație.",
+          "vertex": "Am adăugat un nod la o cale"
+        }
+      },
+      "cancel_draw": {
+        "annotation": "Am anulat desenul."
+      },
+      "change_role": {
+        "annotation": {
+          "few": "S-au schimbat rolurile a {n} membri ai relației.",
+          "one": "S-a schimbat rolul unui membru al relației.",
+          "other": "S-au schimbat rolurile a {n} de membri ai relației."
+        }
+      },
+      "change_tags": {
+        "annotation": "Tag-uri schimbate."
+      },
+      "circularize": {
+        "title": "Circularizează"
+      },
+      "connect": {
+        "annotation": {
+          "from_vertex": {
+            "to_area": "Am conectat o cale la o suprafață.",
+            "to_line": "Am conectat o cale la o linie.",
+            "to_point": "Am conectat o cale cu un punct.",
+            "to_vertex": "Am conectat o cale cu alta."
+          }
+        }
+      },
+      "continue": {
+        "annotation": {
+          "area": "Am continuat o suprafață. ",
+          "line": "Am continuat o linie."
+        },
+        "description": "Continuă linia",
+        "not_eligible": "Nicio linie nu poate fi continuată aici",
+        "title": "Continuă"
+      },
+      "copy": {
+        "title": "Copiază"
+      },
+      "delete": {
+        "annotation": {
+          "area": "Șterge o suprafață.",
+          "line": "Șterge o linie.",
+          "point": "Șterge un punct.",
+          "relation": "Șterge o relație.",
+          "vertex": "Șterge un nod dintr-o cale."
+        },
+        "title": "Șterge"
+      },
+      "disconnect": {
+        "connected_to_hidden": "Acesta nu poate fi deconectat deoarece este conectat la o caracteristică ascunsă.",
+        "not_downloaded": "Acesta nu poate fi deconectat deoarece unele părți nu au fost încă descărcate.",
+        "relation": "Acesta nu poate fi deconectat deoarece conectează membrii unei structuri.",
+        "title": "Deconectează"
+      },
+      "downgrade": {
+        "description": {
+          "address": "Eliminați toate etichetele adreselor inexistente.",
+          "building": "Eliminați toate etichetele clădirilor inexistente.",
+          "building_address": "Eliminați toate etichetele clădirilor și adreselor inexistente."
+        },
+        "title": "Revenire"
+      },
+      "merge": {
+        "annotation": {
+          "few": "S-au îmbinat [n] elemente.",
+          "one": "S-a îmbinat un element.",
+          "other": "S-au îmbinat [n] elemente."
+        },
+        "damage_relation": "Aceste caracteristici nu pot fi îmbinate, deoarece ar deteriora o \"{relation}\" structură.",
+        "description": "Unește aceste obiecte.",
+        "not_adjacent": "Aceste caracteristici nu pot fi îmbinate deoarece punctele lor finale nu sunt conectate.",
+        "not_eligible": "Aceste obiecte nu pot fi unite.",
+        "title": "Unește"
+      },
+      "move": {
+        "annotation": {
+          "area": "Am mutat o suprafață.",
+          "line": "Am mutat o linie.",
+          "point": "Am mutat un punct.",
+          "vertex": "Am mutat un nod intr-o cale."
+        },
+        "title": "Mută"
+      },
+      "orthogonalize": {
+        "title": "Pătrat"
+      },
+      "paste": {
+        "title": "Lipește"
+      },
+      "reverse": {
+        "description": {
+          "features": "Ajustați direcțiile acestor caracteristici.",
+          "line": "Orientați această linie în direcția opusă.",
+          "lines": "Orientați aceste linii în direcția opusă.",
+          "point": "Rotiți direcția acestui punct.",
+          "points": "Rotiți direcția acestor puncte."
+        },
+        "title": "Întoarce"
+      },
+      "rotate": {
+        "annotation": {
+          "area": "Am rotit o suprafață.",
+          "line": "Am rotit o linie."
+        },
+        "title": "Rotește"
+      },
+      "split": {
+        "title": "Separă"
+      },
+      "start": {
+        "annotation": {
+          "area": "Am pornit o suprafață.",
+          "line": "Am pornit o linie."
+        }
+      },
+      "straighten": {
+        "description": {
+          "line": "Corectează această linie.",
+          "points": "Corectează aceste puncte."
+        },
+        "title": "Întărește "
+      }
+    },
+    "preferences": {
+      "color_selection": {
+        "default": "Implicit"
+      },
+      "description": "Preferinţe",
+      "title": "Preferinţe"
+    },
+    "rapid_menu": {
+      "remove": "Şterge"
+    },
+    "redo": {
+      "nothing": "Nu există nimic de refăcut.",
+      "tooltip": "Reface: {action}"
+    },
+    "report_a_bug": "Raportează o greșeală",
+    "restore": {
+      "description": "Dorești să revii la modificările nesalvate din sesiunea anterioară de editare? ",
+      "heading": "Ai modificări nesalvate.",
+      "reset": "Șterge schimbările mele",
+      "restore": "Restaurează schimbările mele"
+    },
+    "restriction": {
+      "controls": {
+        "distance": "Distanţă",
+        "distance_up_to": "Până la {distance}",
+        "via": "Prin",
+        "via_node_only": "doar nodul",
+        "via_up_to_one": "Sens unic",
+        "via_up_to_two": "Ambele sensuri"
+      },
+      "help": {
+        "from": "DIN",
+        "indirect": "(indirect)",
+        "select_from": "Faceți clic pentru a selecta un {from} segment",
+        "select_from_name": "Faceți clic pentru a selecta {from} {fromName}",
+        "to": "LA",
+        "toggle": "Apăsați pentru \"{turn}\"",
+        "turn": {
+          "allowed_left_turn": "Virajul la stânga permis {indirect}",
+          "allowed_right_turn": "Virajul la dreapta permis {indirect}",
+          "allowed_straight_on": "Permis înainte {indirect}",
+          "allowed_u_turn": "Întoarcerea dintr-o mișcare permisă {indirect}",
+          "no_left_turn": "Interzis virajul la stânga {indirect}",
+          "no_right_turn": "Interzis virajul la dreapta {indirect}",
+          "no_straight_on": "Interzis înainte {indirect}",
+          "no_u_turn": "Interzisă întoarcerea la stânga {indirect}",
+          "only_left_turn": "Obligatoriu la stânga {indirect}",
+          "only_right_turn": "Obligatoriu la dreapta {indirect}",
+          "only_straight_on": "Obligatoriu înainte {indirect}",
+          "only_u_turn": "Obligatoriu întoarcerea dintr-o mișcare {indirect}"
+        },
+        "via": "PRIN"
+      }
+    },
+    "save": {
+      "conflict": {
+        "count": "Conflictul {num} din {total}",
+        "delete": "Lasă șterse",
+        "done": "Toate conflictele au fost rezolvate!",
+        "header": "Rezolvă editări conflictuoase",
+        "keep_local": "Păstrează al meu",
+        "keep_remote": "Folosește cel de-al lor",
+        "next": "Următorul >",
+        "previous": "< Ultimul",
+        "restore": "Restaurează"
+      },
+      "error": "S-a produs o eroare în timpul încărcării",
+      "no_changes": "Nici o modificare de salvat.",
+      "title": "Salveaza",
+      "unsaved_changes": "Ai modificări nesalvate.",
+      "uploading": "Încarcă modificările în OpenStreetMap"
+    },
     "scriptNames": {
       "Adlm": "adlam",
       "Aghb": "albaneză caucaziană",
@@ -1401,6 +1380,128 @@
       "Zxxx": "nescrisă",
       "Zyyy": "comună",
       "Zzzz": "scriere necunoscută"
-    }
+    },
+    "settings": {
+      "custom_background": {
+        "tooltip": "Editează fundalul customizat"
+      }
+    },
+    "shortcuts": {
+      "browsing": "Căutare",
+      "command": {
+        "copy": {
+          "label": "Copiază obiecte selectate"
+        },
+        "first_node": {
+          "label": "Sari la primul nod"
+        },
+        "last_node": {
+          "label": "Sari la ultimul nod"
+        },
+        "pan": {
+          "label": "Mișcă harta"
+        },
+        "paste": {
+          "label": "Lipește obiecte selectate"
+        },
+        "redo": {
+          "label": "Refă ultima acțiune"
+        },
+        "save": {
+          "label": "Salvează modificările"
+        },
+        "select_multi": {
+          "label": "Selectează mai multe obiecte"
+        },
+        "select_one": {
+          "label": "Selectează un singur obiect"
+        },
+        "undo": {
+          "label": "Anulează ultima acțiune"
+        }
+      },
+      "commands": "Comenzi",
+      "display_options": "Afișează opțiuni",
+      "drawing": "Desenare",
+      "editing": "Editare",
+      "gesture": {
+        "drag": "drag"
+      },
+      "help": "Ajutor",
+      "info": "Informație",
+      "key": {
+        "alt": "Alt",
+        "backspace": "Backspace",
+        "cmd": "Cmd",
+        "ctrl": "Ctrl",
+        "del": "Del",
+        "delete": "Șterge",
+        "end": "End",
+        "enter": "Enter",
+        "esc": "Esc",
+        "home": "Home",
+        "option": "Opțiuni",
+        "pause": "Pauză",
+        "pgdn": "PgDn",
+        "pgup": "PgUp",
+        "return": "Înapoi",
+        "shift": "Shift",
+        "space": "Space"
+      },
+      "navigation": "Navigare",
+      "or": "-sau-",
+      "selecting_features": "Selectare obiecte"
+    },
+    "source_switch": {
+      "dev": "dev",
+      "live": "live",
+      "lose_changes": "Ai modificări nesalvate. Schimbând serverul de harți, le vei pierde. Ești sigur(ă) ca vrei să schimbi serverele ?"
+    },
+    "splash": {
+      "walkthrough": "Începe ghidul",
+      "welcome": "Bine ai venit în editorul iD OpenStreetMap"
+    },
+    "success": {
+      "help_link_text": "Detalii",
+      "just_edited": "Tocmai ai editat OpenStreetMap!"
+    },
+    "tag_reference": {
+      "description": "Descriere",
+      "on_wiki": "{tag} pe wiki.osm.org",
+      "used_with": "folosit cu {type}"
+    },
+    "toolbar": {
+      "add_feature": "Adăugați Funcție",
+      "favorites": "Preferate",
+      "inspect": "examinează",
+      "recent": "Recent",
+      "undo_redo": "Anula / Reface"
+    },
+    "tooltip_keyhint": "Scurtătură:",
+    "translate": {
+      "localized_translation_label": "Nume multilingv",
+      "localized_translation_language": "Alege limba",
+      "localized_translation_name": "Nume"
+    },
+    "undo": {
+      "nothing": "Nu există nimic de refăcut.",
+      "tooltip": "Înapoi: {action}"
+    },
+    "units": {
+      "north": "N",
+      "south": "S",
+      "west": "W"
+    },
+    "version": {
+      "whats_new": "Ce e nou în iD {version}"
+    },
+    "wikidata": {
+      "description": "Descriere"
+    },
+    "zoom": {
+      "in": "Mărește",
+      "out": "Micșorează"
+    },
+    "zoom_in_edit": "Măriți pentru a edita"
   }
 }

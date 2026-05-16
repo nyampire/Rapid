@@ -1,146 +1,74 @@
 {
   "km": {
+    "commit": {
+      "cancel": "បោះបង់",
+      "changes": "ផ្លាស់ប្ដូរ",
+      "created": "បានបង្កើត",
+      "deleted": "បានលុប",
+      "download_changes": "ដោនឡូដឯកសារ osmChange",
+      "modified": "បានកែប្រែ",
+      "save": "អាប់ឡូដ",
+      "title": "អាប់ឡូដទៅកាន់ OpenStreetMap",
+      "warnings": "ការព្រមាន"
+    },
+    "contributors": {
+      "list": "កែសម្រួលដោយ {users}",
+      "truncated_list": {
+        "other": "កែសម្រួលដោយ {users}និង {count}ផ្សេងទៀត"
+      }
+    },
+    "feature_info": {
+      "hidden_warning": {
+        "other": "កំបាំងលក្ខណៈពិសេស {count}"
+      }
+    },
+    "help_translate": "ជួយបកប្រែ",
     "icons": {
-      "download": "ទាញយក",
-      "information": "ព័ត៌មាន",
-      "remove": "ដកចេញ",
-      "undo": "ឥតធ្វើ",
-      "zoom_to": "បង្រួមទៅ",
       "copy": "ចម្លង",
+      "deselect": "មិនជ្រើសវិញ",
+      "download": "ទាញយក",
+      "favorite": "សំណព្វចិត្ត",
+      "information": "ព័ត៌មាន",
+      "list": "បញ្ជី",
+      "remove": "ដកចេញ",
+      "text": "អត្ថបទ",
+      "undo": "ឥតធ្វើ",
       "view_on": "មើលលើ  {domain}",
       "visit_website": "ទស្សនាវេបសាយ",
-      "favorite": "សំណព្វចិត្ត",
-      "list": "បញ្ជី",
-      "text": "អត្ថបទ",
-      "deselect": "មិនជ្រើសវិញ"
-    },
-    "toolbar": {
-      "inspect": "ត្រួតពិនិត្យ",
-      "undo_redo": "ឥតធ្វើ / ធ្វើឡើងវិញ",
-      "recent": "ថ្មីៗ",
-      "favorites": "សំណព្វចិត្ត",
-      "add_feature": "បន្ថែមលក្ខណៈពិសេស"
-    },
-    "title": {
-      "labeled_and_more": "{labeled} នឹង {count} ផ្សេងទៀត"
-    },
-    "modes": {
-      "add_area": {
-        "title": "តំបន់"
-      },
-      "add_line": {
-        "title": "បន្ទាត់"
-      },
-      "add_point": {
-        "title": "ចំណុច"
-      },
-      "add_note": {
-        "title": "ចំណាំ",
-        "description": "ប្រទះឃើញមានបញ្ហា?  សូមប្រាប់អ្នកធ្វើផែនទីផ្សេងទៀតឲ្យដឹងផង។"
-      },
-      "add_preset": {
-        "title": "បន្ថែម {feature}"
-      },
-      "browse": {
-        "title": "រុករក"
-      },
-      "drag_node": {
-        "connected_to_hidden": "នេះមិនអាចកែបានទេ ព្រោះវាបានតភ្ជាប់ទៅលក្ខណៈពិសេសដែលលាក់បាំង។"
-      }
-    },
-    "operations": {
-      "add": {
-        "annotation": {
-          "point": "ចំណុចបានបន្ថែម។",
-          "vertex": "បានបន្ថែមថ្នាំងទៅផ្លូវ។",
-          "relation": "ទំនាក់ទំនងបានបន្ថែម។",
-          "note": "ចំណាំបានបន្ថែម។"
-        }
-      },
-      "start": {
-        "annotation": {
-          "line": "គន្លងបានចាប់ផ្តើម។",
-          "area": "តំបន់មួយបានចាប់ផ្តើម។"
-        }
-      },
-      "continue": {
-        "title": "បន្ត",
-        "description": "បន្តបន្ទាត់នេះ។",
-        "not_eligible": "គ្មានបន្ទាត់ដែលអាចបន្តនៅទីនេះបានទេ។",
-        "multiple": "បន្ទាត់ជាច្រើនទៀត អាចបន្តនៅទីនេះបាន។ បន្ថែមមួយទៅកាន់ជម្រើសដើម្បីបន្ត។",
-        "annotation": {
-          "line": "បានបន្តបន្ទាត់មួយ។",
-          "area": "តំបន់មួយបានបន្តធ្វើ។"
-        }
-      },
-      "cancel_draw": {
-        "annotation": "បោះបង់ការគូរ។"
-      },
-      "change_role": {
-        "annotation": "បានផ្លាស់ប្ដូរតួនាទីនៃសមាជិក {n} ពាក់ព័ន្ធ។"
-      },
-      "change_tags": {
-        "annotation": "បានផ្លាស់ប្ដូរស្លាក។"
-      },
-      "copy": {
-        "title": "ចម្លង",
-        "description": "កំណត់លក្ខណៈពិសេសទាំងនេះសម្រាប់ការបិទភ្ជាប់។",
-        "annotation": "បានចម្លងលក្ខណៈពិសេស {n} ។",
-        "too_large": "ទាំងនេះមិនអាចចម្លងបានទេ ព្រោះតែពួកគេបច្ចុប្បន្នមិនគ្រប់គ្រាន់ដែលអាចមើលឃើញបានឡើយ។"
-      },
-      "paste": {
-        "title": "បិទភ្ជាប់",
-        "description": "បន្ថែមលក្ខណៈពិសេស {n} ស្ទួននៅទីនេះ។",
-        "annotation": "បានបិទភ្ជាប់លក្ខណៈពិសេស {n} ។",
-        "nothing_copied": "គ្មានលក្ខណៈពិសេសដែលត្រូវបានចម្លងនោះទេ។"
-      },
-      "delete": {
-        "annotation": {
-          "area": "តំបន់មួយត្រូវបានលុប។"
-        }
-      },
-      "connect": {
-        "annotation": {
-          "from_vertex": {
-            "to_area": "ផ្លូវត្រូវបានតភ្ជាប់ទៅតំបន់មួយ។"
-          },
-          "from_point": {
-            "to_area": "ចំណុចត្រូវបានផ្លាស់ទីទៅតំបន់មួយ។"
-          }
-        }
-      },
-      "disconnect": {
-        "description": {
-          "no_points": {
-            "single_way": {
-              "area": "ផ្តាច់តំបន់នេះពីលក្ខណៈពិសេសផ្សេងទៀត។"
-            }
-          },
-          "single_point": {
-            "single_way": {
-              "area": "ផ្តាច់តំបន់ដែលបានជ្រើសនៅចំណុចនេះ។"
-            }
-          },
-          "multiple_points": {
-            "single_way": {
-              "area": "ផ្តាច់តំបន់ដែលបានជ្រើសនៅចំណុចទាំងនេះ។"
-            }
-          }
-        }
-      }
+      "zoom_to": "បង្រួមទៅ"
     },
     "info_panels": {
+      "background": {
+        "title": "ផ្ទៃក្រោយ"
+      },
+      "history": {
+        "note_comments": "យោបល់",
+        "note_created_date": "កាលបរិច្ឆេទបានបង្កើត",
+        "note_created_user": "បានបង្កើតដោយ",
+        "note_link_text": "កំណត់ត្រាលើ openstreetmap.org",
+        "note_no_history": "គ្មានប្រវត្តិ(កំណត់ត្រាថ្មី)",
+        "title": "ប្រវត្តិ"
+      },
       "measurement": {
         "area": "តំបន់"
+      },
+      "selected": {
+        "other": "បានរើស {n}"
       }
-    },
-    "note": {
-      "note": "ចំណាំ"
     },
     "intro": {
       "graph": {
+        "block_number": "<value for addr:block_number>",
+        "countrycode": "kh",
+        "county": "<value for addr:county>",
+        "district": "<value for addr:district>",
+        "hamlet": "<value for addr:hamlet>",
+        "neighbourhood": "<value for addr:neighbourhood>",
+        "province": "<value for addr:province>",
+        "quarter": "<value for addr:quarter>",
         "state": "<value for addr:state>",
-        "countrycode": "kh"
+        "subdistrict": "<value for addr:subdistrict>",
+        "suburb": "<value for addr:suburb>"
       }
     },
     "languageNames": {
@@ -589,6 +517,147 @@
       "zun": "ហ្សូនី",
       "zza": "ហ្សាហ្សា"
     },
+    "loading_auth": "កំពុងតភ្ជាប់ទៅកាន់ OpenStreetMap...",
+    "login": "បញ្ជាប់ចូល",
+    "logout": "បណ្ដាច់ចេញ",
+    "modes": {
+      "add_area": {
+        "description": "បន្ថែមសួន អាគារ បឹងបួ ឬក៏តំបន់ផ្សេងទៀតទៅផែនទី។",
+        "title": "តំបន់"
+      },
+      "add_line": {
+        "description": "បន្ថែមមហាវិថី វិថី ផ្លូវថ្មើរជើង ប្រឡាយ ឬគន្លងផ្សេងទៀតទៅកាន់ផែនទី។",
+        "title": "បន្ទាត់"
+      },
+      "add_note": {
+        "description": "ប្រទះឃើញមានបញ្ហា?  សូមប្រាប់អ្នកធ្វើផែនទីផ្សេងទៀតឲ្យដឹងផង។",
+        "title": "ចំណាំ"
+      },
+      "add_point": {
+        "description": "បន្ថែមភោជនីយដ្ឋាន បូជនីយដ្ឋាន ប្រអប់សំបុត្រ ឬចំណុចផ្សេងទៀតទៅផែនទី។",
+        "title": "ចំណុច"
+      },
+      "add_preset": {
+        "title": "បន្ថែម {feature}"
+      },
+      "browse": {
+        "description": "ផែន និងពង្រីកផែនទី",
+        "title": "រុករក"
+      },
+      "drag_node": {
+        "connected_to_hidden": "នេះមិនអាចកែបានទេ ព្រោះវាបានតភ្ជាប់ទៅលក្ខណៈពិសេសដែលលាក់បាំង។"
+      }
+    },
+    "note": {
+      "note": "ចំណាំ"
+    },
+    "operations": {
+      "add": {
+        "annotation": {
+          "note": "ចំណាំបានបន្ថែម។",
+          "point": "ចំណុចបានបន្ថែម។",
+          "relation": "ទំនាក់ទំនងបានបន្ថែម។",
+          "vertex": "បានបន្ថែមថ្នាំងទៅផ្លូវ។"
+        }
+      },
+      "cancel_draw": {
+        "annotation": "បោះបង់ការគូរ។"
+      },
+      "change_role": {
+        "annotation": "បានផ្លាស់ប្ដូរតួនាទីនៃសមាជិក {n} ពាក់ព័ន្ធ។"
+      },
+      "change_tags": {
+        "annotation": "បានផ្លាស់ប្ដូរស្លាក។"
+      },
+      "connect": {
+        "annotation": {
+          "from_point": {
+            "to_area": "ចំណុចត្រូវបានផ្លាស់ទីទៅតំបន់មួយ។"
+          },
+          "from_vertex": {
+            "to_area": "ផ្លូវត្រូវបានតភ្ជាប់ទៅតំបន់មួយ។"
+          }
+        }
+      },
+      "continue": {
+        "annotation": {
+          "area": "តំបន់មួយបានបន្តធ្វើ។",
+          "line": "បានបន្តបន្ទាត់មួយ។"
+        },
+        "description": "បន្តបន្ទាត់នេះ។",
+        "multiple": "បន្ទាត់ជាច្រើនទៀត អាចបន្តនៅទីនេះបាន។ បន្ថែមមួយទៅកាន់ជម្រើសដើម្បីបន្ត។",
+        "not_eligible": "គ្មានបន្ទាត់ដែលអាចបន្តនៅទីនេះបានទេ។",
+        "title": "បន្ត"
+      },
+      "copy": {
+        "annotation": "បានចម្លងលក្ខណៈពិសេស {n} ។",
+        "description": "កំណត់លក្ខណៈពិសេសទាំងនេះសម្រាប់ការបិទភ្ជាប់។",
+        "title": "ចម្លង",
+        "too_large": "ទាំងនេះមិនអាចចម្លងបានទេ ព្រោះតែពួកគេបច្ចុប្បន្នមិនគ្រប់គ្រាន់ដែលអាចមើលឃើញបានឡើយ។"
+      },
+      "delete": {
+        "annotation": {
+          "area": "តំបន់មួយត្រូវបានលុប។"
+        },
+        "title": "លុប"
+      },
+      "disconnect": {
+        "description": {
+          "multiple_points": {
+            "single_way": {
+              "area": "ផ្តាច់តំបន់ដែលបានជ្រើសនៅចំណុចទាំងនេះ។"
+            }
+          },
+          "no_points": {
+            "single_way": {
+              "area": "ផ្តាច់តំបន់នេះពីលក្ខណៈពិសេសផ្សេងទៀត។"
+            }
+          },
+          "single_point": {
+            "single_way": {
+              "area": "ផ្តាច់តំបន់ដែលបានជ្រើសនៅចំណុចនេះ។"
+            }
+          }
+        }
+      },
+      "merge": {
+        "title": "រួមបញ្ចូល"
+      },
+      "paste": {
+        "annotation": "បានបិទភ្ជាប់លក្ខណៈពិសេស {n} ។",
+        "description": "បន្ថែមលក្ខណៈពិសេស {n} ស្ទួននៅទីនេះ។",
+        "nothing_copied": "គ្មានលក្ខណៈពិសេសដែលត្រូវបានចម្លងនោះទេ។",
+        "title": "បិទភ្ជាប់"
+      },
+      "rotate": {
+        "annotation": {
+          "area": "បានបង្វិលតំបន់មួយ។",
+          "feature": {
+            "other": "បានបង្វិលលក្ខណៈពិសេស {n} ។"
+          },
+          "line": "បានបង្វិលបន្ទាត់មួយ។",
+          "relation": "បានបង្វិលការទាក់ទង។"
+        },
+        "title": "បង្វិល"
+      },
+      "start": {
+        "annotation": {
+          "area": "តំបន់មួយបានចាប់ផ្តើម។",
+          "line": "គន្លងបានចាប់ផ្តើម។"
+        }
+      }
+    },
+    "redo": {
+      "nothing": "គ្មានអ្វីដែលរីឌូឡើយ។",
+      "title": "រីឌូ",
+      "tooltip": "រីឌូ៖ {action}"
+    },
+    "report_a_bug": "រាយការណ៍កំហុស",
+    "restriction": {
+      "help": {
+        "toggle": "ចុច សម្រាប់ \"{turn}\""
+      }
+    },
     "scriptNames": {
       "Adlm": "អាតឡាម",
       "Aghb": "អាល់បានីកៅកាស៊ី",
@@ -685,6 +754,35 @@
       "Zxxx": "គ្មានការសរសេរ",
       "Zyyy": "ទូទៅ",
       "Zzzz": "អក្សរមិនស្គាល់"
-    }
+    },
+    "title": {
+      "format": {
+        "changes": "({changes}) {base}",
+        "changes_context": "({changes}) {base} – {context}",
+        "context": "{base} – {context}"
+      },
+      "labeled_and_more": "{labeled} នឹង {count} ផ្សេងទៀត"
+    },
+    "toolbar": {
+      "add_feature": "បន្ថែមលក្ខណៈពិសេស",
+      "favorites": "សំណព្វចិត្ត",
+      "inspect": "ត្រួតពិនិត្យ",
+      "recent": "ថ្មីៗ",
+      "undo_redo": "ឥតធ្វើ / ធ្វើឡើងវិញ"
+    },
+    "tooltip_keyhint": "ផ្លូវកាត់៖",
+    "translate": {
+      "language_and_code": "{language} ({code})",
+      "localized_translation_label": "ឈ្មោះច្រើនភាសា",
+      "localized_translation_language": "ជ្រើសភាសា",
+      "localized_translation_name": "ឈ្មោះ",
+      "translate": "បន្ថែមឈ្មោះច្រើនភាសា"
+    },
+    "undo": {
+      "nothing": "គ្មានអ្វីដែលអាន់ឌូឡើយ។",
+      "title": "អាន់ឌូ",
+      "tooltip": "អាន់ឌូ៖ {action}"
+    },
+    "zoom_in_edit": "ពង្រីក ដើម្បីកែសម្រួល"
   }
 }

@@ -1,293 +1,204 @@
 {
   "nn": {
-    "icons": {
-      "download": "nedlasting",
-      "remove": "fjern",
-      "undo": "angre",
-      "zoom_to": "zoom til",
-      "copy": "kopier",
-      "view_on": "vis på {domain}",
-      "visit_website": "besøk nettstaden",
-      "favorite": "favoritt",
-      "list": "liste",
-      "text": "tekst",
-      "deselect": "fjern valget"
-    },
-    "toolbar": {
-      "inspect": "Sjekk",
-      "undo_redo": "Angre / Gjør om",
-      "recent": "Nyleg",
-      "favorites": "Favorittar",
-      "add_feature": "Legg til eigenskap"
-    },
-    "title": {
-      "format": {
-        "context": "{base} – {kontekst}"
-      }
-    },
-    "modes": {
-      "add_area": {
-        "title": "Område"
-      },
-      "add_line": {
-        "title": "Linje"
-      },
-      "add_point": {
-        "title": "Punkt"
-      },
-      "add_note": {
-        "title": "Merknad"
-      }
-    },
-    "operations": {
-      "add": {
-        "annotation": {
-          "point": "La til et punkt",
-          "relation": "La til relasjon.",
-          "note": "La til ein merknad."
+    "QA": {
+      "keepRight": {
+        "comment": "Kommentar",
+        "detail_description": "Skildring",
+        "error_parts": {
+          "from": "frå",
+          "to": "til"
         }
       },
-      "start": {
-        "annotation": {
-          "line": "Starta en linje.",
-          "area": "Starta en område."
-        }
-      },
-      "continue": {
-        "title": "Fortset",
-        "description": "Forsett denne linja.",
-        "annotation": {
-          "line": "Forsetta denne linja.",
-          "area": "Forsetta dette området."
-        }
-      },
-      "cancel_draw": {
-        "annotation": "Avbraut tegning."
-      },
-      "copy": {
-        "title": "Kopier"
-      },
-      "paste": {
-        "title": "Lim inn"
-      },
-      "orthogonalize": {
-        "title": "Kvadrat"
-      },
-      "delete": {
-        "title": "Slett"
-      },
-      "downgrade": {
-        "title": "Nedgrader"
-      },
-      "disconnect": {
-        "title": "Kople frå"
-      },
-      "merge": {
-        "title": "Slå saman",
-        "description": "Slå saman desse funksjonane"
-      },
-      "move": {
-        "title": "Flytt"
-      },
-      "rotate": {
-        "title": "Roter"
+      "osmose": {
+        "detail_title": "Detaljar",
+        "elems_title": "Funksjonar"
       }
     },
-    "restriction": {
-      "help": {
-        "from": "FRÅ",
-        "to": "TIL"
-      }
-    },
-    "translate": {
-      "localized_translation_language": "Vel språk",
-      "localized_translation_name": "Namn"
-    },
-    "zoom_in_edit": "Zoom inn for å redigere",
-    "login": "Logg Inn",
-    "logout": "Logg ut",
-    "report_a_bug": "Rapporter ein feil",
-    "help_translate": "Hjelp til med å omsette",
-    "status": {
-      "retry": "Prøv ein gong til"
+    "background": {
+      "backgrounds": "Bakgrunnar",
+      "contrast": "Kontrast",
+      "custom": "Tilpassa",
+      "key": "B",
+      "none": "Ingen",
+      "title": "Bakgrunn"
     },
     "commit": {
-      "save": "Last opp",
       "cancel": "Avbryt",
-      "errors": "Feil",
-      "warnings": "Åtvaringar",
-      "modified": "Modifisert",
+      "created": "Oppretta",
       "deleted": "Sletta",
-      "created": "Oppretta"
+      "errors": "Feil",
+      "modified": "Modifisert",
+      "save": "Last opp",
+      "warnings": "Åtvaringar"
+    },
+    "confirm": {
+      "cancel": "Avbryt",
+      "okay": "OK"
     },
     "contributors": {
       "list": "Redigeringar av {users}"
     },
+    "filters": {
+      "others": {
+        "description": "Andre funksjonar"
+      },
+      "rail": {
+        "tooltip": "Jernbaner"
+      }
+    },
+    "geolocate": {
+      "title": "Vis plasseringa mi"
+    },
+    "help": {
+      "editing": {
+        "save_h": "Lagre",
+        "upload_h": "Last opp"
+      },
+      "feature_editor": {
+        "tags_h": "Taggar"
+      },
+      "field": {
+        "restrictions": {
+          "about": {
+            "title": "Om"
+          }
+        }
+      }
+    },
+    "help_translate": "Hjelp til med å omsette",
+    "icons": {
+      "copy": "kopier",
+      "deselect": "fjern valget",
+      "download": "nedlasting",
+      "favorite": "favoritt",
+      "information": "info",
+      "list": "liste",
+      "remove": "fjern",
+      "text": "tekst",
+      "undo": "angre",
+      "view_on": "vis på {domain}",
+      "visit_website": "besøk nettstaden",
+      "zoom_to": "zoom til"
+    },
     "info_panels": {
       "background": {
-        "title": "Bakgrunn",
-        "vintage": "Årgang",
-        "source": "Kjelde",
+        "accuracy": "Nøyaktigheit",
         "description": "Skildring",
         "resolution": "Oppløysing",
-        "accuracy": "Nøyaktigheit"
+        "source": "Kjelde",
+        "title": "Bakgrunn",
+        "vintage": "Årgang",
+        "zoom": "Zoom"
       },
       "history": {
-        "title": "Historikk",
-        "no_history": "Ingen historikk (ny funksjon)",
-        "version": "Versjon",
-        "last_edit": "Siste redigering",
         "edited_by": "Redigert av",
+        "last_edit": "Siste redigering",
+        "no_history": "Ingen historikk (ny funksjon)",
         "note_comments": "Kommentarar",
         "note_created_date": "Dato laga",
-        "note_created_user": "Laga av"
+        "note_created_user": "Laga av",
+        "title": "Historikk",
+        "version": "Versjon"
       },
       "location": {
         "title": "Plassering",
         "unknown_location": "Ukjend plassering"
       },
       "measurement": {
+        "area": "Område",
+        "distance": "Strekning",
         "geometry": "Geometri",
         "length": "Lengde",
-        "area": "Område",
         "location": "Plassering",
         "metric": "Metrisk"
       }
     },
-    "geolocate": {
-      "title": "Vis plasseringa mi"
-    },
     "inspector": {
-      "members": "Medlemmar",
-      "features": "Funksjonar",
-      "details": "Detaljar",
-      "search": "Søk",
-      "unknown": "Ukjend",
+      "add": "Legg till",
+      "add_fields": "Legg til felt:",
       "check": {
-        "yes": "Ja",
         "no": "Nei",
-        "reverser": "Endre retning"
+        "reverser": "Endre retning",
+        "yes": "Ja"
       },
+      "details": "Detaljar",
+      "features": "Funksjonar",
+      "location": "Plassering",
+      "members": "Medlemmar",
+      "node": "Node",
+      "none": "Ingen",
       "radio": {
         "structure": {
           "default": "Standard",
           "layer": "Lag"
         }
       },
-      "add": "Legg till",
-      "none": "Ingen",
-      "location": "Plassering",
-      "add_fields": "Legg til felt:"
+      "search": "Søk",
+      "tags": "Taggar",
+      "unknown": "Ukjend"
     },
-    "background": {
-      "title": "Bakgrunn",
-      "backgrounds": "Bakgrunnar",
-      "none": "Ingen",
-      "custom": "Tilpassa",
-      "contrast": "Kontrast"
-    },
-    "map_data": {
-      "layers": {
-        "maproulette": {
-          "detail_title": "Detaljar",
-          "cancel": "Avbryt"
-        }
-      }
-    },
-    "filters": {
-      "rail": {
-        "tooltip": "Jernbaner"
+    "intro": {
+      "areas": {
+        "title": "Område"
       },
-      "others": {
-        "description": "Andre funksjonar"
-      }
-    },
-    "preferences": {
-      "title": "Innstillingar",
-      "description": "Innstillingar",
-      "color_selection": {
-        "default": "Standard"
-      }
-    },
-    "save": {
-      "title": "Lagre",
-      "no_changes": "Ingen endringar å lagre.",
-      "conflict": {
-        "previous": "< Føregåande",
-        "next": "Neste >"
-      }
-    },
-    "success": {
-      "just_edited": "Du endra akkurat OpenStreetMap!",
-      "help_link_text": "Detaljar",
-      "more": "Meir",
-      "events": "Hendingar"
-    },
-    "confirm": {
-      "cancel": "Avbryt"
-    },
-    "splash": {
-      "start": "Rediger no"
-    },
-    "tag_reference": {
-      "description": "Skildring"
-    },
-    "QA": {
-      "osmose": {
-        "detail_title": "Detaljar",
-        "elems_title": "Funksjonar"
+      "done": "ferdig",
+      "graph": {
+        "block_number": "<value for addr:block_number>",
+        "countrycode": "no",
+        "county": "<value for addr:county>",
+        "district": "<value for addr:district>",
+        "hamlet": "<value for addr:hamlet>",
+        "neighbourhood": "<value for addr:neighbourhood>",
+        "postcode": "49093",
+        "province": "<value for addr:province>",
+        "quarter": "<value for addr:quarter>",
+        "state": "<value for addr:state>",
+        "subdistrict": "<value for addr:subdistrict>",
+        "suburb": "<value for addr:suburb>"
       },
-      "keepRight": {
-        "detail_description": "Skildring",
-        "comment": "Kommentar",
-        "error_parts": {
-          "from": "frå",
-          "to": "til"
-        }
-      }
-    },
-    "mapillary_signs": {
-      "title": "Traffikkskilt"
-    },
-    "note": {
-      "note": "Merknad",
-      "commentTitle": "Kommentarar",
-      "comment": "Kommentar"
-    },
-    "help": {
-      "editing": {
-        "save_h": "Lagre",
-        "upload_h": "Last opp"
-      }
+      "ok": "OK"
     },
     "issues": {
       "errors": "Feil",
-      "warnings": "Åtvaringar"
-    },
-    "intro": {
-      "graph": {
-        "state": "<value for addr:state>",
-        "countrycode": "no"
-      }
-    },
-    "shortcuts": {
-      "key": {
-        "delete": "Slett"
-      },
-      "command": {
-        "toggle_issues": {
-          "key": "R"
+      "fix": {
+        "remove_tags": {
+          "title": "Fjern taggar"
         },
-        "toggle_all_cards": {
-          "key": "R"
+        "remove_the_name": {
+          "title": "Fjern namnet"
         },
-        "toggle_location_card": {
-          "key": "P"
+        "set_as_inner": {
+          "title": "Sett som indre"
+        },
+        "set_as_outer": {
+          "title": "Sett som ytre"
+        },
+        "square_feature": {
+          "title": "Rett opp denne eigenskapen"
+        },
+        "tag_as_disconnected": {
+          "title": "Tagg som fråkopla"
+        },
+        "tag_this_as_higher": {
+          "title": "Tagg dette som høgare"
+        },
+        "tag_this_as_lower": {
+          "title": "Tagg dette som lågare "
+        },
+        "use_different_layers": {
+          "title": "Bruk forskjellige lag"
         }
-      }
-    },
-    "wikidata": {
-      "description": "Skildring"
+      },
+      "key": "R",
+      "no_issues": {
+        "hidden_issues": {
+          "elsewhere": "Problem andre steda: {count}"
+        },
+        "message": {
+          "edits": "Dine redigeringar ser bra ut"
+        }
+      },
+      "warnings": "Åtvaringar"
     },
     "languageNames": {
       "aa": "afar",
@@ -925,6 +836,159 @@
       "zun": "zuni",
       "zza": "zazaisk"
     },
+    "login": "Logg Inn",
+    "logout": "Logg ut",
+    "map_data": {
+      "layers": {
+        "maproulette": {
+          "cancel": "Avbryt",
+          "detail_title": "Detaljar"
+        }
+      }
+    },
+    "mapillary_signs": {
+      "title": "Traffikkskilt"
+    },
+    "modes": {
+      "add_area": {
+        "description": "Legg til parkar, bygningar, innsjøar eller andre område i kartet.",
+        "title": "Område"
+      },
+      "add_line": {
+        "title": "Linje"
+      },
+      "add_note": {
+        "title": "Merknad"
+      },
+      "add_point": {
+        "title": "Punkt"
+      }
+    },
+    "note": {
+      "comment": "Kommentar",
+      "commentTitle": "Kommentarar",
+      "note": "Merknad"
+    },
+    "operations": {
+      "add": {
+        "annotation": {
+          "note": "La til ein merknad.",
+          "point": "La til et punkt",
+          "relation": "La til relasjon."
+        }
+      },
+      "cancel_draw": {
+        "annotation": "Avbraut tegning."
+      },
+      "continue": {
+        "annotation": {
+          "area": "Forsetta dette området.",
+          "line": "Forsetta denne linja."
+        },
+        "description": "Forsett denne linja.",
+        "title": "Fortset"
+      },
+      "copy": {
+        "title": "Kopier"
+      },
+      "delete": {
+        "annotation": {
+          "area": "Sletta eit område.",
+          "feature": {
+            "one": "Sletta eit objekt.",
+            "other": "Sletta {n}objekt."
+          },
+          "line": "Sletta ei linje.",
+          "point": "Sletta eit punkt.",
+          "relation": "Sletta ein relasjon.",
+          "vertex": "Sletta ein node frå ein veg."
+        },
+        "title": "Slett"
+      },
+      "disconnect": {
+        "title": "Kople frå"
+      },
+      "downgrade": {
+        "title": "Nedgrader"
+      },
+      "merge": {
+        "description": "Slå saman desse funksjonane",
+        "title": "Slå saman"
+      },
+      "move": {
+        "annotation": {
+          "area": "Flytta eit område.",
+          "line": "Flytta ei linje.",
+          "point": "Flytta eit punkt.",
+          "relation": "Flytta ein relasjon.",
+          "vertex": "FLytta eit punkt på ei linje."
+        },
+        "title": "Flytt"
+      },
+      "orthogonalize": {
+        "title": "Kvadrat"
+      },
+      "paste": {
+        "title": "Lim inn"
+      },
+      "reverse": {
+        "title": "Snu"
+      },
+      "rotate": {
+        "annotation": {
+          "area": "Roterte eit område.",
+          "line": "Roterte ei linje.",
+          "relation": "Roterte ein relasjon."
+        },
+        "title": "Roter"
+      },
+      "split": {
+        "title": "Kløyv"
+      },
+      "start": {
+        "annotation": {
+          "area": "Starta en område.",
+          "line": "Starta en linje."
+        }
+      }
+    },
+    "photo_overlays": {
+      "date_filter": {
+        "fromDate": {
+          "title": "Frå"
+        }
+      }
+    },
+    "preferences": {
+      "color_selection": {
+        "default": "Standard"
+      },
+      "description": "Innstillingar",
+      "title": "Innstillingar"
+    },
+    "redo": {
+      "title": "Gjenta"
+    },
+    "report_a_bug": "Rapporter ein feil",
+    "restriction": {
+      "controls": {
+        "distance": "Strekning",
+        "via": "Via"
+      },
+      "help": {
+        "from": "FRÅ",
+        "to": "TIL",
+        "via": "VIA"
+      }
+    },
+    "save": {
+      "conflict": {
+        "next": "Neste >",
+        "previous": "< Føregåande"
+      },
+      "no_changes": "Ingen endringar å lagre.",
+      "title": "Lagre"
+    },
     "scriptNames": {
       "Adlm": "adlam",
       "Afak": "afaka",
@@ -1100,6 +1164,109 @@
       "Zxxx": "språk utan skrift",
       "Zyyy": "felles",
       "Zzzz": "ukjend skrift"
-    }
+    },
+    "settings": {
+      "custom_background": {
+        "tooltip": "Rediger tilpassa bakgrunn"
+      }
+    },
+    "shortcuts": {
+      "command": {
+        "toggle_all_cards": {
+          "key": "R"
+        },
+        "toggle_issues": {
+          "key": "R"
+        },
+        "toggle_location_card": {
+          "key": "P"
+        }
+      },
+      "gesture": {
+        "drag": "drag"
+      },
+      "key": {
+        "alt": "Alt",
+        "backspace": "Backspace",
+        "cmd": "Cmd",
+        "ctrl": "Ctrl",
+        "del": "Del",
+        "delete": "Slett",
+        "end": "End",
+        "enter": "Enter",
+        "esc": "Esc",
+        "home": "Home",
+        "menu": "Meny",
+        "option": "Option",
+        "pgdn": "PgDn",
+        "pgup": "PgUp",
+        "return": "Retur",
+        "shift": "Shift",
+        "space": "Mellomromstast"
+      },
+      "or": "-eller-"
+    },
+    "splash": {
+      "start": "Rediger no"
+    },
+    "status": {
+      "retry": "Prøv ein gong til"
+    },
+    "success": {
+      "events": "Hendingar",
+      "help_link_text": "Detaljar",
+      "just_edited": "Du endra akkurat OpenStreetMap!",
+      "more": "Meir"
+    },
+    "tag_reference": {
+      "description": "Skildring"
+    },
+    "title": {
+      "format": {
+        "context": "{base} – {kontekst}"
+      }
+    },
+    "toolbar": {
+      "add_feature": "Legg til eigenskap",
+      "favorites": "Favorittar",
+      "inspect": "Sjekk",
+      "recent": "Nyleg",
+      "undo_redo": "Angre / Gjør om"
+    },
+    "translate": {
+      "localized_translation_language": "Vel språk",
+      "localized_translation_name": "Namn"
+    },
+    "undo": {
+      "title": "Gjer om"
+    },
+    "units": {
+      "acres": "{quantity} ac",
+      "arcdegrees": "{quantity}°",
+      "arcminutes": "{quantity}′",
+      "arcseconds": "{quantity}″",
+      "area_pair": "{area1} ({area2})",
+      "coordinate": "{coordinate}{direction}",
+      "coordinate_pair": "{latitude}, {longitude}",
+      "east": "E",
+      "feet": "{quantity} ft",
+      "hectares": "{quantity} ha",
+      "kilometers": "{quantity} km",
+      "meters": "{quantity} m",
+      "miles": "{quantity} mi",
+      "north": "N",
+      "south": "S",
+      "square_feet": "{quantity} sq ft",
+      "square_kilometers": "{quantity} km²",
+      "square_meters": "{quantity} m²",
+      "square_miles": "{quantity} sq mi",
+      "west": "W",
+      "year_month_day": "YYYY-MM-DD"
+    },
+    "wikidata": {
+      "description": "Skildring",
+      "identifier": "Identifikator"
+    },
+    "zoom_in_edit": "Zoom inn for å redigere"
   }
 }

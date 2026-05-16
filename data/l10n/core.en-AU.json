@@ -58,12 +58,7 @@
       "text_v25": "This release includes a new validation to make mapping kerbs easier, new datasets in the data catalogue, and upgrades to the renderer for better performance."
     },
     "rapid_menu": {
-      "about_the_catalog": "These datasets have been provided as open data by various organisations and the Esri user community for the purpose of improving OpenStreetMap.<br/>You can learn more by clicking the links below, or visiting [the Rapid Guide](https://github.com/facebookmicrosites/Open-Mapping-At-Facebook/wiki/Esri-ArcGIS-FAQ) or [Esri/ArcGIS dataset page on the OSM Wiki](https://wiki.openstreetmap.org/wiki/Esri/ArcGIS_Datasets).",
-      "overture": {
-        "places": {
-          "description": "Contains over 53 million point representations of real-world entities: schools, businesses, hospitals, religious organisations, landmarks, mountain peaks, and much more."
-        }
-      }
+      "about_the_catalog": "These datasets have been provided as open data by various organisations and the Esri user community for the purpose of improving OpenStreetMap.<br/>You can learn more by clicking the links below, or visiting [the Rapid Guide](https://github.com/facebookmicrosites/Open-Mapping-At-Facebook/wiki/Esri-ArcGIS-FAQ) or [Esri/ArcGIS dataset page on the OSM Wiki](https://wiki.openstreetmap.org/wiki/Esri/ArcGIS_Datasets)."
     },
     "QA": {
       "keepRight": {

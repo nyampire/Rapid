@@ -1,361 +1,30 @@
 {
   "eu": {
-    "icons": {
-      "download": "deskargatu",
-      "remove": "kendu",
-      "undo": "ezeztatu",
-      "zoom_to": "zoom hona:",
-      "copy": "kopiatu",
-      "view_on": "ikusi hemen {domeinua}",
-      "visit_website": "webgunea bisitatu",
-      "favorite": "gogokoa",
-      "list": "zerrenda",
-      "text": "testua",
-      "deselect": "desmarkatu"
-    },
-    "toolbar": {
-      "inspect": "Arakatu",
-      "undo_redo": "Desegin / Berregin",
-      "recent": "Azkenekoak",
-      "favorites": "Gogokoak",
-      "add_feature": "Ezaugarria gehitu"
-    },
-    "title": {
-      "labeled_and_more": {
-        "one": "{labeled} eta {count} gehiago",
-        "other": "{labeled} eta {count} gehiago"
-      }
-    },
-    "modes": {
-      "add_area": {
-        "title": "Lekua"
-      },
-      "add_line": {
-        "title": "Lerroa"
-      },
-      "add_point": {
-        "title": "Puntua"
-      },
-      "add_note": {
-        "title": "Oharra",
-        "description": "Arazo bat ikusi duzu? Jakinarazi beste kartografo batzuk."
-      },
-      "add_preset": {
-        "title": "Gehitu {ezaugarria}"
-      },
-      "browse": {
-        "title": "Esploratu",
-        "description": "Mapan mugitu."
-      },
-      "drag_node": {
-        "connected_to_hidden": "Hau ezin da editatu ezkutuko ezaugarri lotuta dagoelako."
-      }
-    },
-    "operations": {
-      "add": {
-        "annotation": {
-          "point": "Puntua gehitu da.",
-          "vertex": "Nodoa gehitu zaio bideari.",
-          "relation": "Erlazioa gehitu da.",
-          "note": "Ohar bat gehitu da."
-        }
-      },
-      "start": {
-        "annotation": {
-          "line": "Lerroa hasi da.",
-          "area": "Lekua hasi da."
-        }
-      },
-      "continue": {
-        "title": "Jarraitu",
-        "description": "Lerro hau jarraitu.",
-        "not_eligible": "Ezin da lerrorik jarraitu hemen.",
-        "multiple": "Hainbat lerro jarrai daitezke hemen. Gehitu lerroetako bat hautapenera jarraitzeko.",
-        "annotation": {
-          "line": "Lerroa jarraitu da.",
-          "area": "Lekua jarraitu da."
-        }
-      },
-      "cancel_draw": {
-        "annotation": "Marrazketa bertan behera utzi da."
-      },
-      "change_role": {
-        "annotation": {
-          "one": "Erlazioko osagai baten rola aldatuta.",
-          "other": "Erlazioko {n} osagairen rola aldatuta."
-        }
-      },
-      "change_tags": {
-        "annotation": "Etiketak aldatu dira."
-      },
-      "copy": {
-        "title": "Kopiatu",
-        "annotation": {
-          "one": "Elementu bat kopiatuta",
-          "other": "{n} elementu kopiatuta."
-        }
-      },
-      "paste": {
-        "title": "Itsatsi",
-        "description": {
-          "one": "Gehitu bikoiztutako [feature] bat hemen.",
-          "other": "Gehitu bikoiztutako [n] ezaugarri hemen."
-        },
-        "annotation": {
-          "one": "Ezaugarri bat itsatsita.",
-          "other": "[n] ezaugarri itsatsita."
-        },
-        "nothing_copied": "Ez da elementurik kopiatu."
-      },
-      "circularize": {
-        "title": "Biribildu",
-        "annotation": {
-          "feature": {
-            "one": "Ezaugarri bat biribildu da.",
-            "other": "{n} ezaugarri biribildu dira."
-          }
-        }
-      },
-      "orthogonalize": {
-        "title": "Laukia",
-        "annotation": {
-          "corner": {
-            "one": "Ertz bat karratu bihurtu da.",
-            "other": "{n} ertz karratu bihurtu dira."
-          }
-        }
-      },
-      "straighten": {
-        "title": "Zuzendu",
-        "description": {
-          "points": "Puntu hauek zuzendu.",
-          "line": "Lerro hau zuzendu.",
-          "lines": "Lerro hauek zuzendu."
-        },
-        "annotation": {
-          "point": {
-            "one": "Puntu bat zuzenean jarri dugu.",
-            "other": "[n] puntu zuzenean jarri ditugu."
-          },
-          "line": {
-            "one": "Lerro bat zuzendu dugu.",
-            "other": "[n] lerro zuzendu ditugu."
-          }
-        }
-      },
-      "delete": {
-        "title": "Ezabatu",
-        "annotation": {
-          "point": "Puntu bat ezabatu da.",
-          "line": "Lerro bat ezabatu da.",
-          "area": "Eremu bat ezabatu da.",
-          "relation": "Erlazio bat ezabatu da."
-        }
-      },
-      "downgrade": {
-        "description": {
-          "generic": "Etiketak ezabatu"
-        }
-      },
-      "disconnect": {
-        "title": "Deskonektatu",
-        "not_connected": "Hemen ez dago lerro/area nahikorik deskonektatzeko. ",
-        "connected_to_hidden": "Hau ezin da deskonektatu ezkutuko funtzio bati lotuta dagoelako. ",
-        "relation": "Hau ezin da deskonektatu erlazio bereko kideak lotzen dituelako. "
-      },
-      "merge": {
-        "title": "Bat egin",
-        "description": "Funtzio hauek bat egin.",
-        "not_eligible": "Funtzio hauek ezin dira bat egin. ",
-        "not_adjacent": "Funtzio hauek ezin dira bat egin haien amaiera-puntuak ez daudelako konektatuta. ",
-        "relation": "Funtzio hauek ezin dira bat egin haien arteko erlazio-rol gatazkatsuak dituztelako. ",
-        "incomplete_relation": "Funtzio hauek ezin dira bat egin haietariko bat gutxienez ez delako guztiz deskargatu. "
-      },
-      "move": {
-        "title": "Mugitu",
-        "annotation": {
-          "point": "Puntu bat mugitu da.",
-          "line": "Lerro bat mugitu da.",
-          "area": "Area bat mugitu da."
-        }
-      },
-      "rotate": {
-        "title": "Biratu"
-      },
-      "split": {
-        "title": "Zatitu",
-        "description": {
-          "line": {
-            "single": {
-              "single_node": "Zatitu lerro hau bitan puntu honetan.",
-              "multiple_node": "Zatitu lerro hau puntu hauetan."
-            }
-          }
-        }
-      }
-    },
-    "restriction": {
-      "controls": {
-        "distance": "Distantzia"
-      }
-    },
-    "undo": {
-      "title": "Desegin"
-    },
-    "redo": {
-      "title": "Berregin"
-    },
-    "translate": {
-      "localized_translation_language": "Hizkuntza aukeratu",
-      "localized_translation_name": "Izena"
-    },
-    "login": "Sartu",
-    "logout": "Atera",
-    "loading_auth": "OpenStreetMap-era konektatzen",
-    "help_translate": "Itzultzen lagundu",
-    "commit": {
-      "save": "Igo",
-      "cancel": "Ezeztatu",
-      "changes": "Aldaketak",
-      "modified": "Editatuta",
-      "deleted": "Ezabatua",
-      "created": "Sortua"
-    },
-    "info_panels": {
-      "background": {
-        "description": "Deskripzioa"
-      },
-      "history": {
-        "version": "Bertsioa",
-        "note_comments": "Iruzkinak"
-      },
-      "measurement": {
-        "geometry": "Geometria",
-        "distance": "Distantzia",
-        "area": "Lekua"
-      }
-    },
-    "geometry": {
-      "relation": "erlazioa",
-      "note": "oharra"
-    },
-    "geocoder": {
-      "search": "Mundu osoan bilatu..."
-    },
-    "inspector": {
-      "view_on_osm": "Ikusi openstreetmap.org-en",
-      "feature_type": "Elementu mota",
-      "fields": "Eremuak",
-      "tags": "Etiketak",
-      "relations": "Erlazioak",
-      "role": "Rol-a",
-      "choose": "Aukeratu elementu mota",
-      "results": {
-        "one": "Emaitza {n}, {search} bilatuta",
-        "other": "{n} emaitza {search} bilatuta"
-      },
-      "multiple_types": "Hainbat mota",
-      "back_tooltip": "Aldatu elementu mota",
-      "type": "Mota",
-      "remove": "Ezabatu",
-      "search": "Bilatu",
-      "unknown": "Ezezaguna",
-      "feature_list": "Bilatu elementuak",
-      "check": {
-        "yes": "Bai",
-        "no": "Ez"
-      },
-      "add": "Gehitu",
-      "relation": "Erlazioa",
-      "add_fields": "Gehitu eremua:"
-    },
-    "map_data": {
-      "layers": {
-        "maproulette": {
-          "cancel": "Ezeztatu"
-        }
-      }
-    },
-    "photo_overlays": {
-      "photo_type": {
-        "flat": {
-          "tooltip": "Argazki tradizionalak"
-        },
-        "panoramic": {
-          "title": "Argazki panoramikoak",
-          "tooltip": "360° argazkiak"
-        }
-      }
-    },
-    "filters": {
-      "points": {
-        "description": "Puntuak",
-        "tooltip": "Puntu interesgarriak"
-      },
-      "buildings": {
-        "description": "Eraikuntzak"
-      }
-    },
-    "save": {
-      "title": "Gorde",
-      "conflict": {
-        "keep_local": "Nerea mantendu"
-      }
-    },
-    "success": {
-      "just_edited": "OpenStreetMap editatu berri duzu!",
-      "thank_you": "Eskerrik asko mapa hobetzeagatik.",
-      "like_osm": "OpenStreetMap gustoko duzu? Kontaktatu besteekin:",
-      "more": "Gehiago",
-      "tell_us": "Kontaiguzu!"
-    },
-    "confirm": {
-      "okay": "ADOS",
-      "cancel": "Ezeztatu"
-    },
-    "splash": {
-      "start": "Editatu orain"
-    },
-    "rapid_inspector": {
-      "tags": "Etiketak"
-    },
-    "rapid_menu": {
-      "remove": "Ezabatu",
-      "category": {
-        "roads": "errepideak"
-      }
-    },
-    "tag_reference": {
-      "description": "Deskripzioa"
-    },
     "QA": {
-      "osmose": {
-        "title": "Osmose arazoa"
-      },
       "keepRight": {
-        "detail_description": "Deskripzioa",
         "comment": "Iruzkina",
-        "save_comment": "Iruzkina gorde",
-        "error_parts": {
-          "this_way": "bide hau",
-          "this_crossing": "bidegurutze hau",
-          "this_bridge": "zubi hau",
-          "this_tunnel": "tunel hau",
-          "railway": "trenbide",
-          "waterway": "ubide",
-          "restaurant": "jatetxea",
-          "school": "eskola",
-          "university": "unibertsitatea",
-          "library": "liburutegia",
-          "cinema": "zinema",
-          "cafe": "kafetegia"
-        },
+        "detail_description": "Deskripzioa",
         "errorTypes": {
-          "<30>": {
+          "30": {
             "title": "Itxi gabeko area"
           },
-          "<60>": {
+          "60": {
             "title": "Etiketa zaharkitua"
+          },
+          "310": {
+            "title": "Biribilgune arazoa"
+          },
+          "312": {
+            "title": "Biribilgune norantza okerra"
+          },
+          "400": {
+            "title": "Geometria arazoa"
+          },
+          "402": {
+            "title": "Ezinezko angelua"
+          },
+          "<30>": {
+            "title": "Itxi gabeko area"
           },
           "<310>": {
             "title": "Biribilgune arazoa"
@@ -368,59 +37,84 @@
           },
           "<402>": {
             "title": "Ezinezko angelua"
+          },
+          "<60>": {
+            "title": "Etiketa zaharkitua"
           }
-        }
+        },
+        "error_parts": {
+          "cafe": "kafetegia",
+          "cinema": "zinema",
+          "library": "liburutegia",
+          "railway": "trenbide",
+          "restaurant": "jatetxea",
+          "school": "eskola",
+          "this_bridge": "zubi hau",
+          "this_crossing": "bidegurutze hau",
+          "this_tunnel": "tunel hau",
+          "this_way": "bide hau",
+          "university": "unibertsitatea",
+          "waterway": "ubide"
+        },
+        "save_comment": "Iruzkina gorde"
+      },
+      "osmose": {
+        "detail_title": "Xehetasunak",
+        "title": "Osmose arazoa"
       }
     },
-    "note": {
-      "note": "Oharra",
-      "title": "Oharra editatu",
-      "anonymous": "anonimoa",
-      "commentTitle": "Iruzkinak",
-      "close": "Oharra itxi",
-      "comment": "Iruzkina"
+    "background": {
+      "contrast": "Kontrastea",
+      "key": "B",
+      "none": "Ez baimendua"
     },
-    "help": {
-      "title": "Laguntza",
-      "help": {
-        "title": "Laguntza",
-        "before_start_h": "Hasi aurretik"
-      },
-      "overview": {
-        "features_h": "Mapako elementuak"
-      },
-      "editing": {
-        "select_h": "Aukeratu",
-        "save_h": "Gorde",
-        "upload_h": "Igo"
-      },
-      "feature_editor": {
-        "type_h": "Elementu mota",
-        "fields_h": "Eremuak",
-        "tags_h": "Etiketak"
+    "commit": {
+      "cancel": "Ezeztatu",
+      "changes": "Aldaketak",
+      "created": "Sortua",
+      "deleted": "Ezabatua",
+      "modified": "Editatuta",
+      "save": "Igo"
+    },
+    "confirm": {
+      "cancel": "Ezeztatu",
+      "okay": "ADOS"
+    },
+    "filters": {
+      "buildings": {
+        "description": "Eraikuntzak"
       },
       "points": {
-        "title": "Puntuak"
-      },
-      "lines": {
-        "title": "Eremuak"
-      },
+        "description": "Puntuak",
+        "tooltip": "Puntu interesgarriak"
+      }
+    },
+    "geocoder": {
+      "search": "Mundu osoan bilatu..."
+    },
+    "geometry": {
+      "note": "oharra",
+      "relation": "erlazioa"
+    },
+    "help": {
       "areas": {
         "title": "Eremuak"
       },
-      "relations": {
-        "title": "Erlazioak"
+      "editing": {
+        "save_h": "Gorde",
+        "select_h": "Aukeratu",
+        "upload_h": "Igo"
       },
-      "notes": {
-        "title": "Oharrak",
-        "add_note_h": "Oharrak gehitu",
-        "save_note_h": "Oharrak gorde"
-      },
-      "qa": {
-        "tools_h": "Tresnak"
+      "feature_editor": {
+        "fields_h": "Eremuak",
+        "tags_h": "Etiketak",
+        "type_h": "Elementu mota"
       },
       "field": {
         "restrictions": {
+          "about": {
+            "title": "Honi buruz"
+          },
           "inspecting": {
             "title": "Arakatzen"
           },
@@ -428,18 +122,165 @@
             "title": "Aldatu"
           }
         }
+      },
+      "help": {
+        "before_start_h": "Hasi aurretik",
+        "title": "Laguntza"
+      },
+      "key": "H",
+      "lines": {
+        "title": "Eremuak"
+      },
+      "notes": {
+        "add_note_h": "Oharrak gehitu",
+        "save_note_h": "Oharrak gorde",
+        "title": "Oharrak"
+      },
+      "overview": {
+        "features_h": "Mapako elementuak"
+      },
+      "points": {
+        "title": "Puntuak"
+      },
+      "qa": {
+        "tools_h": "Tresnak"
+      },
+      "relations": {
+        "title": "Erlazioak"
+      },
+      "title": "Laguntza"
+    },
+    "help_translate": "Itzultzen lagundu",
+    "icons": {
+      "copy": "kopiatu",
+      "deselect": "desmarkatu",
+      "download": "deskargatu",
+      "favorite": "gogokoa",
+      "information": "info",
+      "list": "zerrenda",
+      "remove": "kendu",
+      "text": "testua",
+      "undo": "ezeztatu",
+      "view_on": "ikusi hemen {domeinua}",
+      "visit_website": "webgunea bisitatu",
+      "zoom_to": "zoom hona:"
+    },
+    "info_panels": {
+      "background": {
+        "description": "Deskripzioa",
+        "source": "Sorburu",
+        "zoom": "Zooma"
+      },
+      "history": {
+        "note_comments": "Iruzkinak",
+        "title": "Historia",
+        "version": "Bertsioa"
+      },
+      "location": {
+        "title": "Kokalekua"
+      },
+      "measurement": {
+        "area": "Lekua",
+        "center": "Zentru",
+        "distance": "Distantzia",
+        "geometry": "Geometria",
+        "location": "Kokalekua"
+      }
+    },
+    "inspector": {
+      "add": "Gehitu",
+      "add_fields": "Gehitu eremua:",
+      "back_tooltip": "Aldatu elementu mota",
+      "check": {
+        "no": "Ez",
+        "yes": "Bai"
+      },
+      "choose": "Aukeratu elementu mota",
+      "edit": "Editatu elementuak",
+      "feature_list": "Bilatu elementuak",
+      "feature_type": "Elementu mota",
+      "fields": "Eremuak",
+      "incomplete": "<not downloaded>",
+      "location": "Kokalekua",
+      "members": "Kideak",
+      "multiple_types": "Hainbat mota",
+      "none": "Ez baimendua",
+      "radio": {
+        "structure": {
+          "default": "Lehenetsia ",
+          "layer": "Geruza"
+        }
+      },
+      "relation": "Erlazioa",
+      "relations": "Erlazioak",
+      "remove": "Ezabatu",
+      "results": {
+        "one": "Emaitza {n}, {search} bilatuta",
+        "other": "{n} emaitza {search} bilatuta"
+      },
+      "role": "Rol-a",
+      "search": "Bilatu",
+      "tags": "Etiketak",
+      "type": "Mota",
+      "unknown": "Ezezaguna",
+      "view_on_osm": "Ikusi openstreetmap.org-en"
+    },
+    "intro": {
+      "areas": {
+        "choose_playground": "**Aukeratu {preset}-a zerrendatik.**",
+        "title": "Eremuak"
+      },
+      "buildings": {
+        "choose_tank": "**Aukeratu {preset}-a zerrendatik.**",
+        "title": "Eraikuntzak"
+      },
+      "done": "eginda",
+      "graph": {
+        "block_number": "<value for addr:block_number>",
+        "county": "<value for addr:county>",
+        "district": "<value for addr:district>",
+        "hamlet": "<value for addr:hamlet>",
+        "name": {
+          "pizza-hut": "Pizza Hut"
+        },
+        "neighbourhood": "<value for addr:neighbourhood>",
+        "postcode": "49093",
+        "province": "<value for addr:province>",
+        "quarter": "<value for addr:quarter>",
+        "subdistrict": "<value for addr:subdistrict>",
+        "suburb": "<value for addr:suburb>"
+      },
+      "lines": {
+        "title": "Lerroak"
+      },
+      "ok": "ADOS",
+      "points": {
+        "choose_cafe": "**Aukeratu {preset}-a zerrendatik.**",
+        "title": "Puntuak"
+      },
+      "startediting": {
+        "save": "Ez ahaztu aldizka zure aldaketak gordetzeaz!",
+        "start": "Mapeatzen hasi!",
+        "title": "Editatzen hasi"
+      },
+      "welcome": {
+        "title": "Ongi etorri"
       }
     },
     "issues": {
-      "title": "Arazoak",
-      "rules": "Arauak",
-      "resolved_tooltip": "Zure edizioekin konpondutako arazoak",
-      "options": {
-        "what": {
-          "all": "Dena"
+      "crossing_ways": {
+        "title": "Gurutzatzen diren bideak"
+      },
+      "fix": {
+        "add_a_bridge": {
+          "title": "Zubi bat gehitu"
         },
-        "where": {
-          "title": "Non:"
+        "add_a_tunnel": {
+          "annotation": "Tunel bat gehitu.",
+          "title": "Tunel bat gehitu"
+        },
+        "square_feature": {
+          "title": "Elementu hau karratu bihurtu"
         }
       },
       "fix_all": {
@@ -448,84 +289,29 @@
       "help_request": {
         "title": "Laguntza eskaerak"
       },
+      "key": "I",
+      "no_issues": {
+        "message": {
+          "no_edits": "Ez daukazu gorde gabeko aldaketarik"
+        }
+      },
+      "options": {
+        "what": {
+          "all": "Dena"
+        },
+        "where": {
+          "title": "Non:"
+        }
+      },
       "outdated_tags": {
         "title": "Etiketa zaharkituak"
       },
       "private_data": {
         "title": "Informazio pribatua"
       },
-      "fix": {
-        "add_a_bridge": {
-          "title": "Zubi bat gehitu"
-        },
-        "add_a_tunnel": {
-          "title": "Tunel bat gehitu",
-          "annotation": "Tunel bat gehitu."
-        }
-      }
-    },
-    "intro": {
-      "done": "eginda",
-      "ok": "ADOS",
-      "welcome": {
-        "title": "Ongi etorri"
-      },
-      "points": {
-        "title": "Puntuak",
-        "choose_cafe": "**Aukeratu {preset}-a zerrendatik.**"
-      },
-      "areas": {
-        "title": "Eremuak",
-        "choose_playground": "**Aukeratu {preset}-a zerrendatik.**"
-      },
-      "lines": {
-        "title": "Lerroak"
-      },
-      "buildings": {
-        "title": "Eraikuntzak",
-        "choose_tank": "**Aukeratu {preset}-a zerrendatik.**"
-      },
-      "startediting": {
-        "title": "Editatzen hasi",
-        "save": "Ez ahaztu aldizka zure aldaketak gordetzeaz!",
-        "start": "Mapeatzen hasi!"
-      }
-    },
-    "shortcuts": {
-      "key": {
-        "delete": "Ezabatu"
-      },
-      "editing": "Editatu",
-      "drawing": "Marraztu",
-      "commands": "Aginduak",
-      "help": "Laguntza",
-      "display_options": "Bistaratzeko aukerak",
-      "info": "Informazioa",
-      "command": {
-        "copy": {
-          "label": "Aukeratutako ezaugarriak kopiatu"
-        },
-        "save": {
-          "label": "Aldaketak gorde"
-        },
-        "move": {
-          "label": "Aukeratutako ezaugarriak mugitu"
-        },
-        "straighten": {
-          "label": "Puntu lerro bat zuzendu"
-        },
-        "circularize": {
-          "label": "Lerro itxia ala area biribildu"
-        },
-        "delete": {
-          "label": "Aukeratutako ezaugarriak ezabatu"
-        }
-      }
-    },
-    "wikidata": {
-      "identifier": "Identifikatzailea",
-      "label": "Etiketa",
-      "description": "Deskripzioa"
+      "resolved_tooltip": "Zure edizioekin konpondutako arazoak",
+      "rules": "Arauak",
+      "title": "Arazoak"
     },
     "languageNames": {
       "aa": "afarera",
@@ -983,6 +769,250 @@
       "zun": "zuñiera",
       "zza": "zazera"
     },
+    "loading_auth": "OpenStreetMap-era konektatzen",
+    "login": "Sartu",
+    "logout": "Atera",
+    "map_data": {
+      "layers": {
+        "maproulette": {
+          "cancel": "Ezeztatu"
+        }
+      }
+    },
+    "mapillary": {
+      "title": "Mapillary",
+      "view_on_mapillary": "Irudi hau Mapillaryn ikusi"
+    },
+    "modes": {
+      "add_area": {
+        "description": "Parkeak, eraikuntzak, lakuak edo beste leku motak gehitu mapari.",
+        "title": "Lekua"
+      },
+      "add_line": {
+        "description": "Autopistak, kaleak, bidezidorrak, kanalak edo bestelako lerroak gehitu mapari.",
+        "title": "Lerroa"
+      },
+      "add_note": {
+        "description": "Arazo bat ikusi duzu? Jakinarazi beste kartografo batzuk.",
+        "title": "Oharra"
+      },
+      "add_point": {
+        "description": "Jatetxeak, monumentuak, postontziak edo beste puntu motak gehitu mapari.",
+        "title": "Puntua"
+      },
+      "add_preset": {
+        "title": "Gehitu {ezaugarria}"
+      },
+      "browse": {
+        "description": "Mapan mugitu.",
+        "title": "Esploratu"
+      },
+      "drag_node": {
+        "connected_to_hidden": "Hau ezin da editatu ezkutuko ezaugarri lotuta dagoelako."
+      }
+    },
+    "note": {
+      "anonymous": "anonimoa",
+      "close": "Oharra itxi",
+      "comment": "Iruzkina",
+      "commentTitle": "Iruzkinak",
+      "note": "Oharra",
+      "title": "Oharra editatu"
+    },
+    "operations": {
+      "add": {
+        "annotation": {
+          "note": "Ohar bat gehitu da.",
+          "point": "Puntua gehitu da.",
+          "relation": "Erlazioa gehitu da.",
+          "vertex": "Nodoa gehitu zaio bideari."
+        }
+      },
+      "cancel_draw": {
+        "annotation": "Marrazketa bertan behera utzi da."
+      },
+      "change_role": {
+        "annotation": {
+          "one": "Erlazioko osagai baten rola aldatuta.",
+          "other": "Erlazioko {n} osagairen rola aldatuta."
+        }
+      },
+      "change_tags": {
+        "annotation": "Etiketak aldatu dira."
+      },
+      "circularize": {
+        "annotation": {
+          "feature": {
+            "one": "Ezaugarri bat biribildu da.",
+            "other": "{n} ezaugarri biribildu dira."
+          }
+        },
+        "title": "Biribildu"
+      },
+      "continue": {
+        "annotation": {
+          "area": "Lekua jarraitu da.",
+          "line": "Lerroa jarraitu da."
+        },
+        "description": "Lerro hau jarraitu.",
+        "multiple": "Hainbat lerro jarrai daitezke hemen. Gehitu lerroetako bat hautapenera jarraitzeko.",
+        "not_eligible": "Ezin da lerrorik jarraitu hemen.",
+        "title": "Jarraitu"
+      },
+      "copy": {
+        "annotation": {
+          "one": "Elementu bat kopiatuta",
+          "other": "{n} elementu kopiatuta."
+        },
+        "title": "Kopiatu"
+      },
+      "delete": {
+        "annotation": {
+          "area": "Eremu bat ezabatu da.",
+          "feature": {
+            "one": "Elementu bat ezabatuta.",
+            "other": " {n} elementu ezabatuta."
+          },
+          "line": "Lerro bat ezabatu da.",
+          "point": "Puntu bat ezabatu da.",
+          "relation": "Erlazio bat ezabatu da.",
+          "vertex": "Nodo bat bide batetik ezabatuta."
+        },
+        "title": "Ezabatu"
+      },
+      "disconnect": {
+        "connected_to_hidden": "Hau ezin da deskonektatu ezkutuko funtzio bati lotuta dagoelako. ",
+        "not_connected": "Hemen ez dago lerro/area nahikorik deskonektatzeko. ",
+        "relation": "Hau ezin da deskonektatu erlazio bereko kideak lotzen dituelako. ",
+        "title": "Deskonektatu"
+      },
+      "downgrade": {
+        "description": {
+          "generic": "Etiketak ezabatu"
+        }
+      },
+      "merge": {
+        "damage_relation": "Funtzio hauek ezin dira bat egin \"{relation}\" harremana kaltetuko luketelako.",
+        "description": "Funtzio hauek bat egin.",
+        "incomplete_relation": "Funtzio hauek ezin dira bat egin haietariko bat gutxienez ez delako guztiz deskargatu. ",
+        "not_adjacent": "Funtzio hauek ezin dira bat egin haien amaiera-puntuak ez daudelako konektatuta. ",
+        "not_eligible": "Funtzio hauek ezin dira bat egin. ",
+        "relation": "Funtzio hauek ezin dira bat egin haien arteko erlazio-rol gatazkatsuak dituztelako. ",
+        "title": "Bat egin"
+      },
+      "move": {
+        "annotation": {
+          "area": "Area bat mugitu da.",
+          "line": "Lerro bat mugitu da.",
+          "point": "Puntu bat mugitu da."
+        },
+        "title": "Mugitu"
+      },
+      "orthogonalize": {
+        "annotation": {
+          "corner": {
+            "one": "Ertz bat karratu bihurtu da.",
+            "other": "{n} ertz karratu bihurtu dira."
+          }
+        },
+        "title": "Laukia"
+      },
+      "paste": {
+        "annotation": {
+          "one": "Ezaugarri bat itsatsita.",
+          "other": "[n] ezaugarri itsatsita."
+        },
+        "description": {
+          "one": "Gehitu bikoiztutako [feature] bat hemen.",
+          "other": "Gehitu bikoiztutako [n] ezaugarri hemen."
+        },
+        "nothing_copied": "Ez da elementurik kopiatu.",
+        "title": "Itsatsi"
+      },
+      "reverse": {
+        "title": "Alderantzizkatu"
+      },
+      "rotate": {
+        "title": "Biratu"
+      },
+      "split": {
+        "description": {
+          "line": {
+            "single": {
+              "multiple_node": "Zatitu lerro hau puntu hauetan.",
+              "single_node": "Zatitu lerro hau bitan puntu honetan."
+            }
+          }
+        },
+        "title": "Zatitu"
+      },
+      "start": {
+        "annotation": {
+          "area": "Lekua hasi da.",
+          "line": "Lerroa hasi da."
+        }
+      },
+      "straighten": {
+        "annotation": {
+          "line": {
+            "one": "Lerro bat zuzendu dugu.",
+            "other": "[n] lerro zuzendu ditugu."
+          },
+          "point": {
+            "one": "Puntu bat zuzenean jarri dugu.",
+            "other": "[n] puntu zuzenean jarri ditugu."
+          }
+        },
+        "description": {
+          "line": "Lerro hau zuzendu.",
+          "lines": "Lerro hauek zuzendu.",
+          "points": "Puntu hauek zuzendu."
+        },
+        "title": "Zuzendu"
+      }
+    },
+    "photo_overlays": {
+      "photo_type": {
+        "flat": {
+          "tooltip": "Argazki tradizionalak"
+        },
+        "panoramic": {
+          "title": "Argazki panoramikoak",
+          "tooltip": "360° argazkiak"
+        }
+      }
+    },
+    "preferences": {
+      "key": "P",
+      "privacy": {
+        "title": "Pribatutasuna"
+      }
+    },
+    "rapid_inspector": {
+      "tags": "Etiketak"
+    },
+    "rapid_menu": {
+      "category": {
+        "roads": "errepideak"
+      },
+      "remove": "Ezabatu"
+    },
+    "redo": {
+      "nothing": "Ezer berregiteko.",
+      "title": "Berregin",
+      "tooltip": "Berregin: {action}"
+    },
+    "restriction": {
+      "controls": {
+        "distance": "Distantzia"
+      }
+    },
+    "save": {
+      "conflict": {
+        "keep_local": "Nerea mantendu"
+      },
+      "title": "Gorde"
+    },
     "scriptNames": {
       "Adlm": "adlama",
       "Aghb": "Kaukasoko albaniera",
@@ -1160,6 +1190,97 @@
       "Zxxx": "idatzi gabea",
       "Zyyy": "ohikoa",
       "Zzzz": "idazkera ezezaguna"
+    },
+    "shortcuts": {
+      "command": {
+        "circularize": {
+          "label": "Lerro itxia ala area biribildu"
+        },
+        "copy": {
+          "label": "Aukeratutako ezaugarriak kopiatu"
+        },
+        "delete": {
+          "label": "Aukeratutako ezaugarriak ezabatu"
+        },
+        "move": {
+          "label": "Aukeratutako ezaugarriak mugitu"
+        },
+        "save": {
+          "label": "Aldaketak gorde"
+        },
+        "straighten": {
+          "label": "Puntu lerro bat zuzendu"
+        }
+      },
+      "commands": "Aginduak",
+      "display_options": "Bistaratzeko aukerak",
+      "drawing": "Marraztu",
+      "editing": "Editatu",
+      "help": "Laguntza",
+      "info": "Informazioa",
+      "key": {
+        "alt": "Alt",
+        "ctrl": "Ctrl",
+        "delete": "Ezabatu"
+      }
+    },
+    "splash": {
+      "start": "Editatu orain",
+      "welcome": "Ongi etorri ID OpenStreetMap editorera"
+    },
+    "streetside": {
+      "title": "Bing Streetside"
+    },
+    "success": {
+      "help_link_text": "Xehetasunak",
+      "just_edited": "OpenStreetMap editatu berri duzu!",
+      "like_osm": "OpenStreetMap gustoko duzu? Kontaktatu besteekin:",
+      "more": "Gehiago",
+      "tell_us": "Kontaiguzu!",
+      "thank_you": "Eskerrik asko mapa hobetzeagatik.",
+      "thank_you_location": "Eskerrik asko {where} inguruko mapa hobetzeagatik!",
+      "view_on_osm": "Ikusi aldaketak OSM-n"
+    },
+    "tag_reference": {
+      "description": "Deskripzioa"
+    },
+    "title": {
+      "format": {
+        "changes": "({changes}) {base}",
+        "changes_context": "({changes}) {base} – {context}",
+        "context": "{base} – {context}"
+      },
+      "labeled_and_more": {
+        "one": "{labeled} eta {count} gehiago",
+        "other": "{labeled} eta {count} gehiago"
+      }
+    },
+    "toolbar": {
+      "add_feature": "Ezaugarria gehitu",
+      "favorites": "Gogokoak",
+      "inspect": "Arakatu",
+      "recent": "Azkenekoak",
+      "undo_redo": "Desegin / Berregin"
+    },
+    "translate": {
+      "localized_translation_language": "Hizkuntza aukeratu",
+      "localized_translation_name": "Izena"
+    },
+    "undo": {
+      "nothing": "Ezer desegiteko.",
+      "title": "Desegin",
+      "tooltip": "Desegin: {action}"
+    },
+    "units": {
+      "east": "E",
+      "north": "N",
+      "south": "S",
+      "west": "W"
+    },
+    "wikidata": {
+      "description": "Deskripzioa",
+      "identifier": "Identifikatzailea",
+      "label": "Etiketa"
     }
   }
 }

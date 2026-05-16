@@ -1,213 +1,28 @@
 {
   "lb": {
-    "icons": {
-      "remove": "läschen",
-      "undo": "Réckgängeg maachen",
-      "zoom_to": "zoomen bei",
-      "copy": "kopéieren",
-      "view_on": "ugucken op {domain}",
-      "visit_website": "Websäit besichen",
-      "favorite": "favorit",
-      "list": "Lescht",
-      "deselect": "ofwielen"
-    },
-    "toolbar": {
-      "inspect": "inspektéieren",
-      "undo_redo": "Réckgängeg maachen / Widderhuelen",
-      "recent": "Rezent",
-      "favorites": "Favoritten",
-      "add_feature": "Feature bäifügen"
-    },
-    "title": {
-      "labeled_and_more": {
-        "one": "{labeled} an {count} méi",
-        "other": "{labeled} an {count} méi"
+    "QA": {
+      "keepRight": {
+        "detail_description": "Beschreiwung"
       }
     },
-    "modes": {
-      "add_area": {
-        "title": "Beräich"
-      },
-      "add_line": {
-        "title": "Linn"
-      },
-      "add_point": {
-        "title": "Punkt"
-      },
-      "add_note": {
-        "title": "Notiz",
-        "description": "Feeler fonnt? Looss aner Benotzer et wëssen."
-      },
-      "add_preset": {
-        "title": "{feature} bäifügen"
-      },
-      "browse": {
-        "title": "Duerchsichen",
-        "description": "Kaart beweegen an zoomen."
-      },
-      "drag_node": {
-        "connected_to_hidden": "Dëst kann net beaarbecht ginn well et mat engem verstoppten Feature verbonnen ass."
-      }
+    "background": {
+      "description": "Hannergrond Astellungen",
+      "none": "Keen",
+      "reset": "Zerécksetzen",
+      "title": "Hannergrond"
     },
-    "operations": {
-      "add": {
-        "annotation": {
-          "point": "Punkt bäigefügt.",
-          "vertex": "Knuet um Wee bäigefügt.",
-          "relation": "Relatioun bäigefügt.",
-          "note": "Notiz bäigefügt."
-        }
-      },
-      "start": {
-        "annotation": {
-          "line": "Linn ugefangen.",
-          "area": "Beräich ugefangen."
-        }
-      },
-      "continue": {
-        "title": "Weidermaachen",
-        "description": "Dëss Linn weiderféieren.",
-        "not_eligible": "Hei kann keng Linn weidergeféiert ginn.",
-        "multiple": "E puer Linnen kënnen hei weidergefouert ginn. Füg eng der Selektioun bäi fir weider ze maachen.",
-        "annotation": {
-          "line": "All Linnen weider gemach.",
-          "area": "Beräich weidergemaach."
-        }
-      },
-      "cancel_draw": {
-        "annotation": "Molen ofgebrach."
-      },
-      "change_role": {
-        "annotation": {
-          "one": "Den Rôle vun engem Relatiounsmember geännert.",
-          "other": "Den Rôle vun {n} Relatiounsmemberen geännert."
-        }
-      },
-      "change_tags": {
-        "annotation": "Stëchwierder geännert."
-      },
-      "copy": {
-        "title": "Kopéieren",
-        "description": {
-          "one": "Dëssen Feature fir d'Afügen virbereeden.",
-          "other": "Dëss Features fir d'Afügen virbereeden."
-        },
-        "annotation": {
-          "one": "Een Feature kopéiert",
-          "other": "{n} Features kopéiert."
-        },
-        "too_large": {
-          "one": "Dësst kann net kopéiert ginn well net genuch dovunner Siichtbar ass.",
-          "other": "Dëss kënnen net kopéiert ginn well net genuch vun hinnen Siichtbar ass."
-        }
-      },
-      "paste": {
-        "title": "Afügen",
-        "description": {
-          "one": "Füg een duplizéierten Feature hei bäi.",
-          "other": "Füg {n} duplizéierten Features hei bäi."
-        },
-        "annotation": {
-          "one": "Een Feature agefügt.",
-          "other": "{n} Features Agefügt."
-        },
-        "nothing_copied": "Et goufen keng Features kopéiert."
-      },
-      "circularize": {
-        "title": "Kreesfërmeg maachen",
-        "annotation": {
-          "feature": {
-            "one": "Een Feature kreesfërmeg gemaach.",
-            "other": "{n} Features kreesfërmeg gemaach."
-          }
-        }
-      },
-      "orthogonalize": {
-        "title": "Rechtwénkeleg maachen",
-        "annotation": {
-          "corner": {
-            "one": "Een Eck rechtwénkeleg gemaach.",
-            "other": "{n} Ecken rechtwénkeleg gemaach."
-          },
-          "feature": {
-            "one": "D'Ecken vun engem Feature rechtwénkeleg gemaach.",
-            "other": "D'Ecken vun {n} Features rechtwénkeleg gemaach."
-          }
-        }
-      },
-      "straighten": {
-        "title": "Riicht maachen",
-        "description": {
-          "points": "Dëss Punkten riicht maachen.",
-          "line": "Dëss Linn riicht maachen.",
-          "lines": "Dëss Linnen riicht maachen."
-        },
-        "annotation": {
-          "point": {
-            "one": "Een Punkt riicht gemaach.",
-            "other": "{n} Punkten riicht gemaach."
-          },
-          "line": {
-            "one": "Eng Linn riicht gemaach.",
-            "other": "{n} Linnen riicht gemaach."
-          }
-        }
-      },
-      "delete": {
-        "title": "Läschen",
-        "annotation": {
-          "point": "Een Punkt geläscht.",
-          "vertex": "Een Knuet vun engem Wee geläscht.",
-          "line": "Eng Linn geläscht.",
-          "area": "Een Beräich geläscht.",
-          "relation": "Eng Relatioun geläscht."
-        }
-      },
-      "disconnect": {
-        "title": "Trennen"
-      },
-      "merge": {
-        "title": "Zesummenféieren",
-        "description": "Dëss Features zesummenféieren.",
-        "annotation": {
-          "one": "Een Feature zesummengefouert.",
-          "other": "{n} Features zesummengefouert."
-        }
-      },
-      "move": {
-        "title": "Verréckelen",
-        "annotation": {
-          "point": "Een Punkt verréckelt.",
-          "vertex": "Een Knuet vum Wee verréckelt.",
-          "line": "Eng Linn verréckelt.",
-          "area": "Een Beräich verréckelt."
-        }
-      },
-      "rotate": {
-        "title": "Dréinen",
-        "annotation": {
-          "line": "Eng Linn gedréint.",
-          "area": "Een Beräich gedréint."
-        }
-      },
-      "reverse": {
-        "title": "Inverséieren"
-      },
-      "split": {
-        "title": "Deelen"
-      }
-    },
-    "zoom_in_edit": "Eranzoomen fir ze beaarbeschten",
-    "logout": "Ausloggen",
-    "report_a_bug": "Een Fehler mellen",
     "commit": {
+      "cancel": "Ofbriechen",
+      "created": "Erstallt",
+      "deleted": "Geläscht",
+      "modified": "Modifiéiert",
+      "save": "Upload",
       "title": "Op OpenStreetMap eroplueden",
       "upload_explanation": "D'Ännerungen déi Dir eroplued wäerten op all Kaarten déi OpenStreetMap Daten benotzen Siichtbar ginn.",
-      "cancel": "Ofbriechen",
-      "warnings": "Warnungen",
-      "modified": "Modifiéiert",
-      "deleted": "Geläscht",
-      "created": "Erstallt"
+      "warnings": "Warnungen"
+    },
+    "confirm": {
+      "cancel": "Ofbriechen"
     },
     "contributors": {
       "list": "Beaarbeschtungen vun {users}",
@@ -216,83 +31,51 @@
         "other": "Beaarbeschtungen vun {users} an {count} aneren"
       }
     },
+    "geolocate": {
+      "title": "Mäin Standort uweisen"
+    },
+    "help": {
+      "editing": {
+        "save_h": "Späicheren",
+        "upload_h": "Upload"
+      }
+    },
+    "icons": {
+      "copy": "kopéieren",
+      "deselect": "ofwielen",
+      "download": "eroflueden",
+      "favorite": "favorit",
+      "information": "info",
+      "list": "Lescht",
+      "remove": "läschen",
+      "text": "text",
+      "undo": "Réckgängeg maachen",
+      "view_on": "ugucken op {domain}",
+      "visit_website": "Websäit besichen",
+      "zoom_to": "zoomen bei"
+    },
     "info_panels": {
       "background": {
-        "title": "Hannergrond",
-        "description": "Beschreiwung"
+        "description": "Beschreiwung",
+        "title": "Hannergrond"
       },
       "measurement": {
         "area": "Beräich"
       }
     },
-    "geolocate": {
-      "title": "Mäin Standort uweisen"
-    },
     "inspector": {
-      "view_on_osm": "Op openstreetmap.org ugucken",
       "choose": "Den Typ vun Feature auswielen",
+      "no_documentation_key": "Et ass keng Dokumentatioun verfügbar.",
+      "none": "Keen",
       "results": {
         "one": "{n} Resultat fir {search}",
         "other": "{n} Resultater fir {search}"
       },
-      "no_documentation_key": "Et ass keng Dokumentatioun verfügbar."
-    },
-    "background": {
-      "title": "Hannergrond",
-      "description": "Hannergrond Astellungen",
-      "reset": "Zerécksetzen"
-    },
-    "map_data": {
-      "layers": {
-        "maproulette": {
-          "cancel": "Ofbriechen"
-        }
-      }
-    },
-    "restore": {
-      "heading": "Dir hudd net gespäichert Ännerungen"
-    },
-    "save": {
-      "title": "Späicheren",
-      "no_changes": "Keng Ännerungen fir ze späicheren.",
-      "error": "Fehler sinn während dem Versuch ze späicheren opgetrueden",
-      "uploading": "Ännerungen ginn op OpenStreetMap eropgelueden...",
-      "unsaved_changes": "Dir hudd net gespäichert Ännerungen"
-    },
-    "confirm": {
-      "cancel": "Ofbriechen"
-    },
-    "tag_reference": {
-      "description": "Beschreiwung"
-    },
-    "QA": {
-      "keepRight": {
-        "detail_description": "Beschreiwung"
-      }
-    },
-    "note": {
-      "note": "Notiz"
-    },
-    "help": {
-      "editing": {
-        "save_h": "Späicheren"
-      }
+      "unknown": "Onbekannt",
+      "view_on_osm": "Op openstreetmap.org ugucken"
     },
     "issues": {
       "warnings": "Warnungen"
-    },
-    "shortcuts": {
-      "key": {
-        "delete": "Läschen"
-      },
-      "command": {
-        "save": {
-          "label": "Ännerungen späicheren"
-        }
-      }
-    },
-    "wikidata": {
-      "description": "Beschreiwung"
     },
     "languageNames": {
       "ab": "Abchasesch",
@@ -724,6 +507,204 @@
       "zh-Hant": "Chinesesch (traditionell)",
       "zun": "Zuni-Sprooch"
     },
+    "logout": "Ausloggen",
+    "map_data": {
+      "layers": {
+        "maproulette": {
+          "cancel": "Ofbriechen"
+        }
+      }
+    },
+    "modes": {
+      "add_area": {
+        "description": "Füg Parks, Gebaier, Séien oder aner Beräicher op der Kaart bäi.",
+        "title": "Beräich"
+      },
+      "add_line": {
+        "description": "Füg Autobunnen, Stroossen, Zebrasträifen, Kanäl oder aner Linnen op der Kaart bäi.",
+        "title": "Linn"
+      },
+      "add_note": {
+        "description": "Feeler fonnt? Looss aner Benotzer et wëssen.",
+        "title": "Notiz"
+      },
+      "add_point": {
+        "description": "Füg Restauranten, Monumenter, Bréifboitten oder aner Punkten op der Kaart bäi.",
+        "title": "Punkt"
+      },
+      "add_preset": {
+        "title": "{feature} bäifügen"
+      },
+      "browse": {
+        "description": "Kaart beweegen an zoomen.",
+        "title": "Duerchsichen"
+      },
+      "drag_node": {
+        "connected_to_hidden": "Dëst kann net beaarbecht ginn well et mat engem verstoppten Feature verbonnen ass."
+      }
+    },
+    "note": {
+      "note": "Notiz"
+    },
+    "operations": {
+      "add": {
+        "annotation": {
+          "note": "Notiz bäigefügt.",
+          "point": "Punkt bäigefügt.",
+          "relation": "Relatioun bäigefügt.",
+          "vertex": "Knuet um Wee bäigefügt."
+        }
+      },
+      "cancel_draw": {
+        "annotation": "Molen ofgebrach."
+      },
+      "change_role": {
+        "annotation": {
+          "one": "Den Rôle vun engem Relatiounsmember geännert.",
+          "other": "Den Rôle vun {n} Relatiounsmemberen geännert."
+        }
+      },
+      "change_tags": {
+        "annotation": "Stëchwierder geännert."
+      },
+      "circularize": {
+        "annotation": {
+          "feature": {
+            "one": "Een Feature kreesfërmeg gemaach.",
+            "other": "{n} Features kreesfërmeg gemaach."
+          }
+        },
+        "title": "Kreesfërmeg maachen"
+      },
+      "continue": {
+        "annotation": {
+          "area": "Beräich weidergemaach.",
+          "line": "All Linnen weider gemach."
+        },
+        "description": "Dëss Linn weiderféieren.",
+        "multiple": "E puer Linnen kënnen hei weidergefouert ginn. Füg eng der Selektioun bäi fir weider ze maachen.",
+        "not_eligible": "Hei kann keng Linn weidergeféiert ginn.",
+        "title": "Weidermaachen"
+      },
+      "copy": {
+        "annotation": {
+          "one": "Een Feature kopéiert",
+          "other": "{n} Features kopéiert."
+        },
+        "description": {
+          "one": "Dëssen Feature fir d'Afügen virbereeden.",
+          "other": "Dëss Features fir d'Afügen virbereeden."
+        },
+        "title": "Kopéieren",
+        "too_large": {
+          "one": "Dësst kann net kopéiert ginn well net genuch dovunner Siichtbar ass.",
+          "other": "Dëss kënnen net kopéiert ginn well net genuch vun hinnen Siichtbar ass."
+        }
+      },
+      "delete": {
+        "annotation": {
+          "area": "Een Beräich geläscht.",
+          "line": "Eng Linn geläscht.",
+          "point": "Een Punkt geläscht.",
+          "relation": "Eng Relatioun geläscht.",
+          "vertex": "Een Knuet vun engem Wee geläscht."
+        },
+        "title": "Läschen"
+      },
+      "disconnect": {
+        "title": "Trennen"
+      },
+      "merge": {
+        "annotation": {
+          "one": "Een Feature zesummengefouert.",
+          "other": "{n} Features zesummengefouert."
+        },
+        "description": "Dëss Features zesummenféieren.",
+        "title": "Zesummenféieren"
+      },
+      "move": {
+        "annotation": {
+          "area": "Een Beräich verréckelt.",
+          "line": "Eng Linn verréckelt.",
+          "point": "Een Punkt verréckelt.",
+          "vertex": "Een Knuet vum Wee verréckelt."
+        },
+        "title": "Verréckelen"
+      },
+      "orthogonalize": {
+        "annotation": {
+          "corner": {
+            "one": "Een Eck rechtwénkeleg gemaach.",
+            "other": "{n} Ecken rechtwénkeleg gemaach."
+          },
+          "feature": {
+            "one": "D'Ecken vun engem Feature rechtwénkeleg gemaach.",
+            "other": "D'Ecken vun {n} Features rechtwénkeleg gemaach."
+          }
+        },
+        "title": "Rechtwénkeleg maachen"
+      },
+      "paste": {
+        "annotation": {
+          "one": "Een Feature agefügt.",
+          "other": "{n} Features Agefügt."
+        },
+        "description": {
+          "one": "Füg een duplizéierten Feature hei bäi.",
+          "other": "Füg {n} duplizéierten Features hei bäi."
+        },
+        "nothing_copied": "Et goufen keng Features kopéiert.",
+        "title": "Afügen"
+      },
+      "reverse": {
+        "title": "Inverséieren"
+      },
+      "rotate": {
+        "annotation": {
+          "area": "Een Beräich gedréint.",
+          "line": "Eng Linn gedréint."
+        },
+        "title": "Dréinen"
+      },
+      "split": {
+        "title": "Deelen"
+      },
+      "start": {
+        "annotation": {
+          "area": "Beräich ugefangen.",
+          "line": "Linn ugefangen."
+        }
+      },
+      "straighten": {
+        "annotation": {
+          "line": {
+            "one": "Eng Linn riicht gemaach.",
+            "other": "{n} Linnen riicht gemaach."
+          },
+          "point": {
+            "one": "Een Punkt riicht gemaach.",
+            "other": "{n} Punkten riicht gemaach."
+          }
+        },
+        "description": {
+          "line": "Dëss Linn riicht maachen.",
+          "lines": "Dëss Linnen riicht maachen.",
+          "points": "Dëss Punkten riicht maachen."
+        },
+        "title": "Riicht maachen"
+      }
+    },
+    "report_a_bug": "Een Fehler mellen",
+    "restore": {
+      "heading": "Dir hudd net gespäichert Ännerungen"
+    },
+    "save": {
+      "error": "Fehler sinn während dem Versuch ze späicheren opgetrueden",
+      "no_changes": "Keng Ännerungen fir ze späicheren.",
+      "title": "Späicheren",
+      "unsaved_changes": "Dir hudd net gespäichert Ännerungen",
+      "uploading": "Ännerungen ginn op OpenStreetMap eropgelueden..."
+    },
     "scriptNames": {
       "Arab": "Arabesch",
       "Armn": "Armenesch",
@@ -803,6 +784,49 @@
       "Zxxx": "Ouni Schrëft",
       "Zyyy": "Onbestëmmt",
       "Zzzz": "Oncodéiert Schrëft"
-    }
+    },
+    "shortcuts": {
+      "command": {
+        "save": {
+          "label": "Ännerungen späicheren"
+        }
+      },
+      "key": {
+        "delete": "Läschen"
+      }
+    },
+    "source_switch": {
+      "dev": "dev",
+      "live": "live"
+    },
+    "tag_reference": {
+      "description": "Beschreiwung"
+    },
+    "title": {
+      "format": {
+        "changes": "({changes}) {base}",
+        "changes_context": "({changes}) {base} – {context}",
+        "context": "{base} – {context}"
+      },
+      "labeled_and_more": {
+        "one": "{labeled} an {count} méi",
+        "other": "{labeled} an {count} méi"
+      }
+    },
+    "toolbar": {
+      "add_feature": "Feature bäifügen",
+      "favorites": "Favoritten",
+      "inspect": "inspektéieren",
+      "recent": "Rezent",
+      "undo_redo": "Réckgängeg maachen / Widderhuelen"
+    },
+    "units": {
+      "north": "N",
+      "south": "S"
+    },
+    "wikidata": {
+      "description": "Beschreiwung"
+    },
+    "zoom_in_edit": "Eranzoomen fir ze beaarbeschten"
   }
 }

@@ -1,371 +1,201 @@
 {
   "te": {
-    "icons": {
-      "remove": "తొలగించు"
-    },
-    "modes": {
-      "add_area": {
-        "title": "ప్రదేశం"
+    "QA": {
+      "keepRight": {
+        "detail_description": "వివరణ"
       },
-      "add_line": {
-        "title": "గీత"
-      },
-      "add_point": {
-        "title": "బిందువు"
-      },
-      "browse": {
-        "title": "బ్రౌస్",
-        "description": "పటాన్ని జూమ్ చేయండి మరియు విస్తరించండి."
+      "osmose": {
+        "detail_title": "వివరాలు"
       }
     },
-    "operations": {
-      "add": {
-        "annotation": {
-          "point": "ఒక బిందువును చేర్చారు.",
-          "vertex": "దారిలో ఒక నోడ్ చేర్చబడింది.",
-          "relation": "ఒక సంబంధం చేర్చబడింది."
-        }
-      },
-      "start": {
-        "annotation": {
-          "line": "ఒక గీతను మొదలుపెట్టారు.",
-          "area": "ఒక ప్రదేశాన్ని మొదలుపెట్టారు."
-        }
-      },
-      "continue": {
-        "title": "కొనసాగించు",
-        "description": "ఈ గీతను కొనసాగించండి.",
-        "not_eligible": "గీతను ఇక్కడకు కొనసాగించలేరు.",
-        "annotation": {
-          "line": "ఒక గీతను కొనసాగించారు.",
-          "area": "ఒక ప్రదేశాన్ని కొనసాగించారు."
-        }
-      },
-      "cancel_draw": {
-        "annotation": "గీయడాన్ని రద్దుచేసారు."
-      },
-      "change_tags": {
-        "annotation": "ట్యాగ్లు మార్చబడ్డాయి."
-      },
-      "circularize": {
-        "title": "వృత్తీకరించు"
-      },
-      "orthogonalize": {
-        "title": "చతురస్రం"
-      },
-      "straighten": {
-        "title": "తిన్నగాచేయి"
-      },
-      "delete": {
-        "title": "తొలగించు",
-        "annotation": {
-          "point": "ఒక బిందువును తొలగించారు.",
-          "vertex": "దారిలో నుండి ఒక నోడ్‌ను తొలగించండి.",
-          "line": "గీత తొలగించబడింది",
-          "area": "స్థలం తొలగించబడింది",
-          "relation": "సంబంధం తొలగించబడింది"
-        }
-      },
-      "disconnect": {
-        "title": "విడదీయు",
-        "not_connected": "విడదీయడానికి తగినన్ని గీతలు/ప్రదేశాలు లేవు.",
-        "connected_to_hidden": "ఇది విడదీయబడదు ఎందుకంటే ఇది ఒక దాగిన లక్షణానికి కలిపి ఉంది.",
-        "relation": "ఇది విడదీయబడదు ఎందుకంటే ఇది ఒక సంబంధంలోని అంశాన్ని కలుపుతోంది."
-      },
-      "merge": {
-        "title": "విలీనం చెయ్యు",
-        "description": "ఈ లక్షణాలను విలీనించండి.",
-        "not_eligible": "ఈ విశేషాలు విలీనానికి చేయబడలేవు",
-        "incomplete_relation": "ఈ లక్షణాలు విలీనింపబడవు ఎందుకంటే కనీసం ఒక లక్షణం పూర్తిగా డౌన్‌లోడ్ కాలేదు.",
-        "conflicting_tags": "ఈ లక్షణాలు విలీనింపబడవు ఎందుకంటే వాటిలో కొన్ని ట్యాగ్‌లకు విలువలు విరుద్ధంగా ఉన్నాయి. "
-      },
-      "move": {
-        "title": "తరలించు",
-        "annotation": {
-          "point": "ఒక బిందువు తరలించబడింది",
-          "vertex": "దారిలో ఒక నోడ్ కదిలించబడింది.",
-          "line": "ఒక గీత తరలించబడింది",
-          "area": "ఒక ప్రదేశం తరలించబడింది"
-        }
-      },
-      "rotate": {
-        "title": "తిప్పు",
-        "annotation": {
-          "line": "ఒక గీత తిప్పబడింది",
-          "area": "ఒక స్థలం తిప్పబడింది"
-        }
-      },
-      "reverse": {
-        "title": "వెనక్కి తిప్పు "
-      },
-      "split": {
-        "title": "విడగొట్టు",
-        "not_eligible": "గీత మొదలు లేదా ఆఖరిన విడగొట్టడానికి వీలు లేదు."
-      }
+    "background": {
+      "none": "ఏవీ కాదు",
+      "title": "వెనుతలం"
     },
-    "undo": {
-      "tooltip": "చెరిపివేయు: {action}",
-      "nothing": "చెరిపివేయుటకు ఏమిలేదు "
-    },
-    "redo": {
-      "tooltip": "మరల చేయు: {action}",
-      "nothing": "మరల చేయుటకు ఏమిలేదు "
-    },
-    "translate": {
-      "localized_translation_language": "భాషను ఎంచుకోండి",
-      "localized_translation_name": "పేరు"
-    },
-    "loading_auth": "ఓపెన్‌స్ట్రీట్‌మ్యాపుకి అనుసంధానిస్తున్నాం…",
-    "help_translate": "అనువాదనకు సహకరించండి",
     "commit": {
+      "cancel": "రద్దుచేయి",
+      "created": "సృష్టించబడింది",
+      "deleted": "తొలగించబడింది",
+      "modified": "మార్చబడింది",
       "title": "OpenStreetMapలో మార్పులను భద్రపరచండి ",
       "upload_explanation": "మీరు ఎక్కించే మార్పులు ఓపెన్‌స్ట్రీట్‌మ్యాప్ డేటాను వాడే పటాలన్నింటిలోనూ కనిపిస్తాయి.",
-      "cancel": "రద్దుచేయి",
-      "warnings": "హెచ్చరికలు",
-      "modified": "మార్చబడింది",
-      "deleted": "తొలగించబడింది",
-      "created": "సృష్టించబడింది"
+      "warnings": "హెచ్చరికలు"
+    },
+    "confirm": {
+      "cancel": "రద్దుచేయి"
     },
     "contributors": {
       "list": "మార్పులు చేసిన {users}"
     },
+    "filters": {
+      "boundaries": {
+        "description": "సరిహద్దులు",
+        "tooltip": "పరిపాలనా సరిహద్దులు"
+      },
+      "buildings": {
+        "description": "కట్టడాలు"
+      },
+      "paths": {
+        "description": "దారులు",
+        "tooltip": "కాలిబాటలు, సైకిల్ తోవలు, మొదలైనవి."
+      },
+      "points": {
+        "description": "బిందువులు"
+      },
+      "rail": {
+        "tooltip": "రైల్వేలు"
+      },
+      "traffic_roads": {
+        "tooltip": "రహదార్లు, వీధులు, మొదలైనవి."
+      },
+      "water": {
+        "description": "నీటి విశేషాలు",
+        "tooltip": "నదులు, చెరువులు, పల్లపు ప్రాంతాలు, మొదలైనవి."
+      }
+    },
+    "geocoder": {
+      "no_results_worldwide": "ఫలితాలు ఏమీ లేవు",
+      "search": "విశ్వవ్యాప్తంగా వెతుకు"
+    },
+    "geolocate": {
+      "title": "నా ప్రాంతాన్ని చూపించు"
+    },
+    "geometry": {
+      "line": "గీత",
+      "point": "బిందువు",
+      "relation": "సంబంధం",
+      "vertex": "శీర్షం"
+    },
+    "help": {
+      "areas": {
+        "title": "ప్రదేశాలు"
+      },
+      "editing": {
+        "save_h": "భద్రపరచు"
+      },
+      "help": {
+        "title": "సహాయం"
+      },
+      "lines": {
+        "title": "గీతలు"
+      },
+      "overview": {
+        "features_h": "పటపు విశేషాలు"
+      },
+      "points": {
+        "title": "బిందువులు"
+      },
+      "relations": {
+        "boundary_h": "సరిహద్దులు"
+      },
+      "title": "సహాయం"
+    },
+    "help_translate": "అనువాదనకు సహకరించండి",
+    "icons": {
+      "remove": "తొలగించు"
+    },
     "info_panels": {
       "background": {
-        "title": "వెనుతలం",
-        "description": "వివరణ"
+        "description": "వివరణ",
+        "title": "వెనుతలం"
       },
       "location": {
         "title": "ప్రాంతం"
       },
       "measurement": {
         "area": "ప్రదేశం",
-        "location": "ప్రాంతం"
+        "center": "కేంద్రము",
+        "geometry": "రేఖాగణితం",
+        "imperial": "ఇంపీరియల్",
+        "length": "పొడవు",
+        "location": "ప్రాంతం",
+        "metric": "మెట్రిక్",
+        "perimeter": "చుట్టుకొలత"
       }
-    },
-    "geometry": {
-      "point": "బిందువు",
-      "vertex": "శీర్షం",
-      "line": "గీత",
-      "relation": "సంబంధం"
-    },
-    "geocoder": {
-      "search": "విశ్వవ్యాప్తంగా వెతుకు",
-      "no_results_worldwide": "ఫలితాలు ఏమీ లేవు"
-    },
-    "geolocate": {
-      "title": "నా ప్రాంతాన్ని చూపించు"
     },
     "inspector": {
-      "show_more": "మరింత చూపించు",
-      "view_on_osm": "openstreetmap.org లో చూడండి",
-      "new_relation": "కొత్త సంబంధం...",
-      "role": "పాత్ర",
+      "add": "చేర్చు",
+      "check": {
+        "no": "కాదు",
+        "yes": "అవును"
+      },
       "choose": "విశేష రకాన్ని ఎంచుకోండి",
       "details": "వివరాలు",
-      "remove": "తొలగించు",
-      "search": "వెతుకు",
-      "unknown": "గుర్తు తెలియని",
+      "edit": "విశేషం మార్చు",
       "feature_list": "విశేషాలు వెతుకు",
-      "check": {
-        "yes": "అవును",
-        "no": "కాదు"
-      },
-      "add": "చేర్చు",
+      "location": "ప్రాంతం",
+      "new_relation": "కొత్త సంబంధం...",
       "none": "ఏవీ కాదు",
-      "way": "దారి",
-      "relation": "సంబంధం",
-      "location": "ప్రాంతం"
-    },
-    "background": {
-      "title": "వెనుతలం",
-      "none": "ఏవీ కాదు"
-    },
-    "map_data": {
-      "layers": {
-        "maproulette": {
-          "detail_title": "వివరాలు",
-          "cancel": "రద్దుచేయి"
+      "radio": {
+        "structure": {
+          "layer": "పొర"
         }
-      }
-    },
-    "filters": {
-      "points": {
-        "description": "బిందువులు"
       },
-      "traffic_roads": {
-        "tooltip": "రహదార్లు, వీధులు, మొదలైనవి."
-      },
-      "paths": {
-        "description": "దారులు",
-        "tooltip": "కాలిబాటలు, సైకిల్ తోవలు, మొదలైనవి."
-      },
-      "buildings": {
-        "description": "కట్టడాలు"
-      },
-      "boundaries": {
-        "description": "సరిహద్దులు",
-        "tooltip": "పరిపాలనా సరిహద్దులు"
-      },
-      "water": {
-        "description": "నీటి విశేషాలు",
-        "tooltip": "నదులు, చెరువులు, పల్లపు ప్రాంతాలు, మొదలైనవి."
-      },
-      "rail": {
-        "tooltip": "రైల్వేలు"
-      }
-    },
-    "restore": {
-      "heading": "భద్రపరచని మార్పులు ఉన్నాయి"
-    },
-    "save": {
-      "title": "భద్రపరచు",
-      "no_changes": "భద్రపరచాల్సిన మార్పులేమీ లేవు.",
-      "unsaved_changes": "భద్రపరచని మార్పులు ఉన్నాయి",
-      "conflict": {
-        "previous": "< మునుపటి",
-        "next": "తదుపరి >",
-        "keep_local": "నావి ఉంచు",
-        "keep_remote": "వాళ్ళవి వాడు",
-        "restore": "పునరుద్ధరించు"
-      }
-    },
-    "success": {
-      "help_link_text": "వివరాలు"
-    },
-    "confirm": {
-      "cancel": "రద్దుచేయి"
-    },
-    "rapid_menu": {
-      "remove": "తొలగించు"
-    },
-    "tag_reference": {
-      "description": "వివరణ"
-    },
-    "QA": {
-      "osmose": {
-        "detail_title": "వివరాలు"
-      },
-      "keepRight": {
-        "detail_description": "వివరణ"
-      }
-    },
-    "help": {
-      "title": "సహాయం",
-      "help": {
-        "title": "సహాయం"
-      },
-      "overview": {
-        "features_h": "పటపు విశేషాలు"
-      },
-      "editing": {
-        "save_h": "భద్రపరచు"
-      },
-      "points": {
-        "title": "బిందువులు"
-      },
-      "lines": {
-        "title": "గీతలు"
-      },
-      "areas": {
-        "title": "ప్రదేశాలు"
-      },
-      "relations": {
-        "boundary_h": "సరిహద్దులు"
-      }
-    },
-    "issues": {
-      "warnings": "హెచ్చరికలు"
+      "relation": "సంబంధం",
+      "remove": "తొలగించు",
+      "role": "పాత్ర",
+      "search": "వెతుకు",
+      "show_more": "మరింత చూపించు",
+      "unknown": "గుర్తు తెలియని",
+      "view_on_osm": "openstreetmap.org లో చూడండి",
+      "way": "దారి"
     },
     "intro": {
-      "graph": {
-        "state": "<value for addr:state>",
-        "countrycode": "in"
-      },
-      "points": {
-        "title": "బిందువులు"
-      },
       "areas": {
         "title": "ప్రదేశాలు"
-      },
-      "lines": {
-        "title": "గీతలు"
       },
       "buildings": {
         "title": "కట్టడాలు"
       },
-      "startediting": {
-        "title": "కూర్పు మొదలుపెట్టు",
-        "save": "మీరు మార్చిన విశేషాలను భద్రపరచడం మరచిపోకండి!",
-        "start": "మ్యాప్ చేయడం మొదలుపెట్టు"
-      }
-    },
-    "shortcuts": {
-      "key": {
-        "delete": "తొలగించు"
+      "graph": {
+        "block_number": "<value for addr:block_number>",
+        "countrycode": "in",
+        "county": "<value for addr:county>",
+        "district": "<value for addr:district>",
+        "hamlet": "<value for addr:hamlet>",
+        "name": {
+          "conrail-railroad": "తూ.కో.రైల్వే పట్టాలు",
+          "east-street": "ఈస్ట్ బైపాస్ రోడ్డు",
+          "elm-street": "ప్రభుత్వ కాలేజి స్ట్రీట్",
+          "flower-street": "కోటదుర్గ అమ్మవారి వీధి",
+          "foster-street": "కందుకూరి మార్గం",
+          "memory-isle-park": "రావు జ్ఞాపక పార్కు",
+          "morris-avenue": "బి.ఆర్.పి రోడ్డు",
+          "portage-avenue": "పెద్దపాలం కూడలి",
+          "portage-river": "పెద్దపాలెం ఏరు",
+          "railroad-drive": "రైలుపట్టాల తోవ",
+          "riverwalk-trail": "కొలను ఒడ్డు కాలిబాట దారి",
+          "rocky-river": "సెలయేరు",
+          "saint-joseph-river": "కృష్ణా నది",
+          "scidmore-park": "పక్కపాలెం తోట",
+          "scidmore-park-petting-zoo": "పక్కపాలెం వనం జంతుశాల",
+          "spring-street": "షావుకారు వీధి",
+          "three-rivers-city-hall": "పెద్దపల్లి పురపాలక కేంద్రం",
+          "three-rivers-fire-department": "పెద్దపల్లి అగ్నిమాపక కేంద్రం",
+          "walnut-street": "ముడునూరి స్ట్రీట్",
+          "water-street": "మేదర వీధి"
+        },
+        "neighbourhood": "<value for addr:neighbourhood>",
+        "province": "<value for addr:province>",
+        "quarter": "<value for addr:quarter>",
+        "state": "<value for addr:state>",
+        "subdistrict": "<value for addr:subdistrict>",
+        "suburb": "<value for addr:suburb>"
       },
-      "help": "సహాయం",
-      "command": {
-        "accept_feature": {
-          "key": "ఏ"
-        },
-        "ignore_feature": {
-          "key": "డీ"
-        },
-        "continue_line": {
-          "key": "ఏ"
-        },
-        "merge": {
-          "key": "సీ"
-        },
-        "disconnect": {
-          "key": "డీ"
-        },
-        "split": {
-          "key": "ఎక్స్"
-        },
-        "reverse": {
-          "key": "వీ"
-        },
-        "move": {
-          "key": "ఎమ్"
-        },
-        "rotate": {
-          "key": "ఆర్"
-        },
-        "straighten": {
-          "key": "ఎస్"
-        },
-        "circularize": {
-          "key": "ఓ"
-        },
-        "cycle_highway_tag": {
-          "key": "సీ"
-        },
-        "toggle_all_layers": {
-          "key": "డీ"
-        },
-        "toggle_osm_data": {
-          "key": "ఓ"
-        },
-        "toggle_rapid_data": {
-          "key": "ఆర్"
-        },
-        "toggle_mapillary": {
-          "key": "ఎమ్"
-        },
-        "toggle_streetside": {
-          "key": "ఎస్"
-        },
-        "toggle_measurement_card": {
-          "key": "ఎమ్"
-        }
+      "lines": {
+        "title": "గీతలు"
+      },
+      "points": {
+        "title": "బిందువులు"
+      },
+      "startediting": {
+        "save": "మీరు మార్చిన విశేషాలను భద్రపరచడం మరచిపోకండి!",
+        "start": "మ్యాప్ చేయడం మొదలుపెట్టు",
+        "title": "కూర్పు మొదలుపెట్టు"
       }
     },
-    "units": {
-      "south": "ఎస్"
-    },
-    "wikidata": {
-      "description": "వివరణ"
+    "issues": {
+      "warnings": "హెచ్చరికలు"
     },
     "languageNames": {
       "aa": "అఫార్",
@@ -933,6 +763,162 @@
       "zun": "జుని",
       "zza": "జాజా"
     },
+    "loading_auth": "ఓపెన్‌స్ట్రీట్‌మ్యాపుకి అనుసంధానిస్తున్నాం…",
+    "map_data": {
+      "layers": {
+        "maproulette": {
+          "cancel": "రద్దుచేయి",
+          "detail_title": "వివరాలు"
+        }
+      }
+    },
+    "modes": {
+      "add_area": {
+        "description": "పార్కులను, కట్టడాలను, సరస్సులను లేదా ఇతర ప్రదేశాలను పటంలో చేర్చండి.",
+        "title": "ప్రదేశం"
+      },
+      "add_line": {
+        "description": "రహదారులను, వీధులను, పాదచారుల దారులను, కాలువలను లేక ఇతర గీతలను పటంలో చేర్చండి.",
+        "title": "గీత"
+      },
+      "add_note": {
+        "title": "గమనిక"
+      },
+      "add_point": {
+        "description": "హోటెల్, పోస్ట్ బాక్స్ ఇతరత్రా ప్రదేశాలను మ్యాప్ కి జతపరచండి",
+        "title": "బిందువు"
+      },
+      "browse": {
+        "description": "పటాన్ని జూమ్ చేయండి మరియు విస్తరించండి.",
+        "title": "బ్రౌస్"
+      }
+    },
+    "note": {
+      "note": "గమనిక"
+    },
+    "operations": {
+      "add": {
+        "annotation": {
+          "point": "ఒక బిందువును చేర్చారు.",
+          "relation": "ఒక సంబంధం చేర్చబడింది.",
+          "vertex": "దారిలో ఒక నోడ్ చేర్చబడింది."
+        }
+      },
+      "cancel_draw": {
+        "annotation": "గీయడాన్ని రద్దుచేసారు."
+      },
+      "change_tags": {
+        "annotation": "ట్యాగ్లు మార్చబడ్డాయి."
+      },
+      "circularize": {
+        "title": "వృత్తీకరించు"
+      },
+      "connect": {
+        "annotation": {
+          "from_vertex": {
+            "to_area": "స్థలము ఒక దారికి కలపబడింది",
+            "to_line": "గీత ఒక దారికి కలపబడింది",
+            "to_point": "పాయంట్ ఒక దారికి కలపబడింది",
+            "to_vertex": "ఒక దారి మరొక దారితో కలపబడింది"
+          }
+        }
+      },
+      "continue": {
+        "annotation": {
+          "area": "ఒక ప్రదేశాన్ని కొనసాగించారు.",
+          "line": "ఒక గీతను కొనసాగించారు."
+        },
+        "description": "ఈ గీతను కొనసాగించండి.",
+        "not_eligible": "గీతను ఇక్కడకు కొనసాగించలేరు.",
+        "title": "కొనసాగించు"
+      },
+      "delete": {
+        "annotation": {
+          "area": "స్థలం తొలగించబడింది",
+          "line": "గీత తొలగించబడింది",
+          "point": "ఒక బిందువును తొలగించారు.",
+          "relation": "సంబంధం తొలగించబడింది",
+          "vertex": "దారిలో నుండి ఒక నోడ్‌ను తొలగించండి."
+        },
+        "title": "తొలగించు"
+      },
+      "disconnect": {
+        "connected_to_hidden": "ఇది విడదీయబడదు ఎందుకంటే ఇది ఒక దాగిన లక్షణానికి కలిపి ఉంది.",
+        "not_connected": "విడదీయడానికి తగినన్ని గీతలు/ప్రదేశాలు లేవు.",
+        "relation": "ఇది విడదీయబడదు ఎందుకంటే ఇది ఒక సంబంధంలోని అంశాన్ని కలుపుతోంది.",
+        "title": "విడదీయు"
+      },
+      "merge": {
+        "conflicting_tags": "ఈ లక్షణాలు విలీనింపబడవు ఎందుకంటే వాటిలో కొన్ని ట్యాగ్‌లకు విలువలు విరుద్ధంగా ఉన్నాయి. ",
+        "description": "ఈ లక్షణాలను విలీనించండి.",
+        "incomplete_relation": "ఈ లక్షణాలు విలీనింపబడవు ఎందుకంటే కనీసం ఒక లక్షణం పూర్తిగా డౌన్‌లోడ్ కాలేదు.",
+        "not_eligible": "ఈ విశేషాలు విలీనానికి చేయబడలేవు",
+        "title": "విలీనం చెయ్యు"
+      },
+      "move": {
+        "annotation": {
+          "area": "ఒక ప్రదేశం తరలించబడింది",
+          "line": "ఒక గీత తరలించబడింది",
+          "point": "ఒక బిందువు తరలించబడింది",
+          "vertex": "దారిలో ఒక నోడ్ కదిలించబడింది."
+        },
+        "title": "తరలించు"
+      },
+      "orthogonalize": {
+        "title": "చతురస్రం"
+      },
+      "reverse": {
+        "description": {
+          "line": "ఈ గీతను వ్యతిరేక దిశగా పంపు"
+        },
+        "title": "వెనక్కి తిప్పు "
+      },
+      "rotate": {
+        "annotation": {
+          "area": "ఒక స్థలం తిప్పబడింది",
+          "line": "ఒక గీత తిప్పబడింది"
+        },
+        "title": "తిప్పు"
+      },
+      "split": {
+        "not_eligible": "గీత మొదలు లేదా ఆఖరిన విడగొట్టడానికి వీలు లేదు.",
+        "title": "విడగొట్టు"
+      },
+      "start": {
+        "annotation": {
+          "area": "ఒక ప్రదేశాన్ని మొదలుపెట్టారు.",
+          "line": "ఒక గీతను మొదలుపెట్టారు."
+        }
+      },
+      "straighten": {
+        "description": {
+          "line": "ఈ గీతను తిన్నగా చేయి."
+        },
+        "title": "తిన్నగాచేయి"
+      }
+    },
+    "rapid_menu": {
+      "remove": "తొలగించు"
+    },
+    "redo": {
+      "nothing": "మరల చేయుటకు ఏమిలేదు ",
+      "tooltip": "మరల చేయు: {action}"
+    },
+    "restore": {
+      "heading": "భద్రపరచని మార్పులు ఉన్నాయి"
+    },
+    "save": {
+      "conflict": {
+        "keep_local": "నావి ఉంచు",
+        "keep_remote": "వాళ్ళవి వాడు",
+        "next": "తదుపరి >",
+        "previous": "< మునుపటి",
+        "restore": "పునరుద్ధరించు"
+      },
+      "no_changes": "భద్రపరచాల్సిన మార్పులేమీ లేవు.",
+      "title": "భద్రపరచు",
+      "unsaved_changes": "భద్రపరచని మార్పులు ఉన్నాయి"
+    },
     "scriptNames": {
       "Adlm": "అద్లామ్",
       "Arab": "అరబిక్",
@@ -1070,6 +1056,93 @@
       "Zxxx": "లిపి లేని",
       "Zyyy": "సామాన్య",
       "Zzzz": "తెలియని లిపి"
+    },
+    "shortcuts": {
+      "command": {
+        "accept_feature": {
+          "key": "ఏ"
+        },
+        "circularize": {
+          "key": "ఓ"
+        },
+        "continue_line": {
+          "key": "ఏ"
+        },
+        "cycle_highway_tag": {
+          "key": "సీ"
+        },
+        "disconnect": {
+          "key": "డీ"
+        },
+        "ignore_feature": {
+          "key": "డీ"
+        },
+        "merge": {
+          "key": "సీ"
+        },
+        "move": {
+          "key": "ఎమ్"
+        },
+        "reverse": {
+          "key": "వీ"
+        },
+        "rotate": {
+          "key": "ఆర్"
+        },
+        "split": {
+          "key": "ఎక్స్"
+        },
+        "straighten": {
+          "key": "ఎస్"
+        },
+        "toggle_all_layers": {
+          "key": "డీ"
+        },
+        "toggle_mapillary": {
+          "key": "ఎమ్"
+        },
+        "toggle_measurement_card": {
+          "key": "ఎమ్"
+        },
+        "toggle_osm_data": {
+          "key": "ఓ"
+        },
+        "toggle_rapid_data": {
+          "key": "ఆర్"
+        },
+        "toggle_streetside": {
+          "key": "ఎస్"
+        }
+      },
+      "help": "సహాయం",
+      "key": {
+        "delete": "తొలగించు"
+      }
+    },
+    "splash": {
+      "walkthrough": "దర్శన మొదలుపెట్టు"
+    },
+    "success": {
+      "help_link_text": "వివరాలు",
+      "just_edited": "మీరు ఇప్పుడే OpenStreetMapను మార్చారు"
+    },
+    "tag_reference": {
+      "description": "వివరణ"
+    },
+    "tooltip_keyhint": "సత్వరమార్గం:",
+    "translate": {
+      "localized_translation_language": "భాషను ఎంచుకోండి",
+      "localized_translation_name": "పేరు"
+    },
+    "undo": {
+      "nothing": "చెరిపివేయుటకు ఏమిలేదు ",
+      "tooltip": "చెరిపివేయు: {action}"
+    },
+    "units": {
+      "south": "ఎస్"
+    },
+    "wikidata": {
+      "description": "వివరణ"
     }
   }
 }

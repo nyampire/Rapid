@@ -1,4 +1,4 @@
-describe('MapWithAIService', () => {
+describe('PlateauService', () => {
   let _service;
 
   class MockEditSystem {
@@ -25,196 +25,8 @@ describe('MapWithAIService', () => {
 
 
   beforeEach(() => {
-    _service = new Rapid.MapWithAIService(new MockContext());
+    _service = new Rapid.PlateauService(new MockContext());
     return _service.initAsync();
-  });
-
-
-  describe('#_getLoc', () => {
-    it('parses lon/lat from attributes', () => {
-      const attrs = {
-        lon: { value: '139.6917' },
-        lat: { value: '35.6895' }
-      };
-      const loc = _service._getLoc(attrs);
-      expect(loc).to.eql([139.6917, 35.6895]);
-    });
-  });
-
-
-  describe('#_getVisible', () => {
-    it('returns true when visible attribute is absent', () => {
-      const attrs = {};
-      expect(_service._getVisible(attrs)).to.be.true;
-    });
-
-    it('returns true when visible is not "false"', () => {
-      const attrs = { visible: { value: 'true' } };
-      expect(_service._getVisible(attrs)).to.be.true;
-    });
-
-    it('returns false when visible is "false"', () => {
-      const attrs = { visible: { value: 'false' } };
-      expect(_service._getVisible(attrs)).to.be.false;
-    });
-  });
-
-
-  describe('#_getTags', () => {
-    it('extracts key-value pairs from tag elements', () => {
-      const xml = new DOMParser().parseFromString(
-        '<way><tag k="building" v="yes"/><tag k="height" v="10"/></way>', 'text/xml'
-      ).documentElement;
-      const tags = _service._getTags(xml);
-      expect(tags).to.eql({ building: 'yes', height: '10' });
-    });
-
-    it('ignores tags with empty key or value', () => {
-      const xml = new DOMParser().parseFromString(
-        '<way><tag k="" v="yes"/><tag k="name" v=""/><tag k="ok" v="val"/></way>', 'text/xml'
-      ).documentElement;
-      const tags = _service._getTags(xml);
-      expect(tags).to.eql({ ok: 'val' });
-    });
-
-    it('returns empty object when no tags', () => {
-      const xml = new DOMParser().parseFromString('<way></way>', 'text/xml').documentElement;
-      const tags = _service._getTags(xml);
-      expect(tags).to.eql({});
-    });
-  });
-
-
-  describe('#_getNodes', () => {
-    it('extracts node references with n prefix', () => {
-      const xml = new DOMParser().parseFromString(
-        '<way><nd ref="100"/><nd ref="101"/><nd ref="102"/></way>', 'text/xml'
-      ).documentElement;
-      const nodes = _service._getNodes(xml);
-      expect(nodes).to.eql(['n100', 'n101', 'n102']);
-    });
-  });
-
-
-  describe('#_parseNode', () => {
-    it('creates an osmNode with loc and tags', () => {
-      const xml = new DOMParser().parseFromString(
-        '<node lon="139.5" lat="35.5"><tag k="name" v="test"/></node>', 'text/xml'
-      ).documentElement;
-      const node = _service._parseNode(xml, 'n-1');
-      expect(node.id).to.eql('n-1');
-      expect(node.loc).to.eql([139.5, 35.5]);
-      expect(node.tags).to.eql({ name: 'test' });
-      expect(node.visible).to.be.true;
-    });
-  });
-
-
-  describe('#_parseWay', () => {
-    it('creates an osmWay with nodes and tags', () => {
-      const xml = new DOMParser().parseFromString(
-        '<way><nd ref="1"/><nd ref="2"/><nd ref="3"/><tag k="building" v="yes"/></way>', 'text/xml'
-      ).documentElement;
-      const way = _service._parseWay(xml, 'w-1');
-      expect(way.id).to.eql('w-1');
-      expect(way.nodes).to.eql(['n1', 'n2', 'n3']);
-      expect(way.tags).to.eql({ building: 'yes' });
-      expect(way.visible).to.be.true;
-    });
-  });
-
-
-  describe('#_getMembers', () => {
-    it('extracts member references with type initial prefix and role', () => {
-      const xml = new DOMParser().parseFromString(
-        '<relation>' +
-          '<member type="way" ref="100" role="outline"/>' +
-          '<member type="way" ref="101" role="part"/>' +
-          '<member type="node" ref="200" role=""/>' +
-        '</relation>', 'text/xml'
-      ).documentElement;
-      const members = _service._getMembers(xml);
-      expect(members).to.eql([
-        { id: 'w100', type: 'way', role: 'outline' },
-        { id: 'w101', type: 'way', role: 'part' },
-        { id: 'n200', type: 'node', role: '' }
-      ]);
-    });
-
-    it('handles missing role attribute as empty string', () => {
-      const xml = new DOMParser().parseFromString(
-        '<relation><member type="way" ref="42"/></relation>', 'text/xml'
-      ).documentElement;
-      const members = _service._getMembers(xml);
-      expect(members[0].role).to.eql('');
-    });
-  });
-
-
-  describe('#_parseRelation', () => {
-    it('creates an osmRelation with tags and members', () => {
-      const xml = new DOMParser().parseFromString(
-        '<relation>' +
-          '<member type="way" ref="10" role="outline"/>' +
-          '<member type="way" ref="11" role="part"/>' +
-          '<tag k="type" v="building"/>' +
-          '<tag k="building" v="yes"/>' +
-          '<tag k="height" v="8.4"/>' +
-        '</relation>', 'text/xml'
-      ).documentElement;
-      const rel = _service._parseRelation(xml, 'r-100');
-      expect(rel.id).to.eql('r-100');
-      expect(rel.type).to.eql('relation');
-      expect(rel.tags).to.eql({ type: 'building', building: 'yes', height: '8.4' });
-      expect(rel.members).to.eql([
-        { id: 'w10', type: 'way', role: 'outline' },
-        { id: 'w11', type: 'way', role: 'part' }
-      ]);
-      expect(rel.visible).to.be.true;
-    });
-  });
-
-
-  describe('#_parseEntity for relations', () => {
-    // Phase 3-A: MapWithAIService が `<relation>` を取り込むかの統合テスト
-    const dataset = {
-      id: 'plateauJapan-test',
-      cache: { seen: new Set(), splitWays: new Map(), seenFirstNodeID: new Set() }
-    };
-
-    beforeEach(() => {
-      dataset.cache.seen.clear();
-      dataset.cache.splitWays.clear();
-      dataset.cache.seenFirstNodeID.clear();
-    });
-
-    it('parses a relation element into an osmRelation entity', () => {
-      const xml = new DOMParser().parseFromString(
-        '<relation id="-100">' +
-          '<member type="way" ref="-1" role="outline"/>' +
-          '<member type="way" ref="-2" role="part"/>' +
-          '<tag k="type" v="building"/>' +
-          '<tag k="building" v="yes"/>' +
-        '</relation>', 'text/xml'
-      ).documentElement;
-      const entity = _service._parseEntity(dataset, null, xml);
-      expect(entity).to.not.be.null;
-      expect(entity.id).to.eql('r-100');
-      expect(entity.type).to.eql('relation');
-      expect(entity.tags.type).to.eql('building');
-      expect(entity.members).to.have.length(2);
-      expect(dataset.cache.seen.has('r-100')).to.be.true;
-    });
-
-    it('skips duplicate relation IDs (cache.seen)', () => {
-      const xml = new DOMParser().parseFromString(
-        '<relation id="-100"><tag k="type" v="building"/></relation>', 'text/xml'
-      ).documentElement;
-      const first = _service._parseEntity(dataset, null, xml);
-      const second = _service._parseEntity(dataset, null, xml);
-      expect(first).to.not.be.null;
-      expect(second).to.be.null;
-    });
   });
 
 
@@ -512,10 +324,6 @@ describe('MapWithAIService', () => {
   });
 
 
-  // ----------------------------------------------------------------------
-  // _checkWayOverlapsOsmBuildings (pure helper)
-  // ----------------------------------------------------------------------
-
   describe('#_checkWayOverlapsOsmBuildings', () => {
     function makePlateauWay(graph, wayId, coords) {
       const nodeIds = [];
@@ -567,17 +375,13 @@ describe('MapWithAIService', () => {
   });
 
 
-  // ----------------------------------------------------------------------
-  // Phase 4-B-2: hover で relation member を視覚的にハイライト
-  // ----------------------------------------------------------------------
-
   describe('#_onHoverchange', () => {
     /**
      * 必要な mock:
      * - context.systems.gfx.scene.layers.get(layerID) → layer-like object
      * - layer.setClass / layer.unsetClass を spy 対応
      * - service の datasets[].graph に entity + relation を仕込む
-     * - hover data.__service__ === 'mapwithai', data.__datasetid__ === 'pj'
+     * - hover data.__service__ === 'plateau', data.__datasetid__ === 'pj'
      */
     function makeLayerMock() {
       const setCalls = [];
@@ -612,7 +416,7 @@ describe('MapWithAIService', () => {
       };
       // service.graph() が data.__datasetid__ から graph を返すように
       // 既存の service.graph() メソッドがあれば自動的に動く想定。
-      // (MapWithAIService に graph(datasetID) メソッドがあることを前提)
+      // (PlateauService に graph(datasetID) メソッドがあることを前提)
       return { outline, part, relation };
     }
 
@@ -623,7 +427,7 @@ describe('MapWithAIService', () => {
       // hover 対象 = part の Plateau データ
       // production と同じく way instance 自体に metadata を attach (prototype を残す)
       const hoverData = built.part;
-      hoverData.__service__ = 'mapwithai';
+      hoverData.__service__ = 'plateau';
       hoverData.__datasetid__ = 'pj';
 
       _service._onHoverchange({ target: { layer: layer, data: hoverData } });
@@ -655,7 +459,7 @@ describe('MapWithAIService', () => {
       const graph = new Rapid.Graph([solo]);
       _service._datasets.pj_solo = { id: 'pj_solo', graph: graph, tree: null, cache: {} };
 
-      solo.__service__ = 'mapwithai';
+      solo.__service__ = 'plateau';
       solo.__datasetid__ = 'pj_solo';
 
       _service._onHoverchange({ target: { layer: layer, data: solo } });
@@ -676,7 +480,7 @@ describe('MapWithAIService', () => {
       const built = makeBuildingRelationDataset(_service, 'pj');
 
       // 1回目: part を hover → outline に highlight
-      built.part.__service__ = 'mapwithai';
+      built.part.__service__ = 'plateau';
       built.part.__datasetid__ = 'pj';
       _service._onHoverchange({ target: { layer: layer, data: built.part } });
 
@@ -700,7 +504,7 @@ describe('MapWithAIService', () => {
       };
 
       const built = makeBuildingRelationDataset(_service, 'pj');
-      built.part.__service__ = 'mapwithai';
+      built.part.__service__ = 'plateau';
       built.part.__datasetid__ = 'pj';
 
       // select 側が outline を claim している状態を再現
@@ -770,7 +574,7 @@ describe('MapWithAIService', () => {
       attachScene(_service, layer);
       const built = makeBuildingRelationDataset(_service, 'pj');
 
-      built.part.__service__ = 'mapwithai';
+      built.part.__service__ = 'plateau';
       built.part.__datasetid__ = 'pj';
       const selectedData = new Map([[built.part.id, built.part]]);
       _service.context.selectedData = () => selectedData;
@@ -838,7 +642,7 @@ describe('MapWithAIService', () => {
 
       const solo = Rapid.osmWay({ id: 'w_solo', nodes: [], tags: { building: 'yes' } });
       _service._datasets.pj_solo = { id: 'pj_solo', graph: new Rapid.Graph([solo]), tree: null, cache: {} };
-      solo.__service__ = 'mapwithai';
+      solo.__service__ = 'plateau';
       solo.__datasetid__ = 'pj_solo';
 
       _service.context.selectedData = () => new Map([[solo.id, solo]]);

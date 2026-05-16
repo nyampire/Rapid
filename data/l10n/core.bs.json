@@ -1,229 +1,118 @@
 {
   "bs": {
-    "modes": {
-      "add_area": {
-        "title": "Područje"
-      },
-      "add_line": {
-        "title": "Linija"
-      },
-      "add_point": {
-        "title": "Tačka"
-      },
-      "browse": {
-        "title": "Pretražite",
-        "description": "Pomičite i uvećavajte kartu."
+    "QA": {
+      "keepRight": {
+        "detail_description": "Opis"
       }
     },
-    "operations": {
-      "add": {
-        "annotation": {
-          "point": "Dodana tačka.",
-          "vertex": "Dodan čvor putanji.",
-          "relation": "Dodana relacija."
-        }
-      },
-      "start": {
-        "annotation": {
-          "line": "Započeta linija.",
-          "area": "Započeto područje."
-        }
-      },
-      "continue": {
-        "title": "Nastaviti",
-        "description": "Nastaviti ovu liniju.",
-        "not_eligible": "Ovdje nijedna linija ne može biti nastavljena",
-        "annotation": {
-          "line": "Nastavljena linija.",
-          "area": "Nastavljeno područje."
-        }
-      },
-      "cancel_draw": {
-        "annotation": "Otkazano crtanje."
-      },
-      "change_tags": {
-        "annotation": "Izmijenjene oznake."
-      },
-      "circularize": {
-        "title": "Zaokružite"
-      },
-      "orthogonalize": {
-        "title": "Kvadrat"
-      },
-      "straighten": {
-        "title": "Ispraviti"
-      },
-      "delete": {
-        "title": "Izbrišite",
-        "annotation": {
-          "point": "Izbrisana tačka.",
-          "vertex": "Izbrisan čvor sa putanje.",
-          "line": "Izbrisana linija.",
-          "area": "Izbrisano područje.",
-          "relation": "Izbrisana relacija."
-        }
-      },
-      "disconnect": {
-        "title": "Prekinite vezu.",
-        "not_connected": "Ne postoji dovoljno linija/ područja da bi se prekinula veza."
-      },
-      "merge": {
-        "title": "Spojite",
-        "not_eligible": "Ove značajke ne mogu biti spojene."
-      },
-      "move": {
-        "title": "Pomaknite",
-        "annotation": {
-          "point": "Pomaknuta tačka.",
-          "vertex": "Pomaknut čvor u putanji.",
-          "line": "Pomaknuta linija.",
-          "area": "Pomaknuto područje."
-        }
-      },
-      "rotate": {
-        "title": "Rotirajte",
-        "annotation": {
-          "line": "Rotirana linija.",
-          "area": "Rotirano područje."
-        }
-      },
-      "reverse": {
-        "title": "Obrnuto"
-      },
-      "split": {
-        "title": "Razdvojite",
-        "not_eligible": "Linije ne mogu biti razdvojene na njihovom početku i kraju."
-      }
+    "background": {
+      "custom": "Prilagođena pozadina",
+      "none": "Ništa",
+      "reset": "ponovo postavite",
+      "title": "Pozadina"
     },
-    "undo": {
-      "tooltip": "Poništiti: {action}",
-      "nothing": "Ništa za poništiti."
-    },
-    "redo": {
-      "tooltip": "Obnoviti: {action}",
-      "nothing": "Ništa za vratiti."
-    },
-    "translate": {
-      "localized_translation_language": "Izaberite jezik",
-      "localized_translation_name": "Naziv"
-    },
-    "loading_auth": "Povezivanje na OpenStreetMap...",
     "commit": {
+      "cancel": "Otkažite",
+      "created": "Napravljeno",
+      "deleted": "Izbrisano",
+      "modified": "Izmijenjeno",
       "upload_explanation": "Promjene koje postavite će biti vidljive na svim kartama koje koriste OpenStreetMap podatke.",
       "upload_explanation_with_user": "Promjene koje postavite kao {user} će biti vidljive na svim kartama koje koriste OpenStreetMap podatke.",
-      "cancel": "Otkažite",
-      "warnings": "Upozorenja",
-      "modified": "Izmijenjeno",
-      "deleted": "Izbrisano",
-      "created": "Napravljeno"
+      "warnings": "Upozorenja"
+    },
+    "confirm": {
+      "cancel": "Otkažite"
     },
     "contributors": {
       "list": "Uređivanja korisnika {users}"
-    },
-    "info_panels": {
-      "background": {
-        "title": "Pozadina",
-        "description": "Opis"
-      },
-      "measurement": {
-        "area": "Područje"
-      }
-    },
-    "geocoder": {
-      "search": "Globalna pretraga...",
-      "no_results_worldwide": "Nema pronađenih rezultata"
-    },
-    "geolocate": {
-      "title": "Pokazati moju lokaciju"
-    },
-    "inspector": {
-      "show_more": "Prikazati više",
-      "view_on_osm": "Pogledajte na stranici openstreetmap.org",
-      "new_relation": "Nova relacija...",
-      "role": "Uloga",
-      "choose": "Odaberite tip svojstva",
-      "remove": "Uklonite",
-      "search": "Pretraga",
-      "unknown": "Nepoznato",
-      "incomplete": "<nije preuzeto>",
-      "feature_list": "Značajke pretrage",
-      "none": "Ništa"
-    },
-    "background": {
-      "title": "Pozadina",
-      "none": "Ništa",
-      "custom": "Prilagođena pozadina",
-      "reset": "ponovo postavite"
-    },
-    "map_data": {
-      "layers": {
-        "maproulette": {
-          "cancel": "Otkažite"
-        }
-      }
     },
     "filters": {
       "points": {
         "description": "Tačke"
       }
     },
-    "restore": {
-      "heading": "Imate promjene koje nisu spašene"
+    "geocoder": {
+      "no_results_worldwide": "Nema pronađenih rezultata",
+      "search": "Globalna pretraga..."
     },
-    "save": {
-      "title": "Sačuvajte",
-      "no_changes": "Nema promjena za sačuvati.",
-      "unsaved_changes": "Imate promjene koje nisu spašene"
-    },
-    "confirm": {
-      "cancel": "Otkažite"
-    },
-    "source_switch": {
-      "dev": "razvojno",
-      "live": "uživo",
-      "lose_changes": "Imate nespremljenih promjena. Mijenjanje servera karte će ih odbaciti. Sigurni ste da želite promijeniti servere?"
-    },
-    "rapid_menu": {
-      "remove": "Uklonite"
-    },
-    "tag_reference": {
-      "description": "Opis",
-      "on_wiki": "{tag} na wiki.osm.org",
-      "used_with": "Korišteno sa {type}"
-    },
-    "QA": {
-      "keepRight": {
-        "detail_description": "Opis"
-      }
+    "geolocate": {
+      "title": "Pokazati moju lokaciju"
     },
     "help": {
-      "title": "Pomoć",
-      "help": {
-        "title": "Pomoć"
-      },
-      "overview": {
-        "navigation_h": "Navigacija"
+      "areas": {
+        "title": "Područja"
       },
       "editing": {
         "save_h": "Sačuvajte"
       },
-      "points": {
-        "title": "Tačke"
+      "help": {
+        "title": "Pomoć"
       },
       "lines": {
         "title": "Linije"
       },
-      "areas": {
-        "title": "Područja"
+      "overview": {
+        "navigation_h": "Navigacija"
+      },
+      "points": {
+        "title": "Tačke"
+      },
+      "title": "Pomoć"
+    },
+    "info_panels": {
+      "background": {
+        "description": "Opis",
+        "source": "Izvor",
+        "title": "Pozadina"
+      },
+      "location": {
+        "title": "Lokacija"
+      },
+      "measurement": {
+        "area": "Područje",
+        "location": "Lokacija"
       }
     },
-    "issues": {
-      "warnings": "Upozorenja"
+    "inspector": {
+      "choose": "Odaberite tip svojstva",
+      "edit": "Urediti značajku",
+      "feature_list": "Značajke pretrage",
+      "incomplete": "<nije preuzeto>",
+      "location": "Lokacija",
+      "new_relation": "Nova relacija...",
+      "none": "Ništa",
+      "radio": {
+        "structure": {
+          "layer": "Sloj"
+        }
+      },
+      "relation": "Relacija",
+      "remove": "Uklonite",
+      "role": "Uloga",
+      "search": "Pretraga",
+      "show_more": "Prikazati više",
+      "unknown": "Nepoznato",
+      "view_on_osm": "Pogledajte na stranici openstreetmap.org"
     },
     "intro": {
+      "areas": {
+        "title": "Područja"
+      },
       "graph": {
+        "block_number": "<value for addr:block_number>",
+        "countrycode": "ba",
+        "county": "<value for addr:county>",
+        "district": "<value for addr:district>",
+        "hamlet": "<value for addr:hamlet>",
+        "neighbourhood": "<value for addr:neighbourhood>",
+        "province": "<value for addr:province>",
+        "quarter": "<value for addr:quarter>",
         "state": "<value for addr:state>",
-        "countrycode": "ba"
+        "subdistrict": "<value for addr:subdistrict>",
+        "suburb": "<value for addr:suburb>"
+      },
+      "lines": {
+        "title": "Linije"
       },
       "navigation": {
         "title": "Navigacija"
@@ -231,38 +120,14 @@
       "points": {
         "title": "Tačke"
       },
-      "areas": {
-        "title": "Područja"
-      },
-      "lines": {
-        "title": "Linije"
-      },
       "startediting": {
-        "title": "Počnite uređivati",
         "save": "Ne zaboravite da često spašavate Vaše promjene!",
-        "start": "Počnite uređivati kartu!"
+        "start": "Počnite uređivati kartu!",
+        "title": "Počnite uređivati"
       }
     },
-    "shortcuts": {
-      "key": {
-        "delete": "Izbrišite"
-      },
-      "navigation": "Navigacija",
-      "help": "Pomoć",
-      "command": {
-        "straighten": {
-          "key": "Oblikovati"
-        },
-        "toggle_streetside": {
-          "key": "Oblikovati"
-        }
-      }
-    },
-    "units": {
-      "south": "Oblikovati"
-    },
-    "wikidata": {
-      "description": "Opis"
+    "issues": {
+      "warnings": "Upozorenja"
     },
     "languageNames": {
       "aa": "afarski",
@@ -821,6 +686,153 @@
       "zun": "zuni",
       "zza": "zaza"
     },
+    "loading_auth": "Povezivanje na OpenStreetMap...",
+    "map_data": {
+      "layers": {
+        "maproulette": {
+          "cancel": "Otkažite"
+        }
+      }
+    },
+    "modes": {
+      "add_area": {
+        "description": "Dodajte karti parkove, zgrade, jezera ili druga područja.",
+        "title": "Područje"
+      },
+      "add_line": {
+        "description": "Dodajte puteve, ulice, pješačke staze, kanale ili druge linije na kartu.",
+        "title": "Linija"
+      },
+      "add_note": {
+        "title": "Bilješka"
+      },
+      "add_point": {
+        "description": "Dodajte restorane, spomenike, poštanske urede ili druge tačke na kartu.",
+        "title": "Tačka"
+      },
+      "browse": {
+        "description": "Pomičite i uvećavajte kartu.",
+        "title": "Pretražite"
+      }
+    },
+    "note": {
+      "note": "Bilješka"
+    },
+    "operations": {
+      "add": {
+        "annotation": {
+          "point": "Dodana tačka.",
+          "relation": "Dodana relacija.",
+          "vertex": "Dodan čvor putanji."
+        }
+      },
+      "cancel_draw": {
+        "annotation": "Otkazano crtanje."
+      },
+      "change_tags": {
+        "annotation": "Izmijenjene oznake."
+      },
+      "circularize": {
+        "title": "Zaokružite"
+      },
+      "connect": {
+        "annotation": {
+          "from_vertex": {
+            "to_area": "Povezana putanja na područje.",
+            "to_line": "Povezana putanja na liniju.",
+            "to_point": "Povezana putanja na tačku.",
+            "to_vertex": "Povezana putanja na drugo."
+          }
+        }
+      },
+      "continue": {
+        "annotation": {
+          "area": "Nastavljeno područje.",
+          "line": "Nastavljena linija."
+        },
+        "description": "Nastaviti ovu liniju.",
+        "not_eligible": "Ovdje nijedna linija ne može biti nastavljena",
+        "title": "Nastaviti"
+      },
+      "delete": {
+        "annotation": {
+          "area": "Izbrisano područje.",
+          "line": "Izbrisana linija.",
+          "point": "Izbrisana tačka.",
+          "relation": "Izbrisana relacija.",
+          "vertex": "Izbrisan čvor sa putanje."
+        },
+        "title": "Izbrišite"
+      },
+      "disconnect": {
+        "not_connected": "Ne postoji dovoljno linija/ područja da bi se prekinula veza.",
+        "title": "Prekinite vezu."
+      },
+      "merge": {
+        "not_eligible": "Ove značajke ne mogu biti spojene.",
+        "title": "Spojite"
+      },
+      "move": {
+        "annotation": {
+          "area": "Pomaknuto područje.",
+          "line": "Pomaknuta linija.",
+          "point": "Pomaknuta tačka.",
+          "vertex": "Pomaknut čvor u putanji."
+        },
+        "title": "Pomaknite"
+      },
+      "orthogonalize": {
+        "title": "Kvadrat"
+      },
+      "reverse": {
+        "description": {
+          "line": "Promijeniti smjer ove linije."
+        },
+        "title": "Obrnuto"
+      },
+      "rotate": {
+        "annotation": {
+          "area": "Rotirano područje.",
+          "line": "Rotirana linija."
+        },
+        "title": "Rotirajte"
+      },
+      "split": {
+        "not_eligible": "Linije ne mogu biti razdvojene na njihovom početku i kraju.",
+        "title": "Razdvojite"
+      },
+      "start": {
+        "annotation": {
+          "area": "Započeto područje.",
+          "line": "Započeta linija."
+        }
+      },
+      "straighten": {
+        "description": {
+          "line": "Ispraviti ovu liniju."
+        },
+        "title": "Ispraviti"
+      }
+    },
+    "rapid_menu": {
+      "remove": "Uklonite"
+    },
+    "redo": {
+      "nothing": "Ništa za vratiti.",
+      "tooltip": "Obnoviti: {action}"
+    },
+    "restore": {
+      "description": "Želite li vratiti nespremljene promjene od prethodnog uređivanja?",
+      "heading": "Imate promjene koje nisu spašene"
+    },
+    "save": {
+      "conflict": {
+        "restore": "Vratite prethodno"
+      },
+      "no_changes": "Nema promjena za sačuvati.",
+      "title": "Sačuvajte",
+      "unsaved_changes": "Imate promjene koje nisu spašene"
+    },
     "scriptNames": {
       "Adlm": "adlam pismo",
       "Afak": "afaka pismo",
@@ -1024,6 +1036,54 @@
       "Zxxx": "nepisani jezik",
       "Zyyy": "zajedničko pismo",
       "Zzzz": "nepoznato pismo"
+    },
+    "shortcuts": {
+      "command": {
+        "straighten": {
+          "key": "Oblikovati"
+        },
+        "toggle_streetside": {
+          "key": "Oblikovati"
+        }
+      },
+      "help": "Pomoć",
+      "key": {
+        "delete": "Izbrišite"
+      },
+      "navigation": "Navigacija"
+    },
+    "source_switch": {
+      "dev": "razvojno",
+      "live": "uživo",
+      "lose_changes": "Imate nespremljenih promjena. Mijenjanje servera karte će ih odbaciti. Sigurni ste da želite promijeniti servere?"
+    },
+    "splash": {
+      "text": "ID je prijateljski ali moćan alat za doprinos najboljoj svjetskoj besplatnoj karti svijeta. Ovo je verzija {version}. Za više informacija pogledajte stranicu {website} i prijavite greške na stranici {github}.",
+      "walkthrough": "Počnite sa upoznavanjem",
+      "welcome": "Dobrodošli u ID - OpenStreetMap uređivač"
+    },
+    "success": {
+      "just_edited": "Upravo ste uredili OpenStreetMap kartu!"
+    },
+    "tag_reference": {
+      "description": "Opis",
+      "on_wiki": "{tag} na wiki.osm.org",
+      "used_with": "Korišteno sa {type}"
+    },
+    "tooltip_keyhint": "Prečica:",
+    "translate": {
+      "localized_translation_language": "Izaberite jezik",
+      "localized_translation_name": "Naziv"
+    },
+    "undo": {
+      "nothing": "Ništa za poništiti.",
+      "tooltip": "Poništiti: {action}"
+    },
+    "units": {
+      "south": "Oblikovati"
+    },
+    "wikidata": {
+      "description": "Opis"
     }
   }
 }

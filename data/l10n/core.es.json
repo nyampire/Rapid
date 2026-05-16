@@ -1501,7 +1501,18 @@
       "overture": {
         "places": {
           "label": "Lugares de Overture",
-          "description": "Contiene más de 53 millones de representaciones puntuales de entidades del mundo real: escuelas, negocios, hospitales, organizaciones religiosas, puntos de referencia, picos de montañas y mucho más."
+          "description": "Puntos de interés de Overture Maps, provenientes de diversos colaboradores comerciales y comunitarios."
+        },
+        "esri_buildings": {
+          "label": "Edificios de Esri Community Maps",
+          "description": "Huella de edificios aportada por el programa Community Maps de Esri, disponible a través de la Fundación Overture Maps."
+        },
+        "ml_buildings": {
+          "description": "Huella de edificios derivada mediante ML de Microsoft y Google Open Buildings, fusionada por la Fundación Overture Maps."
+        },
+        "tomtom_roads": {
+          "label": "Vías de TomTom",
+          "description": "Datos de la red vial provenientes de TomTom, disponibles a través de la Fundación Overture Maps."
         }
       },
       "omdFootways": {
@@ -1511,6 +1522,17 @@
       "metaSyntheticFootways": {
         "label": "Senderos peatonales sintéticos de Meta",
         "description": "Datos de senderos peatonales sintéticos recopilados de diversas entidades gubernamentales locales."
+      },
+      "ignored_ids": {
+        "link": "{count} IDs de Overture ignorados",
+        "link_one": "{count} ID de Overture ignorado",
+        "title": "{count} IDs de Overture ignorados",
+        "title_one": "{count} ID de Overture ignorado",
+        "instructions": "Estos son los IDs GERS de Overture de huellas de edificios derivadas mediante ML que rechazaste o ignoraste en esta sesión. Puedes reportarlos como falsos positivos abriendo un issue:",
+        "copy": "Copiar al portapapeles",
+        "copied": "¡Copiado!",
+        "download": "Descargar como archivo",
+        "more": "… y {count} más"
       }
     },
     "rapid_poweruser": {

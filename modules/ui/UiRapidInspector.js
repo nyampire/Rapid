@@ -198,7 +198,9 @@ export class UiRapidInspector {
     // cascade 全 member を即座にフィルタアウト (= 二重描画解消) する。
     const acceptedIDs = [];
 
-    editor.perform(actionRapidAcceptFeature(datum.id, graph, { skipCascade, acceptedIDs }));
+    // Pass tree alongside skipCascade/acceptedIDs so the action can also
+    // run upstream's auto-connect on accepted way endpoints (PR #1769).
+    editor.perform(actionRapidAcceptFeature(datum.id, graph, { skipCascade, acceptedIDs, tree: editor.tree }));
 
     // In place of a string annotation, this introduces an "object-style"
     // annotation, where "type" and "description" are standard keys,
