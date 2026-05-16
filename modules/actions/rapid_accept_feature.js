@@ -1,6 +1,10 @@
-import { vecInterp } from '@rapid-sdk/math';
+import { Extent, geoMetersToLat, geoMetersToLon, geoSphericalDistance, vecInterp, vecProject } from '@rapid-sdk/math';
 
 import { osmNode, osmRelation, osmWay } from '../osm/index.js';
+import { osmRoutableHighwayTagValues } from '../osm/tags.js';
+
+const AUTO_CONNECT_METERS = 5;    // max distance to snap endpoint to nearby highway
+const NODE_MERGE_METERS = 1;   // reuse existing node if within this distance
 
 
 function findConnectionPoint(graph, newNode, targetWay, nodeA, nodeB) {
@@ -87,6 +91,11 @@ export function actionRapidAcceptFeature(entityID, extGraph, options) {
         if (acceptedIDs && id) acceptedIDs.push(id);
     }
 
+    // upstream (PR #1769): auto-connect 用に渡される RBush tree。
+    // 旧 signature `actionRapidAcceptFeature(id, graph, tree)` を踏襲する呼び出しがあれば
+    // options に tree を畳み込んで渡すこと: `{ skipCascade, acceptedIDs, tree }`。
+    var tree = options && options.tree;
+
     return function(graph) {
         var seenRelations = {};       // 完了済 relation (relation→relation 再帰防止 + 結果キャッシュ)
         var inProgressRelations = {}; // 処理中 relation (way→relation の再 cascade 防止)
@@ -101,6 +110,121 @@ export function actionRapidAcceptFeature(entityID, extGraph, options) {
         }
 
         return graph;
+
+
+        function canConnect(way1, way2) {
+            if (way1.id === way2.id) return false;
+
+            var b1 = way1.tags.bridge && way1.tags.bridge !== 'no';
+            var b2 = way2.tags.bridge && way2.tags.bridge !== 'no';
+            if ((b1 || b2) && !(b1 && b2)) return false;
+
+            var t1 = way1.tags.tunnel && way1.tags.tunnel !== 'no';
+            var t2 = way2.tags.tunnel && way2.tags.tunnel !== 'no';
+            if ((t1 || t2) && !(t1 && t2)) return false;
+
+            if ((way1.tags.layer || '0') !== (way2.tags.layer || '0')) return false;
+            if ((way1.tags.level || '0') !== (way2.tags.level || '0')) return false;
+
+            return true;
+        }
+
+
+        function autoConnectEndpoint(node, acceptedWay) {
+            if (!tree) return null;
+
+            var loc = node.loc;
+            var lonRange = geoMetersToLon(AUTO_CONNECT_METERS, loc[1]);
+            var latRange = geoMetersToLat(AUTO_CONNECT_METERS);
+            var queryExtent = new Extent(
+                [loc[0] - lonRange, loc[1] - latRange],
+                [loc[0] + lonRange, loc[1] + latRange]
+            );
+
+            var segmentInfos = tree.waySegments(queryExtent, graph);
+            var bestDist = Infinity;
+            var bestResult = null;
+
+            var targetWay;
+            for (var i = 0; i < segmentInfos.length; i++) {
+                var segInfo = segmentInfos[i];
+                targetWay = graph.hasEntity(segInfo.wayId);
+                if (!targetWay) continue;
+                if (!targetWay.tags.highway || !osmRoutableHighwayTagValues[targetWay.tags.highway]) continue;
+                if (!canConnect(acceptedWay, targetWay)) continue;
+
+                var nA = graph.hasEntity(segInfo.nodes[0]);
+                var nB = graph.hasEntity(segInfo.nodes[1]);
+                if (!nA || !nB) continue;
+
+                // Check for node merge (dupe-like) — prefer merging to existing endpoints
+                var distA = geoSphericalDistance(loc, nA.loc);
+                if (distA < NODE_MERGE_METERS && distA < bestDist) {
+                    bestDist = distA;
+                    bestResult = { mergeNodeId: nA.id, targetWayId: segInfo.wayId };
+                }
+                var distB = geoSphericalDistance(loc, nB.loc);
+                if (distB < NODE_MERGE_METERS && distB < bestDist) {
+                    bestDist = distB;
+                    bestResult = { mergeNodeId: nB.id, targetWayId: segInfo.wayId };
+                }
+
+                // Project onto segment
+                var projected = vecProject(loc, [nA.loc, nB.loc]);
+                if (projected) {
+                    var projDist = geoSphericalDistance(loc, projected.target);
+                    if (projDist < AUTO_CONNECT_METERS && projDist < bestDist) {
+                        // If projection lands near an existing segment endpoint, merge instead of snap
+                        var distToA = geoSphericalDistance(projected.target, nA.loc);
+                        var distToB = geoSphericalDistance(projected.target, nB.loc);
+                        if (distToA < NODE_MERGE_METERS) {
+                            bestDist = projDist;
+                            bestResult = { mergeNodeId: nA.id, targetWayId: segInfo.wayId };
+                        } else if (distToB < NODE_MERGE_METERS) {
+                            bestDist = projDist;
+                            bestResult = { mergeNodeId: nB.id, targetWayId: segInfo.wayId };
+                        } else {
+                            bestDist = projDist;
+                            bestResult = { snapLoc: projected.target, edge: [nA.id, nB.id], targetWayId: segInfo.wayId };
+                        }
+                    }
+                }
+            }
+
+            if (!bestResult) return null;
+
+            // Get the connected highway tag before modifying the graph
+            var connectedHighwayTag = graph.entity(bestResult.targetWayId).tags.highway;
+
+            if (bestResult.mergeNodeId) {
+                // Replace endpoint references in accepted way with existing node
+                var updatedNodes = acceptedWay.nodes.map(function(nid) {
+                    return nid === node.id ? bestResult.mergeNodeId : nid;
+                });
+                graph = graph.replace(acceptedWay.update({ nodes: updatedNodes }));
+                // Remove the orphaned original node
+                graph = graph.remove(node);
+            } else {
+                // Snap node to projected point on segment, splice into target way
+                node = node.move(bestResult.snapLoc);
+                graph = graph.replace(node);
+
+                targetWay = graph.entity(bestResult.targetWayId);
+                var nidList = targetWay.nodes;
+                var nAid = bestResult.edge[0];
+                var nBid = bestResult.edge[1];
+
+                // Find the exact edge in the target way's node list
+                for (var k = 0; k < nidList.length - 1; k++) {
+                    if (nidList[k] === nAid && nidList[k + 1] === nBid) {
+                        graph = graph.replace(targetWay.addNode(node.id, k + 1));
+                        break;
+                    }
+                }
+            }
+
+            return connectedHighwayTag;
+        }
 
 
         // These functions each accept the external entities, returning the replacement
@@ -147,13 +271,21 @@ export function actionRapidAcceptFeature(entityID, extGraph, options) {
             way.tags = Object.assign({}, way.tags);
             removeMetadata(way);
 
-            var nodes = way.nodes.map(function(nodeId) {
+            var firstNodeHadConn = false;
+            var lastNodeHadConn = false;
+
+            var nodes = way.nodes.map(function(nodeId, index) {
                 // copy node before modifying
                 var node = osmNode(extGraph.entity(nodeId));
                 node.tags = Object.assign({}, node.tags);
 
                 var conn = node.tags.conn && node.tags.conn.split(',');
                 var dupeId = node.tags.dupe;
+
+                // Track endpoints with existing connection metadata
+                if (index === 0 && (conn || dupeId)) firstNodeHadConn = true;
+                if (index === extWay.nodes.length - 1 && (conn || dupeId)) lastNodeHadConn = true;
+
                 removeMetadata(node);
 
                 if (dupeId && graph.hasEntity(dupeId) && !locationChanged(graph.entity(dupeId).loc, node.loc)) {
@@ -183,8 +315,31 @@ export function actionRapidAcceptFeature(entityID, extGraph, options) {
 
             way = way.update({ nodes: nodes });
             graph = graph.replace(way);
+
+            // upstream (PR #1769): auto-connect endpoints that had no conn/dupe tags.
+            // Only runs when caller supplied a `tree` (RBush index) via options.tree.
+            if (tree && !way.isClosed()) {
+                var connectedHighwayTag = null;
+                var tag;
+                if (!firstNodeHadConn) {
+                    tag = autoConnectEndpoint(graph.entity(way.nodes[0]), graph.entity(way.id));
+                    if (tag) connectedHighwayTag = tag;
+                    way = graph.entity(way.id);  // re-fetch after potential modification
+                }
+                if (!lastNodeHadConn) {
+                    tag = autoConnectEndpoint(graph.entity(way.nodes[way.nodes.length - 1]), graph.entity(way.id));
+                    if (tag) connectedHighwayTag = tag;
+                    way = graph.entity(way.id);  // re-fetch after potential modification
+                }
+
+                // Inherit highway tag from connected way if accepted way has generic 'road' classification
+                if (connectedHighwayTag && way.tags.highway === 'road') {
+                    graph = graph.replace(way.update({ tags: Object.assign({}, way.tags, { highway: connectedHighwayTag }) }));
+                }
+            }
+
             recordAccepted(way.id);
-            return way;
+            return graph.entity(way.id);
         }
 
 

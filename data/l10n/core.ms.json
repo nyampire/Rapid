@@ -1,300 +1,72 @@
 {
   "ms": {
-    "icons": {
-      "download": "muat turun",
-      "copy": "salin",
-      "list": "senarai",
-      "text": "teks"
-    },
-    "modes": {
-      "add_area": {
-        "title": "Kawasan"
+    "QA": {
+      "keepRight": {
+        "comment": "Ulasan",
+        "detail_description": "Perincian"
       },
-      "add_line": {
-        "title": "Garis"
-      },
-      "add_point": {
-        "title": "Titik"
-      },
-      "add_note": {
-        "title": "Nota",
-        "description": "Ada sebarang masalah? Maklumkan terhadap pemeta-pemeta lain."
-      },
-      "browse": {
-        "title": "Semak imbas",
-        "description": "Gerakkan dan zumkan peta."
+      "osmose": {
+        "detail_title": "Butiran"
       }
     },
-    "operations": {
-      "add": {
-        "annotation": {
-          "point": "Suatu titik telah ditambah.",
-          "vertex": "Suatu nod telah ditambah pada suatu garis.",
-          "relation": "Suatu hubungan telah ditambah."
-        }
+    "area_fill": {
+      "full": {
+        "description": "Isi Penuh",
+        "tooltip": "Kawasan dilukis dengan isi penuh."
       },
-      "start": {
-        "annotation": {
-          "line": "Suatu garis telah mula dicipta.",
-          "area": "Suatu kawasan telah mula dicipta."
-        }
+      "partial": {
+        "description": "Isi Separa",
+        "tooltip": "Kawasan dilukis dengan isi sahaja di sekitar tepi dalamannya. (Disyorkan untuk pemeta pemula)"
       },
-      "continue": {
-        "title": "Lanjut",
-        "description": "Lanjutkan garis ini.",
-        "not_eligible": "Garis ini tidak dapat dilanjutkan dari sini.",
-        "annotation": {
-          "line": "Suatu garis telah dilanjutkan.",
-          "area": "Suatu kawasan telah dilanjutkan."
-        }
-      },
-      "cancel_draw": {
-        "annotation": "Surihan dibatalkan."
-      },
-      "change_tags": {
-        "annotation": "Tag-tag telah diubah."
-      },
-      "circularize": {
-        "title": "Jadikan lebih bulat"
-      },
-      "orthogonalize": {
-        "title": "Bucu sudut tepat"
-      },
-      "straighten": {
-        "title": "Luruskan"
-      },
-      "delete": {
-        "title": "Hapus",
-        "annotation": {
-          "point": "Titik telah dihapuskan.",
-          "vertex": "Suatu nod dalam jalan telah dihapus.",
-          "line": "Suatu garis telah dihapuskan.",
-          "area": "Kawasan telah dihapuskan.",
-          "relation": "Suatu hubungan telah dihapuskan."
-        }
-      },
-      "disconnect": {
-        "title": "Pisahkan",
-        "not_connected": "Terdapat garis/kawasan yang tidak mencukupi di sini untuk diputuskan.",
-        "connected_to_hidden": "Ini tidak dapat diputuskan kerana ianya bersambung kepada ciri tersembunyi.",
-        "relation": "Ini tidak dapat diputuskan kerana ianya menyambung ahli-ahli hubungan."
-      },
-      "merge": {
-        "title": "Gabungkan",
-        "description": "Gabungkan gambaran-gambaran ini.",
-        "not_eligible": "Gambaran-gambaran ini tidak dapat digabungkan.",
-        "not_adjacent": "Ciri-ciri ini tidak dapat digabungkan kerana titik hujung mereka tidak bersambung.",
-        "incomplete_relation": "Ciri-ciri ini tidak dapat digabungkan kerana sekurang-kurangnya satu belum sepenuhnya dimuat turun.",
-        "conflicting_tags": "Ciri-ciri ini tidak dapat digabungkan kerana beberapa penanda mereka mempunyai nilai yang bercanggah."
-      },
-      "move": {
-        "title": "Alih",
-        "annotation": {
-          "point": "Suatu titik telah dialih.",
-          "vertex": "Suatu nod dalam jalan telah dialih.",
-          "line": "Suatu garis telah dialih.",
-          "area": "Telah dipindah suatu kawasan."
-        }
-      },
-      "rotate": {
-        "title": "Putar",
-        "annotation": {
-          "line": "Suatu garis telah diputarkan.",
-          "area": "Telah diputarkan suatu kawasan."
-        }
-      },
-      "reverse": {
-        "title": "Songsang"
-      },
-      "split": {
-        "title": "Belah",
-        "not_eligible": "Garis tidak dapat dibelah pada permulaan atau akhir.",
-        "connected_to_hidden": "Ini tidak dapat dibelah kerana ianya bersambung ke ciri tersembunyi."
-      },
-      "restriction": {
-        "annotation": {
-          "create": "Suatu larangan membelok telah ditambah",
-          "delete": "Suatu larangan membelok telah dihapuskan"
-        }
+      "wireframe": {
+        "description": "Tiada Isi (Bingkai Wayar)",
+        "tooltip": "Mendayakan mod bingkai wayar menjadikannya mudah untuk melihat imejan latar belakang."
       }
     },
-    "restriction": {
-      "controls": {
-        "distance": "Jarak"
+    "background": {
+      "best_imagery": "Sumber imejan terbaik yang diketahui bagi lokasi ini",
+      "custom": "Penyuai",
+      "key": "B",
+      "minimap": {
+        "tooltip": "Tunjukkan peta yang dizum keluar untuk membantu mencari kawasan yang dipaparkan saat ini."
       },
-      "help": {
-        "from": "DARI",
-        "via": "MELALUI",
-        "to": "KE"
-      }
+      "none": "Tiada",
+      "offset": "Seret di mana-mana dalam kawasan kelabu di bawah untuk melaraskan ofset imejan, atau masukkan nilai-nilai ofset dalam meter.",
+      "reset": "set semula",
+      "switch": "Tukar balik ke latar belakang ini",
+      "title": "Latar belakang"
     },
-    "undo": {
-      "tooltip": "Buat asal: {action}",
-      "nothing": "Tidak ada apa-apa yang boleh dibuat asal."
+    "bearing": {
+      "n": "U"
     },
-    "redo": {
-      "tooltip": "Buat semula: {action}",
-      "nothing": "Tidak ada apa-apa yang boleh dibuat semula."
-    },
-    "translate": {
-      "localized_translation_language": "Pilih bahasa",
-      "localized_translation_name": "Nama"
-    },
-    "zoom_in_edit": "Zum lebih dekat untuk menyunting",
-    "login": "Log Masuk",
-    "logout": "Log Keluar",
-    "loading_auth": "Berhubung ke OpenStreetMap...",
-    "report_a_bug": "Laporkan suatu pepijat",
-    "help_translate": "Bantu penterjemahan",
     "commit": {
+      "about_changeset_comments": "Tentang komen set ubah",
+      "about_changeset_comments_link": "//wiki.openstreetmap.org/wiki/Good_changeset_comments",
+      "cancel": "Batal",
+      "created": "Dicipta",
+      "deleted": "Dipadam",
+      "download_changes": "Muat turun fail osmChange",
+      "errors": "Ralat-ralat",
+      "google_warning": "Komen anda menyebut tentang Google: anda diingatkan bahawa dilarang sama sekali untuk meniru Google Maps",
+      "modified": "Diubah suai",
+      "request_review": "Saya mahukan seseorang yang boleh memeriksa suntingan saya.",
+      "save": "Muat naik",
       "title": "Muat naik ke OpenStreetMap",
       "upload_explanation": "Perubahan yang telah anda muat naik akan kelihatan pada semua peta yang menggunakan data OpenStreetMap.",
       "upload_explanation_with_user": "Perubahan yang telah anda muat naik sebagai {user} akan kelihatan pada semua peta yang menggunakan data OpenStreetMap.",
-      "request_review": "Saya mahukan seseorang yang boleh memeriksa suntingan saya.",
-      "save": "Muat naik",
+      "warnings": "Amaran"
+    },
+    "confirm": {
       "cancel": "Batal",
-      "download_changes": "Muat turun fail osmChange",
-      "errors": "Ralat-ralat",
-      "warnings": "Amaran",
-      "modified": "Diubah suai",
-      "deleted": "Dipadam",
-      "created": "Dicipta",
-      "about_changeset_comments": "Tentang komen set ubah",
-      "google_warning": "Komen anda menyebut tentang Google: anda diingatkan bahawa dilarang sama sekali untuk meniru Google Maps"
+      "okay": "OK"
     },
     "contributors": {
       "list": "Suntingan-suntingan oleh {users}"
     },
-    "info_panels": {
-      "background": {
-        "title": "Latar belakang",
-        "vintage": "Vintaj",
-        "description": "Perincian",
-        "show_tiles": "Tunjukkan Jubin",
-        "hide_tiles": "Sembunyikan Jubin"
-      },
-      "history": {
-        "title": "Sejarah",
-        "version": "Versi",
-        "last_edit": "Pengeditan Terakhir",
-        "edited_by": "Diedit Oleh",
-        "changeset": "Perubahan",
-        "note_comments": "Komen-komen"
-      },
-      "location": {
-        "title": "Lokasi",
-        "unknown_location": "Lokasi Tidak Diketahui"
-      },
-      "measurement": {
-        "title": "Ukuran",
-        "geometry": "Geometri",
-        "center": "Tengah",
-        "length": "Panjang",
-        "distance": "Jarak",
-        "area": "Kawasan",
-        "centroid": "Sentroid",
-        "location": "Lokasi",
-        "metric": "Metrik"
-      }
-    },
-    "geometry": {
-      "point": "titik",
-      "vertex": "bucu",
-      "line": "garis",
-      "area": "kawasan",
-      "relation": "hubungan"
-    },
-    "geocoder": {
-      "search": "Cari di seluruh dunia...",
-      "no_results_worldwide": "Tiada keputusan dijumpai"
-    },
-    "geolocate": {
-      "title": "Tunjukkan Kedudukan Saya",
-      "locating": "Menentukan tempat, sila tunggu..."
-    },
-    "inspector": {
-      "show_more": "Tunjukkan Lagi",
-      "view_on_osm": "Lihat pada openstreetmap.org",
-      "fields": "Tempat-tempat Kosong",
-      "tags": "Tag-tag",
-      "new_relation": "Hubungan baru...",
-      "role": "Peranan",
-      "choose": "Pilih jenis ciri",
-      "type": "Jenis",
-      "details": "Butiran",
-      "remove": "Keluarkan",
-      "search": "Gelintar",
-      "unknown": "Tidak Diketahui",
-      "feature_list": "Cari ciri",
-      "check": {
-        "yes": "Ya",
-        "no": "Tidak",
-        "reverser": "Ubah Arah"
-      },
-      "radio": {
-        "structure": {
-          "default": "Lalai",
-          "layer": "Lapisan"
-        }
-      },
-      "add": "Tambah",
-      "none": "Tiada",
-      "node": "Nod",
-      "way": "Cara",
-      "relation": "Hubungan",
-      "location": "Lokasi",
-      "add_fields": "Tambah tempat kosong:"
-    },
-    "background": {
-      "title": "Latar belakang",
-      "none": "Tiada",
-      "best_imagery": "Sumber imejan terbaik yang diketahui bagi lokasi ini",
-      "switch": "Tukar balik ke latar belakang ini",
-      "custom": "Penyuai",
-      "reset": "set semula",
-      "minimap": {
-        "tooltip": "Tunjukkan peta yang dizum keluar untuk membantu mencari kawasan yang dipaparkan saat ini."
-      },
-      "offset": "Seret di mana-mana dalam kawasan kelabu di bawah untuk melaraskan ofset imejan, atau masukkan nilai-nilai ofset dalam meter."
-    },
-    "map_data": {
-      "title": "Data Peta",
-      "description": "Data Peta",
-      "data_layers": "Lapisan-lapisan Data",
-      "layers": {
-        "osm": {
-          "tooltip": "Data peta dari OpenStreetMap"
-        },
-        "maproulette": {
-          "detail_title": "Butiran",
-          "cancel": "Batal"
-        }
-      },
-      "autohidden": "Ciri-ciri ini telah disembunyikan secara automatik kerana terlalu banyak akan dipaparkan di skrin. Anda boleh mengezum masuk untuk mengedit mereka."
-    },
-    "photo_overlays": {
-      "date_filter": {
-        "fromDate": {
-          "title": "Dari"
-        }
-      }
-    },
     "filters": {
-      "points": {
-        "description": "Titik-titik",
-        "tooltip": "Titik-titik Tumpuan"
-      },
-      "traffic_roads": {
-        "description": "Jalan Trafik",
-        "tooltip": "Lebuh Raya, Jalan-Jalan, dll."
-      },
-      "service_roads": {
-        "description": "Jalan-jalan Susur",
-        "tooltip": "Jalan-jalan Susur, Lorong Letak Kereta, Rintisan-rintisan, dll."
-      },
-      "paths": {
-        "description": "Denai-denai",
-        "tooltip": "Lorong Jalan Kaki, Laluan Kaki, Lorong Basikal, dll."
+      "boundaries": {
+        "description": "Sempadan-sempadan",
+        "tooltip": "Sempadan Pentadbiran"
       },
       "buildings": {
         "description": "Bangunan-bangunan",
@@ -304,183 +76,209 @@
         "description": "Gambaran Guna Tanah",
         "tooltip": "Hutan-hutan, Tanah-tanah Perladangan, Taman-taman, Kediaman-kediaman, Perdagangan, dll."
       },
-      "boundaries": {
-        "description": "Sempadan-sempadan",
-        "tooltip": "Sempadan Pentadbiran"
+      "others": {
+        "tooltip": "Yang Lain-lain"
       },
-      "water": {
-        "description": "Gambaran-Gambaran Air",
-        "tooltip": "Sungai-sungai, Tasik-tasik, Kolam-kolam, Lembangan-lembangan, dll."
+      "past_future": {
+        "tooltip": "Cadangan, Pembinaan, Terabai, Diruntuhkan, dll."
       },
-      "rail": {
-        "description": "Ciri-ciri Kereta Api",
-        "tooltip": "Kereta Api"
+      "paths": {
+        "description": "Denai-denai",
+        "tooltip": "Lorong Jalan Kaki, Laluan Kaki, Lorong Basikal, dll."
+      },
+      "points": {
+        "description": "Titik-titik",
+        "tooltip": "Titik-titik Tumpuan"
       },
       "power": {
         "description": "Gambaran-gambaran Kuasa Elektrik",
         "tooltip": "Talian-talian Elektrik, Loji-loji Kuasa, Pencawang-pencawang, dll."
       },
-      "past_future": {
-        "tooltip": "Cadangan, Pembinaan, Terabai, Diruntuhkan, dll."
+      "rail": {
+        "description": "Ciri-ciri Kereta Api",
+        "tooltip": "Kereta Api"
       },
-      "others": {
-        "tooltip": "Yang Lain-lain"
-      }
-    },
-    "area_fill": {
-      "wireframe": {
-        "description": "Tiada Isi (Bingkai Wayar)",
-        "tooltip": "Mendayakan mod bingkai wayar menjadikannya mudah untuk melihat imejan latar belakang."
+      "service_roads": {
+        "description": "Jalan-jalan Susur",
+        "tooltip": "Jalan-jalan Susur, Lorong Letak Kereta, Rintisan-rintisan, dll."
       },
-      "partial": {
-        "description": "Isi Separa",
-        "tooltip": "Kawasan dilukis dengan isi sahaja di sekitar tepi dalamannya. (Disyorkan untuk pemeta pemula)"
+      "traffic_roads": {
+        "description": "Jalan Trafik",
+        "tooltip": "Lebuh Raya, Jalan-Jalan, dll."
       },
-      "full": {
-        "description": "Isi Penuh",
-        "tooltip": "Kawasan dilukis dengan isi penuh."
+      "water": {
+        "description": "Gambaran-Gambaran Air",
+        "tooltip": "Sungai-sungai, Tasik-tasik, Kolam-kolam, Lembangan-lembangan, dll."
       }
-    },
-    "preferences": {
-      "color_selection": {
-        "default": "Lalai"
-      }
-    },
-    "restore": {
-      "heading": "Anda mempunyai perubahan yang belum disimpan"
-    },
-    "save": {
-      "title": "Simpan",
-      "help": "Semak perubahan anda dan muat naik ke OpenStreetMap, menjadikannya dapat dilihat oleh pengguna lain.",
-      "no_changes": "Tiada perubahan untuk disimpan.",
-      "error": "Terdapat ralat semasa percubaan penyimpanan",
-      "status_code": "Pelayan mengembalikan kod status {code}",
-      "unknown_error_details": "Pastikan anda telah berhubung dengan Internet.",
-      "uploading": "Memuat naik perubahan terhadap OpenStreetMap...",
-      "unsaved_changes": "Anda mempunyai perubahan yang belum disimpan",
-      "conflict": {
-        "header": "Selesaikan suntingan bercanggah",
-        "count": "Bercanggah {num} dari {total}",
-        "previous": "< Sebelumnya",
-        "next": "Berikutnya >",
-        "keep_local": "Simpan kepunyaan saya",
-        "keep_remote": "Gunakan kepunyaan mereka",
-        "restore": "Kembalikan",
-        "delete": "Tinggalkan yang Dipadam",
-        "download_changes": "Atau muat turun fail osmChange",
-        "done": "Kesemua pertikaian telah diselesaikan!"
-      }
-    },
-    "merge_remote_changes": {
-      "conflict": {
-        "deleted": "Ciri ini telah dipadam oleh {user}.",
-        "location": "Ciri ini dipindah oleh kedua-dua anda dan {user}.",
-        "nodelist": "Nod diubah oleh kedua-dua anda dan {user}.",
-        "memberlist": "Ahli hubungan diubah oleh kedua-dua anda dan {user}."
-      }
-    },
-    "success": {
-      "help_link_text": "Butiran",
-      "like_osm": "Suka OpenStreetMap? Bertemu pemeta-pemeta lain:",
-      "tell_us": "Beritahu kami!"
-    },
-    "confirm": {
-      "cancel": "Batal"
-    },
-    "source_switch": {
-      "lose_changes": "Anda mempunyai perubahan yang belum disimpan. Menukar pelayan peta akan membuangnya. Adakah anda pasti mahu menukar pelayan?"
-    },
-    "rapid_inspector": {
-      "tags": "Tag-tag"
-    },
-    "rapid_menu": {
-      "remove": "Keluarkan"
-    },
-    "tag_reference": {
-      "description": "Perincian",
-      "on_wiki": "{tag} pada wiki.osm.org",
-      "used_with": "digunakan dengan {type}"
-    },
-    "bearing": {
-      "n": "U"
     },
     "full_screen": "Togol Skrin Penuh",
-    "QA": {
-      "osmose": {
-        "detail_title": "Butiran"
-      },
-      "keepRight": {
-        "detail_description": "Perincian",
-        "comment": "Ulasan"
-      }
+    "geocoder": {
+      "no_results_worldwide": "Tiada keputusan dijumpai",
+      "search": "Cari di seluruh dunia..."
     },
-    "mapillary": {
-      "tooltip": "Gambar jalan dari Mapillary"
+    "geolocate": {
+      "locating": "Menentukan tempat, sila tunggu...",
+      "title": "Tunjukkan Kedudukan Saya"
     },
-    "note": {
-      "note": "Nota",
-      "commentTitle": "Komen-komen",
-      "comment": "Ulasan"
+    "geometry": {
+      "area": "kawasan",
+      "line": "garis",
+      "point": "titik",
+      "relation": "hubungan",
+      "vertex": "bucu"
     },
     "help": {
-      "title": "Bantuan",
-      "help": {
-        "title": "Bantuan",
-        "open_data_h": "Data Terbuka",
-        "open_data": "Perubahan yang anda buat dalam peta ini boleh dilihat oleh semua pengguna OpenStreetMap. Suntingan-suntingan anda boleh dibuat berdasarkan pengetahuan anda sendiri, survei secara jalanan, imejan dari udara atau gambar-gambar di permukaan jalan. [Dilarang meniru](https://www.openstreetmap.org/copyright) sama sekali dari sumber-sumber komersil seperti Google Maps.",
-        "before_start_h": "Sebelum anda bermula",
-        "open_source_h": "Sumber Terbuka"
-      },
-      "overview": {
-        "title": "Tinjauan Keseluruhan",
-        "navigation_h": "Pengemudian",
-        "features_h": "Ciri-ciri Peta",
-        "nodes_ways": "Dalam OpenStreetMap, titik-titik ini kadang kala dirujuk sebagai nod-nod, manakala garis-garis dan kawasan-kawasan pula mungkin dirujuk sebagai *jalan-jalan*."
+      "areas": {
+        "add_area_h": "Menambah Kawasan-kawasan",
+        "delete_area_h": "Menghapus Kawasan-kawasan",
+        "modify_area_h": "Mengubah Kawasan-kawasan",
+        "title": "Kawasan-kawasan"
       },
       "editing": {
-        "title": "Menyunting & Menyimpan",
+        "keyboard_h": "Jalan Pintas Papan Kekunci",
         "save_h": "Simpan",
-        "upload_h": "Muat naik",
-        "keyboard_h": "Jalan Pintas Papan Kekunci"
+        "title": "Menyunting & Menyimpan",
+        "upload_h": "Muat naik"
       },
       "feature_editor": {
         "fields_h": "Tempat-tempat Kosong",
         "tags_h": "Tag-tag"
       },
-      "points": {
-        "title": "Titik-titik",
-        "delete_point": "Amatlah molek untuk menghapuskan ciri-ciri yang sudah tidak wujud di alam nyata. Ciri-ciri yang telah dihapuskan dalam OpenStreetMap juga bermakna membuang ciri tersebut daripada peta yang digunakan semua orang. Maka, anda hendaklah memastikan ciri-ciri alam nyata tersebut benar-benar tiada sebelum membuat penghapusan."
-      },
-      "lines": {
-        "title": "Garis-garis"
-      },
-      "areas": {
-        "title": "Kawasan-kawasan",
-        "add_area_h": "Menambah Kawasan-kawasan",
-        "modify_area_h": "Mengubah Kawasan-kawasan",
-        "delete_area_h": "Menghapus Kawasan-kawasan"
-      },
-      "relations": {
-        "boundary_h": "Sempadan-sempadan"
-      },
       "gps": {
         "title": "Jejak-jejak GPS",
         "using_h": "Menggunakan Jejak-jejak GPS"
       },
+      "help": {
+        "before_start_h": "Sebelum anda bermula",
+        "open_data": "Perubahan yang anda buat dalam peta ini boleh dilihat oleh semua pengguna OpenStreetMap. Suntingan-suntingan anda boleh dibuat berdasarkan pengetahuan anda sendiri, survei secara jalanan, imejan dari udara atau gambar-gambar di permukaan jalan. [Dilarang meniru](https://www.openstreetmap.org/copyright) sama sekali dari sumber-sumber komersil seperti Google Maps.",
+        "open_data_h": "Data Terbuka",
+        "open_source_h": "Sumber Terbuka",
+        "title": "Bantuan",
+        "welcome": "Selamat datang ke penyunting iD [OpenStreetMap](https://www.openstreetmap.org/). Penyunting ini membolehkan anda mengemaskini OpenStreetMap secara terus melalui pelayar web anda."
+      },
+      "key": "H",
+      "lines": {
+        "title": "Garis-garis"
+      },
+      "overview": {
+        "features_h": "Ciri-ciri Peta",
+        "navigation_h": "Pengemudian",
+        "nodes_ways": "Dalam OpenStreetMap, titik-titik ini kadang kala dirujuk sebagai nod-nod, manakala garis-garis dan kawasan-kawasan pula mungkin dirujuk sebagai *jalan-jalan*.",
+        "title": "Tinjauan Keseluruhan"
+      },
+      "points": {
+        "delete_point": "Amatlah molek untuk menghapuskan ciri-ciri yang sudah tidak wujud di alam nyata. Ciri-ciri yang telah dihapuskan dalam OpenStreetMap juga bermakna membuang ciri tersebut daripada peta yang digunakan semua orang. Maka, anda hendaklah memastikan ciri-ciri alam nyata tersebut benar-benar tiada sebelum membuat penghapusan.",
+        "title": "Titik-titik"
+      },
       "qa": {
         "tools_h": "Alat"
+      },
+      "relations": {
+        "boundary_h": "Sempadan-sempadan"
+      },
+      "title": "Bantuan"
+    },
+    "help_translate": "Bantu penterjemahan",
+    "icons": {
+      "copy": "salin",
+      "download": "muat turun",
+      "information": "info",
+      "list": "senarai",
+      "text": "teks"
+    },
+    "info_panels": {
+      "background": {
+        "description": "Perincian",
+        "hide_tiles": "Sembunyikan Jubin",
+        "show_tiles": "Tunjukkan Jubin",
+        "source": "Sumber",
+        "title": "Latar belakang",
+        "vintage": "Vintaj",
+        "zoom": "Zoom"
+      },
+      "history": {
+        "changeset": "Perubahan",
+        "edited_by": "Diedit Oleh",
+        "last_edit": "Pengeditan Terakhir",
+        "note_comments": "Komen-komen",
+        "title": "Sejarah",
+        "version": "Versi"
+      },
+      "location": {
+        "title": "Lokasi",
+        "unknown_location": "Lokasi Tidak Diketahui"
+      },
+      "measurement": {
+        "area": "Kawasan",
+        "center": "Tengah",
+        "centroid": "Sentroid",
+        "distance": "Jarak",
+        "geometry": "Geometri",
+        "imperial": "Imperial",
+        "length": "Panjang",
+        "location": "Lokasi",
+        "metric": "Metrik",
+        "perimeter": "Perimeter",
+        "title": "Ukuran"
       }
     },
-    "issues": {
-      "errors": "Ralat",
-      "warnings": "Amaran"
+    "inspector": {
+      "add": "Tambah",
+      "add_fields": "Tambah tempat kosong:",
+      "check": {
+        "no": "Tidak",
+        "reverser": "Ubah Arah",
+        "yes": "Ya"
+      },
+      "choose": "Pilih jenis ciri",
+      "details": "Butiran",
+      "edit": "Edit ciri",
+      "feature_list": "Cari ciri",
+      "fields": "Tempat-tempat Kosong",
+      "incomplete": "<not downloaded>",
+      "location": "Lokasi",
+      "new_relation": "Hubungan baru...",
+      "node": "Nod",
+      "none": "Tiada",
+      "radio": {
+        "structure": {
+          "default": "Lalai",
+          "layer": "Lapisan"
+        }
+      },
+      "relation": "Hubungan",
+      "remove": "Keluarkan",
+      "role": "Peranan",
+      "search": "Gelintar",
+      "show_more": "Tunjukkan Lagi",
+      "tags": "Tag-tag",
+      "type": "Jenis",
+      "unknown": "Tidak Diketahui",
+      "view_on_osm": "Lihat pada openstreetmap.org",
+      "way": "Cara"
     },
     "intro": {
+      "areas": {
+        "choose_field": "**Pilih {field} dari senarai.**",
+        "choose_playground": "**Pilih {preset} dari senarai.**",
+        "retry_add_field": "Medan {field} tidak dipilih. Sila cuba sekali lagi.",
+        "title": "Kawasan-kawasan"
+      },
+      "buildings": {
+        "choose_tank": "**Pilih {preset} dari senarai.**",
+        "title": "Bangunan-bangunan"
+      },
       "graph": {
+        "block_number": "<value for addr:block_number>",
         "city": "Kota Perdana",
-        "state": "<value for addr:state>",
         "countrycode": "my",
+        "county": "<value for addr:county>",
+        "district": "<value for addr:district>",
+        "hamlet": "<value for addr:hamlet>",
         "name": {
+          "10th-avenue": "Lebuh Sepuluh",
+          "11th-avenue": "Lebuh Sebelas",
+          "12th-avenue": "Lebuh Dua Belas",
           "1st-avenue": "Lebuh Satu",
           "2nd-avenue": "Lebuh Dua",
           "4th-avenue": "Lebuh Empat",
@@ -490,9 +288,6 @@
           "7th-avenue": "Lebuh Tujuh",
           "8th-avenue": "Lebuh Lapan",
           "9th-avenue": "Lebuh Sembilan",
-          "10th-avenue": "Lebuh Sepuluh",
-          "11th-avenue": "Lebuh Sebelas",
-          "12th-avenue": "Lebuh Dua Belas",
           "access-point-employment": "Agensi Pekerjaan Access Point",
           "adams-street": "Jalan Adam",
           "andrews-street": "Jalan Anggerik",
@@ -511,11 +306,12 @@
           "hoffman-street": "Jalan Hilir",
           "jefferson-street": "Jalan Juwita",
           "kelsey-street": "Jalan Kemajuan",
+          "las-coffee-cafe": "L.A.'s Coffee Cafe",
           "lynns-garage": "YY Auto & Accessories",
+          "main-street": "Jalan Besar",
           "main-street-barbell": "Gim Jalan Besar",
           "main-street-cafe": "Kafe Jalan Besar",
           "main-street-fitness": "Fitness First & Foremost",
-          "main-street": "Jalan Besar",
           "maple-street": "Jalan Mayang",
           "market-street": "Jalan Pasar",
           "michigan-avenue": "Lebuh Maju",
@@ -535,11 +331,12 @@
           "riverwalk-trail": "Denai Tepi Sungai",
           "rocky-river": "Sungai Rasa",
           "saint-joseph-river": "Sungai Siantan",
-          "scidmore-park-petting-zoo": "Zoo Sentuh Taman Bandar Kota Perdana",
           "scidmore-park": "Taman Bandar Kota Perdana",
+          "scidmore-park-petting-zoo": "Zoo Sentuh Taman Bandar Kota Perdana",
           "south-street": "Jalan Selatan",
           "southern-michigan-bank": "Bank Simpanan",
           "spring-street": "Jalan Semarak",
+          "three-rivers": "Kota Perdana",
           "three-rivers-city-hall": "Dewan Bandaraya Kota Perdana",
           "three-rivers-elementary-school": "Sekolah Kebangsaan Kota Perdana",
           "three-rivers-fire-department": "Balai Bomba dan Penyelamat Kota Perdana",
@@ -548,110 +345,58 @@
           "three-rivers-municipal-airport": "Lapangan Terbang Kota Perdana",
           "three-rivers-post-office": "Pejabat Pos Kota Perdana",
           "three-rivers-public-library": "Perpustakaan Awam Kota Perdana",
-          "three-rivers": "Kota Perdana",
           "walnut-street": "Jalan Warna",
           "washington-street": "Jalan Widuri",
           "water-street": "Jalan Warta",
           "west-street": "Jalan Barat",
           "wheeler-street": "Jalan Wangsa",
           "wood-street": "Jalan Wangsa"
-        }
-      },
-      "welcome": {
-        "title": "Selamat datang",
-        "welcome": "Selamat datang! Diharap panduan ini membantu dalam menerangkan asas-asas menyunting OpenStreetMap.",
-        "practice": "Semua data dalam lintas semak ini hanyalah sekadar amali, dan suntingan anda dalam lintas semak ini tidak akan disimpan.",
-        "words": "Beberapa istilah dan konsep baru bakal diperkenalkan dalam lintas semak ini. Perkataan baru akan *dicondongkan*."
-      },
-      "navigation": {
-        "title": "Pengemudian",
-        "features": "Perkataan *gambaran-gambaran* digunakan untuk memperincikan objek-objek dalam peta. Setiap butiran dalam alam nyata boleh dipetakan sebagai suatu gambaran dalam OpenStreetMap.",
-        "points_lines_areas": "Gambaran-gambaran peta diwakilkan dengan *titik-titik*, *garis-garis*, atau *kawasan-kawasan*.",
-        "nodes_ways": "Dalam OpenStreetMap, titik-titik ini kadang kala dirujuk sebagai nod-nod, manakala garis-garis dan kawasan-kawasan pula mungkin dirujuk sebagai *jalan-jalan*.",
-        "selected_townhall": "Bagus! Titik ini telah dipilih. Gambaran yang telah dipilih akan berkunang-kunang.",
-        "editor_townhall": "Setelah suatu gambaran telah dipilih, *penyunting gambaran* akan dipaparkan di sisi peta.",
-        "preset_townhall": "Bahagian paling atas pada penyunting gambaran menunjukkan ciri-ciri gambaran. Titik ini ialah sebuah {preset}.",
-        "fields_townhall": "Bahagian tengah penyunting gambaran mempunyai medan-medan yang menunjukkan sifat-sifat gambaran, seperti nama dan alamatnya.",
-        "search_street": "Anda boleh menggelintar gambaran-gambaran yang sedang dipaparkan di peta, atau di seluruh dunia. **Gelintar '{name}'.**",
-        "choose_street": "**Pilih {name} dari senarai untuk memilih yang ini.**",
-        "selected_street": "Bagus! {name} telah dipilih."
-      },
-      "points": {
-        "title": "Titik-titik",
-        "choose_cafe": "**Pilih {preset} dari senarai.**"
-      },
-      "areas": {
-        "title": "Kawasan-kawasan",
-        "choose_playground": "**Pilih {preset} dari senarai.**",
-        "choose_field": "**Pilih {field} dari senarai.**",
-        "retry_add_field": "Medan {field} tidak dipilih. Sila cuba sekali lagi."
+        },
+        "neighbourhood": "<value for addr:neighbourhood>",
+        "province": "<value for addr:province>",
+        "quarter": "<value for addr:quarter>",
+        "state": "<value for addr:state>",
+        "subdistrict": "<value for addr:subdistrict>",
+        "suburb": "<value for addr:suburb>"
       },
       "lines": {
-        "title": "Garis-garis",
-        "choose_category_road": "**Pilih {category} dari senarai.**"
+        "choose_category_road": "**Pilih {category} dari senarai.**",
+        "title": "Garis-garis"
       },
-      "buildings": {
-        "title": "Bangunan-bangunan",
-        "choose_tank": "**Pilih {preset} dari senarai.**"
+      "navigation": {
+        "choose_street": "**Pilih {name} dari senarai untuk memilih yang ini.**",
+        "editor_townhall": "Setelah suatu gambaran telah dipilih, *penyunting gambaran* akan dipaparkan di sisi peta.",
+        "features": "Perkataan *gambaran-gambaran* digunakan untuk memperincikan objek-objek dalam peta. Setiap butiran dalam alam nyata boleh dipetakan sebagai suatu gambaran dalam OpenStreetMap.",
+        "fields_townhall": "Bahagian tengah penyunting gambaran mempunyai medan-medan yang menunjukkan sifat-sifat gambaran, seperti nama dan alamatnya.",
+        "nodes_ways": "Dalam OpenStreetMap, titik-titik ini kadang kala dirujuk sebagai nod-nod, manakala garis-garis dan kawasan-kawasan pula mungkin dirujuk sebagai *jalan-jalan*.",
+        "points_lines_areas": "Gambaran-gambaran peta diwakilkan dengan *titik-titik*, *garis-garis*, atau *kawasan-kawasan*.",
+        "preset_townhall": "Bahagian paling atas pada penyunting gambaran menunjukkan ciri-ciri gambaran. Titik ini ialah sebuah {preset}.",
+        "search_street": "Anda boleh menggelintar gambaran-gambaran yang sedang dipaparkan di peta, atau di seluruh dunia. **Gelintar '{name}'.**",
+        "selected_street": "Bagus! {name} telah dipilih.",
+        "selected_townhall": "Bagus! Titik ini telah dipilih. Gambaran yang telah dipilih akan berkunang-kunang.",
+        "title": "Pengemudian"
+      },
+      "ok": "OK",
+      "points": {
+        "choose_cafe": "**Pilih {preset} dari senarai.**",
+        "title": "Titik-titik"
       },
       "startediting": {
-        "title": "Mulakan Suntingan",
         "save": "Jangan lupa untuk kerap menyimpan perubahan-perubahan anda!",
-        "start": "Mulakan pemetaan!"
-      }
-    },
-    "shortcuts": {
-      "title": "Jalan Pintas Papan Kekunci",
-      "tooltip": "Tunjukkan paparan jalan pintas papan kekunci.",
-      "key": {
-        "delete": "Hapus"
+        "start": "Mulakan pemetaan!",
+        "title": "Mulakan Suntingan"
       },
-      "navigation": "Pengemudian",
-      "help": "Bantuan",
-      "info": "Maklumat",
-      "command": {
-        "add_area": {
-          "label": "Mod 'tambah kawasan'"
-        },
-        "add_note": {
-          "key": "U"
-        },
-        "stop_line": {
-          "label": "Siapkan melukis garis atau kawasan"
-        },
-        "save": {
-          "label": "Simpan perubahan"
-        },
-        "extract": {
-          "key": "T"
-        },
-        "circularize": {
-          "label": "Bulatkan garis atau kawasan tertutup"
-        },
-        "wireframe": {
-          "key": "B"
-        },
-        "keyboard_shortcuts": {
-          "label": "Tunjukkan kaedah jalan pintas papan kekunci"
-        },
-        "toggle_osm_notes": {
-          "key": "U"
-        }
+      "welcome": {
+        "practice": "Semua data dalam lintas semak ini hanyalah sekadar amali, dan suntingan anda dalam lintas semak ini tidak akan disimpan.",
+        "title": "Selamat datang",
+        "welcome": "Selamat datang! Diharap panduan ini membantu dalam menerangkan asas-asas menyunting OpenStreetMap.",
+        "words": "Beberapa istilah dan konsep baru bakal diperkenalkan dalam lintas semak ini. Perkataan baru akan *dicondongkan*."
       }
     },
-    "units": {
-      "feet": "{quantity} ka",
-      "miles": "{quantity} bt",
-      "square_feet": "{quantity} kp",
-      "square_miles": "{quantity} bp",
-      "north": "U",
-      "east": "T",
-      "west": "B",
-      "year_month_day": "TTTT-BB-HH"
-    },
-    "wikidata": {
-      "identifier": "Pengenal pasti",
-      "description": "Huraian"
+    "issues": {
+      "errors": "Ralat",
+      "key": "I",
+      "warnings": "Amaran"
     },
     "languageNames": {
       "ab": "Abkhazia",
@@ -831,6 +576,236 @@
       "zh-Hans": "Cina Mandarin Ringkas",
       "zh-Hant": "Cina Mandarin Tradisional"
     },
+    "loading_auth": "Berhubung ke OpenStreetMap...",
+    "login": "Log Masuk",
+    "logout": "Log Keluar",
+    "map_data": {
+      "autohidden": "Ciri-ciri ini telah disembunyikan secara automatik kerana terlalu banyak akan dipaparkan di skrin. Anda boleh mengezum masuk untuk mengedit mereka.",
+      "data_layers": "Lapisan-lapisan Data",
+      "description": "Data Peta",
+      "layers": {
+        "maproulette": {
+          "cancel": "Batal",
+          "detail_title": "Butiran"
+        },
+        "osm": {
+          "tooltip": "Data peta dari OpenStreetMap"
+        }
+      },
+      "title": "Data Peta"
+    },
+    "mapillary": {
+      "tooltip": "Gambar jalan dari Mapillary",
+      "view_on_mapillary": "Paparkan imej ini dalam Mapillary"
+    },
+    "merge_remote_changes": {
+      "conflict": {
+        "deleted": "Ciri ini telah dipadam oleh {user}.",
+        "location": "Ciri ini dipindah oleh kedua-dua anda dan {user}.",
+        "memberlist": "Ahli hubungan diubah oleh kedua-dua anda dan {user}.",
+        "nodelist": "Nod diubah oleh kedua-dua anda dan {user}."
+      }
+    },
+    "modes": {
+      "add_area": {
+        "description": "Tambah taman-taman, bangunan-bangunan, tasik-tasik atau kawasan-kawasan lain dalam peta.",
+        "title": "Kawasan"
+      },
+      "add_line": {
+        "description": "Tambah lebuh-lebuh raya, jalan-jalan, denai pejalan kaki, terusan-terusan atau garis-garis lain dalam peta.",
+        "title": "Garis"
+      },
+      "add_note": {
+        "description": "Ada sebarang masalah? Maklumkan terhadap pemeta-pemeta lain.",
+        "title": "Nota"
+      },
+      "add_point": {
+        "description": "Tambah restoran-restoran, monumen-monumen, peti-peti surat atau titik-titik lain dalam peta.",
+        "title": "Titik"
+      },
+      "browse": {
+        "description": "Gerakkan dan zumkan peta.",
+        "title": "Semak imbas"
+      }
+    },
+    "note": {
+      "comment": "Ulasan",
+      "commentTitle": "Komen-komen",
+      "note": "Nota"
+    },
+    "operations": {
+      "add": {
+        "annotation": {
+          "point": "Suatu titik telah ditambah.",
+          "relation": "Suatu hubungan telah ditambah.",
+          "vertex": "Suatu nod telah ditambah pada suatu garis."
+        }
+      },
+      "cancel_draw": {
+        "annotation": "Surihan dibatalkan."
+      },
+      "change_tags": {
+        "annotation": "Tag-tag telah diubah."
+      },
+      "circularize": {
+        "title": "Jadikan lebih bulat"
+      },
+      "connect": {
+        "annotation": {
+          "from_vertex": {
+            "to_area": "Telah disambung cara kepada kawasan.",
+            "to_line": "Suatu jalan telah disambungkan pada suatu garis.",
+            "to_point": "Suatu jalan telah disambungkan pada suatu titik.",
+            "to_vertex": "Suatu jalan telah disambungkan pada suatu jalan yang lain."
+          }
+        }
+      },
+      "continue": {
+        "annotation": {
+          "area": "Suatu kawasan telah dilanjutkan.",
+          "line": "Suatu garis telah dilanjutkan."
+        },
+        "description": "Lanjutkan garis ini.",
+        "not_eligible": "Garis ini tidak dapat dilanjutkan dari sini.",
+        "title": "Lanjut"
+      },
+      "delete": {
+        "annotation": {
+          "area": "Kawasan telah dihapuskan.",
+          "line": "Suatu garis telah dihapuskan.",
+          "point": "Titik telah dihapuskan.",
+          "relation": "Suatu hubungan telah dihapuskan.",
+          "vertex": "Suatu nod dalam jalan telah dihapus."
+        },
+        "title": "Hapus"
+      },
+      "disconnect": {
+        "connected_to_hidden": "Ini tidak dapat diputuskan kerana ianya bersambung kepada ciri tersembunyi.",
+        "not_connected": "Terdapat garis/kawasan yang tidak mencukupi di sini untuk diputuskan.",
+        "relation": "Ini tidak dapat diputuskan kerana ianya menyambung ahli-ahli hubungan.",
+        "title": "Pisahkan"
+      },
+      "merge": {
+        "conflicting_tags": "Ciri-ciri ini tidak dapat digabungkan kerana beberapa penanda mereka mempunyai nilai yang bercanggah.",
+        "description": "Gabungkan gambaran-gambaran ini.",
+        "incomplete_relation": "Ciri-ciri ini tidak dapat digabungkan kerana sekurang-kurangnya satu belum sepenuhnya dimuat turun.",
+        "not_adjacent": "Ciri-ciri ini tidak dapat digabungkan kerana titik hujung mereka tidak bersambung.",
+        "not_eligible": "Gambaran-gambaran ini tidak dapat digabungkan.",
+        "title": "Gabungkan"
+      },
+      "move": {
+        "annotation": {
+          "area": "Telah dipindah suatu kawasan.",
+          "line": "Suatu garis telah dialih.",
+          "point": "Suatu titik telah dialih.",
+          "vertex": "Suatu nod dalam jalan telah dialih."
+        },
+        "title": "Alih"
+      },
+      "orthogonalize": {
+        "title": "Bucu sudut tepat"
+      },
+      "restriction": {
+        "annotation": {
+          "create": "Suatu larangan membelok telah ditambah",
+          "delete": "Suatu larangan membelok telah dihapuskan"
+        }
+      },
+      "reverse": {
+        "description": {
+          "line": "Songsangkan haluan garis dalam arah yang bertentangan."
+        },
+        "title": "Songsang"
+      },
+      "rotate": {
+        "annotation": {
+          "area": "Telah diputarkan suatu kawasan.",
+          "line": "Suatu garis telah diputarkan."
+        },
+        "title": "Putar"
+      },
+      "split": {
+        "connected_to_hidden": "Ini tidak dapat dibelah kerana ianya bersambung ke ciri tersembunyi.",
+        "not_eligible": "Garis tidak dapat dibelah pada permulaan atau akhir.",
+        "title": "Belah"
+      },
+      "start": {
+        "annotation": {
+          "area": "Suatu kawasan telah mula dicipta.",
+          "line": "Suatu garis telah mula dicipta."
+        }
+      },
+      "straighten": {
+        "description": {
+          "line": "Luruskan garis ini."
+        },
+        "title": "Luruskan"
+      }
+    },
+    "photo_overlays": {
+      "date_filter": {
+        "fromDate": {
+          "title": "Dari"
+        }
+      }
+    },
+    "preferences": {
+      "color_selection": {
+        "default": "Lalai"
+      }
+    },
+    "rapid_inspector": {
+      "tags": "Tag-tag"
+    },
+    "rapid_menu": {
+      "remove": "Keluarkan"
+    },
+    "redo": {
+      "nothing": "Tidak ada apa-apa yang boleh dibuat semula.",
+      "tooltip": "Buat semula: {action}"
+    },
+    "report_a_bug": "Laporkan suatu pepijat",
+    "restore": {
+      "description": "Andakah anda ingin mengembalikan perubahan yang belum disimpan dari sesi penyuntingan sebelumnya?",
+      "heading": "Anda mempunyai perubahan yang belum disimpan",
+      "reset": "Buang perubahan saya",
+      "restore": "Pulihkan perubahan saya"
+    },
+    "restriction": {
+      "controls": {
+        "distance": "Jarak"
+      },
+      "help": {
+        "from": "DARI",
+        "from_name": "{from} {fromName}",
+        "from_name_to_name": "{from} {fromName} {to} {toName}",
+        "to": "KE",
+        "via": "MELALUI",
+        "via_names": "{via} {viaNames}"
+      }
+    },
+    "save": {
+      "conflict": {
+        "count": "Bercanggah {num} dari {total}",
+        "delete": "Tinggalkan yang Dipadam",
+        "done": "Kesemua pertikaian telah diselesaikan!",
+        "download_changes": "Atau muat turun fail osmChange",
+        "header": "Selesaikan suntingan bercanggah",
+        "keep_local": "Simpan kepunyaan saya",
+        "keep_remote": "Gunakan kepunyaan mereka",
+        "next": "Berikutnya >",
+        "previous": "< Sebelumnya",
+        "restore": "Kembalikan"
+      },
+      "error": "Terdapat ralat semasa percubaan penyimpanan",
+      "help": "Semak perubahan anda dan muat naik ke OpenStreetMap, menjadikannya dapat dilihat oleh pengguna lain.",
+      "no_changes": "Tiada perubahan untuk disimpan.",
+      "status_code": "Pelayan mengembalikan kod status {code}",
+      "title": "Simpan",
+      "unknown_error_details": "Pastikan anda telah berhubung dengan Internet.",
+      "unsaved_changes": "Anda mempunyai perubahan yang belum disimpan",
+      "uploading": "Memuat naik perubahan terhadap OpenStreetMap..."
+    },
     "scriptNames": {
       "Aghb": "Kaukasia Albania",
       "Armi": "Aramia Imperial",
@@ -892,6 +867,113 @@
       "Zxxx": "Tidak ditulis",
       "Zyyy": "Lazim",
       "Zzzz": "Tulisan Tidak Diketahui"
-    }
+    },
+    "settings": {
+      "custom_background": {
+        "tooltip": "Tukar latar belakang tersuai"
+      }
+    },
+    "shortcuts": {
+      "command": {
+        "add_area": {
+          "label": "Mod 'tambah kawasan'"
+        },
+        "add_note": {
+          "key": "U"
+        },
+        "circularize": {
+          "label": "Bulatkan garis atau kawasan tertutup"
+        },
+        "extract": {
+          "key": "T"
+        },
+        "keyboard_shortcuts": {
+          "label": "Tunjukkan kaedah jalan pintas papan kekunci"
+        },
+        "save": {
+          "label": "Simpan perubahan"
+        },
+        "stop_line": {
+          "label": "Siapkan melukis garis atau kawasan"
+        },
+        "toggle_osm_notes": {
+          "key": "U"
+        },
+        "wireframe": {
+          "key": "B"
+        }
+      },
+      "help": "Bantuan",
+      "info": "Maklumat",
+      "key": {
+        "delete": "Hapus"
+      },
+      "navigation": "Pengemudian",
+      "title": "Jalan Pintas Papan Kekunci",
+      "tooltip": "Tunjukkan paparan jalan pintas papan kekunci."
+    },
+    "source_switch": {
+      "dev": "dev",
+      "live": "live",
+      "lose_changes": "Anda mempunyai perubahan yang belum disimpan. Menukar pelayan peta akan membuangnya. Adakah anda pasti mahu menukar pelayan?"
+    },
+    "splash": {
+      "start": "Sunting sekarang",
+      "text": "Penyunting iD ialah suatu alat yang berkuasa tinggi tetapi sangat mudah digunakan untuk membuat sumbangan terhadap peta percuma yang terunggul di dunia. Ini ialah versi {version}. Untuk maklumat lanjut sila layari {website} dan laporkan pepijat di {github}.",
+      "walkthrough": "Mulakan Panduan",
+      "welcome": "Selamat datang! Ini ialah penyunting iD OpenStreetMap"
+    },
+    "success": {
+      "help_link_text": "Butiran",
+      "help_link_url": "https://wiki.openstreetmap.org/wiki/FAQ#I_have_just_made_some_changes_to_the_map._How_do_I_get_to_see_my_changes.3F",
+      "just_edited": "Anda baru sahaja telah menyunting OpenStreetMap!",
+      "like_osm": "Suka OpenStreetMap? Bertemu pemeta-pemeta lain:",
+      "tell_us": "Beritahu kami!"
+    },
+    "tag_reference": {
+      "description": "Perincian",
+      "on_wiki": "{tag} pada wiki.osm.org",
+      "used_with": "digunakan dengan {type}"
+    },
+    "tooltip_keyhint": "Kekunci pintas:",
+    "translate": {
+      "localized_translation_language": "Pilih bahasa",
+      "localized_translation_name": "Nama"
+    },
+    "undo": {
+      "nothing": "Tidak ada apa-apa yang boleh dibuat asal.",
+      "tooltip": "Buat asal: {action}"
+    },
+    "units": {
+      "arcdegrees": "{quantity}°",
+      "arcminutes": "{quantity}′",
+      "arcseconds": "{quantity}″",
+      "area_pair": "{area1} ({area2})",
+      "coordinate": "{coordinate}{direction}",
+      "coordinate_pair": "{latitude}, {longitude}",
+      "east": "T",
+      "feet": "{quantity} ka",
+      "hectares": "{quantity} ha",
+      "kilometers": "{quantity} km",
+      "meters": "{quantity} m",
+      "miles": "{quantity} bt",
+      "north": "U",
+      "south": "S",
+      "square_feet": "{quantity} kp",
+      "square_kilometers": "{quantity} km²",
+      "square_meters": "{quantity} m²",
+      "square_miles": "{quantity} bp",
+      "west": "B",
+      "year_month_day": "TTTT-BB-HH"
+    },
+    "version": {
+      "whats_new": "Yang terkini dalam iD {version}"
+    },
+    "wikidata": {
+      "description": "Huraian",
+      "identifier": "Pengenal pasti",
+      "label": "Label"
+    },
+    "zoom_in_edit": "Zum lebih dekat untuk menyunting"
   }
 }

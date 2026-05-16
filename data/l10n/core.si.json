@@ -1,200 +1,47 @@
 {
   "si": {
-    "modes": {
-      "add_area": {
-        "title": "ප්‍රදේශය"
-      },
-      "add_line": {
-        "title": "රේඛාව"
-      },
-      "add_point": {
-        "title": "ලක්ෂ්‍යයක්"
-      },
-      "browse": {
-        "title": "සොයන්න",
-        "description": "සිතියම එහෙ මෙහෙ කිරීම සහ විශාලනය කිරීම"
+    "QA": {
+      "keepRight": {
+        "detail_description": "විස්තරය"
       }
     },
-    "operations": {
-      "add": {
-        "annotation": {
-          "point": "ස්ථානයක් සටහන් කරන ලදී",
-          "vertex": "මාර්ගයකට බිදුම් ස්ථානයක් එකතු කරන ලදී",
-          "relation": "සම්බන්දතාවයක් එකතු කරන්න"
-        }
+    "area_fill": {
+      "full": {
+        "description": "සම්පුර්ණයෙන් පිරුණු",
+        "tooltip": "සම්පුර්ණයෙන් වෙසෙන පරිදි ප්‍රදේශය ඇඳ ඇත. "
       },
-      "start": {
-        "annotation": {
-          "line": "රේඛාවක් අරඹන ලදී.",
-          "area": "ප්‍රදේශයක් අරඹන ලදී."
-        }
+      "partial": {
+        "description": "පාර්ශිකව පිරුණු"
       },
-      "continue": {
-        "title": "දිගටම කරගෙන යන්න",
-        "description": "මෙමෙ රේකාව තව දිගට අදින්න",
-        "not_eligible": "කිසිදු රේකාවක් මෙතෙන් සිට ඇදිය නොහැක",
-        "annotation": {
-          "line": "රේකාව දික් කරන ලදී",
-          "area": "ප්‍රදේශයක් වෙනස් කිරීම අරබන ලදී"
-        }
-      },
-      "cancel_draw": {
-        "annotation": "ඇදීම නැවත දැමුනි"
-      },
-      "change_tags": {
-        "annotation": "වෙනනස් කරන ලද සටනහන්"
-      },
-      "circularize": {
-        "title": "වෘතයක් බවට පත්කිරීම"
-      },
-      "orthogonalize": {
-        "title": "හතරැස් කොටුව"
-      },
-      "straighten": {
-        "title": "සෘජුකරනය එහෙස් නොමෙතිනම් කෙලින් කිරීම"
-      },
-      "delete": {
-        "title": "මකන්න",
-        "annotation": {
-          "point": "ලක්ෂ්‍යයක් ඉවත් කරන්න.",
-          "vertex": "මාර්ගයෙන් බිදුම් ලක්ෂය ඉවත් කරන්න",
-          "line": "රේඛාව මකන්න.",
-          "area": "ප්‍රදේශය මකන්න.",
-          "relation": "සම්බන්දතාවයක් මක දමන ලදී"
-        }
-      },
-      "disconnect": {
-        "title": "විසන්ධි කරන්න",
-        "not_connected": "එකිනෙකින් වෙන් කිරීම සදහා අවශ්‍ය තරම් රේකා/ප්‍රදේශයන් නොමැත",
-        "connected_to_hidden": "මෙය සෙගවුන ලක්ෂණයකට සම්බන්ද බැවින් වෙන්කල නොහැක."
-      },
-      "merge": {
-        "title": "එකතුකරන්න",
-        "not_eligible": "මෙම ලක්ෂණ එක්කල නොහැක.",
-        "incomplete_relation": "අවම තරමින් එක් රේකාවක් හෝ සම්පුර්ණයෙන් බාගත වී නොමැති නිසා මෙම රේකා එක්කල නොහැක"
-      },
-      "move": {
-        "title": "චලනය කරන්න",
-        "annotation": {
-          "point": "ලක්ෂයක් චලනය කරන ලදී",
-          "vertex": "මාර්ගයක බිදුම් ලක්ෂයක් වෙනස් කරන ලදී",
-          "line": "රෙකාවක් වෙනස් කරන ලදී",
-          "area": "ප්‍රදේශයක් වෙනස් කරන ලදී"
-        }
-      },
-      "rotate": {
-        "title": "හරවන්න",
-        "annotation": {
-          "line": "රෙකාවක් හරවන ලදී",
-          "area": "ප්‍රදේශයක් හරවන ලදී"
-        }
-      },
-      "reverse": {
-        "title": "ආපස්සට"
-      },
-      "split": {
-        "title": "වෙන්කරන්න",
-        "not_eligible": "රේකාවක් ආරම්බයේදී හෝ අවසානයේදී බෙදිය නොහැක",
-        "connected_to_hidden": "මෙය සෙගවුන ලක්ෂණයකට සම්බන්ද බැවින් දෙකට බෙදිය නොහැක."
-      },
-      "restriction": {
-        "annotation": {
-          "create": "හැරවීම තහනමක් එක කරන ලදී",
-          "delete": "හැරවීම් තහනම ඉවත් කිරන ලදී"
-        }
+      "wireframe": {
+        "description": "පිරවීමෙන් තොර(සැකිල්ල පමණි)"
       }
     },
-    "undo": {
-      "tooltip": "{action} ආපසු හැරවීම",
-      "nothing": "කිසිවක් කිරීමට නැත"
+    "background": {
+      "custom": "රිසි පරදී සැකසු",
+      "none": "කිසිවක් නැත",
+      "reset": "යළි පිහිටුවනවා",
+      "title": "පසුබිම"
     },
-    "redo": {
-      "tooltip": "{action} නැවත කරන්න ",
-      "nothing": "නැවත කිරීමට කිසිවක් නැත"
-    },
-    "translate": {
-      "localized_translation_language": "භාෂාවක් තෝරාගන්න",
-      "localized_translation_name": "නම"
-    },
-    "loading_auth": "OpenStreetMap වෙත සම්බන්ද වෙමින්...",
     "commit": {
+      "cancel": "අහෝසි කරන්න",
+      "created": "ඇති කරන ලදී",
+      "deleted": "මකාදමන ලදී",
+      "modified": "වෙනස් කරන ලදී",
       "upload_explanation": "ඔබ ඇතුලත් කරන ලද වෙනස්කම් OpenStreetMap දත්ත බාවිතා කරන සියලු සිතියම් තුල දිස්වනු ඇත",
       "upload_explanation_with_user": "{user} වශයෙන් ඔබ ඇතුලත් කරන ලද වෙනස්කම් OpenStreetMap දත්ත බාවිතා කරන සියලු සිතියම් තුල දිස්වනු ඇත",
-      "cancel": "අහෝසි කරන්න",
-      "warnings": "අනතුරු ඇගවීම්",
-      "modified": "වෙනස් කරන ලදී",
-      "deleted": "මකාදමන ලදී",
-      "created": "ඇති කරන ලදී"
+      "warnings": "අනතුරු ඇගවීම්"
+    },
+    "confirm": {
+      "cancel": "අහෝසි කරන්න"
     },
     "contributors": {
       "list": "සංස්කරණය  {users} විසිනි"
     },
-    "info_panels": {
-      "background": {
-        "title": "පසුබිම",
-        "description": "විස්තරය"
-      },
-      "location": {
-        "title": "ස්ථානය"
-      },
-      "measurement": {
-        "area": "ප්‍රදේශය",
-        "location": "ස්ථානය"
-      }
-    },
-    "geocoder": {
-      "search": "ලෝකය පුරා සොයන්න",
-      "no_results_worldwide": "සොයාගත නොහැක"
-    },
-    "geolocate": {
-      "title": "මගේ ස්ථානය පෙන්වන්න"
-    },
-    "inspector": {
-      "show_more": "තව පෙන්වන්න",
-      "view_on_osm": "openstreetmap.org හි පෙන්වන්න",
-      "new_relation": "නව සම්බන්දතා ",
-      "role": "භූමිකාව",
-      "choose": "ලක්ෂණයෙහි වර්ගය තෝරන්න",
-      "remove": "ඉවත් කරන්න",
-      "search": "සොයන්න",
-      "unknown": "නොදනී",
-      "incomplete": "<බාගත වේ නොමැත>",
-      "feature_list": "ලක්ෂණ සොයන්න",
-      "check": {
-        "yes": "ඔව්",
-        "no": "නැත"
-      },
-      "none": "කිසිවක් නැත",
-      "node": "බිදුම් ලක්ෂය",
-      "way": "මාර්ගය",
-      "relation": "සම්බන්දතාවය",
-      "location": "ස්ථානය",
-      "add_fields": "එකතුකරන් ලදී"
-    },
-    "background": {
-      "title": "පසුබිම",
-      "none": "කිසිවක් නැත",
-      "custom": "රිසි පරදී සැකසු",
-      "reset": "යළි පිහිටුවනවා"
-    },
-    "map_data": {
-      "title": "සිතියම් දත්ත",
-      "description": "සිතියම් දත්ත",
-      "data_layers": "දත්ත තට්ටුව",
-      "layers": {
-        "maproulette": {
-          "cancel": "අහෝසි කරන්න"
-        }
-      }
-    },
     "filters": {
-      "points": {
-        "description": "ලක්ෂ",
-        "tooltip": "අවදානය දිනාගන්නා ස්ථාන"
-      },
-      "paths": {
-        "description": "මාර්ග",
-        "tooltip": "පදික මං තීරු , අඩි පාරවල් ,බයිසිකල් මාර්ග"
+      "boundaries": {
+        "description": "සීමා මායිම්",
+        "tooltip": "පරිපලන සීමා"
       },
       "buildings": {
         "description": "ගොඩනැගිලි",
@@ -204,112 +51,123 @@
         "description": "ගොඩබිම බාවිතා කර ඇති ලක්ෂණ",
         "tooltip": "වනාන්තර, ගොවිබිම් ,උද්ද්‍යාන , ගෘහාශ්‍රිත ,වාණිජ ආදී"
       },
-      "boundaries": {
-        "description": "සීමා මායිම්",
-        "tooltip": "පරිපලන සීමා"
+      "others": {
+        "tooltip": "හැම දෙයක්ම"
       },
-      "water": {
-        "description": "ජලයේ  ආකාරය",
-        "tooltip": "ගංගා,විල්,පොකුණු ආදී"
+      "past_future": {
+        "tooltip": "යෝජිත, ඉදිකෙරිමින් පවතින ,අතහැර දැමු , විනාශකරන ලද , ආදී"
       },
-      "rail": {
-        "description": "දුම්රිය මාර්ග ලක්ෂණයන්",
-        "tooltip": "දුම්රිය මාර්ග"
+      "paths": {
+        "description": "මාර්ග",
+        "tooltip": "පදික මං තීරු , අඩි පාරවල් ,බයිසිකල් මාර්ග"
+      },
+      "points": {
+        "description": "ලක්ෂ",
+        "tooltip": "අවදානය දිනාගන්නා ස්ථාන"
       },
       "power": {
         "description": "විදුලි බල බර්ගයේ ආකාරය ",
         "tooltip": "විදුලි සැපයුම්, බලාගාර, උප බලාගාර ආදී"
       },
-      "past_future": {
-        "tooltip": "යෝජිත, ඉදිකෙරිමින් පවතින ,අතහැර දැමු , විනාශකරන ලද , ආදී"
+      "rail": {
+        "description": "දුම්රිය මාර්ග ලක්ෂණයන්",
+        "tooltip": "දුම්රිය මාර්ග"
       },
-      "others": {
-        "tooltip": "හැම දෙයක්ම"
+      "water": {
+        "description": "ජලයේ  ආකාරය",
+        "tooltip": "ගංගා,විල්,පොකුණු ආදී"
       }
     },
-    "area_fill": {
-      "wireframe": {
-        "description": "පිරවීමෙන් තොර(සැකිල්ල පමණි)"
-      },
-      "partial": {
-        "description": "පාර්ශිකව පිරුණු"
-      },
-      "full": {
-        "description": "සම්පුර්ණයෙන් පිරුණු",
-        "tooltip": "සම්පුර්ණයෙන් වෙසෙන පරිදි ප්‍රදේශය ඇඳ ඇත. "
-      }
+    "geocoder": {
+      "no_results_worldwide": "සොයාගත නොහැක",
+      "search": "ලෝකය පුරා සොයන්න"
     },
-    "restore": {
-      "heading": "ඔබ සතුව සුරකීම නොකරන ලද වෙනස්කම් ඇත"
-    },
-    "save": {
-      "title": "සුරකින්න",
-      "no_changes": "සුරැකීම සඳහා වෙනස් කිරීම් නැත.",
-      "error": "සුරැකීමේදී වරදක් සිදුවිය",
-      "status_code": " ප්‍රතිචාර වශයෙන් {code} කේතය සැපයුම් යන්ත්‍රයෙන් ලැබුණි.",
-      "unknown_error_details": "ඔබ අන්තර්ජාලයට සම්බන්ද වී ඇති බවතහවුරු කරන්න",
-      "unsaved_changes": "ඔබ සතුව සුරකීම නොකරන ලද වෙනස්කම් ඇත",
-      "conflict": {
-        "header": "එකිනෙකට නොගැලපෙන සංස්කරණයන් නිරකරනය කරන්න ",
-        "count": "නොගැලපීම {total} අතරින් {num} ",
-        "previous": "<පෙර",
-        "next": "ඊළඟ>",
-        "restore": "ප්‍රතිසංස්ථානය",
-        "delete": "මකාදමන ලද කොටස් මගහරින්න",
-        "done": "සියලු නොගැලපීම නිරාකරණය කෙරිණි"
-      }
-    },
-    "confirm": {
-      "cancel": "අහෝසි කරන්න"
-    },
-    "source_switch": {
-      "live": "සජීවී"
-    },
-    "rapid_menu": {
-      "remove": "ඉවත් කරන්න"
-    },
-    "tag_reference": {
-      "description": "විස්තරය",
-      "on_wiki": "on wiki.osm.org මත {tag} ",
-      "used_with": "{type} බවිත කර ඇත"
-    },
-    "QA": {
-      "keepRight": {
-        "detail_description": "විස්තරය"
-      }
+    "geolocate": {
+      "title": "මගේ ස්ථානය පෙන්වන්න"
     },
     "help": {
-      "title": "සහය",
-      "help": {
-        "title": "සහය"
-      },
-      "overview": {
-        "navigation_h": "මර්ගෝපදේශනය",
-        "features_h": "සිතියම් ලක්ෂණයන්"
+      "areas": {
+        "title": "ප්‍රදේශයන්"
       },
       "editing": {
         "save_h": "සුරකින්න"
       },
-      "points": {
-        "title": "ලක්ෂ"
+      "help": {
+        "title": "සහය"
       },
       "lines": {
         "title": "රේකා"
       },
-      "areas": {
-        "title": "ප්‍රදේශයන්"
+      "overview": {
+        "features_h": "සිතියම් ලක්ෂණයන්",
+        "navigation_h": "මර්ගෝපදේශනය"
+      },
+      "points": {
+        "title": "ලක්ෂ"
       },
       "relations": {
         "boundary_h": "සීමා මායිම්"
+      },
+      "title": "සහය"
+    },
+    "info_panels": {
+      "background": {
+        "description": "විස්තරය",
+        "title": "පසුබිම"
+      },
+      "location": {
+        "title": "ස්ථානය"
+      },
+      "measurement": {
+        "area": "ප්‍රදේශය",
+        "location": "ස්ථානය"
       }
     },
-    "issues": {
-      "warnings": "අනතුරු ඇගවීම්"
+    "inspector": {
+      "add_fields": "එකතුකරන් ලදී",
+      "check": {
+        "no": "නැත",
+        "yes": "ඔව්"
+      },
+      "choose": "ලක්ෂණයෙහි වර්ගය තෝරන්න",
+      "edit": "ලක්ෂණ සංස්කරණය කරන්න",
+      "feature_list": "ලක්ෂණ සොයන්න",
+      "incomplete": "<බාගත වේ නොමැත>",
+      "location": "ස්ථානය",
+      "new_relation": "නව සම්බන්දතා ",
+      "node": "බිදුම් ලක්ෂය",
+      "none": "කිසිවක් නැත",
+      "relation": "සම්බන්දතාවය",
+      "remove": "ඉවත් කරන්න",
+      "role": "භූමිකාව",
+      "search": "සොයන්න",
+      "show_more": "තව පෙන්වන්න",
+      "unknown": "නොදනී",
+      "view_on_osm": "openstreetmap.org හි පෙන්වන්න",
+      "way": "මාර්ගය"
     },
     "intro": {
+      "areas": {
+        "title": "ප්‍රදේශයන්"
+      },
+      "buildings": {
+        "title": "ගොඩනැගිලි"
+      },
       "graph": {
+        "block_number": "<value for addr:block_number>",
+        "countrycode": "lk",
+        "county": "<value for addr:county>",
+        "district": "<value for addr:district>",
+        "hamlet": "<value for addr:hamlet>",
+        "neighbourhood": "<value for addr:neighbourhood>",
+        "province": "<value for addr:province>",
+        "quarter": "<value for addr:quarter>",
         "state": "<value for addr:state>",
-        "countrycode": "lk"
+        "subdistrict": "<value for addr:subdistrict>",
+        "suburb": "<value for addr:suburb>"
+      },
+      "lines": {
+        "title": "රේකා"
       },
       "navigation": {
         "title": "මර්ගෝපදේශනය"
@@ -317,28 +175,12 @@
       "points": {
         "title": "ලක්ෂ"
       },
-      "areas": {
-        "title": "ප්‍රදේශයන්"
-      },
-      "lines": {
-        "title": "රේකා"
-      },
-      "buildings": {
-        "title": "ගොඩනැගිලි"
-      },
       "startediting": {
         "start": "සිතියම් කරනය ආරම්බ කරන්න"
       }
     },
-    "shortcuts": {
-      "key": {
-        "delete": "මකන්න"
-      },
-      "navigation": "මර්ගෝපදේශනය",
-      "help": "සහය"
-    },
-    "wikidata": {
-      "description": "විස්තරය"
+    "issues": {
+      "warnings": "අනතුරු ඇගවීම්"
     },
     "languageNames": {
       "aa": "අෆාර්",
@@ -798,6 +640,168 @@
       "zun": "සුනි",
       "zza": "සාසා"
     },
+    "loading_auth": "OpenStreetMap වෙත සම්බන්ද වෙමින්...",
+    "map_data": {
+      "data_layers": "දත්ත තට්ටුව",
+      "description": "සිතියම් දත්ත",
+      "layers": {
+        "maproulette": {
+          "cancel": "අහෝසි කරන්න"
+        }
+      },
+      "title": "සිතියම් දත්ත"
+    },
+    "modes": {
+      "add_area": {
+        "description": "උද්‍යාන, ගොඩනැගිලි, වැව් හෝ වෙනත් ප්‍රදේශ සිතියමට එකතු කරන්න.",
+        "title": "ප්‍රදේශය"
+      },
+      "add_line": {
+        "description": "අධිවේගී මාර්ග, මාර්ග, පදික මාර්ග, ඇලවල් හෝ වෙනත් රේඛා සිතියමට එකතු කරන්න.",
+        "title": "රේඛාව"
+      },
+      "add_point": {
+        "description": "ආපනශාලා,ස්මාරක,තැපැල් පෙට්ටි හෝ වෙනත් ස්ථාන එකතුකරන්න",
+        "title": "ලක්ෂ්‍යයක්"
+      },
+      "browse": {
+        "description": "සිතියම එහෙ මෙහෙ කිරීම සහ විශාලනය කිරීම",
+        "title": "සොයන්න"
+      }
+    },
+    "operations": {
+      "add": {
+        "annotation": {
+          "point": "ස්ථානයක් සටහන් කරන ලදී",
+          "relation": "සම්බන්දතාවයක් එකතු කරන්න",
+          "vertex": "මාර්ගයකට බිදුම් ස්ථානයක් එකතු කරන ලදී"
+        }
+      },
+      "cancel_draw": {
+        "annotation": "ඇදීම නැවත දැමුනි"
+      },
+      "change_tags": {
+        "annotation": "වෙනනස් කරන ලද සටනහන්"
+      },
+      "circularize": {
+        "title": "වෘතයක් බවට පත්කිරීම"
+      },
+      "connect": {
+        "annotation": {
+          "from_vertex": {
+            "to_area": "මාර්ගය ප්‍රදේශයකට සම්බන්දකරන් ලදී",
+            "to_line": "මාර්ගය රෙකාවකට සම්බන්දකරන් ලදී",
+            "to_point": "මාර්ගය ලක්ෂයකට සම්බන්දකරන් ලදී.",
+            "to_vertex": "මාර්ගය වෙනත් මාර්ගයකට සම්බන්දකරන් ලදී"
+          }
+        }
+      },
+      "continue": {
+        "annotation": {
+          "area": "ප්‍රදේශයක් වෙනස් කිරීම අරබන ලදී",
+          "line": "රේකාව දික් කරන ලදී"
+        },
+        "description": "මෙමෙ රේකාව තව දිගට අදින්න",
+        "not_eligible": "කිසිදු රේකාවක් මෙතෙන් සිට ඇදිය නොහැක",
+        "title": "දිගටම කරගෙන යන්න"
+      },
+      "delete": {
+        "annotation": {
+          "area": "ප්‍රදේශය මකන්න.",
+          "line": "රේඛාව මකන්න.",
+          "point": "ලක්ෂ්‍යයක් ඉවත් කරන්න.",
+          "relation": "සම්බන්දතාවයක් මක දමන ලදී",
+          "vertex": "මාර්ගයෙන් බිදුම් ලක්ෂය ඉවත් කරන්න"
+        },
+        "title": "මකන්න"
+      },
+      "disconnect": {
+        "connected_to_hidden": "මෙය සෙගවුන ලක්ෂණයකට සම්බන්ද බැවින් වෙන්කල නොහැක.",
+        "not_connected": "එකිනෙකින් වෙන් කිරීම සදහා අවශ්‍ය තරම් රේකා/ප්‍රදේශයන් නොමැත",
+        "title": "විසන්ධි කරන්න"
+      },
+      "merge": {
+        "incomplete_relation": "අවම තරමින් එක් රේකාවක් හෝ සම්පුර්ණයෙන් බාගත වී නොමැති නිසා මෙම රේකා එක්කල නොහැක",
+        "not_eligible": "මෙම ලක්ෂණ එක්කල නොහැක.",
+        "title": "එකතුකරන්න"
+      },
+      "move": {
+        "annotation": {
+          "area": "ප්‍රදේශයක් වෙනස් කරන ලදී",
+          "line": "රෙකාවක් වෙනස් කරන ලදී",
+          "point": "ලක්ෂයක් චලනය කරන ලදී",
+          "vertex": "මාර්ගයක බිදුම් ලක්ෂයක් වෙනස් කරන ලදී"
+        },
+        "title": "චලනය කරන්න"
+      },
+      "orthogonalize": {
+        "title": "හතරැස් කොටුව"
+      },
+      "restriction": {
+        "annotation": {
+          "create": "හැරවීම තහනමක් එක කරන ලදී",
+          "delete": "හැරවීම් තහනම ඉවත් කිරන ලදී"
+        }
+      },
+      "reverse": {
+        "description": {
+          "line": "මෙමෙ රේකාව ගමන්කරන දිශාව විරුද්ධ අතට හරවන්න"
+        },
+        "title": "ආපස්සට"
+      },
+      "rotate": {
+        "annotation": {
+          "area": "ප්‍රදේශයක් හරවන ලදී",
+          "line": "රෙකාවක් හරවන ලදී"
+        },
+        "title": "හරවන්න"
+      },
+      "split": {
+        "connected_to_hidden": "මෙය සෙගවුන ලක්ෂණයකට සම්බන්ද බැවින් දෙකට බෙදිය නොහැක.",
+        "not_eligible": "රේකාවක් ආරම්බයේදී හෝ අවසානයේදී බෙදිය නොහැක",
+        "title": "වෙන්කරන්න"
+      },
+      "start": {
+        "annotation": {
+          "area": "ප්‍රදේශයක් අරඹන ලදී.",
+          "line": "රේඛාවක් අරඹන ලදී."
+        }
+      },
+      "straighten": {
+        "description": {
+          "line": "මෙම රේකාව කෙලින් කරන්න"
+        },
+        "title": "සෘජුකරනය එහෙස් නොමෙතිනම් කෙලින් කිරීම"
+      }
+    },
+    "rapid_menu": {
+      "remove": "ඉවත් කරන්න"
+    },
+    "redo": {
+      "nothing": "නැවත කිරීමට කිසිවක් නැත",
+      "tooltip": "{action} නැවත කරන්න "
+    },
+    "restore": {
+      "description": "ඔබට මීට පෙර සංස්කරණය කිරීමේදී  සුරැකීමට නොහැකි වූ වෙනස් කිරීම් නැවත පිහිටුවීමට අවශ්‍යද ? ",
+      "heading": "ඔබ සතුව සුරකීම නොකරන ලද වෙනස්කම් ඇත"
+    },
+    "save": {
+      "conflict": {
+        "count": "නොගැලපීම {total} අතරින් {num} ",
+        "delete": "මකාදමන ලද කොටස් මගහරින්න",
+        "done": "සියලු නොගැලපීම නිරාකරණය කෙරිණි",
+        "header": "එකිනෙකට නොගැලපෙන සංස්කරණයන් නිරකරනය කරන්න ",
+        "next": "ඊළඟ>",
+        "previous": "<පෙර",
+        "restore": "ප්‍රතිසංස්ථානය"
+      },
+      "error": "සුරැකීමේදී වරදක් සිදුවිය",
+      "no_changes": "සුරැකීම සඳහා වෙනස් කිරීම් නැත.",
+      "status_code": " ප්‍රතිචාර වශයෙන් {code} කේතය සැපයුම් යන්ත්‍රයෙන් ලැබුණි.",
+      "title": "සුරකින්න",
+      "unknown_error_details": "ඔබ අන්තර්ජාලයට සම්බන්ද වී ඇති බවතහවුරු කරන්න",
+      "unsaved_changes": "ඔබ සතුව සුරකීම නොකරන ලද වෙනස්කම් ඇත"
+    },
     "scriptNames": {
       "Adlm": "ඇඩ්ලම්",
       "Arab": "අරාබි",
@@ -857,6 +861,47 @@
       "Zxxx": "අලිඛිත",
       "Zyyy": "පොදු",
       "Zzzz": "නොදත් අකුරු මාලාව"
+    },
+    "settings": {
+      "custom_background": {
+        "tooltip": "පසුතලය රිසි පරිදි සැකසීම සදහා"
+      }
+    },
+    "shortcuts": {
+      "help": "සහය",
+      "key": {
+        "delete": "මකන්න"
+      },
+      "navigation": "මර්ගෝපදේශනය"
+    },
+    "source_switch": {
+      "live": "සජීවී"
+    },
+    "splash": {
+      "welcome": "iD OpenStreetMap සංස්කරණ වේදසටහන වෙත සාදරයෙන් පිළිගනිමු"
+    },
+    "success": {
+      "just_edited": "ඔබ මේ මොහොතේ OpenStreetMap සංස්කරණය කරන ලදී"
+    },
+    "tag_reference": {
+      "description": "විස්තරය",
+      "on_wiki": "on wiki.osm.org මත {tag} ",
+      "used_with": "{type} බවිත කර ඇත"
+    },
+    "tooltip_keyhint": "කෙටි මාර්ග",
+    "translate": {
+      "localized_translation_language": "භාෂාවක් තෝරාගන්න",
+      "localized_translation_name": "නම"
+    },
+    "undo": {
+      "nothing": "කිසිවක් කිරීමට නැත",
+      "tooltip": "{action} ආපසු හැරවීම"
+    },
+    "units": {
+      "south": "S"
+    },
+    "wikidata": {
+      "description": "විස්තරය"
     }
   }
 }

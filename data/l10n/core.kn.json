@@ -1,281 +1,61 @@
 {
   "kn": {
-    "icons": {
-      "information": "ಮಾಹಿತಿ",
-      "remove": "ತೆಗೆಯಿರಿ",
-      "undo": "ಮಾಡಿದ್ದನ್ನು ತೆಗೆಯುವುದು",
-      "zoom_to": "ಗಾತ್ರವನ್ನು ಹೆಚ್ಚಿಸು",
-      "copy": "ನಕಲಿಸಿ",
-      "view_on": "{domain} ನಲ್ಲಿ ನೋಡು",
-      "visit_website": "ವೆಬ್ಸೈಟನ್ನು ಭೇಟಿ ಮಾಡು",
-      "favorite": "ಇಷ್ಟವಾದ",
-      "list": "ಪಟ್ಟಿ",
-      "text": "ಬರವಣಿಗೆ",
-      "deselect": "ಆಯ್ಕೆಯನ್ನು ತೆಗೆಯುವುದು"
-    },
-    "toolbar": {
-      "inspect": "ಪರೀಕ್ಷಿಸು",
-      "undo_redo": "ಪುನಃ ಮಾಡು",
-      "recent": "ಇತ್ತೀಚಿನ",
-      "favorites": "ಇಷ್ಟವಾದ",
-      "add_feature": "ವೈಶಿಷ್ಟ್ಯವನ್ನು ಸೇರಿಸು"
-    },
-    "modes": {
-      "add_area": {
-        "title": "ಪ್ರದೇಶ"
+    "QA": {
+      "keepRight": {
+        "detail_description": "ವಿವರಣೆ"
       },
-      "add_line": {
-        "title": "ಗೆರೆ"
-      },
-      "add_point": {
-        "title": "ಬಿಂದು"
-      },
-      "add_note": {
-        "title": "ಟಿಪ್ಪಣಿ",
-        "description": "ತಪ್ಪು ಕಂಡೀತೇ? ಬೇರೆಯವರಿಗೆ ತಿಳಿಸಿ."
-      },
-      "add_preset": {
-        "title": "ವೈಶಿಷ್ಟ್ಯವನ್ನು ಸೇರಿಸು"
-      },
-      "browse": {
-        "title": "ಜಾಲಾಟ",
-        "description": "ನಕ್ಷೆಯನ್ನು ಪ್ಯಾನ್ ಮತ್ತು ಜೂಮ್ ಮಾಡಿರಿ."
-      },
-      "drag_node": {
-        "connected_to_hidden": "ಅಗೋಚರ ಮೂಲಕ್ಕೆ ಸಂಬಂಧಿಸಿದ್ದರಿಂದ ಪರಿಷ್ಕರಿಸಲು ಸಾಧ್ಯವಿಲ್ಲ"
+      "osmose": {
+        "detail_title": "ವಿವರಗಳು"
       }
     },
-    "operations": {
-      "add": {
-        "annotation": {
-          "point": "ಒಂದು ಬಿಂದುವನ್ನು ಸೇರಿಸಲಾಯಿತು.",
-          "vertex": "ದಾರಿಗೆ ಒಂದು ಜಾಲಘಟಕವನ್ನು ಸೇರಿಸಲಾಗಿದೆ",
-          "relation": "ಸಂಬಂಧವನ್ನು ಸೇರಿಸಲಾಗಿದೆ.",
-          "note": "ಟಿಪ್ಪಣಿಯನ್ನು ಸೇರಿಸಲಾಗಿದೆ."
-        }
+    "area_fill": {
+      "full": {
+        "description": "ಪೂರ್ಣ ತುಂಬು"
       },
-      "start": {
-        "annotation": {
-          "line": "ಒಂದು ಗೆರೆ ಶುರುವಾಯಿತು.",
-          "area": "ಪ್ರದೇಶವನ್ನು ಆರಂಭಿಸು."
-        }
+      "partial": {
+        "description": "ಅರೆ ತುಂಬು‍"
       },
-      "continue": {
-        "title": "ಮುಂದುವರೆಸು",
-        "description": "ಈ ರೇಖೆಯನ್ನು ಮುಂದುವರೆಸು.",
-        "not_eligible": "ಇಲ್ಲಿ ಯಾವುದೇ ಗೆರೆ ಮುಂದುವರೆಯುವುದಿಲ್ಲ",
-        "annotation": {
-          "line": "ರೇಖೆಯಾಗಿ ಮುಂದುವರೆಸು.",
-          "area": "ಪ್ರದೇಶವನ್ನು ಮುಂದುವರೆಸು."
-        }
-      },
-      "cancel_draw": {
-        "annotation": "ಚಿತ್ರವನ್ನು ರದ್ದುಗೊಳಿಸು."
-      },
-      "change_tags": {
-        "annotation": "ಹೆಸರು ಪಟ್ಟಿಯ ಬದಲಾವಣೆ."
-      },
-      "paste": {
-        "title": "ಅಂಟಿಸು"
-      },
-      "circularize": {
-        "title": "ವೃತ್ತಾಕಾರ"
-      },
-      "orthogonalize": {
-        "title": "ಚೌಕ"
-      },
-      "straighten": {
-        "title": "ನೇರಗೊಳಿಸು"
-      },
-      "delete": {
-        "title": "ಅಳಿಸು",
-        "annotation": {
-          "point": "ಬಿಂದುವನ್ನು ಅಳಿಸಲಾಯಿತು.",
-          "vertex": "ಜಾಲಘಟಕವನ್ನು ಈ ದಾರಿಯಿಂದ ಅಳಿಸಲಾಗಿದೆ.  ",
-          "line": "ರೇಖೆಯನ್ನು ಅಳಿಸಲಾಯಿತು.",
-          "area": "ಪ್ರದೇಶವನ್ನು ಅಳಿಸಲಾಯಿತು.",
-          "relation": "‍ರಿಲೇಷನ್ ಅನ್ನು ಅಳಿಸಲಾಗಿದೆ."
-        }
-      },
-      "disconnect": {
-        "title": "ಸಂಪರ್ಕ ಕಡಿತಗೊಳಿಸು",
-        "not_connected": "ಬೇರ್ಪಡಿಸಲು ಸಾಕಾಗುವಷ್ಟು ದಾರಿಗಳು ಅಥವಾ ಕ್ಷೇತ್ರಗಳಿಲ್ಲ.",
-        "connected_to_hidden": "ಗುಪ್ತ ವಸ್ತುವಿಗೆ ಸೇರ್ಪಡೆಯಾದುದರಿಂದ, ಈ ವಸ್ತುವನ್ನು ಬೇರ್ಪಡಿಸಲಾಗುವುದಿಲ್ಲ. ",
-        "relation": "ಈ ವಸ್ತುಗಳು ಒಂದು ಸಂಬಂಧದ ಅಂಶವಾಗಿರುವುದರಿಂದ, ಇದನ್ನು ಬೇರ್ಪಡಿಸಲಾಗುವುದಿಲ್ಲ. "
-      },
-      "merge": {
-        "title": "ವಿಲೀನಗೊಳಿಸು",
-        "description": "ಈ ವಸ್ತುಗಳನ್ನು ಸೇರಿಸಿ.",
-        "not_eligible": "ಈ ವಸ್ತುಗಳನ್ನು ಸೇರಿಸಲಾಗುವುದಿಲ್ಲ.",
-        "not_adjacent": "ಈ ವಸ್ತುಗಳನ್ನು ಸೇರಿಸಲಾಗುವುದಿಲ್ಲ ಏಕೆಂದರೆ ಇವುಗಳ ಕೊನೆಗಳು ಒಂದಕ್ಕೊಂಡಕ್ಕೆ ಸೇರಿಕೊಂಡಿಲ್ಲ.   ",
-        "incomplete_relation": "ಈ ವಸ್ತುಗಳನ್ನು ಸೇರಿಸಲಾಗುವುದಿಲ್ಲ ಏಕೆಂದರೆ ಇವುಗಳಲ್ಲಿ ಕನಿಷ್ಟಪಕ್ಷ ಒಂದಾದರೂ ಸಂಪೂರ್ಣವಾಗಿ ನಕಲಿಳಿಸಿಲ್ಲ.    ",
-        "conflicting_tags": "ಈ ವಸ್ತುಗಳನ್ನು ಸೇರಿಸಲಾಗುವುದಿಲ್ಲ ಏಕೆಂದರೆ ಇವುಗಳಲ್ಲಿ ಕೆಲವು ವಸ್ತುಗಳ ಗುರುತುಪಟ್ಟಿಗಳ ನಡುವೆ ಸಂಘರ್ಷವಿದೆ.     "
-      },
-      "move": {
-        "title": "ಸರಿಸು",
-        "annotation": {
-          "point": "ಒಂದು ಬಿಂದುವನ್ನು ಸರಿಸಲಾಯಿತು.",
-          "vertex": "ದಾರಿಯಲ್ಲಿರುವ ಒಂದು ಚುಕ್ಕೆಯನ್ನು ಸರಿಸಲಾಯಿತು. ",
-          "line": "ರೇಖೆಯನ್ನು ಸರಿಸಲಾಯಿತು.",
-          "area": "ಪ್ರದೇಶವನ್ನು ಸರಿಸಲಾಯಿತು."
-        }
-      },
-      "rotate": {
-        "title": "ತಿರುಗಿಸು",
-        "annotation": {
-          "line": "ರೇಖೆಯನ್ನು ತಿರುಗಿಸು",
-          "area": "ಪ್ರದೇಶವನ್ನು ತಿರುಗಿಸು"
-        }
-      },
-      "reverse": {
-        "title": "ಹಿಮ್ಮುಖ"
-      },
-      "split": {
-        "title": "ವಿಭಜಿಸು",
-        "not_eligible": "ಗೆರೆಗಳನ್ನು ಶುರುವಿನಿಂದ ಅಥವಾ ಕೊನೆಯಿಂದ ವಿಭಜಿಸಲಾಗುವುದಿಲ್ಲ.",
-        "connected_to_hidden": "ಈ ವಸ್ತು ಇನ್ನೊದು ಗುಪ್ತ ವಸ್ತುವಿಗೆ ಸೇರಿಕೊಂಡಿದೆ. ಆದುದರಿಂದ ಇದನ್ನು ವಿಭಜಿಸಲಾಗುವುದಿಲ್ಲ. "
-      },
-      "restriction": {
-        "annotation": {
-          "create": "ತಿರುಗು ನಿರ್ಬಂಧವನ್ನು ಸೇರಿಸಲಾಗಿದೆ.",
-          "delete": "ತಿರುಗು ನಿರ್ಬಂಧವನ್ನು ತೆಗೆಯಲಾಗಿದೆ. "
-        }
+      "wireframe": {
+        "description": "ತುಂಬುಇಲ್ಲ (ವಯರ್ಫ್ರೇಮ್)",
+        "tooltip": "ವಯರ್ಫ್ರೇಮ್ ಅಳವಡಿಸುವುದರಿಂದ ಹಿಂದಿನ ಸೆಟಿಲೈಟ್ ಚಿತ್ರ ಸ್ಪಷ್ಟವಾಗಿ ಕಾಣುತ್ತದೆ."
       }
     },
-    "undo": {
-      "tooltip": "ಹಿಂಪಡೆ: {action}",
-      "nothing": "ಹಿಂಪಡೆಯಲು ಏನು ಇಲ್ಲ"
+    "background": {
+      "best_imagery": "ಈ ಪ್ರದೇಶಕ್ಕೆ ಅಪ್ರತಿಮ ಉಪಗ್ರಹ ಚಿತ್ರಣ  ",
+      "custom": "ಅನುಸರಣ",
+      "key": "B",
+      "none": "‍‍ಯಾವುದೂ ಇಲ್ಲ",
+      "reset": "ಮರುಹೊಂದಿಸು",
+      "switch": "ಈ ಹಿನ್ನಲೆಗೆ ಹಿಂತಿರುಗಿ ",
+      "title": "ಹಿನ್ನೆಲೆ"
     },
-    "redo": {
-      "tooltip": "ಮರಳಿಮಾಡು:{action}",
-      "nothing": "ಮರಳಿಮಾಡಲು ಏನು ಇಲ್ಲ."
-    },
-    "translate": {
-      "localized_translation_language": "ಭಾಷೆಯನ್ನು ಆಯ್ಕೆಮಾಡಿ",
-      "localized_translation_name": "ಹೆಸರು"
-    },
-    "zoom_in_edit": "ಪರಿಷ್ಕರಿಸಲು zoom ಮಾಡಿ",
-    "loading_auth": "ಓಪನ್ ಸ್ಟ್ರೀಟ್ ಮ್ಯಾಪ್ ಗೆ ಸಂಪರ್ಕಿಸಲಾಗುತ್ತಿದೆ.....",
-    "report_a_bug": "ದೋಷವನ್ನು ವಿವರಿಸಿ. ",
-    "help_translate": "ಅನುವಾದಕ್ಕೆ ನೀವು ಸಹಾಯಮಾಡಿ. ",
     "commit": {
+      "about_changeset_comments": "ಬದಲಾವಣೆಗಳ ಸಾರಾಂಶದ ಬಗ್ಗೆ",
+      "about_changeset_comments_link": "//wiki.openstreetmap.org/wiki/Good_changeset_comments\n\nಯಾವುದಾದರೂ ಬದಲಾದ ಗುಂಪಿಗೆ ನಿಮ್ಮ ಅಭಿಪ್ರಾಯ ತಿಳಿಸಬೇಕಾದಲ್ಲಿ ಈ ದಾಖಲೆ ನಿಮ್ಮ ಸಹಾಯಕ್ಕಿದೆ.  ",
+      "cancel": "ರದ್ದು ಮಾಡು",
+      "created": "ರಚಿಸಲಾಯಿತು",
+      "deleted": "ಅಳಿಸಲಾಯಿತು",
+      "download_changes": "osmChange ಅನ್ನು ಡೌನ್ಲೋಡ್ ಮಾಡಿರಿ",
+      "google_warning": "ನೀವು ಈ ಹೇಳಿಕೆಯಲ್ಲಿ ಗೂಗಲ್ ಅನ್ನು ಉಲ್ಲೇಖಿಸಿದ್ದೀರ. ಗೂಗಲ್ ಮಾಪ್ಸ್ ನಿಂದ ಮಾಹಿತಿ ಪಡೆಯುವುದು ನಿಷೇಧಿಸಿದೆ. ",
+      "modified": "ಮಾರ್ಪಡಿಸು",
+      "request_review": "ಬೇರೆ ಯಾರಾದರೂ ನನ್ನ ಪರಿಷ್ಕರಣೆಯನ್ನು ಪುನರವಲೋಕಿಸಲು ಇಚ್ಛಿಸುತ್ತೇನೆ",
+      "save": "ಅಂತರಜಾಲಕ್ಕೆ ರವಾನೆ ಮಾಡು ",
       "title": "ಓಪೆನ್‌ಸ್ಟ್ರೀಟ್ಮ್ಯಾಪ್ ಜಾಲಕ್ಕೆ ನಿಮ್ಮ ಬದಲಾವಣೆಗಳನ್ನು ರವಾನಿಸಿ.   ",
       "upload_explanation": "ನೀವು ಉಪ್ಲೋಡ್ ಮಾಡುವ ಎಲ್ಲ ಮಾಹಿತಿ ಆಥಾವ ಬದಲಾವಣೆಗಳು ಓಪನ್ಸ್ಟ್ರೀಟ್ಮ್ಯಾಪ್ ಮಾಹಿತಿ ಉಪಯೋಗಿಸುವ ಎಲ್ಲ ನಕ್ಷೆಗಲ್ಲಿ ವ್ಯಕ್ತವಾಗುತ್ತದೆ. ",
       "upload_explanation_with_user": "{user} ಉಪ್ಲೋಡ್ ಮಾಡುವ ಎಲ್ಲ ಮಾಹಿತಿ ಆಥಾವ ಬದಲಾವಣೆಗಳು ಓಪನ್ಸ್ಟ್ರೀಟ್ಮ್ಯಾಪ್ ಮಾಹಿತಿ ಉಪಯೋಗಿಸುವ ಎಲ್ಲ ನಕ್ಷೆಗಲ್ಲಿ ವ್ಯಕ್ತವಾಗುತ್ತದೆ. ",
-      "request_review": "ಬೇರೆ ಯಾರಾದರೂ ನನ್ನ ಪರಿಷ್ಕರಣೆಯನ್ನು ಪುನರವಲೋಕಿಸಲು ಇಚ್ಛಿಸುತ್ತೇನೆ",
-      "save": "ಅಂತರಜಾಲಕ್ಕೆ ರವಾನೆ ಮಾಡು ",
+      "warnings": "ಎಚ್ಚರಿಕೆಗಳು"
+    },
+    "confirm": {
       "cancel": "ರದ್ದು ಮಾಡು",
-      "download_changes": "osmChange ಅನ್ನು ಡೌನ್ಲೋಡ್ ಮಾಡಿರಿ",
-      "warnings": "ಎಚ್ಚರಿಕೆಗಳು",
-      "modified": "ಮಾರ್ಪಡಿಸು",
-      "deleted": "ಅಳಿಸಲಾಯಿತು",
-      "created": "ರಚಿಸಲಾಯಿತು",
-      "about_changeset_comments": "ಬದಲಾವಣೆಗಳ ಸಾರಾಂಶದ ಬಗ್ಗೆ",
-      "about_changeset_comments_link": "//wiki.openstreetmap.org/wiki/Good_changeset_comments\n\nಯಾವುದಾದರೂ ಬದಲಾದ ಗುಂಪಿಗೆ ನಿಮ್ಮ ಅಭಿಪ್ರಾಯ ತಿಳಿಸಬೇಕಾದಲ್ಲಿ ಈ ದಾಖಲೆ ನಿಮ್ಮ ಸಹಾಯಕ್ಕಿದೆ.  ",
-      "google_warning": "ನೀವು ಈ ಹೇಳಿಕೆಯಲ್ಲಿ ಗೂಗಲ್ ಅನ್ನು ಉಲ್ಲೇಖಿಸಿದ್ದೀರ. ಗೂಗಲ್ ಮಾಪ್ಸ್ ನಿಂದ ಮಾಹಿತಿ ಪಡೆಯುವುದು ನಿಷೇಧಿಸಿದೆ. "
+      "okay": "ಸರಿ"
     },
     "contributors": {
       "list": "ಸಂಪಾದನೆಗಳು {ಬಳಕೆದಾರ ಮೂಲಕ}"
     },
-    "info_panels": {
-      "background": {
-        "title": "ಹಿನ್ನೆಲೆ",
-        "zoom": "ಜೂಮ್",
-        "vintage": "ವಿಂಟೇಜ್",
-        "source": "ಮೂಲ",
-        "description": "ವಿವರಣೆ",
-        "accuracy": "ನಿಖರತೆ"
-      },
-      "location": {
-        "title": "ಸ್ಥಳ"
-      },
-      "measurement": {
-        "area": "ಪ್ರದೇಶ",
-        "location": "ಸ್ಥಳ"
-      }
-    },
-    "geometry": {
-      "point": "ಬಿಂದು",
-      "vertex": "ತುದಿ",
-      "line": "ರೇಖೆ",
-      "area": "ಪ್ರದೇಶ",
-      "relation": "ಸಂಭಂಧ"
-    },
-    "geocoder": {
-      "search": "ಪ್ರಪಂಚದಾದ್ಯಂತ ಹುಡುಕು......",
-      "no_results_worldwide": "ಯಾವುದೇ ಫಲಿತಾಂಶಗಳು ಕಂಡುಬರಲಿಲ್ಲ"
-    },
-    "geolocate": {
-      "title": "ನನ್ನ ಸ್ಥಳವನ್ನು ತೋರಿಸಿ",
-      "locating": "ಪತ್ತೆ ಹಚ್ಚುತ್ತಿದೆ. ದವವಿತ್ತು ಸ್ವಲ್ಪ ಸಮಯ ಕಾಯಿರಿ. "
-    },
-    "inspector": {
-      "show_more": "‍ಇನ್ನೂ ತೋರಿಸು",
-      "view_on_osm": "ಓಪನ್ ಸ್ಟ್ರೀಟ್ ಮ್ಯಾಪ್.ಆರ್ಗ್ ನಲ್ಲಿ ನೋಡಿ. ",
-      "relations": "ಸಂಬಂಧ",
-      "new_relation": "ಹೊಸ ನಂಟು",
-      "role": "ಪಾತ್ರ",
-      "choose": "ವಸ್ತು ಪ್ರಕಾರವನ್ನ ಆಯ್ಕೆಮಾಡಿ  ",
-      "type": "‍ವಿಧ",
-      "details": "ವಿವರಗಳು",
-      "remove": "ತೆಗೆದುಹಾಕು",
-      "search": "ಹುಡುಕು",
-      "unknown": "ತಿಳಿಯದ",
-      "feature_list": "‍‍ವೈಶಿಷ್ಟ್ಯಗಳನ್ನು ಹುಡುಕು",
-      "check": {
-        "yes": "ಹೌದು",
-        "no": "ಇಲ್ಲ",
-        "reverser": "ದಿಕ್ಕು ಬದಲಾಯಿಸು"
-      },
-      "radio": {
-        "structure": {
-          "default": " ಪೂರ್ವನಿಯೋಜಿತ",
-          "layer": "ಪದರ"
-        }
-      },
-      "add": "ಸೇರಿಸಿ",
-      "none": "‍ಯಾವುದೂ ಇಲ್ಲ",
-      "node": "‍‍ಯಾವುದೂ ಇಲ್ಲ",
-      "way": "ದಾರಿ",
-      "relation": "ಸಂಬಂಧ",
-      "location": "ಸ್ಥಳ",
-      "add_fields": "ವರ್ಗವನ್ನು ಸೇರಿಸಿ. "
-    },
-    "background": {
-      "title": "ಹಿನ್ನೆಲೆ",
-      "none": "‍‍ಯಾವುದೂ ಇಲ್ಲ",
-      "best_imagery": "ಈ ಪ್ರದೇಶಕ್ಕೆ ಅಪ್ರತಿಮ ಉಪಗ್ರಹ ಚಿತ್ರಣ  ",
-      "switch": "ಈ ಹಿನ್ನಲೆಗೆ ಹಿಂತಿರುಗಿ ",
-      "custom": "ಅನುಸರಣ",
-      "reset": "ಮರುಹೊಂದಿಸು"
-    },
-    "map_data": {
-      "title": "ನಕ್ಷೆ ಮಾಹಿತಿ.",
-      "description": "ನಕ್ಷೆ ಮಾಹಿತಿ.",
-      "data_layers": "ಡೇಟಾ ಪದರಗಳು",
-      "layers": {
-        "maproulette": {
-          "detail_title": "ವಿವರಗಳು",
-          "cancel": "ರದ್ದು ಮಾಡು"
-        }
-      }
-    },
     "filters": {
-      "points": {
-        "description": "ಚುಕ್ಕೆಗಳು. ",
-        "tooltip": "ಆಸಕ್ತಿಯ ಅಂಶಗಳು."
-      },
-      "traffic_roads": {
-        "description": "ಸಂಚಾರಿ ರಸ್ತೆಗಳು",
-        "tooltip": "ಹೆದ್ದಾರಿಗಳು, ಬೀದಿಗಳು, ಇತ್ಯಾದಿ. "
-      },
-      "service_roads": {
-        "description": "ಸೌಕರ್ಯ ರಸ್ತೆಗಳು. ",
-        "tooltip": "ಸೌಕರ್ಯ ರಸ್ತೆಗಳು; ಗಾಡಿ ನಿಲ್ಲ್ಸುವ ಸ್ಥಳಗಳು; ಹಾದಿಗಳು... ಇತ್ಯಾದಿ."
-      },
-      "paths": {
-        "description": "ಹಾದಿ",
-        "tooltip": "ಪಾದಚಾರಿ ಮಾರ್ಗಗಳು, ಕಾಲುದಾರಿಗಳು, ಸೈಕ‍ಲ್ ಮಾರ್ಗಗಳು, ಇತ್ಯಾದಿ"
+      "boundaries": {
+        "description": "ಗಡಿಗಳು",
+        "tooltip": "ಆಡಳಿತಾತ್ಮಕ ಗಡಿರೇಖೆಗಳು"
       },
       "buildings": {
         "description": "ಕಟ್ಟಡಗಳು",
@@ -285,155 +65,190 @@
         "description": "ನೆಲಉಪಯುಕ್ತ ಲಕ್ಷಣಗಳು. ",
         "tooltip": "‍ಕಾಡುಗಳು, ಕೃಷಿಭೂಮಿ, ಉದ್ಯಾನಗಳು, ಗೃಹ, ವಾಣಿಜ್ಯ, ಇತ್ಯಾದಿ"
       },
-      "boundaries": {
-        "description": "ಗಡಿಗಳು",
-        "tooltip": "ಆಡಳಿತಾತ್ಮಕ ಗಡಿರೇಖೆಗಳು"
+      "others": {
+        "tooltip": "ಇನ್ನಿತರೆ"
       },
-      "water": {
-        "description": "ನೀರಿನ ಲಕ್ಷಣಗಳು",
-        "tooltip": "ನದಿಗಳು, ಸರೋವರಗಳು, ಕೊಳಗಳು, ಹೊಂಡಗಳು, ಇತ್ಯಾದಿ"
+      "past_future": {
+        "tooltip": "ಪ್ರ‍ಸ್ತಾವಿಸಿದ, ನಿರ್ಮಾ‍ಣ ಹಂತದ, ಕೈಬಿಟ್ಟ, ಕೆಡವ‍ಲಾದ ಇತ್ಯಾದಿ"
       },
-      "rail": {
-        "description": "ರೈಲಿನ ಲಕ್ಷಣಗಳು",
-        "tooltip": "ರೈಲ್ವೆ"
+      "paths": {
+        "description": "ಹಾದಿ",
+        "tooltip": "ಪಾದಚಾರಿ ಮಾರ್ಗಗಳು, ಕಾಲುದಾರಿಗಳು, ಸೈಕ‍ಲ್ ಮಾರ್ಗಗಳು, ಇತ್ಯಾದಿ"
+      },
+      "points": {
+        "description": "ಚುಕ್ಕೆಗಳು. ",
+        "tooltip": "ಆಸಕ್ತಿಯ ಅಂಶಗಳು."
       },
       "power": {
         "description": "ವಿದ್ಯುತ್ ಲಕ್ಷಣಗಳು",
         "tooltip": "ವಿದ್ಯುತ್ ಸಂಪರ್ಕಗಳು, ವಿದ್ಯುತ್ ಉತ್ಪಾದನಾ ಘಟಕಗಳು, ಉಪಕೇಂದ್ರಗಳು ಇತ್ಯಾದಿ"
       },
-      "past_future": {
-        "tooltip": "ಪ್ರ‍ಸ್ತಾವಿಸಿದ, ನಿರ್ಮಾ‍ಣ ಹಂತದ, ಕೈಬಿಟ್ಟ, ಕೆಡವ‍ಲಾದ ಇತ್ಯಾದಿ"
+      "rail": {
+        "description": "ರೈಲಿನ ಲಕ್ಷಣಗಳು",
+        "tooltip": "ರೈಲ್ವೆ"
       },
-      "others": {
-        "tooltip": "ಇನ್ನಿತರೆ"
-      }
-    },
-    "area_fill": {
-      "wireframe": {
-        "description": "ತುಂಬುಇಲ್ಲ (ವಯರ್ಫ್ರೇಮ್)",
-        "tooltip": "ವಯರ್ಫ್ರೇಮ್ ಅಳವಡಿಸುವುದರಿಂದ ಹಿಂದಿನ ಸೆಟಿಲೈಟ್ ಚಿತ್ರ ಸ್ಪಷ್ಟವಾಗಿ ಕಾಣುತ್ತದೆ."
+      "service_roads": {
+        "description": "ಸೌಕರ್ಯ ರಸ್ತೆಗಳು. ",
+        "tooltip": "ಸೌಕರ್ಯ ರಸ್ತೆಗಳು; ಗಾಡಿ ನಿಲ್ಲ್ಸುವ ಸ್ಥಳಗಳು; ಹಾದಿಗಳು... ಇತ್ಯಾದಿ."
       },
-      "partial": {
-        "description": "ಅರೆ ತುಂಬು‍"
+      "traffic_roads": {
+        "description": "ಸಂಚಾರಿ ರಸ್ತೆಗಳು",
+        "tooltip": "ಹೆದ್ದಾರಿಗಳು, ಬೀದಿಗಳು, ಇತ್ಯಾದಿ. "
       },
-      "full": {
-        "description": "ಪೂರ್ಣ ತುಂಬು"
+      "water": {
+        "description": "ನೀರಿನ ಲಕ್ಷಣಗಳು",
+        "tooltip": "ನದಿಗಳು, ಸರೋವರಗಳು, ಕೊಳಗಳು, ಹೊಂಡಗಳು, ಇತ್ಯಾದಿ"
       }
-    },
-    "preferences": {
-      "color_selection": {
-        "default": " ಪೂರ್ವನಿಯೋಜಿತ"
-      }
-    },
-    "restore": {
-      "heading": "ಉಳಿಸದ ಬದಲಾವಣೆಗಳಿವೆ."
-    },
-    "save": {
-      "title": "ಉಳಿಸು",
-      "no_changes": "ಉಳಿಸಲು ಏನೂ ಬದಲಾವಣೆಗಳು ಇಲ್ಲ. ",
-      "error": "ನೇವು ಮಾಡಿದ ಬದಲಾವಣೆಗಳನ್ನು ಉಳಿಸುವಾಗ ಪ್ರಮಾದ ಉಂಟಾಯಿತು. ",
-      "unknown_error_details": "ಅಂತರಜಾಲದ ಸಂಪರ್ಕ ಇರುವುದೆಂದು ಖಚಿತಪಡಿಸಿಕೊಳ್ಳಿ. ",
-      "unsaved_changes": "ಉಳಿಸದ ಬದಲಾವಣೆಗಳಿವೆ.",
-      "conflict": {
-        "header": "ವಿರೋಧವಿರುವ ಬದಲಾವಣೆಗಳನ್ನು ಪರಿಹರಿಸಿ. ",
-        "count": "{ಮೊತ್ತ} ದಲ್ಲಿ {ಸಂಖೆ} ವಿರೋಧ.",
-        "previous": "<‍ಹಿಂದಿನ",
-        "next": "‍ಮುಂದಿನ>",
-        "keep_local": "ನನ್ನ ಬದಲಾವಣೆಗಳನ್ನು ಉಳಿಸಿ. ",
-        "keep_remote": "ಅವರ ಬದಲಾವಣೆಗಳನ್ನು ಉಳಿಸಿ",
-        "restore": "ಪುನಃಸ್ಥಾಪನೆ",
-        "delete": "ಅಳಿಸಿರುವುದನ್ನು ಬಿಡು",
-        "done": "ಎಲ್ಲ ವಿರೋಧಗಳನ್ನು ಪರಿಹರಿಸಲಾಗಿದೆ! "
-      }
-    },
-    "success": {
-      "help_link_text": "ವಿವರಗಳು"
-    },
-    "confirm": {
-      "okay": "ಸರಿ",
-      "cancel": "ರದ್ದು ಮಾಡು"
-    },
-    "source_switch": {
-      "dev": "ಡೆವ್",
-      "live": "ಲೈವ್"
-    },
-    "rapid_menu": {
-      "remove": "ತೆಗೆದುಹಾಕು"
-    },
-    "tag_reference": {
-      "description": "ವಿವರಣೆ",
-      "on_wiki": "{tag} wiki.osm.org ನಲ್ಲಿ",
-      "used_with": "{ಮಾದರಿ} ಜೊತೆಗೆ ಬಳಸಿ. "
     },
     "full_screen": "‍ಪೂರ್ಣ ಪರದೆಗೆ ಹಿಂದಿರುಗು",
-    "QA": {
-      "osmose": {
-        "detail_title": "ವಿವರಗಳು"
-      },
-      "keepRight": {
-        "detail_description": "ವಿವರಣೆ"
-      }
+    "geocoder": {
+      "no_results_worldwide": "ಯಾವುದೇ ಫಲಿತಾಂಶಗಳು ಕಂಡುಬರಲಿಲ್ಲ",
+      "search": "ಪ್ರಪಂಚದಾದ್ಯಂತ ಹುಡುಕು......"
     },
-    "mapillary": {
-      "tooltip": "ರಸ್ತೆ ಮಟ್ಟದ ಚಿತ್ರಗಳು ಮ್ಯಾಪಿಲರೀ ಇಂದ "
+    "geolocate": {
+      "locating": "ಪತ್ತೆ ಹಚ್ಚುತ್ತಿದೆ. ದವವಿತ್ತು ಸ್ವಲ್ಪ ಸಮಯ ಕಾಯಿರಿ. ",
+      "title": "ನನ್ನ ಸ್ಥಳವನ್ನು ತೋರಿಸಿ"
     },
-    "note": {
-      "note": "ಟಿಪ್ಪಣಿ"
+    "geometry": {
+      "area": "ಪ್ರದೇಶ",
+      "line": "ರೇಖೆ",
+      "point": "ಬಿಂದು",
+      "relation": "ಸಂಭಂಧ",
+      "vertex": "ತುದಿ"
     },
     "help": {
-      "title": "ಸಹಾಯ",
-      "help": {
-        "title": "ಸಹಾಯ"
-      },
-      "overview": {
-        "navigation_h": "ಸಂಚರಣೆ",
-        "features_h": "‍ನಕ್ಷೆಯ ವೈಶಿಷ್ಟ್ಯತೆಗಳು"
+      "areas": {
+        "add_area_h": "ಪ್ರದೇಶಗಳನ್ನು ಸೇರಿಸಲಾಗುತ್ತಿದೆ",
+        "delete_area_h": "ಪ್ರದೇಶಗಳನ್ನು ಅಳಿಸಲಾಗುತ್ತಿದೆ",
+        "modify_area_h": "ಪ್ರದೇಶಗಳನ್ನು ಮಾರ್ಪಡಿಸಲಾಗುತ್ತಿದೆ",
+        "point_or_area_h": "ಪ್ರದೇಶ ಅಥವಾ ಬಿಂದು?",
+        "square_area_h": "ಚೌಕ ಮೂಲೆಗಳು",
+        "title": "ಪ್ರದೇಶ"
       },
       "editing": {
         "save_h": "ಉಳಿಸು",
         "upload_h": "ಅಂತರಜಾಲಕ್ಕೆ ರವಾನೆ ಮಾಡು "
       },
+      "help": {
+        "title": "ಸಹಾಯ"
+      },
+      "key": "H",
+      "lines": {
+        "connect_line_h": "ರೇಖೆಗಳನ್ನು ಜೋಡಿಸಲಾಗುತ್ತಿದೆ",
+        "delete_line_h": "ರೇಖೆಗಳನ್ನು ಅಳಿಸಲಾಗುತ್ತಿದೆ",
+        "disconnect_line_h": "ರೇಖೆಗಳನ್ನು ಬೇರ್ಪಡಿಸಲಾಗುತ್ತಿದೆ",
+        "modify_line_h": "ರೇಖೆಗಳನ್ನು ಬದಲಿಸಲಾಗುತ್ತಿದೆ",
+        "move_line_h": "ರೇಖೆಗಳನ್ನು ಸ್ಥಳಾಂತರಿಸಲಾಗುತ್ತಿದೆ",
+        "title": "ರೇಖೆಗಳು"
+      },
+      "overview": {
+        "features_h": "‍ನಕ್ಷೆಯ ವೈಶಿಷ್ಟ್ಯತೆಗಳು",
+        "navigation_h": "ಸಂಚರಣೆ"
+      },
       "points": {
         "title": "ಬಿಂದುಗಳು"
       },
-      "lines": {
-        "title": "ರೇಖೆಗಳು",
-        "modify_line_h": "ರೇಖೆಗಳನ್ನು ಬದಲಿಸಲಾಗುತ್ತಿದೆ",
-        "connect_line_h": "ರೇಖೆಗಳನ್ನು ಜೋಡಿಸಲಾಗುತ್ತಿದೆ",
-        "disconnect_line_h": "ರೇಖೆಗಳನ್ನು ಬೇರ್ಪಡಿಸಲಾಗುತ್ತಿದೆ",
-        "move_line_h": "ರೇಖೆಗಳನ್ನು ಸ್ಥಳಾಂತರಿಸಲಾಗುತ್ತಿದೆ",
-        "delete_line_h": "ರೇಖೆಗಳನ್ನು ಅಳಿಸಲಾಗುತ್ತಿದೆ"
-      },
-      "areas": {
-        "title": "ಪ್ರದೇಶ",
-        "point_or_area_h": "ಪ್ರದೇಶ ಅಥವಾ ಬಿಂದು?",
-        "add_area_h": "ಪ್ರದೇಶಗಳನ್ನು ಸೇರಿಸಲಾಗುತ್ತಿದೆ",
-        "square_area_h": "ಚೌಕ ಮೂಲೆಗಳು",
-        "modify_area_h": "ಪ್ರದೇಶಗಳನ್ನು ಮಾರ್ಪಡಿಸಲಾಗುತ್ತಿದೆ",
-        "delete_area_h": "ಪ್ರದೇಶಗಳನ್ನು ಅಳಿಸಲಾಗುತ್ತಿದೆ"
-      },
-      "relations": {
-        "title": "ಸಂಬಂಧ",
-        "boundary_h": "ಗಡಿಗಳು"
-      },
       "qa": {
         "tools_h": "ಉಪಕರಣಗಳು"
+      },
+      "relations": {
+        "boundary_h": "ಗಡಿಗಳು",
+        "title": "ಸಂಬಂಧ"
+      },
+      "title": "ಸಹಾಯ"
+    },
+    "help_translate": "ಅನುವಾದಕ್ಕೆ ನೀವು ಸಹಾಯಮಾಡಿ. ",
+    "icons": {
+      "copy": "ನಕಲಿಸಿ",
+      "deselect": "ಆಯ್ಕೆಯನ್ನು ತೆಗೆಯುವುದು",
+      "favorite": "ಇಷ್ಟವಾದ",
+      "information": "ಮಾಹಿತಿ",
+      "list": "ಪಟ್ಟಿ",
+      "remove": "ತೆಗೆಯಿರಿ",
+      "text": "ಬರವಣಿಗೆ",
+      "undo": "ಮಾಡಿದ್ದನ್ನು ತೆಗೆಯುವುದು",
+      "view_on": "{domain} ನಲ್ಲಿ ನೋಡು",
+      "visit_website": "ವೆಬ್ಸೈಟನ್ನು ಭೇಟಿ ಮಾಡು",
+      "zoom_to": "ಗಾತ್ರವನ್ನು ಹೆಚ್ಚಿಸು"
+    },
+    "info_panels": {
+      "background": {
+        "accuracy": "ನಿಖರತೆ",
+        "description": "ವಿವರಣೆ",
+        "source": "ಮೂಲ",
+        "title": "ಹಿನ್ನೆಲೆ",
+        "vintage": "ವಿಂಟೇಜ್",
+        "zoom": "ಜೂಮ್"
+      },
+      "location": {
+        "title": "ಸ್ಥಳ"
+      },
+      "measurement": {
+        "area": "ಪ್ರದೇಶ",
+        "center": "ಮಧ್ಯ",
+        "centroid": "‍ಮಧ್ಯಬಿಂದು",
+        "geometry": "‍ಜಾಮಿತಿ",
+        "imperial": "ಸಾರ್ವಭೌಮ ",
+        "length": "ಉದ್ದ",
+        "location": "ಸ್ಥಳ",
+        "metric": "ಮೆಟ್ರಿಕ್",
+        "perimeter": "‍ಪರಿಧಿ"
       }
     },
-    "issues": {
-      "warnings": "ಎಚ್ಚರಿಕೆಗಳು"
+    "inspector": {
+      "add": "ಸೇರಿಸಿ",
+      "add_fields": "ವರ್ಗವನ್ನು ಸೇರಿಸಿ. ",
+      "check": {
+        "no": "ಇಲ್ಲ",
+        "reverser": "ದಿಕ್ಕು ಬದಲಾಯಿಸು",
+        "yes": "ಹೌದು"
+      },
+      "choose": "ವಸ್ತು ಪ್ರಕಾರವನ್ನ ಆಯ್ಕೆಮಾಡಿ  ",
+      "details": "ವಿವರಗಳು",
+      "edit": "‍ವೈಶಿಷ್ಟ್ಯಗಳನ್ನು ಸಂಪಾದಿಸು",
+      "feature_list": "‍‍ವೈಶಿಷ್ಟ್ಯಗಳನ್ನು ಹುಡುಕು",
+      "incomplete": "<not downloaded>",
+      "location": "ಸ್ಥಳ",
+      "new_relation": "ಹೊಸ ನಂಟು",
+      "node": "‍‍ಯಾವುದೂ ಇಲ್ಲ",
+      "none": "‍ಯಾವುದೂ ಇಲ್ಲ",
+      "radio": {
+        "structure": {
+          "default": " ಪೂರ್ವನಿಯೋಜಿತ",
+          "layer": "ಪದರ"
+        }
+      },
+      "relation": "ಸಂಬಂಧ",
+      "relations": "ಸಂಬಂಧ",
+      "remove": "ತೆಗೆದುಹಾಕು",
+      "role": "ಪಾತ್ರ",
+      "search": "ಹುಡುಕು",
+      "show_more": "‍ಇನ್ನೂ ತೋರಿಸು",
+      "type": "‍ವಿಧ",
+      "unknown": "ತಿಳಿಯದ",
+      "view_on_osm": "ಓಪನ್ ಸ್ಟ್ರೀಟ್ ಮ್ಯಾಪ್.ಆರ್ಗ್ ನಲ್ಲಿ ನೋಡಿ. ",
+      "way": "ದಾರಿ"
     },
     "intro": {
+      "areas": {
+        "title": "ಪ್ರದೇಶ"
+      },
+      "buildings": {
+        "title": "ಕಟ್ಟಡಗಳು"
+      },
       "done": "‍ಮುಗಿಯಿತು",
-      "ok": "ಓಕೇ",
       "graph": {
+        "block_number": "<value for addr:block_number>",
         "city": "ತ್ರೀ ರಿವರ್ಸ್ ",
-        "state": "<value for addr:state>",
         "countrycode": "in",
+        "county": "<value for addr:county>",
+        "district": "<value for addr:district>",
+        "hamlet": "<value for addr:hamlet>",
         "name": {
           "6th-street": "6ನೇ ರಸ್ತೆ",
           "adams-street": "ಆಡಮ್ಸ್ ರಸ್ತೆ",
           "andrews-street": "ಆಂಡ್ರ್ಯೂಸ್ ರಸ್ತೆ",
+          "flower-street": "‍ಹೂವಿನ ಬೀದಿ",
           "scidmore-park": "ಸ್ಕಿಡ್ಮ್ಮಾರ ಪಾರ್ಕ್  ",
           "scouter-park": "ಸ್ಕೌಟರ್ ಪಾರ್ಕ್  ",
           "sherwin-williams": "ಶೆರ್ವಿನ್ ವಿಲ್ಯಮ್ಸ್  ",
@@ -441,6 +256,7 @@
           "southern-michigan-bank": "ಸದರ್ನ್ ಮಿಶಿಗನ್ ಬ್ಯಾಂಕ್ ",
           "spring-street": "ಸ್ಪ್ರಿಂಗ್ ರಸ್ತೆ ",
           "sturgeon-river-road": "ಸ್ಟರ್ಜನ್ ನದಿ ರಸ್ತೆ ",
+          "three-rivers": "ಮೂರು ನದಿಗಳು ",
           "three-rivers-city-hall": "ತ್ರೀ ರಿವೆರ್ಸ್ ನಗರ ಸಭಾಂಗಣ  ",
           "three-rivers-elementary-school": "ತ್ರೀ ರಿವೆರ್ಸ್ ಪ್ರಾಥಮಿಕ ಶಾಲೆ  ",
           "three-rivers-fire-department": "ತ್ರೀ ರಿವೆರ್ಸ್ ಅಗ್ನಿಶಾಮಕ ಇಲಾಖೆ",
@@ -449,7 +265,6 @@
           "three-rivers-municipal-airport": "ತ್ರೀ ರಿವೆರ್ಸ್ ಪುರಸಭೆ ವಿಮಾನ ನಿಲ್ದಾಣ  ",
           "three-rivers-post-office": "ತ್ರೀ ರಿವೆರ್ಸ್ ಅಂಚೆ ಕಚೇರಿ",
           "three-rivers-public-library": "ತ್ರೀ ರಿವೆರ್ಸ್ ಸಾರ್ವಜನಿಕ ಗ್ರಂಥಾಲಯ",
-          "three-rivers": "ಮೂರು ನದಿಗಳು ",
           "unique-jewelry": "ಅನನ್ಯ ಆಭರಣ ",
           "walnut-street": "ವಾಲ್ನಟ್ ರಸ್ತೆ ",
           "washington-street": "ವಾಶಿಂಗ್ಟನ್ ರಸ್ತೆ ",
@@ -459,54 +274,40 @@
           "william-towing": "ವಿಲಿಯಮ್ ಟೋವಿಂಗ್ ",
           "willow-drive": "ವಿಲ್ಲೋ ರಸ್ತೆ  ",
           "wood-street": "ವುಡ್ ರಸ್ತೆ  "
-        }
-      },
-      "welcome": {
-        "title": "ಸ್ವಾಗತ",
-        "welcome": "ಸ್ವಾಗತ! ಈ ಸಹಾಯದರ್ಶನ ಓಪನ್ಸ್ಟ್ರೀಟ್ಮ್ಯಾಪ್ ನಲ್ಲಿ ಸಂಪಾದಿಸುವ ಬಗ್ಗೆ ಎಲ್ಲ ಮಾಹಿತಿಗಳನ್ನು ನೀಡುತ್ತದೆ.  ",
-        "practice": "ಈ ಸಹಾಯದರ್ಶನದ ಮೂಲಕ ಮಾಡುವ ಎಲ್ಲ ಬದಲಾವಣೆಗಳು ಕೇವಲ ಅಭ್ಯಾಸಕ್ಕಾಗಿ. ಯಾವುದೇ ಬದಲಾವಣೆಗಳು ಉಳಿವುದಿಲ್ಲ.   "
-      },
-      "navigation": {
-        "title": "ಸಂಚರಣೆ"
-      },
-      "points": {
-        "title": "ಚುಕ್ಕೆಗಳು. "
-      },
-      "areas": {
-        "title": "ಪ್ರದೇಶ"
+        },
+        "neighbourhood": "<value for addr:neighbourhood>",
+        "postcode": "49093",
+        "province": "<value for addr:province>",
+        "quarter": "<value for addr:quarter>",
+        "state": "<value for addr:state>",
+        "subdistrict": "<value for addr:subdistrict>",
+        "suburb": "<value for addr:suburb>"
       },
       "lines": {
         "title": "ರೇಖೆಗಳು"
       },
-      "buildings": {
-        "title": "ಕಟ್ಟಡಗಳು"
+      "navigation": {
+        "choose_street": "ಪಟ್ಟಿಯಲ್ಲಿರುವ {ಹೆಸರನ್ನು} ಆಯ್ಕೆ ಮಾಡಲು ಒಂದನ್ನು ಆರಿಸಿ. ",
+        "title": "ಸಂಚರಣೆ"
+      },
+      "ok": "ಓಕೇ",
+      "points": {
+        "title": "ಚುಕ್ಕೆಗಳು. "
       },
       "startediting": {
-        "title": "ಬದಲಿಸಲು ಪ್ರಾರಂಭಿಸಿ.",
         "save": "ನೀವು ಮಾಡಿದ ಬದಲಾವಣೆಗಲ್‌ನ್ನು ಮರೆಯದೆ ಉಳಿಸಿಕೊಳ್ಳಿ, ",
-        "start": "ನಕ್ಷೆ ಮಾಡಲು ಪ್ರಾರಂಭಿಸಿ!"
-      }
-    },
-    "shortcuts": {
-      "key": {
-        "delete": "ಅಳಿಸು"
+        "start": "ನಕ್ಷೆ ಮಾಡಲು ಪ್ರಾರಂಭಿಸಿ!",
+        "title": "ಬದಲಿಸಲು ಪ್ರಾರಂಭಿಸಿ."
       },
-      "editing": "ಸಂಪಾದಿಸುವುದು",
-      "navigation": "ಸಂಚರಣೆ",
-      "commands": "ಆದೇಶಗಳು",
-      "help": "ಸಹಾಯ",
-      "info": "ಮಾಹಿತಿ",
-      "command": {
-        "toggle_issues": {
-          "key": "ಐ"
-        },
-        "toggle_all_cards": {
-          "key": "ಐ"
-        }
+      "welcome": {
+        "practice": "ಈ ಸಹಾಯದರ್ಶನದ ಮೂಲಕ ಮಾಡುವ ಎಲ್ಲ ಬದಲಾವಣೆಗಳು ಕೇವಲ ಅಭ್ಯಾಸಕ್ಕಾಗಿ. ಯಾವುದೇ ಬದಲಾವಣೆಗಳು ಉಳಿವುದಿಲ್ಲ.   ",
+        "title": "ಸ್ವಾಗತ",
+        "welcome": "ಸ್ವಾಗತ! ಈ ಸಹಾಯದರ್ಶನ ಓಪನ್ಸ್ಟ್ರೀಟ್ಮ್ಯಾಪ್ ನಲ್ಲಿ ಸಂಪಾದಿಸುವ ಬಗ್ಗೆ ಎಲ್ಲ ಮಾಹಿತಿಗಳನ್ನು ನೀಡುತ್ತದೆ.  "
       }
     },
-    "wikidata": {
-      "description": "ವಿವರಣೆ"
+    "issues": {
+      "key": "ಐ",
+      "warnings": "ಎಚ್ಚರಿಕೆಗಳು"
     },
     "languageNames": {
       "aa": "ಅಫಾರ್",
@@ -1070,6 +871,201 @@
       "zun": "ಝೂನಿ",
       "zza": "ಜಾಝಾ"
     },
+    "loading_auth": "ಓಪನ್ ಸ್ಟ್ರೀಟ್ ಮ್ಯಾಪ್ ಗೆ ಸಂಪರ್ಕಿಸಲಾಗುತ್ತಿದೆ.....",
+    "map_data": {
+      "data_layers": "ಡೇಟಾ ಪದರಗಳು",
+      "description": "ನಕ್ಷೆ ಮಾಹಿತಿ.",
+      "layers": {
+        "maproulette": {
+          "cancel": "ರದ್ದು ಮಾಡು",
+          "detail_title": "ವಿವರಗಳು"
+        }
+      },
+      "title": "ನಕ್ಷೆ ಮಾಹಿತಿ."
+    },
+    "mapillary": {
+      "tooltip": "ರಸ್ತೆ ಮಟ್ಟದ ಚಿತ್ರಗಳು ಮ್ಯಾಪಿಲರೀ ಇಂದ ",
+      "view_on_mapillary": "ಈ ಚಿತ್ರವನ್ನು Mapillary ನಲ್ಲಿ ನೋಡಿ"
+    },
+    "modes": {
+      "add_area": {
+        "description": "ಉದ್ಯಾನವನಗಳು, ಕಟ್ಟಡಗಳು, ಕೆರೆಗಳು ಅಥವಾ ಇತರೆ ಪ್ರದೇಶಗಳನ್ನು ನಕ್ಷೆಯಲ್ಲಿ ಸೇರಿಸಿ.",
+        "title": "ಪ್ರದೇಶ"
+      },
+      "add_line": {
+        "description": "ಹೆದ್ದಾರಿಗಳು, ಬೀದಿಗಳು, ಪಾದಚಾರಿ ಮಾರ್ಗ, ಕಾಲುವೆಗಳು ಅಥವಾ ಇತರ ಸಾಲುಗಳನ್ನು ನಕ್ಷೆ‍ಗೆ ಸೇರಿಸಿ.",
+        "title": "ಗೆರೆ"
+      },
+      "add_note": {
+        "description": "ತಪ್ಪು ಕಂಡೀತೇ? ಬೇರೆಯವರಿಗೆ ತಿಳಿಸಿ.",
+        "title": "ಟಿಪ್ಪಣಿ"
+      },
+      "add_point": {
+        "description": "ಉದ್ಯಾನವನಗಳು, ಕಟ್ಟಡಗಳು, ಸರೋವರಗಳು ಅಥವಾ ಇತರೆ ಪ್ರದೇಶಗಳನ್ನು ನಕ್ಷೆಯಲ್ಲಿ ಸೇರಿಸಿ.",
+        "title": "ಬಿಂದು"
+      },
+      "add_preset": {
+        "title": "ವೈಶಿಷ್ಟ್ಯವನ್ನು ಸೇರಿಸು"
+      },
+      "browse": {
+        "description": "ನಕ್ಷೆಯನ್ನು ಪ್ಯಾನ್ ಮತ್ತು ಜೂಮ್ ಮಾಡಿರಿ.",
+        "title": "ಜಾಲಾಟ"
+      },
+      "drag_node": {
+        "connected_to_hidden": "ಅಗೋಚರ ಮೂಲಕ್ಕೆ ಸಂಬಂಧಿಸಿದ್ದರಿಂದ ಪರಿಷ್ಕರಿಸಲು ಸಾಧ್ಯವಿಲ್ಲ"
+      }
+    },
+    "note": {
+      "note": "ಟಿಪ್ಪಣಿ"
+    },
+    "operations": {
+      "add": {
+        "annotation": {
+          "note": "ಟಿಪ್ಪಣಿಯನ್ನು ಸೇರಿಸಲಾಗಿದೆ.",
+          "point": "ಒಂದು ಬಿಂದುವನ್ನು ಸೇರಿಸಲಾಯಿತು.",
+          "relation": "ಸಂಬಂಧವನ್ನು ಸೇರಿಸಲಾಗಿದೆ.",
+          "vertex": "ದಾರಿಗೆ ಒಂದು ಜಾಲಘಟಕವನ್ನು ಸೇರಿಸಲಾಗಿದೆ"
+        }
+      },
+      "cancel_draw": {
+        "annotation": "ಚಿತ್ರವನ್ನು ರದ್ದುಗೊಳಿಸು."
+      },
+      "change_tags": {
+        "annotation": "ಹೆಸರು ಪಟ್ಟಿಯ ಬದಲಾವಣೆ."
+      },
+      "circularize": {
+        "title": "ವೃತ್ತಾಕಾರ"
+      },
+      "connect": {
+        "annotation": {
+          "from_vertex": {
+            "to_area": "ದಾರಿಯನ್ನು ಒಂದು ಕ್ಷೇತ್ರಕ್ಕೆ ಸೇರಿಸಲಾಗಿದೆ.",
+            "to_line": "ದಾರಿಯನ್ನು ಒಂದು ಗೆರೆಗೆ ಸೇರಿಸಲಾಗಿದೆ.",
+            "to_point": "ದಾರಿಯನ್ನು ಒಂದು ಚುಕ್ಕೆಗೆ ಸೇರಿಸಲಾಗಿದೆ.",
+            "to_vertex": "ಒಂದು ದಾರಿಯನ್ನು ಇನೊಂದಕ್ಕೆ ಸೇರಿಸಲಾಗಿದೆ."
+          }
+        }
+      },
+      "continue": {
+        "annotation": {
+          "area": "ಪ್ರದೇಶವನ್ನು ಮುಂದುವರೆಸು.",
+          "line": "ರೇಖೆಯಾಗಿ ಮುಂದುವರೆಸು."
+        },
+        "description": "ಈ ರೇಖೆಯನ್ನು ಮುಂದುವರೆಸು.",
+        "not_eligible": "ಇಲ್ಲಿ ಯಾವುದೇ ಗೆರೆ ಮುಂದುವರೆಯುವುದಿಲ್ಲ",
+        "title": "ಮುಂದುವರೆಸು"
+      },
+      "delete": {
+        "annotation": {
+          "area": "ಪ್ರದೇಶವನ್ನು ಅಳಿಸಲಾಯಿತು.",
+          "line": "ರೇಖೆಯನ್ನು ಅಳಿಸಲಾಯಿತು.",
+          "point": "ಬಿಂದುವನ್ನು ಅಳಿಸಲಾಯಿತು.",
+          "relation": "‍ರಿಲೇಷನ್ ಅನ್ನು ಅಳಿಸಲಾಗಿದೆ.",
+          "vertex": "ಜಾಲಘಟಕವನ್ನು ಈ ದಾರಿಯಿಂದ ಅಳಿಸಲಾಗಿದೆ.  "
+        },
+        "title": "ಅಳಿಸು"
+      },
+      "disconnect": {
+        "connected_to_hidden": "ಗುಪ್ತ ವಸ್ತುವಿಗೆ ಸೇರ್ಪಡೆಯಾದುದರಿಂದ, ಈ ವಸ್ತುವನ್ನು ಬೇರ್ಪಡಿಸಲಾಗುವುದಿಲ್ಲ. ",
+        "not_connected": "ಬೇರ್ಪಡಿಸಲು ಸಾಕಾಗುವಷ್ಟು ದಾರಿಗಳು ಅಥವಾ ಕ್ಷೇತ್ರಗಳಿಲ್ಲ.",
+        "relation": "ಈ ವಸ್ತುಗಳು ಒಂದು ಸಂಬಂಧದ ಅಂಶವಾಗಿರುವುದರಿಂದ, ಇದನ್ನು ಬೇರ್ಪಡಿಸಲಾಗುವುದಿಲ್ಲ. ",
+        "title": "ಸಂಪರ್ಕ ಕಡಿತಗೊಳಿಸು"
+      },
+      "merge": {
+        "conflicting_tags": "ಈ ವಸ್ತುಗಳನ್ನು ಸೇರಿಸಲಾಗುವುದಿಲ್ಲ ಏಕೆಂದರೆ ಇವುಗಳಲ್ಲಿ ಕೆಲವು ವಸ್ತುಗಳ ಗುರುತುಪಟ್ಟಿಗಳ ನಡುವೆ ಸಂಘರ್ಷವಿದೆ.     ",
+        "description": "ಈ ವಸ್ತುಗಳನ್ನು ಸೇರಿಸಿ.",
+        "incomplete_relation": "ಈ ವಸ್ತುಗಳನ್ನು ಸೇರಿಸಲಾಗುವುದಿಲ್ಲ ಏಕೆಂದರೆ ಇವುಗಳಲ್ಲಿ ಕನಿಷ್ಟಪಕ್ಷ ಒಂದಾದರೂ ಸಂಪೂರ್ಣವಾಗಿ ನಕಲಿಳಿಸಿಲ್ಲ.    ",
+        "not_adjacent": "ಈ ವಸ್ತುಗಳನ್ನು ಸೇರಿಸಲಾಗುವುದಿಲ್ಲ ಏಕೆಂದರೆ ಇವುಗಳ ಕೊನೆಗಳು ಒಂದಕ್ಕೊಂಡಕ್ಕೆ ಸೇರಿಕೊಂಡಿಲ್ಲ.   ",
+        "not_eligible": "ಈ ವಸ್ತುಗಳನ್ನು ಸೇರಿಸಲಾಗುವುದಿಲ್ಲ.",
+        "title": "ವಿಲೀನಗೊಳಿಸು"
+      },
+      "move": {
+        "annotation": {
+          "area": "ಪ್ರದೇಶವನ್ನು ಸರಿಸಲಾಯಿತು.",
+          "line": "ರೇಖೆಯನ್ನು ಸರಿಸಲಾಯಿತು.",
+          "point": "ಒಂದು ಬಿಂದುವನ್ನು ಸರಿಸಲಾಯಿತು.",
+          "vertex": "ದಾರಿಯಲ್ಲಿರುವ ಒಂದು ಚುಕ್ಕೆಯನ್ನು ಸರಿಸಲಾಯಿತು. "
+        },
+        "title": "ಸರಿಸು"
+      },
+      "orthogonalize": {
+        "title": "ಚೌಕ"
+      },
+      "paste": {
+        "title": "ಅಂಟಿಸು"
+      },
+      "restriction": {
+        "annotation": {
+          "create": "ತಿರುಗು ನಿರ್ಬಂಧವನ್ನು ಸೇರಿಸಲಾಗಿದೆ.",
+          "delete": "ತಿರುಗು ನಿರ್ಬಂಧವನ್ನು ತೆಗೆಯಲಾಗಿದೆ. "
+        }
+      },
+      "reverse": {
+        "description": {
+          "line": "ಈ ಗೆರೆಯನ್ನು ಅಭಿಮುಖ ದಿಕ್ಕಿನಲ್ಲಿ ಚಲಿಸುವಂತೆ ಮಾಡಿ. "
+        },
+        "title": "ಹಿಮ್ಮುಖ"
+      },
+      "rotate": {
+        "annotation": {
+          "area": "ಪ್ರದೇಶವನ್ನು ತಿರುಗಿಸು",
+          "line": "ರೇಖೆಯನ್ನು ತಿರುಗಿಸು"
+        },
+        "title": "ತಿರುಗಿಸು"
+      },
+      "split": {
+        "connected_to_hidden": "ಈ ವಸ್ತು ಇನ್ನೊದು ಗುಪ್ತ ವಸ್ತುವಿಗೆ ಸೇರಿಕೊಂಡಿದೆ. ಆದುದರಿಂದ ಇದನ್ನು ವಿಭಜಿಸಲಾಗುವುದಿಲ್ಲ. ",
+        "not_eligible": "ಗೆರೆಗಳನ್ನು ಶುರುವಿನಿಂದ ಅಥವಾ ಕೊನೆಯಿಂದ ವಿಭಜಿಸಲಾಗುವುದಿಲ್ಲ.",
+        "title": "ವಿಭಜಿಸು"
+      },
+      "start": {
+        "annotation": {
+          "area": "ಪ್ರದೇಶವನ್ನು ಆರಂಭಿಸು.",
+          "line": "ಒಂದು ಗೆರೆ ಶುರುವಾಯಿತು."
+        }
+      },
+      "straighten": {
+        "description": {
+          "line": "ಈ ರೇಖೆಯನ್ನು ನೇರಗೊಳಿಸು."
+        },
+        "title": "ನೇರಗೊಳಿಸು"
+      }
+    },
+    "preferences": {
+      "color_selection": {
+        "default": " ಪೂರ್ವನಿಯೋಜಿತ"
+      }
+    },
+    "rapid_menu": {
+      "remove": "ತೆಗೆದುಹಾಕು"
+    },
+    "redo": {
+      "nothing": "ಮರಳಿಮಾಡಲು ಏನು ಇಲ್ಲ.",
+      "tooltip": "ಮರಳಿಮಾಡು:{action}"
+    },
+    "report_a_bug": "ದೋಷವನ್ನು ವಿವರಿಸಿ. ",
+    "restore": {
+      "description": "ಮುಂಚೆ ತಿದ್ದಿದ ವಸ್ತುಗಳನ್ನು ಮಾರುಕಳಿಸಬೇಕೆ?",
+      "heading": "ಉಳಿಸದ ಬದಲಾವಣೆಗಳಿವೆ."
+    },
+    "save": {
+      "conflict": {
+        "count": "{ಮೊತ್ತ} ದಲ್ಲಿ {ಸಂಖೆ} ವಿರೋಧ.",
+        "delete": "ಅಳಿಸಿರುವುದನ್ನು ಬಿಡು",
+        "done": "ಎಲ್ಲ ವಿರೋಧಗಳನ್ನು ಪರಿಹರಿಸಲಾಗಿದೆ! ",
+        "header": "ವಿರೋಧವಿರುವ ಬದಲಾವಣೆಗಳನ್ನು ಪರಿಹರಿಸಿ. ",
+        "keep_local": "ನನ್ನ ಬದಲಾವಣೆಗಳನ್ನು ಉಳಿಸಿ. ",
+        "keep_remote": "ಅವರ ಬದಲಾವಣೆಗಳನ್ನು ಉಳಿಸಿ",
+        "next": "‍ಮುಂದಿನ>",
+        "previous": "<‍ಹಿಂದಿನ",
+        "restore": "ಪುನಃಸ್ಥಾಪನೆ"
+      },
+      "error": "ನೇವು ಮಾಡಿದ ಬದಲಾವಣೆಗಳನ್ನು ಉಳಿಸುವಾಗ ಪ್ರಮಾದ ಉಂಟಾಯಿತು. ",
+      "no_changes": "ಉಳಿಸಲು ಏನೂ ಬದಲಾವಣೆಗಳು ಇಲ್ಲ. ",
+      "title": "ಉಳಿಸು",
+      "unknown_error_details": "ಅಂತರಜಾಲದ ಸಂಪರ್ಕ ಇರುವುದೆಂದು ಖಚಿತಪಡಿಸಿಕೊಳ್ಳಿ. ",
+      "unsaved_changes": "ಉಳಿಸದ ಬದಲಾವಣೆಗಳಿವೆ."
+    },
     "scriptNames": {
       "Adlm": "ಆ್ಯಡ್ಲಮ್",
       "Arab": "ಅರೇಬಿಕ್",
@@ -1207,6 +1203,90 @@
       "Zxxx": "ಅಲಿಖಿತ",
       "Zyyy": "ಸಾಮಾನ್ಯ",
       "Zzzz": "ಅಪರಿಚಿತ ಲಿಪಿ"
-    }
+    },
+    "settings": {
+      "custom_background": {
+        "tooltip": "ಅನುಸರಣ ಹಿನ್ನಲೆಯನ್ನು ಸಂಪಾದಿಸಿ"
+      }
+    },
+    "shortcuts": {
+      "command": {
+        "toggle_all_cards": {
+          "key": "ಐ"
+        },
+        "toggle_issues": {
+          "key": "ಐ"
+        }
+      },
+      "commands": "ಆದೇಶಗಳು",
+      "editing": "ಸಂಪಾದಿಸುವುದು",
+      "help": "ಸಹಾಯ",
+      "info": "ಮಾಹಿತಿ",
+      "key": {
+        "alt": "Alt",
+        "backspace": "Backspace",
+        "cmd": "Cmd",
+        "ctrl": "Ctrl",
+        "del": "Del",
+        "delete": "ಅಳಿಸು",
+        "end": "End",
+        "enter": "Enter",
+        "esc": "Esc",
+        "home": "Home",
+        "option": "Option",
+        "pause": "Pause",
+        "pgdn": "PgDn",
+        "pgup": "PgUp",
+        "return": "Return",
+        "shift": "Shift",
+        "space": "Space"
+      },
+      "navigation": "ಸಂಚರಣೆ"
+    },
+    "source_switch": {
+      "dev": "ಡೆವ್",
+      "live": "ಲೈವ್"
+    },
+    "splash": {
+      "walkthrough": "ಸಹಾಯದರ್ಶನವನ್ನು ಪ್ರಾರಂಭಿಸಿ  ",
+      "welcome": "ಓಪನ್ ಸ್ಟ್ರೀಟ್ ಮ್ಯಾಪ್ ಐಡಿ ಎಡಿಟರಿಗೆ ಸ್ವಾಗತ!"
+    },
+    "success": {
+      "help_link_text": "ವಿವರಗಳು",
+      "just_edited": "ನೀವು ಈಗ ಓಪನ್‍ ಸ್ಟ್ರೀಟ್ ಮ್ಯಾಪ್ ಸಂಪಾದಿಸಿದಿರಿ."
+    },
+    "tag_reference": {
+      "description": "ವಿವರಣೆ",
+      "on_wiki": "{tag} wiki.osm.org ನಲ್ಲಿ",
+      "used_with": "{ಮಾದರಿ} ಜೊತೆಗೆ ಬಳಸಿ. "
+    },
+    "toolbar": {
+      "add_feature": "ವೈಶಿಷ್ಟ್ಯವನ್ನು ಸೇರಿಸು",
+      "favorites": "ಇಷ್ಟವಾದ",
+      "inspect": "ಪರೀಕ್ಷಿಸು",
+      "recent": "ಇತ್ತೀಚಿನ",
+      "undo_redo": "ಪುನಃ ಮಾಡು"
+    },
+    "tooltip_keyhint": "ಕಿರುಹಾದಿ",
+    "translate": {
+      "localized_translation_language": "ಭಾಷೆಯನ್ನು ಆಯ್ಕೆಮಾಡಿ",
+      "localized_translation_name": "ಹೆಸರು"
+    },
+    "undo": {
+      "nothing": "ಹಿಂಪಡೆಯಲು ಏನು ಇಲ್ಲ",
+      "tooltip": "ಹಿಂಪಡೆ: {action}"
+    },
+    "units": {
+      "north": "N",
+      "south": "S",
+      "west": "W"
+    },
+    "version": {
+      "whats_new": "iD {version} ಇದರಲ್ಲಿ ಹೊಸತೇನು"
+    },
+    "wikidata": {
+      "description": "ವಿವರಣೆ"
+    },
+    "zoom_in_edit": "ಪರಿಷ್ಕರಿಸಲು zoom ಮಾಡಿ"
   }
 }

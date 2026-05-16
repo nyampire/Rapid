@@ -1,0 +1,25 @@
+{
+  "uz": {
+    "icons": {
+      "copy": "nusxa olish",
+      "deselect": "tanlovni bekor qilish",
+      "download": "yuklab olish",
+      "favorite": "sevimli",
+      "information": "maʼlumot",
+      "list": "roʻyxat",
+      "remove": "oʻchirib tashlash",
+      "text": "matn",
+      "undo": "bekor qilish",
+      "view_on": "{domain}da koʻrish",
+      "visit_website": "veb-saytga o‘tish",
+      "zoom_to": "yaqinlashtirish"
+    },
+    "toolbar": {
+      "add_feature": "Obyekt qo‘shish",
+      "favorites": "Sevimlilar",
+      "inspect": "Koʻrib chiqish",
+      "recent": "Soʻnggi",
+      "undo_redo": "Bekor qilish / Qaytarish"
+    }
+  }
+}

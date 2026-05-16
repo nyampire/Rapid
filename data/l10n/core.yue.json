@@ -1148,7 +1148,19 @@
       "overture": {
         "places": {
           "label": "Overture 地點",
-          "description": "含有超過 5300 萬筆代表現實世界的物件：例如學校、商家、醫院、宗教組織、地標、山峰等等。"
+          "description": "從 Overture 地圖來的興趣點，來源自不同的商業與社群貢獻者。"
+        },
+        "esri_buildings": {
+          "label": "Esri 社群地圖建築",
+          "description": "建築外框是透過 Overture 地圖基金會，由 Esri 社群地圖計劃所提供。"
+        },
+        "ml_buildings": {
+          "label": "微軟機器學習 + Google 開放建築",
+          "description": "機器學習產生建築外框由微軟與 Google 開放建築，並且由 Overture 地圖基金會來整合。"
+        },
+        "tomtom_roads": {
+          "label": "TomTom 道路",
+          "description": "從 TomTom 來的道路網路資料，透過 Overture 地圖基金會取得"
         }
       },
       "omdFootways": {
@@ -1158,6 +1170,17 @@
       "metaSyntheticFootways": {
         "label": "從 Meta 生成的步道",
         "description": "從不同地方政府收集的生成步道資料。"
+      },
+      "ignored_ids": {
+        "link": "已忽略{count}個 Overture 編號",
+        "link_one": "已忽略 {count}Overture 編號",
+        "title": "已忽略 {count}個 Overture 編號",
+        "title_one": "已忽略 {count} 個 Overture 編號",
+        "instructions": "這些是這次歷程您所駁回/忽略的 Overture 機器學習產生的建築外框的 GERS 編號。您可以開啟議題回報為偽陽性。",
+        "copy": "複製到剪貼簿",
+        "copied": "已經複製了！",
+        "download": "以檔案方式下載",
+        "more": "…以及更多{count}"
       }
     },
     "rapid_poweruser": {

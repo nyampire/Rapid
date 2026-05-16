@@ -2,7 +2,6 @@ import * as Polyclip from 'polyclip-ts';
 
 import { AbstractSystem } from '../core/AbstractSystem.js';
 import { Graph, Tree, RapidDataset } from '../core/lib/index.js';
-import { osmEntity, osmNode, osmWay } from '../osm/index.js';
 import { utilFetchResponse } from '../util/index.js';
 
 // STAC catalog root — used to discover the latest Overture release and per-theme PMTiles URLs.
@@ -32,14 +31,44 @@ const DEBUG_SOURCES = true;
 const seenSources = new Set();
 
 
+// Source filter for TomTom-sourced transportation data
+const TOMTOM_SOURCES = new Set(['TomTom']);
+
 // Minimum zoom level for loading building data (prevents slowdown at low zooms)
 const MIN_BUILDING_ZOOM = 17;
+
+// Minimum zoom level for loading transportation data
+const MIN_TRANSPORTATION_ZOOM = 16;
+
+// Overture class values that map to non-motorized highways
+const NON_MOTORIZED_CLASSES = new Set([
+  'footway', 'cycleway', 'path', 'pedestrian', 'bridleway', 'steps', 'corridor'
+]);
+
+// Highway classes eligible for _link suffix
+const LINK_HIGHWAY_TYPES = new Set(['motorway', 'trunk', 'primary', 'secondary', 'tertiary']);
+
+// STAC themes to fetch PMTiles URLs for
+const WANTED_THEMES = new Set(['buildings', 'places', 'transportation']);
+
+// Maximum features to process per render frame (prevents main thread blocking)
+const MAX_FEATURES_PER_FRAME = 500;
+
+// Map Overture road_surface values to OSM surface= tag values
+const SURFACE_MAP = {
+  'paved': 'paved',
+  'unpaved': 'unpaved',
+  'gravel': 'gravel',
+  'dirt': 'dirt',
+  'paving_stones': 'paving_stones',
+  'metal': 'metal'
+};
 
 
 /**
  * `OvertureService`
  * This service connects to the 'official' sources of Overture PMTiles
- * by acting as a wrapper around the vector tile service
+ * by acting as a wrapper around the PMTiles service
  *
  * - Protomaps .pmtiles single-file archive containing MVT
  *    https://protomaps.com/docs/pmtiles
@@ -66,6 +95,11 @@ export class OvertureService extends AbstractSystem {
     this._mlBuildingsGraph = null;
     this._mlBuildingsTree = null;
     this._mlBuildingsCache = { seen: new Set() };
+
+    // For transportation conflation
+    this._tomtomRoadsGraph = null;
+    this._tomtomRoadsTree = null;
+    this._tomtomRoadsCache = { seen: new Set() };
   }
 
 
@@ -93,8 +127,7 @@ export class OvertureService extends AbstractSystem {
       const releaseData = await fetch(releaseUrl).then(utilFetchResponse);
       this._releaseId = releaseData.id ?? '';
 
-      // 3. Fetch only the themes we need (buildings, places)
-      const WANTED_THEMES = new Set(['buildings', 'places']);
+      // 3. Fetch only the themes we need
       const themeLinks = (releaseData.links ?? []).filter(l => l.rel === 'child' && WANTED_THEMES.has(l.title));
       const themeFetches = themeLinks.map(async link => {
         const themeUrl = new URL(link.href, releaseUrl).href;
@@ -124,8 +157,8 @@ export class OvertureService extends AbstractSystem {
   initAsync() {
     if (this._initPromise) return this._initPromise;
 
-    const vtService = this.context.services.vectortile;
-    return this._initPromise = vtService.initAsync()
+    const pmtilesService = this.context.services.pmtiles;
+    return this._initPromise = pmtilesService.initAsync()
       .then(() => this._loadStacCatalogAsync());
   }
 
@@ -144,17 +177,17 @@ export class OvertureService extends AbstractSystem {
     const editor = this.context.systems.editor;
     editor.on('merge', () => this._invalidateConflationCaches());
 
-    const vtService = this.context.services.vectortile;
-    return vtService.startAsync();
+    const pmtilesService = this.context.services.pmtiles;
+    return pmtilesService.startAsync();
   }
 
 
   /**
    * _invalidateConflationCaches
-   * Clear the "seen" sets so that all Overture buildings get re-conflated
+   * Clear all conflation state so that all Overture features get re-conflated
    * against the latest OSM graph on the next render pass.
-   * We keep the internal graph and tree intact — only the `seen` flags need
-   * resetting so features are re-evaluated for overlap.
+   * Both the `seen` sets and internal graphs/trees are reset to avoid
+   * duplicate entities from re-processing already-rebased features.
    */
   _invalidateConflationCaches() {
     if (this._esriBuildingsCache) {
@@ -169,6 +202,12 @@ export class OvertureService extends AbstractSystem {
     this._esriBuildingsTree = null;
     this._mlBuildingsGraph = null;
     this._mlBuildingsTree = null;
+
+    if (this._tomtomRoadsCache) {
+      this._tomtomRoadsCache.seen.clear();
+    }
+    this._tomtomRoadsGraph = null;
+    this._tomtomRoadsTree = null;
   }
 
 
@@ -186,6 +225,10 @@ export class OvertureService extends AbstractSystem {
     this._mlBuildingsGraph = null;
     this._mlBuildingsTree = null;
     this._mlBuildingsCache = { seen: new Set() };
+
+    this._tomtomRoadsGraph = null;
+    this._tomtomRoadsTree = null;
+    this._tomtomRoadsCache = { seen: new Set() };
 
     return Promise.resolve();
   }
@@ -236,7 +279,20 @@ export class OvertureService extends AbstractSystem {
       descriptionStringID: 'rapid_menu.overture.ml_buildings.description'
     });
 
-    return [places, esriBuildings, mlBuildings];
+    const tomtomRoads = new RapidDataset(this.context, {
+      id: 'tomtom-roads',
+      conflated: false,  // We do client-side conflation
+      service: 'overture',
+      categories: new Set(['overture', 'tomtom', 'roads', 'featured']),
+      color: '#da26d3',  // Rapid magenta
+      dataUsed: ['overture', 'TomTom'],
+      itemUrl: 'https://docs.overturemaps.org/guides/transportation/',
+      licenseUrl: 'https://docs.overturemaps.org/attribution/',
+      labelStringID: 'rapid_menu.overture.tomtom_roads.label',
+      descriptionStringID: 'rapid_menu.overture.tomtom_roads.description'
+    });
+
+    return [mlBuildings, esriBuildings, tomtomRoads, places];
   }
 
 
@@ -246,17 +302,23 @@ export class OvertureService extends AbstractSystem {
    * @param   {string}  datasetID - dataset to load tiles for
    */
   loadTiles(datasetID) {
-    const vtService = this.context.services.vectortile;
+    const pmtilesService = this.context.services.pmtiles;
 
     if (datasetID === 'overture-places') {
       const url = this._pmtilesUrls.get('places');
-      if (url) vtService.loadTiles(url);
+      if (url) pmtilesService.loadTiles(url);
     } else if (datasetID.includes('buildings')) {
       const zoom = this.context.viewport.transform.zoom;
       if (zoom < MIN_BUILDING_ZOOM) return;
 
       const url = this._pmtilesUrls.get('buildings');
-      if (url) vtService.loadTiles(url);
+      if (url) pmtilesService.loadTiles(url);
+    } else if (datasetID === 'tomtom-roads') {
+      const zoom = this.context.viewport.transform.zoom;
+      if (zoom < MIN_TRANSPORTATION_ZOOM) return;
+
+      const url = this._pmtilesUrls.get('transportation');
+      if (url) pmtilesService.loadTiles(url);
     }
   }
 
@@ -268,18 +330,18 @@ export class OvertureService extends AbstractSystem {
    * @return  {Array}   Array of data (GeoJSON features for places, OSM entities for buildings)
    */
   getData(datasetID) {
-    const vtService = this.context.services.vectortile;
+    const pmtilesService = this.context.services.pmtiles;
 
     if (datasetID === 'overture-places') {
       const url = this._pmtilesUrls.get('places');
-      return url ? vtService.getData(url) : [];
+      return url ? pmtilesService.getData(url) : [];
     } else if (datasetID === 'esri-buildings') {
       const zoom = this.context.viewport.transform.zoom;
       if (zoom < MIN_BUILDING_ZOOM) return [];
 
       const url = this._pmtilesUrls.get('buildings');
       if (!url) return [];
-      const geojsonFeatures = vtService.getData(url);
+      const geojsonFeatures = pmtilesService.getData(url);
       return this._conflateBuildings(geojsonFeatures, datasetID, ESRI_SOURCES);
     } else if (datasetID === 'ml-buildings-overture') {
       const zoom = this.context.viewport.transform.zoom;
@@ -287,8 +349,16 @@ export class OvertureService extends AbstractSystem {
 
       const url = this._pmtilesUrls.get('buildings');
       if (!url) return [];
-      const geojsonFeatures = vtService.getData(url);
+      const geojsonFeatures = pmtilesService.getData(url);
       return this._conflateBuildings(geojsonFeatures, datasetID, ML_SOURCES);
+    } else if (datasetID === 'tomtom-roads') {
+      const zoom = this.context.viewport.transform.zoom;
+      if (zoom < MIN_TRANSPORTATION_ZOOM) return [];
+
+      const url = this._pmtilesUrls.get('transportation');
+      if (!url) return [];
+      const geojsonFeatures = pmtilesService.getData(url);
+      return this._conflateTransportation(geojsonFeatures, datasetID);
     } else {
       return [];
     }
@@ -306,6 +376,8 @@ export class OvertureService extends AbstractSystem {
       return this._esriBuildingsGraph;
     } else if (datasetID === 'ml-buildings-overture') {
       return this._mlBuildingsGraph;
+    } else if (datasetID === 'tomtom-roads') {
+      return this._tomtomRoadsGraph;
     }
     return null;
   }
@@ -394,7 +466,7 @@ export class OvertureService extends AbstractSystem {
     const newEntities = [];
 
     // Limit processing to avoid blocking the main thread
-    const MAX_FEATURES_PER_FRAME = 500;
+    const pmtilesService = this.context.services.pmtiles;
     let processedCount = 0;
 
     for (const feature of geojsonFeatures) {
@@ -464,9 +536,21 @@ export class OvertureService extends AbstractSystem {
 
       if (hasOverlap) continue;  // Filter out overlapping building
 
-      // Convert GeoJSON to OSM entities
-      const entities = this._geojsonToOSM(geojson, featureID, datasetID, geometrySource);
+      // Convert GeoJSON to OSM entities via shared PMTilesService method
+      // Build tags first (Overture-specific)
+      const tags = { building: 'yes' };
+      if (geometrySource === 'Microsoft ML Buildings') {
+        tags.source = 'microsoft/BuildingFootprints';
+      } else if (geometrySource === 'Google Open Buildings') {
+        tags.source = 'google/OpenBuildings';
+      } else if (geometrySource === 'Esri Community Maps') {
+        tags.source = 'esri/CommunityMaps';
+      }
+
+      const entities = pmtilesService.geojsonToOSMPolygon(geojson, tags, featureID, datasetID, 'overture');
       if (entities) {
+        const way = entities.at(-1);  // last entity is always the way
+        way.__gersid__ = (geojson.properties || {}).id || null;
         newEntities.push(...entities);
       }
     }
@@ -484,86 +568,223 @@ export class OvertureService extends AbstractSystem {
 
 
   /**
-   * _geojsonToOSM
-   * Convert a GeoJSON Polygon feature to osmNode/osmWay entities
-   * @param   {Object}  geojson - GeoJSON Feature with Polygon geometry
-   * @param   {string}  featureID - Unique identifier for this feature
-   * @param   {string}  datasetID - The dataset this feature belongs to
-   * @param   {string}  geometrySource - The @geometry_source value from the feature
-   * @return  {Array}   Array of [osmNodes..., osmWay], or null if invalid
+   * _conflateTransportation
+   * Filter out Overture transportation features that overlap with existing OSM highways,
+   * filter by source (TomTom only), and convert remaining features to OSM entities.
+   * Uses mode-aware point-sampling via PMTilesService helpers: motorized roads are only
+   * conflated against motorized OSM highways, and non-motorized paths against non-motorized ones.
+   *
+   * @param   {Array}   geojsonFeatures - GeoJSON features from PMTilesService
+   * @param   {string}  datasetID - Which dataset we're processing
+   * @return  {Array}   OSM way entities that pass all filters
    */
-  _geojsonToOSM(geojson, featureID, datasetID, geometrySource) {
-    if (!geojson?.geometry?.coordinates) return null;
+  _conflateTransportation(geojsonFeatures, datasetID) {
+    if (!geojsonFeatures || !geojsonFeatures.length) return [];
 
-    const coords = geojson.geometry.coordinates[0];  // outer ring only
-    if (!coords || coords.length < 4) return null;  // Need at least 3 unique points + closing
+    // Ensure graph/tree/cache exist
+    if (!this._tomtomRoadsGraph) {
+      this._tomtomRoadsGraph = new Graph();
+      this._tomtomRoadsTree = new Tree(this._tomtomRoadsGraph);
+    }
+    const roadsGraph = this._tomtomRoadsGraph;
+    const roadsTree = this._tomtomRoadsTree;
+    const roadsCache = this._tomtomRoadsCache;
 
-    const entities = [];
-    const nodeIDs = [];
+    const pmtilesService = this.context.services.pmtiles;
+    const viewport = this.context.viewport;
+    const extent = viewport.visibleExtent();
 
-    // Create nodes for each coordinate (except closing point which duplicates first)
-    for (let i = 0; i < coords.length - 1; i++) {
-      const loc = coords[i];
-      const nodeID = osmEntity.id('node');  // Generate new negative ID
+    const { motorized, nonMotorized } = pmtilesService.getOSMHighwaysByMode(extent);
 
-      const node = new osmNode({
-        id: nodeID,
-        loc: loc,
-        tags: {}
-      });
+    // Also get already-processed TomTom roads from the internal tree (from previous render passes)
+    // to deduplicate overlapping features from the same dataset (self-conflation)
+    const existingRoads = pmtilesService.getInternalRoadsByMode(extent, roadsGraph, roadsTree);
+    const combinedMotorized = motorized.concat(existingRoads.motorized);
+    const combinedNonMotorized = nonMotorized.concat(existingRoads.nonMotorized);
 
-      // Add metadata for the Rapid system
-      node.__fbid__ = `${datasetID}-${featureID}-n${i}`;
-      node.__service__ = 'overture';
-      node.__datasetid__ = datasetID;
+    const newEntities = [];
+    let processedCount = 0;
 
-      entities.push(node);
-      nodeIDs.push(nodeID);
+    for (const feature of geojsonFeatures) {
+      if (processedCount >= MAX_FEATURES_PER_FRAME) break;
+
+      const geojson = feature.geojson;
+      if (!geojson?.geometry) continue;
+
+      const geomType = geojson.geometry.type;
+      if (geomType !== 'LineString' && geomType !== 'MultiLineString') continue;
+
+      const featureID = feature.id || geojson.id;
+      if (roadsCache.seen.has(featureID)) continue;
+      roadsCache.seen.add(featureID);
+      processedCount++;
+
+      // Filter by source — only keep TomTom, reject OSM
+      const geometrySource = this._getTransportationSource(geojson.properties);
+
+      if (geometrySource && OSM_SOURCES.has(geometrySource)) continue;
+      if (!geometrySource || !TOMTOM_SOURCES.has(geometrySource)) continue;
+
+      // Get line coordinates (handle both LineString and MultiLineString)
+      const lineStrings = geomType === 'LineString'
+        ? [geojson.geometry.coordinates]
+        : geojson.geometry.coordinates;
+
+      // Determine travel mode from Overture class
+      const overtureClass = geojson.properties?.class || '';
+      const isNonMotorized = NON_MOTORIZED_CLASSES.has(overtureClass);
+      const sameModHighways = isNonMotorized ? combinedNonMotorized : combinedMotorized;
+
+      // Check if any linestring in this feature is conflated with existing OSM or TomTom roads
+      let rejected = false;
+      for (const coords of lineStrings) {
+        if (rejected) break;
+        if (pmtilesService.isConflatedWithOSM(coords, sameModHighways)) {
+          rejected = true;
+        }
+      }
+
+      if (rejected) continue;
+
+      // Build OSM tags (Overture-specific mapping)
+      const tags = this._mapOvertureTransportationTags(geojson.properties || {});
+
+      // Convert surviving features to OSM entities via shared PMTilesService method
+      for (let j = 0; j < lineStrings.length; j++) {
+        const partID = lineStrings.length > 1 ? `${featureID}-p${j}` : featureID;
+        const entities = pmtilesService.geojsonToOSMLine(lineStrings[j], tags, partID, datasetID, 'overture');
+        if (entities) {
+          const way = entities.at(-1);  // last entity is always the way
+          way.__gersid__ = (geojson.properties || {}).id || null;
+          newEntities.push(...entities);
+
+          // Within-batch self-conflation: add accepted road to the combined list
+          // so subsequent features in this batch can see it
+          const coords = lineStrings[j];
+          let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
+          for (const c of coords) {
+            if (c[0] < minX) minX = c[0];
+            if (c[0] > maxX) maxX = c[0];
+            if (c[1] < minY) minY = c[1];
+            if (c[1] > maxY) maxY = c[1];
+          }
+          const roadData = {
+            coords,
+            bbox: { minX: minX - 0.0003, minY: minY - 0.0003, maxX: maxX + 0.0003, maxY: maxY + 0.0003 }
+          };
+          if (isNonMotorized) {
+            combinedNonMotorized.push(roadData);
+          } else {
+            combinedMotorized.push(roadData);
+          }
+        }
+      }
     }
 
-    // Close the way by referencing the first node
-    nodeIDs.push(nodeIDs[0]);
-
-    // Build tags for the way
-    const tags = { building: 'yes' };
-
-    // Add source tag based on geometry source
-    if (geometrySource === 'Microsoft ML Buildings') {
-      tags.source = 'microsoft/BuildingFootprints';
-    } else if (geometrySource === 'Google Open Buildings') {
-      tags.source = 'google/OpenBuildings';
-    } else if (geometrySource === 'Esri Community Maps') {
-      tags.source = 'esri/CommunityMaps';
+    // Update the internal graph with new entities
+    if (newEntities.length) {
+      roadsGraph.rebase(newEntities, [roadsGraph], true);
+      roadsTree.rebase(newEntities, true);
     }
 
-    // // Add height attributes if present in Overture data
-    // const props = geojson.properties || {};
-    // if (props.height !== undefined && props.height !== null) {
-    //   // Round to nearest 0.5
-    //   const roundedHeight = Math.round(props.height * 2) / 2;
-    //   tags.height = String(roundedHeight);
-    // }
-    // if (props.num_floors !== undefined && props.num_floors !== null) {
-    //   tags['building:levels'] = String(props.num_floors);
-    // }
+    // Return ways from the tree that intersect the visible extent
+    return roadsTree.intersects(extent, roadsGraph)
+      .filter(entity => entity.type === 'way');
+  }
 
-    // Create the way with appropriate tags
-    const wayID = osmEntity.id('way');
-    const way = new osmWay({
-      id: wayID,
-      nodes: nodeIDs,
-      tags: tags
-    });
 
-    // Add metadata
-    way.__fbid__ = `${datasetID}-${featureID}`;
-    way.__service__ = 'overture';
-    way.__datasetid__ = datasetID;
-    way.__gersid__ = (geojson.properties || {}).id || null;  // Store the GERS ID from Overture properties
+  /**
+   * _getTransportationSource
+   * Extract the primary source dataset name from transportation feature properties.
+   * Transportation features use a `sources` array with `dataset` fields,
+   * unlike buildings which use `@geometry_source`.
+   * The `sources` property may be a JSON string (from MVT encoding) or an array.
+   * @param   {Object}  props - Feature properties
+   * @return  {string|null}  Source dataset name (e.g. 'TomTom', 'OpenStreetMap'), or null
+   */
+  _getTransportationSource(props) {
+    if (!props) return null;
 
-    entities.push(way);
+    // Transportation uses `sources` array with `dataset` field
+    let sources = props.sources;
+    if (!sources) return null;
 
-    return entities;
+    // MVT may encode arrays as JSON strings
+    if (typeof sources === 'string') {
+      try { sources = JSON.parse(sources); } catch (e) { return null; }
+    }
+
+    if (Array.isArray(sources) && sources.length > 0) {
+      return sources[0].dataset || null;
+    }
+
+    return null;
+  }
+
+
+  /**
+   * _mapOvertureTransportationTags
+   * Map Overture transportation properties to OSM tags.
+   * PMTiles MVT may encode nested properties differently than the raw schema,
+   * so this includes fallback handling for flattened property names.
+   *
+   * @param   {Object}  props - Feature properties from Overture PMTiles
+   * @return  {Object}  OSM tags
+   */
+  _mapOvertureTransportationTags(props) {
+    const tags = {};
+
+    // highway= from class
+    let highwayClass = props.class || '';
+    if (highwayClass === 'unknown') {
+      highwayClass = 'road';  // TomTom-sourced unknowns → road (OSM equivalent for unknown classification)
+    }
+
+    // Check for _link subclass
+    const subclassRules = props.subclass_rules || props.subclass || [];
+    let isLink = false;
+    let footwayValue = null;
+    if (Array.isArray(subclassRules)) {
+      for (const rule of subclassRules) {
+        const val = rule?.value || rule;
+        if (val === 'link') isLink = true;
+        if (val === 'sidewalk') footwayValue = 'sidewalk';
+        if (val === 'crosswalk') footwayValue = 'crossing';
+      }
+    } else if (typeof subclassRules === 'string') {
+      if (subclassRules === 'link') isLink = true;
+      if (subclassRules === 'sidewalk') footwayValue = 'sidewalk';
+      if (subclassRules === 'crosswalk') footwayValue = 'crossing';
+    }
+
+    if (highwayClass) {
+      if (isLink && LINK_HIGHWAY_TYPES.has(highwayClass)) {
+        tags.highway = highwayClass + '_link';
+      } else {
+        tags.highway = highwayClass;
+      }
+    }
+
+    // footway= from subclass
+    if (footwayValue && tags.highway === 'footway') {
+      tags.footway = footwayValue;
+    }
+
+    // surface= from road_surface
+    const roadSurface = props.road_surface || props.surface || [];
+    if (Array.isArray(roadSurface) && roadSurface.length > 0) {
+      const surfVal = roadSurface[0]?.value || roadSurface[0];
+      if (surfVal && SURFACE_MAP[surfVal]) {
+        tags.surface = SURFACE_MAP[surfVal];
+      }
+    } else if (typeof roadSurface === 'string' && SURFACE_MAP[roadSurface]) {
+      tags.surface = SURFACE_MAP[roadSurface];
+    }
+
+    // source — safe to hardcode because _conflateTransportation filters to TomTom-only
+    tags.source = 'TomTom';
+
+    return tags;
   }
 
 }

@@ -1,76 +1,16 @@
 {
   "ne": {
     "icons": {
+      "copy": "प्रतिलिपि",
+      "deselect": "अचयन गर्नुहोस्",
       "download": "डाउनलोड गर्नुहोस्",
+      "favorite": "मनपर्ने",
       "information": "जानकारी",
+      "list": "सूची",
       "remove": "हटाउनुहोस्",
       "undo": "अन्डु",
-      "zoom_to": "जुम गर्नुहोस्",
-      "copy": "प्रतिलिपि",
       "view_on": "[domain] मा हेर्नुहोस्",
-      "favorite": "मनपर्ने",
-      "list": "सूची",
-      "deselect": "अचयन गर्नुहोस्"
-    },
-    "toolbar": {
-      "inspect": "निरीक्षण गर्नुहोस्",
-      "undo_redo": "अन्डु / रिडू",
-      "recent": "भर्खरको",
-      "favorites": "मनपर्ने",
-      "add_feature": "फिय्चर थप्नुहोस्"
-    },
-    "modes": {
-      "add_area": {
-        "title": "क्षेत्र"
-      },
-      "add_line": {
-        "title": "लाइन"
-      },
-      "add_point": {
-        "title": "पोइन्ट"
-      },
-      "add_preset": {
-        "title": "[feature] थप्नुहोस्"
-      },
-      "browse": {
-        "title": "ब्राउज",
-        "description": "नक्सा प्यान र जूम गर्नुहोस्।"
-      }
-    },
-    "operations": {
-      "add": {
-        "annotation": {
-          "point": " स्थल थपियो।",
-          "vertex": "वे मा नोड थपियो।",
-          "relation": "रिलेसन थपियो।"
-        }
-      },
-      "start": {
-        "annotation": {
-          "line": "लाईन सुरु गरियो।",
-          "area": "क्षेत्र सुरु गरियो।"
-        }
-      },
-      "continue": {
-        "title": "जारी राख्नु",
-        "description": "यो लाईनलाई जारी राख्नु।",
-        "not_eligible": "यहाँबाट कुनै लाईन जारी गर्न सकिन्न। ",
-        "annotation": {
-          "line": "रेखा जारी राखे।"
-        }
-      },
-      "circularize": {
-        "title": "गोलाकार बनाउनुहोस"
-      },
-      "orthogonalize": {
-        "title": "वर्गाकार"
-      },
-      "straighten": {
-        "title": "सिधा पार्नु"
-      },
-      "delete": {
-        "title": "मेट्नुहोस्"
-      }
+      "zoom_to": "जुम गर्नुहोस्"
     },
     "info_panels": {
       "measurement": {
@@ -78,17 +18,25 @@
       }
     },
     "inspector": {
+      "check": {
+        "no": "होइन",
+        "yes": "हो"
+      },
       "search": "खोजी गर्नुहोस्"
     },
     "intro": {
       "graph": {
+        "block_number": "<value for addr:block_number>",
+        "countrycode": "np",
+        "county": "<value for addr:county>",
+        "district": "<value for addr:district>",
+        "hamlet": "<value for addr:hamlet>",
+        "neighbourhood": "<value for addr:neighbourhood>",
+        "province": "<value for addr:province>",
+        "quarter": "<value for addr:quarter>",
         "state": "<value for addr:state>",
-        "countrycode": "np"
-      }
-    },
-    "shortcuts": {
-      "key": {
-        "delete": "मेट्नुहोस्"
+        "subdistrict": "<value for addr:subdistrict>",
+        "suburb": "<value for addr:suburb>"
       }
     },
     "languageNames": {
@@ -691,6 +639,65 @@
       "zun": "जुनी",
       "zza": "जाजा"
     },
+    "modes": {
+      "add_area": {
+        "description": "नक्सामा पार्क, भवन, पोखरी वा अन्य क्षेत्र थप गर्नुहोस्।",
+        "title": "क्षेत्र"
+      },
+      "add_line": {
+        "description": "नक्सामा राजमार्ग, सडकमार्ग, पैदलमार्ग, नहर वा अन्य लाइनहरु थप्नुहोस्।",
+        "title": "लाइन"
+      },
+      "add_point": {
+        "description": "नक्सामा रेस्टुरेन्ट, स्मारक, हुलाक बक्से वा अन्य स्थल थप्नुहोस्।",
+        "title": "पोइन्ट"
+      },
+      "add_preset": {
+        "title": "[feature] थप्नुहोस्"
+      },
+      "browse": {
+        "description": "नक्सा प्यान र जूम गर्नुहोस्।",
+        "title": "ब्राउज"
+      }
+    },
+    "operations": {
+      "add": {
+        "annotation": {
+          "point": " स्थल थपियो।",
+          "relation": "रिलेसन थपियो।",
+          "vertex": "वे मा नोड थपियो।"
+        }
+      },
+      "circularize": {
+        "title": "गोलाकार बनाउनुहोस"
+      },
+      "continue": {
+        "annotation": {
+          "line": "रेखा जारी राखे।"
+        },
+        "description": "यो लाईनलाई जारी राख्नु।",
+        "not_eligible": "यहाँबाट कुनै लाईन जारी गर्न सकिन्न। ",
+        "title": "जारी राख्नु"
+      },
+      "delete": {
+        "title": "मेट्नुहोस्"
+      },
+      "orthogonalize": {
+        "title": "वर्गाकार"
+      },
+      "start": {
+        "annotation": {
+          "area": "क्षेत्र सुरु गरियो।",
+          "line": "लाईन सुरु गरियो।"
+        }
+      },
+      "straighten": {
+        "description": {
+          "line": "यस लाईनलाई सिधा पार्नुस।"
+        },
+        "title": "सिधा पार्नु"
+      }
+    },
     "scriptNames": {
       "Adlm": "एडलाम",
       "Arab": "अरबी",
@@ -824,6 +831,22 @@
       "Zxxx": "नलेखिएको",
       "Zyyy": "साझा",
       "Zzzz": "अज्ञात लिपि"
+    },
+    "shortcuts": {
+      "key": {
+        "delete": "मेट्नुहोस्"
+      }
+    },
+    "toolbar": {
+      "add_feature": "फिय्चर थप्नुहोस्",
+      "favorites": "मनपर्ने",
+      "inspect": "निरीक्षण गर्नुहोस्",
+      "recent": "भर्खरको",
+      "undo_redo": "अन्डु / रिडू"
+    },
+    "units": {
+      "north": "N",
+      "south": "S"
     }
   }
 }

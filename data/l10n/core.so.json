@@ -1,166 +1,37 @@
 {
   "so": {
-    "modes": {
-      "add_area": {
-        "title": "Aagga"
-      },
-      "add_line": {
-        "title": "Khad"
-      },
-      "add_point": {
-        "title": "Bar"
+    "QA": {
+      "keepRight": {
+        "detail_description": "Sharaxaad"
       }
-    },
-    "operations": {
-      "add": {
-        "annotation": {
-          "point": "Ku daray bar."
-        }
-      },
-      "start": {
-        "annotation": {
-          "line": "Bilaabay xariiq.",
-          "area": "Bilaabay goob."
-        }
-      },
-      "continue": {
-        "title": "Sii wad",
-        "description": "Sii wad khadkanan.",
-        "not_eligible": "Wax khad ah laguma wadi karo halkan.",
-        "annotation": {
-          "line": "Sii waday khadka.",
-          "area": "Sii waday aag."
-        }
-      },
-      "change_tags": {
-        "annotation": "Taxanbaha la beddelay."
-      },
-      "circularize": {
-        "title": "Goobo geli"
-      },
-      "delete": {
-        "title": "Tirtir"
-      },
-      "disconnect": {
-        "title": "Jar Xiriirka",
-        "not_connected": "Ma jiraan khadad/goobo ku filan halkan ku yaalo si loo joojiyo"
-      },
-      "move": {
-        "title": "Dhaqaaji"
-      },
-      "rotate": {
-        "title": "Rog"
-      },
-      "reverse": {
-        "title": "Dib u noqosho"
-      },
-      "split": {
-        "title": "Kala qaybi",
-        "not_eligible": "Khadadka looma kala qaybin karo bilow ama dhammaad."
-      }
-    },
-    "undo": {
-      "tooltip": "Ka-noqosho: {action}",
-      "nothing": "Ma jiraan wax laga noqdo."
-    },
-    "redo": {
-      "tooltip": "Ku-noqosho: {action}",
-      "nothing": "Ma jiraan wax lagu noqdo."
-    },
-    "translate": {
-      "localized_translation_language": "Dooro luuqada",
-      "localized_translation_name": "Magaca"
-    },
-    "zoom_in_edit": "Soo dhawee si aad u tifaftirto khariidada",
-    "help_translate": "Turjum",
-    "commit": {
-      "created": "Lagu suurtogeliyay"
-    },
-    "info_panels": {
-      "background": {
-        "title": "Hagaajinta",
-        "zoom": "Soo dhawee",
-        "description": "Sharaxaad"
-      },
-      "history": {
-        "title": "Taariikh",
-        "last_edit": "Ugu dambeeyn la beddelay"
-      },
-      "measurement": {
-        "area": "Aagga"
-      }
-    },
-    "geometry": {
-      "point": "bar",
-      "line": "khad"
-    },
-    "geocoder": {
-      "search": "Ka raadi dunida oo dhan…",
-      "no_results_worldwide": "Wax tilmaamo ah lama helin"
-    },
-    "geolocate": {
-      "title": "Muuji Goobtayda"
-    },
-    "inspector": {
-      "view_on_osm": "Ka eeg openstreetmap.org",
-      "choose": "Dooro nooca tilmaamaha",
-      "type": "Nooca",
-      "search": "Raadi",
-      "feature_list": "Tilmaamaha Waydiimaha",
-      "radio": {
-        "structure": {
-          "layer": "Lakabka"
-        }
-      },
-      "add": "Ku Dar",
-      "add_fields": "Ku dar goob:"
     },
     "background": {
       "title": "Hagaajinta"
     },
-    "map_data": {
-      "title": "Xogta Khariidada",
-      "description": "Xogta Khariidada",
-      "data_layers": "Lakabyada"
+    "commit": {
+      "created": "Lagu suurtogeliyay"
     },
     "filters": {
       "service_roads": {
         "description": "Jidka Shaqaalaha"
       }
     },
-    "save": {
-      "title": "Keydi",
-      "help": "Dib-u-fiiri isbeddelkaaga oo u soo dir si furan OpenStreetMap, oo ka dhigaysa inay muuqdaan dadka kale.",
-      "no_changes": "Wax isbeddel ah lama kaydin.",
-      "conflict": {
-        "previous": "< Hore",
-        "next": "Xiga >"
-      }
+    "geocoder": {
+      "no_results_worldwide": "Wax tilmaamo ah lama helin",
+      "search": "Ka raadi dunida oo dhan…"
     },
-    "tag_reference": {
-      "description": "Sharaxaad"
+    "geolocate": {
+      "title": "Muuji Goobtayda"
     },
-    "QA": {
-      "keepRight": {
-        "detail_description": "Sharaxaad"
-      }
+    "geometry": {
+      "line": "khad",
+      "point": "bar"
     },
     "help": {
-      "title": "Caawin",
-      "help": {
-        "title": "Caawin",
-        "open_data": "Tifaftiraada aad ku sameyso Khariidadan waxay u muuqan doonaan qof walba oo isticmaala OpenStreetMap. Copying from commercial sources, like Google Maps, [is strictly forbidden](https://www.openstreetmap.org/copyright)."
-      },
       "editing": {
-        "undo_redo_h": "Ka-noqosho & Ku-noqosho",
+        "keyboard_h": "Af-goys",
         "save_h": "Keydi",
-        "keyboard_h": "Af-goys"
-      },
-      "lines": {
-        "title": "Khadadka"
-      },
-      "gps": {
-        "title": "Raadadka GPS"
+        "undo_redo_h": "Ka-noqosho & Ku-noqosho"
       },
       "field": {
         "restrictions": {
@@ -168,42 +39,65 @@
             "title": "Ku-saabsan"
           }
         }
+      },
+      "gps": {
+        "title": "Raadadka GPS"
+      },
+      "help": {
+        "open_data": "Tifaftiraada aad ku sameyso Khariidadan waxay u muuqan doonaan qof walba oo isticmaala OpenStreetMap. Copying from commercial sources, like Google Maps, [is strictly forbidden](https://www.openstreetmap.org/copyright).",
+        "open_source": "iD {version} waa mashruuc wada-shaqayn oo baaq-furahiisa laga heli karo [GitHub](https://github.com/openstreetmap/iD).",
+        "title": "Caawin"
+      },
+      "lines": {
+        "title": "Khadadka"
+      },
+      "title": "Caawin"
+    },
+    "help_translate": "Turjum",
+    "info_panels": {
+      "background": {
+        "description": "Sharaxaad",
+        "source": "Bilowga xogta",
+        "title": "Hagaajinta",
+        "zoom": "Soo dhawee"
+      },
+      "history": {
+        "last_edit": "Ugu dambeeyn la beddelay",
+        "title": "Taariikh"
+      },
+      "measurement": {
+        "area": "Aagga"
       }
     },
-    "intro": {
-      "welcome": {
-        "title": "Ku soo dhowow"
+    "inspector": {
+      "add": "Ku Dar",
+      "add_fields": "Ku dar goob:",
+      "check": {
+        "no": "Maya",
+        "yes": "Haa"
       },
+      "choose": "Dooro nooca tilmaamaha",
+      "edit": "Tifaftir tilmaamaha",
+      "feature_list": "Tilmaamaha Waydiimaha",
+      "radio": {
+        "structure": {
+          "layer": "Lakabka"
+        }
+      },
+      "search": "Raadi",
+      "type": "Nooca",
+      "view_on_osm": "Ka eeg openstreetmap.org"
+    },
+    "intro": {
       "lines": {
         "title": "Khadadka"
       },
       "startediting": {
         "start": "Bilow Jihaynta!"
-      }
-    },
-    "shortcuts": {
-      "title": "Af-goys",
-      "key": {
-        "delete": "Tirtir"
       },
-      "help": "Caawin",
-      "command": {
-        "undo": {
-          "label": "Ka-noqosho"
-        },
-        "redo": {
-          "label": "Ku-noqosho"
-        },
-        "save": {
-          "label": "Keydso is-beddelada"
-        }
+      "welcome": {
+        "title": "Ku soo dhowow"
       }
-    },
-    "units": {
-      "miles": "{quantity} mayl"
-    },
-    "wikidata": {
-      "description": "Sharaxaad"
     },
     "languageNames": {
       "ab": "U dhashay Abkhazia",
@@ -443,6 +337,95 @@
       "zh-Hant": "Af-Shiineeska Mandarin ee Qadiimiga ah",
       "zu": "Zuulu"
     },
+    "map_data": {
+      "data_layers": "Lakabyada",
+      "description": "Xogta Khariidada",
+      "title": "Xogta Khariidada"
+    },
+    "modes": {
+      "add_area": {
+        "description": "Ku dar jardiinooyinka, dhismayaasha, harooyinka, ama meelaha kale Khariidada.",
+        "title": "Aagga"
+      },
+      "add_line": {
+        "description": "Ku dar jidadka halbowlaha, wadooyinka, wadooyinka socotada, kanaalada, ama khadadka kale Khariidada.",
+        "title": "Khad"
+      },
+      "add_note": {
+        "title": "Qoraal"
+      },
+      "add_point": {
+        "description": "Ku dar maqaayadaha, dhismayaasha, sanduuqyada boostada, ama baraha kale Khariidada.",
+        "title": "Bar"
+      }
+    },
+    "note": {
+      "note": "Qoraal"
+    },
+    "operations": {
+      "add": {
+        "annotation": {
+          "point": "Ku daray bar."
+        }
+      },
+      "change_tags": {
+        "annotation": "Taxanbaha la beddelay."
+      },
+      "circularize": {
+        "title": "Goobo geli"
+      },
+      "continue": {
+        "annotation": {
+          "area": "Sii waday aag.",
+          "line": "Sii waday khadka."
+        },
+        "description": "Sii wad khadkanan.",
+        "not_eligible": "Wax khad ah laguma wadi karo halkan.",
+        "title": "Sii wad"
+      },
+      "delete": {
+        "title": "Tirtir"
+      },
+      "disconnect": {
+        "not_connected": "Ma jiraan khadad/goobo ku filan halkan ku yaalo si loo joojiyo",
+        "title": "Jar Xiriirka"
+      },
+      "move": {
+        "title": "Dhaqaaji"
+      },
+      "reverse": {
+        "description": {
+          "line": "Ka dhig khadkaan mid aada jihada lidka ah."
+        },
+        "title": "Dib u noqosho"
+      },
+      "rotate": {
+        "title": "Rog"
+      },
+      "split": {
+        "not_eligible": "Khadadka looma kala qaybin karo bilow ama dhammaad.",
+        "title": "Kala qaybi"
+      },
+      "start": {
+        "annotation": {
+          "area": "Bilaabay goob.",
+          "line": "Bilaabay xariiq."
+        }
+      }
+    },
+    "redo": {
+      "nothing": "Ma jiraan wax lagu noqdo.",
+      "tooltip": "Ku-noqosho: {action}"
+    },
+    "save": {
+      "conflict": {
+        "next": "Xiga >",
+        "previous": "< Hore"
+      },
+      "help": "Dib-u-fiiri isbeddelkaaga oo u soo dir si furan OpenStreetMap, oo ka dhigaysa inay muuqdaan dadka kale.",
+      "no_changes": "Wax isbeddel ah lama kaydin.",
+      "title": "Keydi"
+    },
     "scriptNames": {
       "Aghb": "Qoraalka Luuqada Caucasian Albanian",
       "Ahom": "Dadka Ahom",
@@ -582,6 +565,46 @@
       "Zxxx": "Aan la qorin",
       "Zyyy": "Caadi ahaan",
       "Zzzz": "Far aan la aqoon amase aan saxnayn"
-    }
+    },
+    "shortcuts": {
+      "command": {
+        "redo": {
+          "label": "Ku-noqosho"
+        },
+        "save": {
+          "label": "Keydso is-beddelada"
+        },
+        "undo": {
+          "label": "Ka-noqosho"
+        }
+      },
+      "help": "Caawin",
+      "key": {
+        "delete": "Tirtir"
+      },
+      "title": "Af-goys"
+    },
+    "splash": {
+      "welcome": "Ku soo dhowow id OpenStreetMap editor"
+    },
+    "tag_reference": {
+      "description": "Sharaxaad"
+    },
+    "tooltip_keyhint": "Af-goys:",
+    "translate": {
+      "localized_translation_language": "Dooro luuqada",
+      "localized_translation_name": "Magaca"
+    },
+    "undo": {
+      "nothing": "Ma jiraan wax laga noqdo.",
+      "tooltip": "Ka-noqosho: {action}"
+    },
+    "units": {
+      "miles": "{quantity} mayl"
+    },
+    "wikidata": {
+      "description": "Sharaxaad"
+    },
+    "zoom_in_edit": "Soo dhawee si aad u tifaftirto khariidada"
   }
 }
