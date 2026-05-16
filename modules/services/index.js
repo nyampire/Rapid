@@ -10,6 +10,7 @@ import { OsmService } from './OsmService.js';
 import { OsmoseService } from './OsmoseService.js';
 import { OsmWikibaseService } from './OsmWikibaseService.js';
 import { OvertureService } from './OvertureService.js';
+import { PlateauService } from './PlateauService.js';
 import { StreetsideService } from './StreetsideService.js';
 import { TaginfoService } from './TaginfoService.js';
 import { VectorTileService } from './VectorTileService.js';
@@ -30,6 +31,7 @@ export {
   OsmoseService,
   OsmWikibaseService,
   OvertureService,
+  PlateauService,
   StreetsideService,
   TaginfoService,
   VectorTileService,
@@ -55,6 +57,7 @@ services.available.set('osm', OsmService);
 services.available.set('osmose', OsmoseService);
 services.available.set('osmwikibase', OsmWikibaseService);
 services.available.set('overture', OvertureService);
+services.available.set('plateau', PlateauService);
 services.available.set('streetside', StreetsideService);
 services.available.set('taginfo', TaginfoService);
 services.available.set('vectortile', VectorTileService);

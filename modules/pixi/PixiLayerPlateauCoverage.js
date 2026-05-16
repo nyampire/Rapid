@@ -38,10 +38,10 @@ export class PixiLayerPlateauCoverage extends AbstractLayer {
 
   /**
    * supported
-   * @return {boolean} `true` if the mapwithai service is available
+   * @return {boolean} `true` if the plateau service is available
    */
   get supported() {
-    return !!this.context.services.mapwithai;
+    return !!this.context.services.plateau;
   }
 
 
@@ -65,7 +65,7 @@ export class PixiLayerPlateauCoverage extends AbstractLayer {
     if (!this.enabled) return;
     if (zoom < MINZOOM || zoom > MAXZOOM) return;
 
-    const service = this.context.services.mapwithai;
+    const service = this.context.services.plateau;
     if (!service) return;
 
     // Trigger fetch once. Promise resolves with FeatureCollection or null.

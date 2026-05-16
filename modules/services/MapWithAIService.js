@@ -1,15 +1,13 @@
-import * as Polyclip from 'polyclip-ts';
 import { Tiler } from '@rapid-sdk/math';
 import { utilStringQs } from '@rapid-sdk/util';
 
 import { AbstractSystem } from '../core/AbstractSystem.js';
 import { Graph, Tree, RapidDataset } from '../core/lib/index.js';
 import { osmEntity, osmNode, osmRelation, osmWay } from '../osm/index.js';
-import { utilFetchResponse, utilBuildingRelationInfo } from '../util/index.js';
+import { utilFetchResponse } from '../util/index.js';
 
 
 const APIROOT = 'https://mapwith.ai/maps/ml_roads';
-const PLATEAU_API_URL = 'https://rapid.nyampire.info/api/mapwithai/buildings';  // Production: nyampire/rapid_plateau_api
 const TILEZOOM = 16;
 
 
@@ -34,29 +32,9 @@ export class MapWithAIService extends AbstractSystem {
     this._datasets = {};
     this._deferred = new Set();
 
-    // Cache for Plateau client-side conflation (overlap filtering with OSM buildings)
-    this._plateauConflationCache = {
-      checked: new Set(),    // Set(entityID) - already checked, not overlapping
-      rejected: new Set()    // Set(entityID) - overlapping with OSM
-    };
-
-    // Cache for Plateau coverage area GeoJSON (loaded once, used by PixiLayerPlateauCoverage)
-    this._coverageData = null;          // GeoJSON FeatureCollection or null
-    this._coveragePromise = null;       // Promise<FeatureCollection> when inflight
-
-    // Phase 4-B-2: hover で highlight class を set した relation member の ID 集合。
-    // 同じ ID 群を自分で unsetClass するための追跡用 (他用途の 'highlight' に干渉しない)。
-    this._hoveredRelationSiblings = new Set();
-
-    // Phase 4-B-3: select で highlight class を set した relation member の ID 集合。
-    // hover と同じ 'highlight' クラスを共有するため、cleanup 時に互いの claim を尊重する。
-    this._selectedRelationSiblings = new Set();
-
     // Ensure methods used as callbacks always have `this` bound correctly.
     this._parseNode = this._parseNode.bind(this);
     this._parseWay = this._parseWay.bind(this);
-    this._onHoverchange = this._onHoverchange.bind(this);
-    this._onModeChange = this._onModeChange.bind(this);
   }
 
 
@@ -98,147 +76,7 @@ export class MapWithAIService extends AbstractSystem {
    */
   startAsync() {
     this._started = true;
-
-    // Invalidate Plateau conflation cache when OSM data changes
-    const editor = this.context.systems.editor;
-    if (editor) {
-      editor.on('merge', () => {
-        this._plateauConflationCache.checked.clear();
-        this._plateauConflationCache.rejected.clear();
-      });
-    }
-
-    // Phase 4-B-2: PLATEAU LOD2 multi-section building の relation member を
-    // hover した時、同じ relation の他 members も視覚的にハイライト。
-    // 'highlight' クラス (Pixi で blue glow) を流用、独自スタイル追加なし。
-    const hover = this.context.behaviors && this.context.behaviors.hover;
-    if (hover && typeof hover.on === 'function') {
-      hover.on('hoverchange', this._onHoverchange);
-    }
-
-    // Phase 4-B-3: クリック選択時も relation の他 members を hover と同じ blue glow で
-    // 視覚化する。hover を外しても選択中は highlight が残るよう、cleanup は
-    // `_hoveredRelationSiblings` / `_selectedRelationSiblings` 間で互いの claim を尊重。
-    if (typeof this.context.on === 'function') {
-      this.context.on('modechange', this._onModeChange);
-    }
-
     return Promise.resolve();
-  }
-
-
-  /**
-   * _onHoverchange
-   * Phase 4-B-2: hover 対象が PLATEAU LOD2 building relation のメンバー way なら、
-   * 同 relation の他 members に 'highlight' クラスを set し、cascade 対象を視覚化する。
-   *
-   * 既存の `highlight` クラスは PixiFeaturePolygon 等で blue glow としてレンダリング済。
-   * 他用途 (edit_menu 等) と衝突しないよう、自分が set した ID は `_hoveredRelationSiblings`
-   * で追跡し、cleanup 時はその ID 群だけ unsetClass する (clearClass は使わない)。
-   */
-  _onHoverchange(eventData) {
-    const target = eventData && eventData.target;
-    const layer = target && target.layer;
-    const data = target && target.data;
-
-    // 1. 前回 set した siblings の highlight を解除 (自分が set した ID のみ)。
-    //    ただし select 側がまだ claim している ID は select cleanup に任せるので残す。
-    if (this._hoveredRelationSiblings.size > 0) {
-      const scene = this.context.systems.gfx && this.context.systems.gfx.scene;
-      if (scene) {
-        for (const layerID of ['rapid', 'osm']) {
-          const l = scene.layers && scene.layers.get && scene.layers.get(layerID);
-          if (!l || typeof l.unsetClass !== 'function') continue;
-          for (const id of this._hoveredRelationSiblings) {
-            if (this._selectedRelationSiblings.has(id)) continue;  // select が claim 中
-            l.unsetClass('highlight', id);
-          }
-        }
-      }
-      this._hoveredRelationSiblings.clear();
-    }
-
-    // 2. hover 対象が無いか、自サービスの data でなければ何もしない
-    if (!layer || !data || data.__service__ !== 'mapwithai') return;
-    if (typeof layer.setClass !== 'function') return;
-
-    const datasetGraph = this.graph(data.__datasetid__);
-    if (!datasetGraph) return;
-
-    const info = utilBuildingRelationInfo(data, datasetGraph);
-    if (!info) return;
-
-    // 3. relation の他メンバー (自分以外) に highlight を set
-    for (const member of info.relation.members || []) {
-      if (!member || member.id === data.id) continue;
-      layer.setClass('highlight', member.id);
-      this._hoveredRelationSiblings.add(member.id);
-    }
-  }
-
-
-  /**
-   * _onModeChange
-   * Phase 4-B-3: モード遷移時に、select 中の PLATEAU LOD2 building relation
-   * メンバーがあれば同 relation の他 members に 'highlight' を set する。
-   * hover とは別の集合 (`_selectedRelationSiblings`) で追跡し、
-   * cleanup 時に hover が claim している ID は残す。
-   *
-   * @param  {Object|undefined} mode  新しいモードオブジェクト ({ id, ... })
-   */
-  _onModeChange(mode) {
-    const scene = this.context.systems.gfx && this.context.systems.gfx.scene;
-
-    // 1. 前回 set した select siblings の highlight を解除。
-    //    hover が同じ ID をまだ claim していたら、それは hover cleanup に任せる。
-    if (this._selectedRelationSiblings.size > 0) {
-      if (scene) {
-        for (const layerID of ['rapid', 'osm']) {
-          const l = scene.layers && scene.layers.get && scene.layers.get(layerID);
-          if (!l || typeof l.unsetClass !== 'function') continue;
-          for (const id of this._selectedRelationSiblings) {
-            if (this._hoveredRelationSiblings.has(id)) continue;
-            l.unsetClass('highlight', id);
-          }
-        }
-      }
-      this._selectedRelationSiblings.clear();
-    }
-
-    // 2. select 系モードでなければここで終了 (browse / draw / save 等は無視)
-    const modeID = mode && mode.id;
-    if (!modeID || !/^select/.test(modeID)) return;
-
-    // 3. 選択中の entity から PLATEAU LOD2 building relation のメンバーを探す
-    const selectedData = typeof this.context.selectedData === 'function'
-      ? this.context.selectedData()
-      : null;
-    if (!selectedData || typeof selectedData.values !== 'function') return;
-
-    const rapidLayer = scene && scene.layers && scene.layers.get && scene.layers.get('rapid');
-    if (!rapidLayer || typeof rapidLayer.setClass !== 'function') return;
-
-    for (const datum of selectedData.values()) {
-      if (!datum || datum.__service__ !== 'mapwithai') continue;
-
-      const datasetGraph = this.graph(datum.__datasetid__);
-      if (!datasetGraph) continue;
-
-      const info = utilBuildingRelationInfo(datum, datasetGraph);
-      if (!info) continue;
-
-      for (const member of info.relation.members || []) {
-        if (!member || member.id === datum.id) continue;
-        rapidLayer.setClass('highlight', member.id);
-        this._selectedRelationSiblings.add(member.id);
-      }
-    }
-
-    // 4. setClass はそれ自体では再描画を起こさないので、念のため redraw を要求。
-    const gfx = this.context.systems.gfx;
-    if (gfx && typeof gfx.deferredRedraw === 'function' && this._selectedRelationSiblings.size > 0) {
-      gfx.deferredRedraw();
-    }
   }
 
 
@@ -260,19 +98,6 @@ export class MapWithAIService extends AbstractSystem {
       licenseUrl: 'https://rapideditor.org/doc/license/MapWithAILicense.pdf',
       labelStringID: 'rapid_menu.fbRoads.label',
       descriptionStringID: 'rapid_menu.fbRoads.description'
-    });
-
-    const plateauJapan = new RapidDataset(context, {
-      id: 'plateauJapan',
-      conflated: false,
-      service: 'mapwithai',
-      categories: new Set(['plateau', 'buildings', 'featured', 'japan']),
-      dataUsed: ['osmf.jp', 'Plateau Buildings'],
-      itemUrl: 'https://osmf.jp/plateau-data',
-      licenseUrl: 'https://osmf.jp/license',
-      color: '#66BB6A',
-      labelStringID: 'rapid_menu.plateauJapan.label',
-      descriptionStringID: 'rapid_menu.plateauJapan.description'
     });
 
     const omdFootways = new RapidDataset(context, {
@@ -318,7 +143,7 @@ export class MapWithAIService extends AbstractSystem {
       label: 'Rapid Walkthrough'
     });
 
-    return [fbRoads, plateauJapan, omdFootways, metaSyntheticFootways, introGraph];
+    return [fbRoads, omdFootways, metaSyntheticFootways, introGraph];
   }
 
 
@@ -353,56 +178,6 @@ export class MapWithAIService extends AbstractSystem {
 
 
   /**
-   * loadCoverage
-   * Fetch Plateau coverage area GeoJSON once and cache it.
-   * Used by PixiLayerPlateauCoverage to display where Plateau data exists
-   * at zoom 5-14.
-   *
-   * The endpoint returns a FeatureCollection where each Feature is a
-   * convex-hull polygon of one city's buildings, with properties:
-   *   { city_code, building_count }
-   *
-   * @return {Promise<Object|null>}  GeoJSON FeatureCollection, or null on failure
-   */
-  loadCoverage() {
-    // Return cached data immediately if already loaded
-    if (this._coverageData) {
-      return Promise.resolve(this._coverageData);
-    }
-    // Return inflight promise to coalesce concurrent calls
-    if (this._coveragePromise) {
-      return this._coveragePromise;
-    }
-
-    // Derive coverage URL from the buildings URL
-    // PLATEAU_API_URL is .../api/mapwithai/buildings → .../api/mapwithai/coverage
-    const customPlateauUrl = utilStringQs(window.location.hash).plateau_api_url;
-    const buildingsUrl = customPlateauUrl || PLATEAU_API_URL;
-    const coverageUrl = buildingsUrl.replace(/\/buildings(\?.*)?$/, '/coverage');
-
-    this._coveragePromise = fetch(coverageUrl)
-      .then(utilFetchResponse)
-      .then(data => {
-        if (data && data.type === 'FeatureCollection') {
-          this._coverageData = data;
-          return data;
-        }
-        throw new Error('Invalid coverage response');
-      })
-      .catch(err => {
-        // Graceful degradation: log and return null so the layer can hide itself
-        console.warn('Failed to load Plateau coverage:', err);  // eslint-disable-line no-console
-        return null;
-      })
-      .finally(() => {
-        this._coveragePromise = null;
-      });
-
-    return this._coveragePromise;
-  }
-
-
-  /**
    * getData
    * Get already loaded data that appears in the current map view
    * @param   {string}  datasetID - datasetID to get data for
@@ -413,18 +188,7 @@ export class MapWithAIService extends AbstractSystem {
     if (!ds || !ds.tree || !ds.graph) return [];
 
     const extent = this.context.viewport.visibleExtent();
-    let entities = ds.tree.intersects(extent, ds.graph);
-
-    // Plateau: client-side conflation to filter out buildings overlapping with OSM
-    const baseID = datasetID.replace(/-conflated$/, '');
-    if (baseID === 'plateauJapan') {
-      const useConflationStr = utilStringQs(window.location.hash).plateau_conflation;
-      if (useConflationStr !== 'false' && useConflationStr !== 'no') {
-        entities = this._filterPlateauOverlaps(entities, ds.graph);
-      }
-    }
-
-    return entities;
+    return ds.tree.intersects(extent, ds.graph);
   }
 
 
@@ -529,189 +293,6 @@ export class MapWithAIService extends AbstractSystem {
   }
 
 
-  /**
-   * _filterPlateauOverlaps
-   * Client-side conflation for Plateau buildings.
-   * Filters out Plateau entities that overlap with existing OSM buildings,
-   * using the same bbox + Polyclip polygon intersection approach as OvertureService.
-   *
-   * Phase 4-A: PLATEAU LOD2 building は outline + parts + type=building relation で
-   * 1つの semantic 単位を成すため、relation のメンバー way は **outline の判定結果に従う**。
-   * outline と各 parts が個別に reject される結果として「親 outline が消えて parts だけ宙に浮く」
-   * 等のジオメトリ不整合を防ぐ。
-   *
-   * @param   {Array}  entities - Plateau entities from the tree
-   * @param   {Graph}  plateauGraph - The Plateau dataset graph (for resolving node coords)
-   * @return  {Array}  Filtered entities (non-overlapping only)
-   */
-  _filterPlateauOverlaps(entities, plateauGraph) {
-    const cache = this._plateauConflationCache;
-    const editor = this.context.systems.editor;
-    if (!editor?.staging?.graph) return entities;
-
-    const osmGraph = editor.staging.graph;
-    const extent = this.context.viewport.visibleExtent();
-
-    // 1. Collect OSM buildings in the visible extent
-    const osmEntities = editor.intersects(extent);
-    const osmBuildings = osmEntities.filter(entity =>
-      entity.type === 'way' &&
-      entity.tags.building &&
-      entity.tags.building !== 'no'
-    );
-
-    // 2. Prepare OSM building bounding boxes + polygon coordinates for fast filtering
-    const osmBuildingData = [];
-    for (const way of osmBuildings) {
-      try {
-        if (!way.isClosed()) continue;
-        const coords = way.nodes.map(nodeID => osmGraph.entity(nodeID).loc);
-        if (coords.length < 4) continue;  // Valid polygon needs at least 3 unique points + closing
-
-        let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
-        for (const c of coords) {
-          if (c[0] < minX) minX = c[0];
-          if (c[0] > maxX) maxX = c[0];
-          if (c[1] < minY) minY = c[1];
-          if (c[1] > maxY) maxY = c[1];
-        }
-        osmBuildingData.push({
-          coords: [coords],  // Polyclip expects [[ring]]
-          bbox: { minX, minY, maxX, maxY }
-        });
-      } catch (e) {
-        continue;
-      }
-    }
-
-    // If no OSM buildings in view, skip conflation
-    if (osmBuildingData.length === 0) return entities;
-
-    // Phase 4-A: way_id → building relation のマップを構築。
-    // 並行して relation_id → outline way_id を記録 (outline で代表判定するため)。
-    const wayToBuildingRelation = new Map();        // way_id → relation entity
-    const buildingRelationOutline = new Map();      // relation_id → outline way_id (or undefined)
-    for (const e of entities) {
-      if (e.type !== 'relation') continue;
-      if (e.tags?.type !== 'building') continue;
-      let outlineWayId;
-      for (const m of e.members ?? []) {
-        if (m.type !== 'way') continue;
-        if (!wayToBuildingRelation.has(m.id)) {
-          wayToBuildingRelation.set(m.id, e);
-        }
-        if (m.role === 'outline' && outlineWayId === undefined) {
-          outlineWayId = m.id;
-        }
-      }
-      buildingRelationOutline.set(e.id, outlineWayId);
-    }
-
-    // relation 単位の判定結果キャッシュ (このバッチ内のみ)。
-    // outline の overlap 判定を1回行い、relation の全 member で再利用。
-    const relationOverlapDecision = new Map();  // relation_id → true (overlap) / false (no overlap) / null (unknown)
-
-    const evalRelationOverlap = (relation) => {
-      if (relationOverlapDecision.has(relation.id)) {
-        return relationOverlapDecision.get(relation.id);
-      }
-      const outlineWayId = buildingRelationOutline.get(relation.id);
-      if (!outlineWayId) {
-        relationOverlapDecision.set(relation.id, null);
-        return null;
-      }
-      const outlineWay = plateauGraph.hasEntity(outlineWayId);
-      if (!outlineWay) {
-        relationOverlapDecision.set(relation.id, null);
-        return null;
-      }
-      const decision = this._checkWayOverlapsOsmBuildings(outlineWay, plateauGraph, osmBuildingData);
-      // decision: true = overlap, false = no overlap, null = couldn't evaluate (open way etc.)
-      relationOverlapDecision.set(relation.id, decision);
-      return decision;
-    };
-
-    // 3. Filter each Plateau entity against OSM buildings
-    return entities.filter(entity => {
-      if (entity.type === 'node') return true;  // Keep nodes (needed for way coordinate resolution)
-      if (entity.type === 'relation') return true;  // relations 自体は filter 対象外 (member way の判定で実質決まる)
-      if (entity.type !== 'way') return true;
-
-      // Cache hit - already determined (across batches via _plateauConflationCache)
-      if (cache.rejected.has(entity.id)) return false;
-      if (cache.checked.has(entity.id)) return true;
-
-      // Phase 4-A: building relation の member なら relation の判定結果を採用
-      const parentRel = wayToBuildingRelation.get(entity.id);
-      if (parentRel) {
-        const decision = evalRelationOverlap(parentRel);
-        if (decision === true) {
-          cache.rejected.add(entity.id);
-          return false;
-        }
-        if (decision === false) {
-          cache.checked.add(entity.id);
-          return true;
-        }
-        // decision === null → relation 判定不能、個別 way 判定にフォールバック
-      }
-
-      // 個別 way 判定 (relation 非 member、または relation 判定不能のフォールバック)
-      const decision = this._checkWayOverlapsOsmBuildings(entity, plateauGraph, osmBuildingData);
-      if (decision === true) {
-        cache.rejected.add(entity.id);
-        return false;
-      }
-      // decision === false または null → pass として扱う (open way 等)
-      cache.checked.add(entity.id);
-      return true;
-    });
-  }
-
-
-  /**
-   * _checkWayOverlapsOsmBuildings
-   * 1つの Plateau way が OSM 建物群と重複するか判定する純粋ロジック。
-   * `_filterPlateauOverlaps` から呼ばれ、個別判定と relation outline 代表判定で再利用される。
-   *
-   * @return {boolean | null} true = overlap, false = no overlap, null = couldn't evaluate (open way / invalid coords)
-   */
-  _checkWayOverlapsOsmBuildings(way, plateauGraph, osmBuildingData) {
-    try {
-      if (!way.isClosed()) return null;
-
-      const coords = way.nodes.map(nodeID => plateauGraph.entity(nodeID).loc);
-      if (coords.length < 4) return null;
-
-      let oMinX = Infinity, oMinY = Infinity, oMaxX = -Infinity, oMaxY = -Infinity;
-      for (const c of coords) {
-        if (c[0] < oMinX) oMinX = c[0];
-        if (c[0] > oMaxX) oMaxX = c[0];
-        if (c[1] < oMinY) oMinY = c[1];
-        if (c[1] > oMaxY) oMaxY = c[1];
-      }
-
-      for (const osm of osmBuildingData) {
-        const ob = osm.bbox;
-        if (oMaxX < ob.minX || oMinX > ob.maxX || oMaxY < ob.minY || oMinY > ob.maxY) {
-          continue;
-        }
-        try {
-          const intersection = Polyclip.intersection([coords], osm.coords);
-          if (intersection && intersection.length > 0) {
-            return true;
-          }
-        } catch (e) {
-          continue;  // Polyclip can throw on invalid geometries
-        }
-      }
-
-      return false;
-    } catch (e) {
-      return null;
-    }
-  }
-
 
   /* this is called to merge in the rapid_intro_graph */
   merge(datasetID, entities) {
@@ -751,18 +332,6 @@ export class MapWithAIService extends AbstractSystem {
     } else if (datasetID === 'msBuildings') {
       qs.result_type = 'road_building_vector_xml';
       qs.building_source = 'microsoft';
-    }  else if (datasetID === 'plateauJapan') {
-      // Plateau Japan: bypass Facebook API, call Plateau API directly
-      const bbox = `${extent.min[0]},${extent.min[1]},${extent.max[0]},${extent.max[1]}`;
-      const params = new URLSearchParams({
-        bbox: bbox,
-        use_intersects: 'true',
-        limit: '1000'
-      });
-      // Support runtime override via URL hash (e.g. #plateau_api_url=http://localhost:8000/api/mapwithai/buildings)
-      const customPlateauUrl = utilStringQs(window.location.hash).plateau_api_url;
-      const plateauUrl = customPlateauUrl || PLATEAU_API_URL;
-      return `${plateauUrl}?${params.toString()}`;
     } else {
       qs.result_type = 'osm_xml';
       qs.sources = `esri_building.${datasetID}`;
@@ -965,9 +534,6 @@ export class MapWithAIService extends AbstractSystem {
       }
 
     } else if (type === 'relation') {
-      // Phase 3: PLATEAU LOD2 type=building relation (outline + parts) のような
-      // 構造をクライアント graph に取り込む。relation 単独では geometry を持たず
-      // メンバー way がレンダリングを担うため、parse + graph 追加だけで十分。
       if (cache.seen.has(entityID)) {
         return null;
       } else {
