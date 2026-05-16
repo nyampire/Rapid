@@ -117,6 +117,7 @@ export class RapidSystem extends AbstractSystem {
     const esri = context.services.esri;
     const mapwithai = context.services.mapwithai;
     const overture = context.services.overture;
+    const plateau = context.services.plateau;
 
     // This code is written in a way that we can work with whatever
     // data-providing services are installed.
@@ -124,6 +125,7 @@ export class RapidSystem extends AbstractSystem {
     if (overture)  services.push(overture);
     if (esri)      services.push(esri);
     if (mapwithai) services.push(mapwithai);
+    if (plateau)   services.push(plateau);
 
     const prerequisites = Promise.all(services.map(service => service.startAsync()));
 
