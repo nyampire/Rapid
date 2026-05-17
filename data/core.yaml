@@ -2648,6 +2648,9 @@ en:
       accept_feature:
         label: Accept the feature
         key: A   # <this key> to Accept a suggested feature
+      accept_only_this_feature:
+        label: Accept only this feature (skip multi-section cascade)
+        key: ⇧A  # <this key> for the Add-Only-This-Feature variant on multi-section buildings
       ignore_feature:
         label: Ignore the feature
         key: D   # <this key> to Ignore a suggested feature
