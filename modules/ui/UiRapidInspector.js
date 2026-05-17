@@ -6,6 +6,7 @@ import { uiIcon } from './icon.js';
 import { uiFlash } from './flash.js';
 //import { uiRapidFirstEditDialog } from './rapid_first_edit_dialog.js';
 import { uiTooltip } from './tooltip.js';
+import { utilCmd } from '../util/cmd.js';
 import { utilKeybinding } from '../util/keybinding.js';
 import { utilBuildingRelationInfo } from '../util/building_relation.js';
 
@@ -646,6 +647,10 @@ export class UiRapidInspector {
         title = l10n.t('rapid_inspector.option_accept.tooltip');
         shortcut = l10n.t('shortcuts.command.accept_feature.key');
       }
+    } else if (d.key === 'accept_only_this') {
+      title = l10n.t('rapid_inspector.option_accept_only_this.tooltip');
+      // utilCmd.display renders the platform-correct modifier glyph (⇧ / Shift)
+      shortcut = utilCmd.display(this.context, '⇧' + l10n.t('shortcuts.command.accept_feature.key'));
     } else if (d.key === 'ignore') {
       title = l10n.t('rapid_inspector.option_ignore.tooltip');
       shortcut = l10n.t('shortcuts.command.ignore_feature.key');
@@ -685,12 +690,23 @@ export class UiRapidInspector {
     }
 
     const acceptKey = l10n.t('shortcuts.command.accept_feature.key');
+    const acceptOnlyThisKey = utilCmd('⇧' + acceptKey);  // Shift+A
     const ignoreKey = l10n.t('shortcuts.command.ignore_feature.key');
     const moveKey = l10n.t('shortcuts.command.move.key');
     const rotateKey = l10n.t('shortcuts.command.rotate.key');
-    this._keys = [acceptKey, ignoreKey, moveKey, rotateKey];
+    this._keys = [acceptKey, acceptOnlyThisKey, ignoreKey, moveKey, rotateKey];
 
     keybinding.on(acceptKey, this.acceptFeature);
+    // Shift+A → Add Only This Feature. Only meaningful on multi-section
+    // building parts (UiRapidInspector renders the opt-out button only then);
+    // on regular features acceptFeature ignores skipCascade because there is
+    // nothing to cascade in the first place, so the binding is harmless.
+    keybinding.on(acceptOnlyThisKey, (e) => {
+      this.acceptFeature(e, {
+        skipCascade: true,
+        annotationStringID: 'rapid_inspector.option_accept_only_this.annotation'
+      });
+    });
     keybinding.on(ignoreKey, this.ignoreFeature);
     keybinding.on(moveKey, this.moveFeature);
     keybinding.on(rotateKey, this.rotateFeature);
