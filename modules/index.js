@@ -19,3 +19,7 @@ export * from './util/index.js';
 export * from './validations/index.js';
 
 export { Context } from './Context.js';
+
+// Direct export for tests that need to construct Pixi layer instances with
+// mock scenes (avoids booting a full Rapid context).
+export { PixiLayerPlateauCoverage } from './pixi/PixiLayerPlateauCoverage.js';
