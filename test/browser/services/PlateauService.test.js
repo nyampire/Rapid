@@ -652,4 +652,124 @@ describe('PlateauService', () => {
     });
   });
 
+
+  describe('#loadCoverage', () => {
+    // Coverage endpoint is derived from PLATEAU_API_URL by replacing
+    // `/buildings(?…)?` with `/coverage`. The default URL points to
+    // production; tests use the URL-hash override (#plateau_api_url=…) to
+    // route the request through a localhost path that fetchMock controls.
+    const FAKE_BUILDINGS_URL = 'http://test.invalid/api/mapwithai/buildings';
+    const FAKE_COVERAGE_URL = 'http://test.invalid/api/mapwithai/coverage';
+    const DEFAULT_COVERAGE_URL_RE = /rapid\.nyampire\.info\/api\/mapwithai\/coverage/;
+
+    let _originalHash;
+
+    beforeEach(() => {
+      fetchMock.removeRoutes().clearHistory();
+      _originalHash = window.location.hash;
+      // Default: no URL override → service hits the production-shaped URL,
+      // which we mock with a regex so DNS / TLS never matter.
+      window.history.replaceState(null, '', window.location.pathname);
+    });
+
+    afterEach(() => {
+      fetchMock.removeRoutes().clearHistory();
+      window.history.replaceState(null, '', window.location.pathname + _originalHash);
+    });
+
+    function mockCoverage(routeMatcher, body) {
+      fetchMock.route(routeMatcher, {
+        body: typeof body === 'string' ? body : JSON.stringify(body),
+        status: 200,
+        headers: { 'Content-Type': 'application/json' }
+      });
+    }
+
+    it('fetches and caches the coverage FeatureCollection on first call', async () => {
+      const fc = { type: 'FeatureCollection', features: [] };
+      mockCoverage(DEFAULT_COVERAGE_URL_RE, fc);
+
+      const result = await _service.loadCoverage();
+
+      expect(result).to.eql(fc);
+      expect(_service._coverageData).to.eql(fc);
+      expect(fetchMock.callHistory.calls().length).to.eql(1);
+    });
+
+    it('returns cached data without a second fetch on subsequent calls', async () => {
+      const fc = { type: 'FeatureCollection', features: [{ id: 'a' }] };
+      mockCoverage(DEFAULT_COVERAGE_URL_RE, fc);
+
+      const first = await _service.loadCoverage();
+      const second = await _service.loadCoverage();
+
+      expect(second).to.equal(first);  // same reference (cached)
+      expect(fetchMock.callHistory.calls().length).to.eql(1);
+    });
+
+    it('coalesces concurrent inflight calls into a single fetch', async () => {
+      const fc = { type: 'FeatureCollection', features: [] };
+      mockCoverage(DEFAULT_COVERAGE_URL_RE, fc);
+
+      const [a, b, c] = await Promise.all([
+        _service.loadCoverage(),
+        _service.loadCoverage(),
+        _service.loadCoverage()
+      ]);
+
+      expect(a).to.eql(fc);
+      expect(b).to.eql(fc);
+      expect(c).to.eql(fc);
+      expect(fetchMock.callHistory.calls().length).to.eql(1);
+    });
+
+    it('returns null on fetch failure without throwing (graceful degradation)', async () => {
+      fetchMock.route(DEFAULT_COVERAGE_URL_RE, { status: 500, body: 'oops' });
+
+      const result = await _service.loadCoverage();
+
+      expect(result).to.be.null;
+      expect(_service._coverageData).to.be.null;
+      // Inflight promise must reset on failure so a later call can retry
+      expect(_service._coveragePromise).to.be.null;
+    });
+
+    it('returns null when the response shape is not a FeatureCollection', async () => {
+      mockCoverage(DEFAULT_COVERAGE_URL_RE, { type: 'Feature' });  // wrong type
+
+      const result = await _service.loadCoverage();
+
+      expect(result).to.be.null;
+      expect(_service._coverageData).to.be.null;
+    });
+
+    it('honors the #plateau_api_url hash override when building the coverage URL', async () => {
+      window.history.replaceState(null, '', window.location.pathname + '#plateau_api_url=' + FAKE_BUILDINGS_URL);
+      const fc = { type: 'FeatureCollection', features: [{ id: 'override' }] };
+      mockCoverage(FAKE_COVERAGE_URL, fc);
+
+      const result = await _service.loadCoverage();
+
+      expect(result).to.eql(fc);
+      const lastUrl = fetchMock.callHistory.lastCall().url;
+      expect(lastUrl).to.eql(FAKE_COVERAGE_URL);
+    });
+
+    it('retries after a previous failure clears the inflight promise', async () => {
+      // First call fails …
+      fetchMock.route(DEFAULT_COVERAGE_URL_RE, { status: 500 });
+      const firstResult = await _service.loadCoverage();
+      expect(firstResult).to.be.null;
+
+      // … second call sees a healthy response (re-route)
+      fetchMock.removeRoutes().clearHistory();
+      const fc = { type: 'FeatureCollection', features: [] };
+      mockCoverage(DEFAULT_COVERAGE_URL_RE, fc);
+      const secondResult = await _service.loadCoverage();
+
+      expect(secondResult).to.eql(fc);
+      expect(_service._coverageData).to.eql(fc);
+    });
+  });
+
 });

@@ -30,7 +30,10 @@ module.exports = function (config) {
 
     // list of files / patterns to exclude
     exclude: [
-      'test/browser/pixi/*.js',
+      // Legacy Pixi layer tests that require full Rapid context init.
+      // New mock-based Pixi layer tests use the `*.test.js` suffix and are
+      // still picked up via `test/browser/**/*.js`.
+      'test/browser/pixi/PixiLayerMapUI.js',
       // Comment the next line to run the OSM renderer-specific unit test, which right now merely exercise the code.
       // These tests don't actually make any assertions and therefore always succeed.
       'test/browser/renderer/PixiRenderer.js'
