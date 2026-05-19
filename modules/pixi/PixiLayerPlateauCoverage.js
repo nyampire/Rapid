@@ -31,8 +31,9 @@ export class PixiLayerPlateauCoverage extends AbstractLayer {
    */
   constructor(scene, layerID) {
     super(scene, layerID);
-    this._enabled = true;          // Default ON
-    this._fetched = false;         // True after we've attempted the initial fetch
+    this._enabled = true;             // Default ON
+    this._fetched = false;            // True after coverage has loaded successfully
+    this._fetchInProgress = false;    // True while a fetch is inflight (prevents storm)
   }
 
 
@@ -68,14 +69,22 @@ export class PixiLayerPlateauCoverage extends AbstractLayer {
     const service = this.context.services.plateau;
     if (!service) return;
 
-    // Trigger fetch once. Promise resolves with FeatureCollection or null.
-    // Until it resolves, we have nothing to draw — re-render will pick it up.
-    if (!this._fetched) {
-      this._fetched = true;
+    // Trigger fetch lazily. Promise resolves with FeatureCollection or null.
+    // - `_fetchInProgress` blocks concurrent fetches from successive renders
+    //   (one render → one inflight request → service-side coalesce handles
+    //   any extras anyway, but skipping the .then() noise here is cheaper).
+    // - `_fetched` flips to true ONLY on successful load, so a transient
+    //   failure (network blip, 500) can be retried by the next render.
+    if (!this._fetched && !this._fetchInProgress) {
+      this._fetchInProgress = true;
       service.loadCoverage().then(data => {
+        this._fetchInProgress = false;
         if (data) {
+          this._fetched = true;
           this.context.systems.gfx.deferredRedraw();
         }
+        // On null (failure or invalid shape), `_fetched` stays false so a
+        // future render will retry.
       });
     }
 
