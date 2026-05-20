@@ -3,8 +3,8 @@
   <head>
     <meta charset='utf-8'>
     <title>Rapid</title>
-    <link rel='stylesheet' href='dist/rapid.css'>
-    <link rel='icon' type='image/svg' href='dist/img/rapid_favicon.svg'>
+    <link rel='stylesheet' href='rapid.css'>
+    <link rel='icon' type='image/svg' href='img/rapid_favicon.svg'>
 
     <meta name='viewport' content='width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no'/>
     <meta name='mobile-web-app-capable' content='yes'/>
@@ -32,7 +32,7 @@
       newScript.type = 'text/javascript';
       newScript.onload = checkScript;
       newScript.onerror = checkScript;
-      newScript.src = 'dist/rapid.js';
+      newScript.src = 'rapid.min.js';
 
       document.getElementsByTagName('head')[0].appendChild(newScript);
 
@@ -44,8 +44,7 @@
         } else {
           const context = new Rapid.Context();
           context.containerNode = container;
-          context.assetPath = 'dist/';
-          // context.assetOrigin = 'local';   // test no CDN
+          context.assetPath = '';
           context.buildID = '';
           context.buildSHA = '';
           context.buildDate = '';
@@ -53,17 +52,16 @@
             {
               url: 'https://www.openstreetmap.org',
               apiUrl: 'https://api.openstreetmap.org',
-              client_id: 'XJ4C90NPfWl9EI0-zgFhVh13bcK5kM7pJiIG5i4JBq8',
-              client_secret: '_-joqQGJdkb4DOpCFBRRROCzN_YzS4YLWkgtNFsMIys'
+              client_id: '__OSM_CLIENT_ID__',
+              client_secret: '__OSM_CLIENT_SECRET__'
             }, {
               url: 'https://api06.dev.openstreetmap.org',
               apiUrl: 'https://api06.dev.openstreetmap.org',
-              client_id: 'NShFpuCHSGxVMrttMR8cyYJ5I1pC-yEdNRHpX6XslGM',
-              client_secret: 'YqAspFOYaTOv-uGM8TXbRLMXZUwgczdh3kUaPwqLPSQ'
+              client_id: '__OSM_DEV_CLIENT_ID__',
+              client_secret: '__OSM_DEV_CLIENT_SECRET__'
             }
           ];
 
-          window.context = context;  // for debugging
           window.rapidContext = context;
           context.initAsync();
         }
