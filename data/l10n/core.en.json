@@ -3226,6 +3226,10 @@
           "label": "Accept the feature",
           "key": "A"
         },
+        "accept_only_this_feature": {
+          "label": "Accept only this feature (skip multi-section cascade)",
+          "key": "⇧A"
+        },
         "ignore_feature": {
           "label": "Ignore the feature",
           "key": "D"
