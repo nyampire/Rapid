@@ -48,6 +48,7 @@ export class UiRapidInspector {
 
     // Create child components
     this.AcceptTooltip = uiTooltip(context).placement('bottom');
+    this.AcceptOnlyThisTooltip = uiTooltip(context).placement('bottom');
     this.IgnoreTooltip = uiTooltip(context).placement('bottom');
 
     // Ensure methods used as callbacks always have `this` bound correctly.
@@ -463,7 +464,7 @@ export class UiRapidInspector {
         labelStringID: 'rapid_inspector.option_accept_only_this.label',
         referenceStringID: 'rapid_inspector.option_accept_only_this.description',
         annotationStringID: 'rapid_inspector.option_accept_only_this.annotation',
-        tooltip: this.AcceptTooltip,
+        tooltip: this.AcceptOnlyThisTooltip,
         onClick: this.acceptFeature,
         skipCascade: true
       });
