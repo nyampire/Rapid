@@ -3540,6 +3540,8 @@
       "add_feature": "地物を追加",
       "dashboard_label": "ダッシュボード",
       "dashboard_tooltip": "Rapid Plateau 進捗ダッシュボードを新しいタブで開く",
+      "zoom_overview_label": "Zoom 14",
+      "zoom_overview_tooltip": "ズーム 14 へ移動して建物の読み込みを止め、移動を高速化する（建物は z16 から読み込まれます）",
       "favorites": "お気に入り",
       "inspect": "位置検索/タグ編集",
       "recent": "選択履歴",

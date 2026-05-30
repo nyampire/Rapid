@@ -98,6 +98,7 @@ function buildDataAsync() {
         'fas-arrow-rotate-left',
         'fas-arrow-rotate-right',
         'fas-backward-step',
+        'fas-compress-arrows-alt',  // toolbar: Zoom14 / overview button
         'fas-filter',
         'fas-forward-step',
         'fas-i-cursor',
@@ -105,6 +106,7 @@ function buildDataAsync() {
         'fas-palette',
         'fas-question',
         'fas-star',
+        'fas-tachometer-alt',        // toolbar: Dashboard button (also referenced by QA data; pin explicitly)
         'fas-th-list',
         'fas-triangle-exclamation',
         'fas-user-cog'
