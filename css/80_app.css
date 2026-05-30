@@ -583,6 +583,35 @@ button.bar-button .label {
   padding: 0 5px;
 }
 
+/* Plateau Dashboard toolbar anchor: mirrors button.bar-button rules so the
+   icon column matches Save / Rapid / DrawModes visually. The white fill,
+   rounded corners and dark text colour reproduce the active toolbar look
+   that the button.* selectors above can't reach (we're an <a>, not <button>).
+   color is inherited by the FontAwesome path via `fill="currentColor"`, so
+   the gauge renders monochrome alongside the other icons. */
+a.bar-button.plateau-dashboard {
+  display: flex;
+  flex: 0 0 auto;
+  flex-flow: row nowrap;
+  align-items: center;
+  justify-content: center;
+  padding: 0 10px;
+  min-width: 80px;          /* match Rapid (81 px) / DrawModes (~84-95 px) cadence */
+  white-space: nowrap;
+  font-weight: bold;
+  text-decoration: none;
+  background: #fff;
+  border-radius: 4px;
+  color: #333;
+}
+a.bar-button.plateau-dashboard:hover,
+a.bar-button.plateau-dashboard:focus {
+  color: #000;
+}
+a.bar-button.plateau-dashboard .icon {
+  flex: 0 0 20px;
+}
+
 button.add-area {
   opacity: 0.65;
 }

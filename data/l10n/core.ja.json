@@ -3538,6 +3538,8 @@
     },
     "toolbar": {
       "add_feature": "地物を追加",
+      "dashboard_label": "ダッシュボード",
+      "dashboard_tooltip": "Rapid Plateau 進捗ダッシュボードを新しいタブで開く",
       "favorites": "お気に入り",
       "inspect": "位置検索/タグ編集",
       "recent": "選択履歴",
