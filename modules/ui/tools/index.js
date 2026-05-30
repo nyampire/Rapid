@@ -1,3 +1,4 @@
+export * from './UiDashboardTool.js';
 export * from './UiDownloadTool.js';
 export * from './UiDrawModesTool.js';
 export * from './UiRapidTool.js';

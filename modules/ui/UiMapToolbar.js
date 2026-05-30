@@ -1,7 +1,7 @@
 import { selection, select } from 'd3-selection';
 
 import {
-  UiDownloadTool, UiDrawModesTool, UiRapidTool, UiSaveTool, UiUndoRedoTool
+  UiDashboardTool, UiDownloadTool, UiDrawModesTool, UiRapidTool, UiSaveTool, UiUndoRedoTool
 } from './tools/index.js';
 
 
@@ -31,6 +31,7 @@ export class UiMapToolbar {
     // Create child components
     this.DrawModes = new UiDrawModesTool(context);
     this.Rapid = new UiRapidTool(context);
+    this.Dashboard = new UiDashboardTool(context);
     this.UndoRedo = new UiUndoRedoTool(context);
     this.Save = new UiSaveTool(context);
     this.Download = new UiDownloadTool(context);
@@ -70,6 +71,7 @@ export class UiMapToolbar {
       'spacer',
       this.DrawModes,
       this.Rapid,
+      this.Dashboard,
       'spacer',
       this.UndoRedo,
       this.Save,
@@ -127,7 +129,7 @@ export class UiMapToolbar {
 
     $items
       .selectAll('.item-label')
-      .text(d => l10n.t(d.stringID));
+      .text(d => d.stringID ? l10n.t(d.stringID) : '');
 
     // If we are adding/removing any buttons, check if toolbar has overflowed..
     ui.checkOverflow('.map-toolbar', true);

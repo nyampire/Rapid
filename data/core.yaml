@@ -19,6 +19,8 @@ en:
     favorites: Favorites
     add_feature: Add Feature
     rapid_features: Assist
+    dashboard_label: Dashboard
+    dashboard_tooltip: Open the Rapid Plateau progress dashboard (new tab)
   title:
     format:
       context: "{base} – {context}"
