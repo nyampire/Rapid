@@ -4,7 +4,7 @@ import { PixiFeaturePolygon } from './PixiFeaturePolygon.js';
 
 const LAYERID = 'plateau-coverage';
 const MINZOOM = 5;
-const MAXZOOM = 14;
+const MAXZOOM = 15;
 // Vivid orange — colorblind-safe (IBM Accessible Color Palette),
 // stands out against Japan's green-heavy OSM background (forests, parks).
 const PLATEAU_COVERAGE_COLOR = 0xFE6100;
@@ -17,7 +17,7 @@ const PLATEAU_COVERAGE_COLOR = 0xFE6100;
  * Each polygon is a convex hull of one city's building centroids,
  * fetched from the rapid_plateau_api server.
  *
- * Visible at zoom 5-14. Above zoom 14, the actual building data starts
+ * Visible at zoom 5-15. At zoom 16+ the actual building data starts
  * loading (see PixiLayerRapid), so this overview layer hides itself.
  *
  * @class
