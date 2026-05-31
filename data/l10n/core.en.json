@@ -24,7 +24,7 @@
       "dashboard_label": "Dashboard",
       "dashboard_tooltip": "Open the Rapid Plateau progress dashboard (new tab)",
       "zoom_overview_label": "Zoom 14",
-      "zoom_overview_tooltip": "Snap to zoom 14 so tiles stop loading and panning stays fast (buildings render from z16)"
+      "zoom_overview_tooltip": "Snap to zoom 14 so tiles stop loading and panning stays fast.<br>Buildings render from z16."
     },
     "title": {
       "format": {
