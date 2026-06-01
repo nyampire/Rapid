@@ -622,10 +622,16 @@ export class PlateauService extends AbstractSystem {
    */
   _tileURL(dataset, extent) {
     const bbox = `${extent.min[0]},${extent.min[1]},${extent.max[0]},${extent.max[1]}`;
+    // A single z16 tile (~500m × 500m) over dense central-Tokyo neighbourhoods
+    // (e.g. 豊島区 池袋) can hold ~1,300+ Plateau outlines. With the previous
+    // limit=1000 the server truncated each response, dropping a random ~25% of
+    // buildings — they appeared on the map as a N-S strip with no outlines
+    // (#34). 5,000 gives ~3× headroom over the observed worst case while keeping
+    // any one tile response under ~7 MB.
     const params = new URLSearchParams({
       bbox: bbox,
       use_intersects: 'true',
-      limit: '1000'
+      limit: '5000'
     });
     // Support runtime override via URL hash, e.g.
     //   #plateau_api_url=http://localhost:8000/api/mapwithai/buildings
