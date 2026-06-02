@@ -85,9 +85,9 @@ describe('PixiLayerPlateauCoverage', () => {
       expect(layer._renderFeaturesCalls).to.eql(0);
     });
 
-    it('does nothing when zoom is above MAXZOOM (14)', () => {
+    it('does nothing when zoom is above MAXZOOM (15)', () => {
       const { layer, service } = makeLayer({});
-      layer.render(1, null, 15);
+      layer.render(1, null, 16);
       expect(service._calls.loadCoverage).to.eql(0);
       expect(layer._renderFeaturesCalls).to.eql(0);
     });
@@ -103,7 +103,7 @@ describe('PixiLayerPlateauCoverage', () => {
       const fc = { type: 'FeatureCollection', features: [] };
       const { layer } = makeLayer({ coverageData: fc });
       layer.render(1, null, 5);    // MINZOOM inclusive
-      layer.render(2, null, 14);   // MAXZOOM inclusive
+      layer.render(2, null, 15);   // MAXZOOM inclusive
       // Both calls should pass the zoom gate; _renderFeatures is invoked
       // (even with empty features, the function is called, then iterates over nothing).
       expect(layer._renderFeaturesCalls).to.eql(2);
