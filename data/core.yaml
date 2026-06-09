@@ -1627,6 +1627,8 @@ en:
       open_source_h: "Open Source"
       open_source: "The Rapid editor is a collaborative open source project, and you are using version {version} now. The source code is available [on GitHub](https://github.com/facebook/Rapid)."
       open_source_help: "You can help Rapid by [reporting bugs](https://github.com/facebook/Rapid/issues)."
+      open_source_plateau_h: "PLATEAU Edition"
+      open_source_plateau: "This edition extends Rapid with integration for [PLATEAU](https://www.mlit.go.jp/plateau/), Japan's open 3D city data. It spans three repositories:\n\n- [Editor](https://github.com/nyampire/Rapid) — this fork of Rapid\n- [API](https://github.com/nyampire/rapid_plateau_api) — backend that serves PLATEAU building data\n- [Dashboard](https://github.com/nyampire/rapid_plateau_dashboard) — visualization of import progress"
     overview:
       title: Overview
       navigation_h: "Navigation"
