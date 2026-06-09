@@ -24,7 +24,9 @@ export function uiPaneHelp(context) {
       'before_start',
       'open_source_h',
       'open_source',
-      'open_source_help'
+      'open_source_help',
+      'open_source_plateau_h',
+      'open_source_plateau'
     ]],
     ['overview', [
       'navigation_h',
@@ -215,6 +217,7 @@ export function uiPaneHelp(context) {
     'help.help.open_data_h': 3,
     'help.help.before_start_h': 3,
     'help.help.open_source_h': 3,
+    'help.help.open_source_plateau_h': 3,
     'help.overview.navigation_h': 3,
     'help.overview.features_h': 3,
     'help.editing.select_h': 3,
