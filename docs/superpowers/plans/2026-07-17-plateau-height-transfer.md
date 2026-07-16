@@ -1961,17 +1961,20 @@ git push
 
 ## Task 1 Result
 
-_To be filled in after Step 2 of Task 1._
+Measured on 2026-07-17 against production DB (read-only SELECT).
 
-| Attribute        | Count | Percentage |
-|------------------|-------|------------|
-| Total buildings  |       |            |
-| With `height`    |       |            |
-| With `ele`       |       |            |
-| With `building_levels` |  |            |
+| Attribute        | Count      | Percentage |
+|------------------|-----------:|-----------:|
+| Total buildings (`building IS NOT NULL`) | 12,746,701 | — |
+| With `height`    | 12,660,547 | 99.32 %    |
+| With `ele`       | 12,746,701 | 100.00 %   |
+| With `building_levels` | 6,075,503 | 47.66 %    |
 
 Observations:
-- ...
+- `height` and `ele` are populated on essentially every building — these are the main workhorses of the transfer feature.
+- `building:levels` covers about half of buildings. This is exactly the scenario the per-tag missing-fill logic (C-b) is designed for: a mapper viewing a building that has PLATEAU height but no levels can pull just the levels.
+- All three target tags stay in the state machine (Task 4). No tag is excluded for low population.
+- No operational caveats to flag downstream.
 
 ---
 
