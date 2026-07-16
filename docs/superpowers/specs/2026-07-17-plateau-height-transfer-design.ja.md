@@ -96,8 +96,9 @@ else:
 **サーバ側 (rapid_plateau_api):**
 
 - `osmfj_plateau_api.py` の `/api/mapwithai/buildings`: SELECT に `ST_AsGeoJSON(ST_PointOnSurface(geom)) AS representative_point` を追加
+- 本 endpoint は OSM XML を返すため、代表点は各 `<way>` / `<relation>` に追加の `<tag>` 要素として付与（例: `<tag k="representative_point" v="139.7563,35.6795" />`）。PlateauService はこれを OSM タグではなく Entity プロパティとして取り出す
 - outline / part 両方に付与（Phase 1 では outline 分のみ使用、Phase 2 で part 分を利用）
-- 新規 endpoint なし、DB マイグレーションなし、API バージョン変更なし。既存クライアントは新フィールドを無視するだけ
+- 新規 endpoint なし、DB マイグレーションなし、API バージョン変更なし。既存クライアントは新タグを無視するだけ
 
 **クライアント側 (Rapid):**
 

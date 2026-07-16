@@ -142,10 +142,15 @@ Server (rapid_plateau_api):
 
 - `osmfj_plateau_api.py` `/api/mapwithai/buildings`: SELECT gains
   `ST_AsGeoJSON(ST_PointOnSurface(geom)) AS representative_point`
+- The buildings endpoint returns OSM XML; the representative point is
+  carried as an extra `<tag>` element on each `<way>` /
+  `<relation>` (e.g. `<tag k="representative_point"
+  v="139.7563,35.6795" />`). PlateauService lifts this into an
+  Entity property rather than an OSM tag
 - Both outlines and parts get the field (Phase 1 uses outlines; Phase 2
   will use parts)
 - No new endpoint, no schema migration, no API version bump — existing
-  clients ignore the new field
+  clients ignore the new tag
 
 Client (Rapid):
 
