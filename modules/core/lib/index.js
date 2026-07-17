@@ -13,6 +13,7 @@ export {
 
 export { Field } from './Field.js';
 export { Graph } from './Graph.js';
+export { TARGET_TAG_KEYS, analyzeTagStates, findCandidates } from './HeightTransferMatcher.js';
 export { Preset } from './Preset.js';
 export { Tree } from './Tree.js';
 export { RapidDataset } from './RapidDataset.js';
