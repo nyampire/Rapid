@@ -154,6 +154,28 @@ describe('PixiLayerHeightTransfer', () => {
       layer.render(1, projectIdentity, 18);
       expect(layer._container.children.length).to.eql(0);
     });
+
+    it('destroys previously rendered icons on re-render, not just detaches them', () => {
+      // `PIXI.Container#removeChildren()` only unparents children - it does not
+      // call `.destroy()` on them, so a replaced icon's GPU-backed resources
+      // (a canvas texture, for `PIXI.Text` glyphs) would leak on every re-render
+      // unless render() destroys the old icons itself.
+      const c1 = { plateauFeature: { id: 'p1', representativePoint: [139.755, 35.679] }, state: 'CANDIDATE' };
+      const c2 = { plateauFeature: { id: 'p2', representativePoint: [139.756, 35.680] }, state: 'CANDIDATE' };
+      const mode = makeMode({ candidates: [c1] });
+      const scene = makeScene(mode);
+      const layer = new Rapid.PixiLayerHeightTransfer(scene, 'height-transfer');
+      layer._container = makeFakeContainer();
+
+      layer.render(0, projectIdentity, 18);
+      const firstIcon = layer._container.children[0];
+      expect(firstIcon.destroyed).to.be.false;
+
+      mode.candidates = [c2];
+      layer.render(1, projectIdentity, 18);
+
+      expect(firstIcon.destroyed).to.be.true;
+    });
   });
 
 

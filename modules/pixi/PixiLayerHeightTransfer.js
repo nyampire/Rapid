@@ -89,7 +89,14 @@ export class PixiLayerHeightTransfer extends AbstractLayer {
     // Always start from a clean slate - the candidate list, zoom, and active
     // state can each change between renders, and this layer is cheap enough
     // to fully rebuild rather than diff.
-    this._container.removeChildren();
+    // `Container#removeChildren()` only unparents children, it does not call
+    // `.destroy()` on them - so destroy the old icons explicitly to release
+    // their GPU-backed resources (a canvas texture, for PIXI.Text glyphs)
+    // instead of silently orphaning them on every re-render.
+    const stale = this._container.removeChildren();
+    for (const child of stale) {
+      child.destroy({ children: true });
+    }
 
     const mode = this.context.systems.heightTransfer;
     if (!mode || !mode.active) return;
