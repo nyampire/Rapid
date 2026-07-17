@@ -21,7 +21,7 @@
       "favorites": "Favorites",
       "add_feature": "Add Feature",
       "rapid_features": "Assist",
-      "height_transfer": "Transfer PLATEAU heights to OSM",
+      "height_transfer": "PLATEAU tag transfer mode",
       "dashboard_label": "Dashboard",
       "dashboard_tooltip": "Open the Rapid Plateau progress dashboard (new tab)",
       "zoom_overview_label": "Zoom 14",
