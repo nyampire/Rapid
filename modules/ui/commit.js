@@ -171,6 +171,22 @@ export function uiCommit(context) {
       tags.comment = [...mrComments].join('\n');
     }
 
+    // PLATEAU height-transfer comment preset (Task 9): once the user has applied at
+    // least one PLATEAU height transfer this session, prefill (or append to) the
+    // changeset comment. Never clobber anything the user already typed -- append
+    // with '; ' instead -- and don't append twice (idempotent across re-renders of
+    // this function, which runs on every commit-panel render, not just the first).
+    const heightTransfer = context.systems.heightTransfer;
+    if (heightTransfer?.transferredIDs?.size > 0) {
+      const preset = 'Add height/ele/building:levels from PLATEAU building data';
+      const currentComment = tags.comment || '';
+      if (!currentComment.trim()) {
+        tags.comment = preset;
+      } else if (!currentComment.includes('PLATEAU')) {
+        tags.comment = `${currentComment}; ${preset}`;
+      }
+    }
+
     // Include '#maproulette' `hashtag`, if Maproulette was used..
     if (usedMapRoulette) {
       const hashtags = new Set((tags.hashtags || '').split(';'));
