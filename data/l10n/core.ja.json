@@ -3540,6 +3540,7 @@
     },
     "toolbar": {
       "add_feature": "地物を追加",
+      "height_transfer": "PLATEAU の高さを OSM に転記",
       "dashboard_label": "ダッシュボード",
       "dashboard_tooltip": "Rapid Plateau 進捗ダッシュボードを新しいタブで開く",
       "zoom_overview_label": "Zoom 14",
