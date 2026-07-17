@@ -772,4 +772,94 @@ describe('PlateauService', () => {
     });
   });
 
+
+  describe('#representativePoint parsing', () => {
+    // Local helpers (this describe block owns them; the pre-existing tests
+    // above build their own fixtures inline and are left untouched).
+    function _makeService() {
+      return new Rapid.PlateauService(new MockContext());
+    }
+
+    function _fakeDataset() {
+      return {
+        id: 'plateauJapan',
+        cache: { seen: new Set() }
+      };
+    }
+
+    function _fakeTile() {
+      return { id: 'fake-tile' };
+    }
+
+    // `_parseXML` defers work via `window.requestIdleCallback` and reports
+    // through a Node-style (err, result) callback, so wrap it in a Promise
+    // for use with async/await.
+    function _parseXMLAsync(service, dataset, xml, tile) {
+      const doc = new window.DOMParser().parseFromString(xml, 'application/xml');
+      return new Promise((resolve, reject) => {
+        service._parseXML(dataset, doc, tile, (err, result) => {
+          if (err) reject(err);
+          else resolve(result);
+        });
+      });
+    }
+
+    it('lifts representative_point tag onto entity property and removes it from tags', async () => {
+      const xml = `<?xml version="1.0"?>
+        <osm version="0.6">
+          <node id="1" lat="35.6795" lon="139.7560"/>
+          <node id="2" lat="35.6795" lon="139.7566"/>
+          <node id="3" lat="35.6800" lon="139.7566"/>
+          <node id="4" lat="35.6800" lon="139.7560"/>
+          <way id="10">
+            <nd ref="1"/><nd ref="2"/><nd ref="3"/><nd ref="4"/><nd ref="1"/>
+            <tag k="building" v="yes"/>
+            <tag k="height" v="12.5"/>
+            <tag k="representative_point" v="139.7563000,35.6797500"/>
+          </way>
+        </osm>`;
+
+      const service = _makeService();
+      const result = await _parseXMLAsync(service, _fakeDataset(), xml, _fakeTile());
+
+      const way = result.find(e => e.type === 'way' && e.id === 'w10');
+      expect(way.representativePoint).to.eql([139.7563000, 35.67975]);
+      expect(way.tags.representative_point).to.be.undefined;
+      expect(way.tags.height).to.eql('12.5');
+    });
+
+    it('falls back to turf.pointOnFeature when tag is missing', async () => {
+      const xml = `<?xml version="1.0"?>
+        <osm version="0.6">
+          <node id="1" lat="35.6795" lon="139.7560"/>
+          <node id="2" lat="35.6795" lon="139.7566"/>
+          <node id="3" lat="35.6800" lon="139.7566"/>
+          <node id="4" lat="35.6800" lon="139.7560"/>
+          <way id="20">
+            <nd ref="1"/><nd ref="2"/><nd ref="3"/><nd ref="4"/><nd ref="1"/>
+            <tag k="building" v="yes"/>
+          </way>
+        </osm>`;
+
+      const service = _makeService();
+      const result = await _parseXMLAsync(service, _fakeDataset(), xml, _fakeTile());
+
+      const way = result.find(e => e.type === 'way' && e.id === 'w20');
+      expect(way.representativePoint).to.exist;
+      expect(way.representativePoint[0]).to.be.closeTo(139.7563, 1e-3);
+      expect(way.representativePoint[1]).to.be.closeTo(35.67975, 1e-3);
+    });
+
+    it('leaves node entities without a representativePoint property', async () => {
+      const xml = `<?xml version="1.0"?>
+        <osm version="0.6"><node id="1" lat="35.68" lon="139.75"/></osm>`;
+
+      const service = _makeService();
+      const result = await _parseXMLAsync(service, _fakeDataset(), xml, _fakeTile());
+
+      const node = result[0];
+      expect(node.representativePoint).to.be.undefined;
+    });
+  });
+
 });

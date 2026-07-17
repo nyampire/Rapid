@@ -1,4 +1,5 @@
 import * as Polyclip from 'polyclip-ts';
+import pointOnFeature from '@turf/point-on-feature';
 import { Tiler } from '@rapid-sdk/math';
 import { utilStringQs } from '@rapid-sdk/util';
 
@@ -708,25 +709,89 @@ export class PlateauService extends AbstractSystem {
   }
 
 
+  /**
+   * _extractRepresentativePoint
+   * Pulls the `representative_point` tag (added server-side — see Task 2 of
+   * the PLATEAU height-transfer plan) off an entity's tags map and parses it
+   * into a `[lon, lat]` pair. The tag must never leak into OSM tag machinery
+   * (changeset uploads, the tag editor, validation, etc), so it is deleted
+   * from `tags` regardless of whether it parses successfully.
+   *
+   * @param   {Object} tags  Mutable tags map (as built by `_getTags`)
+   * @return  {[number, number]|null}
+   */
+  _extractRepresentativePoint(tags) {
+    const raw = tags.representative_point;
+    if (!raw) return null;
+    delete tags.representative_point;
+
+    const parts = raw.split(',');
+    if (parts.length !== 2) return null;
+    const lon = parseFloat(parts[0]);
+    const lat = parseFloat(parts[1]);
+    if (!Number.isFinite(lon) || !Number.isFinite(lat)) return null;
+    return [lon, lat];
+  }
+
+
   _parseWay(obj, uid) {
     const attrs = obj.attributes;
-    return new osmWay({
+    const tags = this._getTags(obj);
+    const representativePoint = this._extractRepresentativePoint(tags);
+    const way = new osmWay({
       id: uid,
       visible: this._getVisible(attrs),
-      tags: this._getTags(obj),
+      tags: tags,
       nodes: this._getNodes(obj),
     });
+    if (representativePoint) way.representativePoint = representativePoint;
+    return way;
   }
 
 
   _parseRelation(obj, uid) {
     const attrs = obj.attributes;
-    return new osmRelation({
+    const tags = this._getTags(obj);
+    const representativePoint = this._extractRepresentativePoint(tags);
+    const relation = new osmRelation({
       id: uid,
       visible: this._getVisible(attrs),
-      tags: this._getTags(obj),
+      tags: tags,
       members: this._getMembers(obj),
     });
+    if (representativePoint) relation.representativePoint = representativePoint;
+    return relation;
+  }
+
+
+  /**
+   * _fillMissingRepresentativePoints
+   * Fallback for PLATEAU sources that haven't been upgraded to emit the
+   * `representative_point` tag yet (Task 2, server side). For building ways
+   * still missing the property after XML parsing, compute one client-side
+   * with turf's `pointOnFeature`. Silently skips entities whose geometry
+   * can't be resolved (e.g. a way whose nodes weren't included in this same
+   * XML batch) — a Plateau tile should never fail to load just because one
+   * building lacks a representative point.
+   *
+   * @param  {Array}  entities  Entities parsed from one XML batch
+   * @param  {Graph}  graph     Graph seeded with that same batch, so that
+   *                            `entity.nodes` refs resolve for `asGeoJSON()`
+   */
+  _fillMissingRepresentativePoints(entities, graph) {
+    for (const entity of entities) {
+      if (entity.type !== 'way' || entity.representativePoint) continue;
+      if (!entity.tags?.building && !entity.tags?.['building:part']) continue;
+      try {
+        const geojson = entity.asGeoJSON(graph);
+        const point = pointOnFeature(geojson);
+        if (point?.geometry?.coordinates) {
+          entity.representativePoint = point.geometry.coordinates;
+        }
+      } catch (_err) {
+        // skip unfillable entities silently
+      }
+    }
   }
 
 
@@ -746,6 +811,12 @@ export class PlateauService extends AbstractSystem {
         const result = this._parseEntity(dataset, tile, child);
         if (result) results.push(result);
       }
+
+      // Turf fallback needs a graph so `way.asGeoJSON()` can resolve node
+      // refs. `results` from one tile batch already includes the nodes for
+      // any ways in that same batch, so a throwaway Graph seeded from just
+      // this batch is sufficient — we don't need the accumulated dataset graph.
+      this._fillMissingRepresentativePoints(results, new Graph(results));
 
       callback(null, results);
     });
