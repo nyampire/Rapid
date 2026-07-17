@@ -33,4 +33,9 @@ describe('actionTransferPlateauTags', () => {
     const g2 = Rapid.actionTransferPlateauTags('r1', { height: '15' })(graph);
     expect(g2.entity('r1').tags).to.eql({ building: 'yes', height: '15' });
   });
+
+  it('marks the returned action with actionName so callers can identify it later (e.g. in undo/redo history)', () => {
+    const action = Rapid.actionTransferPlateauTags('w1', { height: '12' });
+    expect(action.actionName).to.eql('transfer_plateau_tags');
+  });
 });
