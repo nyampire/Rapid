@@ -617,8 +617,8 @@ a.bar-button.plateau-dashboard .icon {
    floats over the top-right of the map instead, above `.over-map`'s children (z-index 5). */
 .height-transfer-preview {
   position: absolute;
-  top: 10px;
-  right: 10px;
+  top: 60px;    /* clear .map-toolbar (~60px tall, top:10px + padding) */
+  right: 50px;  /* clear .map-controls (40px wide column at right:0) */
   z-index: 110;
   width: 280px;
   max-height: calc(100% - 20px);
@@ -632,7 +632,7 @@ a.bar-button.plateau-dashboard .icon {
 }
 .ideditor[dir='rtl'] .height-transfer-preview {
   right: unset;
-  left: 10px;
+  left: 50px;
 }
 .height-transfer-preview h4.height-transfer-preview-title {
   margin: 0 0 8px 0;
