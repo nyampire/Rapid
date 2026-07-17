@@ -743,6 +743,15 @@
       "relation": "リレーション",
       "vertex": "交点"
     },
+    "height_transfer": {
+      "current_tags": "現在のタグ",
+      "additions": "追加するタグ（不足分のみ）",
+      "apply": "適用",
+      "cancel": "キャンセル",
+      "conflict_note": "既存の OSM の値が PLATEAU と異なります。上書きは保留中です（フェーズ3、コミュニティでの合意待ち）。",
+      "covered_note": "対象タグはすべて存在し、PLATEAU の値と一致しています。",
+      "area_mismatch_note": "面積比が 0.5〜2.0 の範囲外です。街区単位のマッピングか PLATEAU 側の分割不足の可能性があります。手動で確認してください。"
+    },
     "help": {
       "areas": {
         "add_area_command": "エリアを追加するには、マップ上部にあるツールバーの{area_icon} **{area}** ボタンを押すか、ショートカットキー`3`を押してください。",
