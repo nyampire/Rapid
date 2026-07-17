@@ -314,15 +314,25 @@ export class PlateauService extends AbstractSystem {
    * getData
    * Get already-loaded entities that appear in the current map view, optionally
    * filtered through client-side conflation against OSM buildings.
+   *
+   * The default conflation filter hides Plateau buildings that overlap an
+   * existing OSM building, so the "add new" flow does not surface duplicates.
+   * The `HeightTransferMode` needs the OPPOSITE — Plateau buildings that DO
+   * overlap OSM buildings, so it can transfer missing tags to them. That path
+   * passes `options.skipConflation = true`.
+   *
    * @param   {string} datasetID
+   * @param   {{skipConflation?: boolean}} [options]
    * @return  {Array}  osmEntity[]
    */
-  getData(datasetID) {
+  getData(datasetID, options = {}) {
     const ds = this._datasets[datasetID];
     if (!ds || !ds.tree || !ds.graph) return [];
 
     const extent = this.context.viewport.visibleExtent();
     let entities = ds.tree.intersects(extent, ds.graph);
+
+    if (options.skipConflation) return entities;
 
     // Client-side conflation: hide Plateau buildings that overlap existing OSM
     const useConflationStr = utilStringQs(window.location.hash).plateau_conflation;
