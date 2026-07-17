@@ -200,6 +200,15 @@ export class HeightTransferMode extends AbstractSystem {
       if (value !== undefined) tagsToAdd[key] = value;
     }
 
+    // Clear the selection *before* committing, not after: `editor.commit()` below fires
+    // 'stablechange' synchronously, which `_onStableChange()` handles by re-deriving
+    // `transferredIDs` from history (already includes this candidate's plateauID once
+    // committed) and calling `_recompute()` -- which re-runs `findCandidates()` (already
+    // excludes this candidate, since `findCandidates` filters against `transferredIDs`) and
+    // emits 'change'. Clearing the selection first means that single emitted 'change' already
+    // reflects the final state, so there's no need for a second manual emit here.
+    if (this.selectedCandidate === candidate) this.selectedCandidate = null;
+
     const action = actionTransferPlateauTags(candidate.osmFeature.id, tagsToAdd);
     editor.perform(action);
     editor.commit({
@@ -211,12 +220,7 @@ export class HeightTransferMode extends AbstractSystem {
       selectedIDs: [ candidate.osmFeature.id ]
     });
 
-    this.transferredIDs.add(candidate.plateauFeature.id);
-    if (this.selectedCandidate === candidate) this.selectedCandidate = null;
-    this.candidates = this.candidates.filter(c => c !== candidate);   // its icon should disappear immediately
-
     this.emit('transferred', candidate);
-    this.emit('change');
   }
 
 

@@ -195,6 +195,20 @@ describe('HeightTransferMode', () => {
   });
 
 
+  it('apply() fires change exactly once per call', () => {
+    const context = makeContext();
+    const mode = new Rapid.HeightTransferMode(context);
+    mode.activate();
+
+    let changeCount = 0;
+    mode.on('change', () => { changeCount++; });
+
+    mode.apply(makeCandidate());
+
+    expect(changeCount).to.equal(1);
+  });
+
+
   it('recomputes candidates when the viewport moves (debounced)', async () => {
     const context = makeContext();
     const getDatasetsSpy = sinon.spy(context.services.plateau, 'getAvailableDatasets');
