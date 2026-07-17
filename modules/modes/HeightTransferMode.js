@@ -244,7 +244,10 @@ export class HeightTransferMode extends AbstractSystem {
     const plateauEntities = [];
     const datasets = plateau.getAvailableDatasets ? plateau.getAvailableDatasets() : [];
     for (const dataset of datasets) {
-      const entities = plateau.getData ? plateau.getData(dataset.id) : null;
+      // skipConflation: the default `getData()` conflation hides Plateau
+      // buildings that overlap OSM, but height transfer needs exactly those
+      // overlapping pairs to work.
+      const entities = plateau.getData ? plateau.getData(dataset.id, { skipConflation: true }) : null;
       if (entities) plateauEntities.push(...entities);
     }
 
