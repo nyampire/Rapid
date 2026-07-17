@@ -780,6 +780,20 @@ export class PlateauService extends AbstractSystem {
    */
   _fillMissingRepresentativePoints(entities, graph) {
     for (const entity of entities) {
+      // Relations are intentionally excluded from this fallback (Phase 1 scope
+      // decision, Task 3 review Finding 2 — see task-3-report.md). A relation's
+      // own geometry lives on its member ways (the outline `role='outline'`
+      // way, per the Simple 3D Buildings pattern this repo follows), so
+      // deriving a point for the relation would mean locating that outline
+      // member and running it through the same turf logic below — real work
+      // for a path that mostly won't be hit: Task 2 (server) already emits
+      // `representative_point` on relations, so this fallback for relations
+      // only fires against un-upgraded servers, and even then the outline
+      // way itself still gets filled here, which downstream matching can
+      // key off directly. A relation arriving with a genuinely missing tag
+      // and no outline fallback is a rare pre-upgrade edge case; full
+      // relation-geometry derivation is deferred to the Phase 2 work that
+      // adds deeper `building:part` support.
       if (entity.type !== 'way' || entity.representativePoint) continue;
       if (!entity.tags?.building && !entity.tags?.['building:part']) continue;
       try {
