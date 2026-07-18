@@ -28,6 +28,7 @@ en:
     section_title: PLATEAU tags
     additions: Add from PLATEAU
     apply: Apply
+    apply_tooltip: Add these PLATEAU tags to the selected building.
     conflict_note: Existing OSM values differ from PLATEAU. Override deferred (Phase 3, pending community consultation).
     area_mismatch_note: Area ratio outside 0.5–2.0. Likely block-level mapping or PLATEAU under-partition; please review manually.
   title:

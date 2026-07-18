@@ -1,4 +1,5 @@
 import { uiSection } from '../section.js';
+import { uiTooltip } from '../tooltip.js';
 
 
 /**
@@ -19,6 +20,7 @@ import { uiSection } from '../section.js';
 export function uiSectionPlateauTags(context) {
   const l10n = context.systems.l10n;
   const heightTransfer = context.systems.heightTransfer;
+  const _applyTooltip = uiTooltip(context).placement('top');   // description + shortcut badge
 
   let _entityIDs = [];
 
@@ -99,9 +101,12 @@ export function uiSectionPlateauTags(context) {
       .attr('class', 'plateau-tags-actions')
       .append('button')
       .attr('class', 'plateau-apply')
-      .attr('title', `${l10n.t('height_transfer.apply')} (${l10n.t('shortcuts.command.apply_plateau_tags.key')})`)
       .text(l10n.t('height_transfer.apply'))
-      .on('click', () => heightTransfer.apply(cand));
+      .on('click', () => heightTransfer.apply(cand))
+      .call(_applyTooltip
+        .title(l10n.t('height_transfer.apply_tooltip'))
+        .shortcut(l10n.t('shortcuts.command.apply_plateau_tags.key'))
+      );
   }
 
 
