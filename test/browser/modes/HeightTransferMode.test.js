@@ -81,14 +81,23 @@ describe('HeightTransferMode', () => {
 
 
   function makeContext(overrides = {}) {
+    const keybinding = {
+      registered: [],
+      on(keys, handler) { this.registered.push({ keys, handler }); return this; },
+      off(keys) { this.registered = this.registered.filter(r => r.keys !== keys); return this; }
+    };
     const context = {
       services: { plateau: makePlateau([]) },
       systems: {
         editor: new MockEditor(),
         map: new MockMap(),
         rapid: { acceptIDs: new Set(), ignoreIDs: new Set() },
-        gfx: { immediateRedrawCalls: 0, immediateRedraw() { this.immediateRedrawCalls++; } }
-      }
+        gfx: { immediateRedrawCalls: 0, immediateRedraw() { this.immediateRedrawCalls++; } },
+        l10n: { t: (id) => id }
+      },
+      _selectedIDs: [],
+      keybinding() { return keybinding; },
+      selectedIDs() { return this._selectedIDs; }
     };
     return Object.assign(context, overrides);
   }
@@ -151,6 +160,42 @@ describe('HeightTransferMode', () => {
     mode.deactivate();
 
     expect(context.systems.gfx.immediateRedrawCalls).to.be.greaterThan(0);
+  });
+
+
+  it('activate() registers the apply shortcut; deactivate() removes it', () => {
+    const context = makeContext();
+    const mode = new Rapid.HeightTransferMode(context);
+    mode.activate();
+    expect(context.keybinding().registered.length).to.equal(1);
+    mode.deactivate();
+    expect(context.keybinding().registered.length).to.equal(0);
+  });
+
+
+  it('the apply shortcut applies the selected candidate building', () => {
+    const context = makeContext();
+    const mode = new Rapid.HeightTransferMode(context);
+    mode.activate();
+    mode.candidates = [makeCandidate()];   // osmFeature.id 'w1', state CANDIDATE
+    context._selectedIDs = ['w1'];
+
+    context.keybinding().registered[0].handler({ preventDefault() {} });
+
+    expect(context.systems.editor.performCalls.length).to.equal(1);
+  });
+
+
+  it('the apply shortcut does nothing when the selection has no candidate', () => {
+    const context = makeContext();
+    const mode = new Rapid.HeightTransferMode(context);
+    mode.activate();
+    mode.candidates = [makeCandidate()];   // 'w1'
+    context._selectedIDs = ['w999'];       // a different building
+
+    context.keybinding().registered[0].handler({ preventDefault() {} });
+
+    expect(context.systems.editor.performCalls.length).to.equal(0);
   });
 
 

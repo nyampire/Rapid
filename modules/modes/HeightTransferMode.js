@@ -1,6 +1,7 @@
 import { AbstractSystem } from '../core/AbstractSystem.js';
 import { actionTransferPlateauTags } from '../actions/transfer_plateau_tags.js';
 import { findCandidates } from '../core/lib/HeightTransferMatcher.js';
+import { utilCmd } from '../util/index.js';
 
 const RECOMPUTE_DEBOUNCE_MS = 200;
 
@@ -40,10 +41,12 @@ export class HeightTransferMode extends AbstractSystem {
     this.transferredIDs = new Set();   // Set<plateauFeatureID> -- session-scoped only, never persisted
 
     this._recomputeTimer = null;
+    this._applyKeys = null;   // keys currently bound for the Apply shortcut
 
     // Ensure methods used as callbacks always have `this` bound correctly.
     this._onViewportMove = this._onViewportMove.bind(this);
     this._onStableChange = this._onStableChange.bind(this);
+    this._onApplyShortcut = this._onApplyShortcut.bind(this);
   }
 
 
@@ -67,6 +70,7 @@ export class HeightTransferMode extends AbstractSystem {
     // an undo/redo may have happened while this system was inactive and unsubscribed.
     this._recomputeTransferredIDs();
     this._recompute();
+    this._setupApplyShortcut();
     this.emit('change');
   }
 
@@ -87,6 +91,12 @@ export class HeightTransferMode extends AbstractSystem {
     const editor = context.systems.editor;
     map?.off?.('move', this._onViewportMove);
     editor?.off?.('stablechange', this._onStableChange);
+
+    const keybinding = context.keybinding?.();
+    if (keybinding && this._applyKeys) {
+      keybinding.off(this._applyKeys);
+      this._applyKeys = null;
+    }
 
     if (this._recomputeTimer) {
       clearTimeout(this._recomputeTimer);
@@ -211,6 +221,43 @@ export class HeightTransferMode extends AbstractSystem {
   getCandidateForOSM(entityID) {
     if (!this.active) return null;
     return this.candidates.find(c => c.osmFeature?.id === entityID) ?? null;
+  }
+
+
+  /**
+   * _setupApplyShortcut
+   * Binds the keyboard shortcut (Shift+W) that applies the PLATEAU tags to the
+   * currently selected candidate building -- the keyboard equivalent of the
+   * section's Apply button. Bound only while the feature is active.
+   */
+  _setupApplyShortcut() {
+    const context = this.context;
+    const keybinding = context.keybinding?.();
+    const l10n = context.systems.l10n;
+    if (!keybinding || !l10n) return;
+
+    if (this._applyKeys) keybinding.off(this._applyKeys);
+    this._applyKeys = [ utilCmd('⇧' + l10n.t('shortcuts.command.apply_plateau_tags.key')) ];
+    keybinding.on(this._applyKeys, this._onApplyShortcut);
+  }
+
+
+  /**
+   * _onApplyShortcut
+   * Applies the candidate for the currently selected OSM building, if any. Does
+   * nothing unless exactly one building is selected and it is a CANDIDATE (the
+   * only actionable state) -- so the key is inert on conflicts, area mismatches,
+   * or a plain selection with no PLATEAU match.
+   */
+  _onApplyShortcut(e) {
+    const ids = this.context.selectedIDs?.() ?? [];
+    if (ids.length !== 1) return;
+
+    const candidate = this.getCandidateForOSM(ids[0]);
+    if (!candidate || candidate.state !== 'CANDIDATE') return;
+
+    e?.preventDefault?.();
+    this.apply(candidate);
   }
 
 

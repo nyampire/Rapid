@@ -99,6 +99,7 @@ export function uiSectionPlateauTags(context) {
       .attr('class', 'plateau-tags-actions')
       .append('button')
       .attr('class', 'plateau-apply')
+      .attr('title', `${l10n.t('height_transfer.apply')} (⇧${l10n.t('shortcuts.command.apply_plateau_tags.key')})`)
       .text(l10n.t('height_transfer.apply'))
       .on('click', () => heightTransfer.apply(cand));
   }
