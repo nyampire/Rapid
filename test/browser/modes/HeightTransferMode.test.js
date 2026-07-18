@@ -261,4 +261,29 @@ describe('HeightTransferMode', () => {
     expect(mode.transferredIDs.has('p1')).to.equal(false);
   });
 
+
+  describe('getCandidateForOSM', () => {
+    it('returns null when the system is inactive', () => {
+      const mode = new Rapid.HeightTransferMode(makeContext());
+      mode.active = false;
+      mode.candidates = [{ osmFeature: { id: 'w1' }, state: 'CANDIDATE' }];
+      expect(mode.getCandidateForOSM('w1')).to.equal(null);
+    });
+
+    it('returns the matching candidate when active', () => {
+      const mode = new Rapid.HeightTransferMode(makeContext());
+      mode.active = true;
+      const cand = { osmFeature: { id: 'w1' }, state: 'CANDIDATE' };
+      mode.candidates = [cand, { osmFeature: { id: 'w2' }, state: 'COVERED' }];
+      expect(mode.getCandidateForOSM('w1')).to.equal(cand);
+    });
+
+    it('returns null when no candidate matches the id', () => {
+      const mode = new Rapid.HeightTransferMode(makeContext());
+      mode.active = true;
+      mode.candidates = [{ osmFeature: { id: 'w1' }, state: 'CANDIDATE' }];
+      expect(mode.getCandidateForOSM('w999')).to.equal(null);
+    });
+  });
+
 });
