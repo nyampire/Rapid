@@ -3667,25 +3667,12 @@ li.issue-fix-item button:not(.actionable) .fix-icon {
     fill: #555;
 }
 
-ul.plateau-additions {
-    margin: 0;
-    padding: 4px 10px 6px 20px;
+/* The added tags reuse the raw tag editor's `.tag-list`/`.tag-row` styling so
+   they match iD's tag layout; just tighten the spacing inside the section. */
+ul.plateau-additions.tag-list {
+    margin: 6px 0 8px;
+    padding: 0;
     list-style: none;
-}
-.ideditor[dir='rtl'] ul.plateau-additions {
-    padding: 4px 20px 6px 10px;
-}
-/* Share the warning tint of the label/fix-list so the section reads as one
-   continuous colored block instead of a white gap in the middle. */
-.issue.severity-warning ul.plateau-additions {
-    background: #ffc;
-}
-li.plateau-addition {
-    display: block;
-    padding: 2px 0;
-    font-family: monospace;
-    font-size: 12px;
-    color: #663;
 }
 
 .issue-container:not(.active) ul.issue-fix-list {

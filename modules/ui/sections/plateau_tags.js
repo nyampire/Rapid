@@ -77,10 +77,12 @@ export function uiSectionPlateauTags(context) {
       .append('span')
       .attr('class', 'issue-message');
 
-    // One "key = value" per line, so the added tags are easy to scan.
+    // Added tags render as a read-only key/value table, reusing the raw tag
+    // editor's `.tag-list`/`.tag-row` markup so the layout matches iD's tag
+    // editor (the "All fields" section below).
     itemsEnter
       .append('ul')
-      .attr('class', 'plateau-additions');
+      .attr('class', 'tag-list plateau-additions');
 
     itemsEnter
       .append('ul')
@@ -106,9 +108,10 @@ export function uiSectionPlateauTags(context) {
     containers.selectAll('.issue-message')
       .text(d => _message(d));
 
-    // Additions list: one "key = value" per line (CANDIDATE only).
+    // Additions: read-only key/value rows (CANDIDATE only), same markup as the
+    // raw tag editor so they read as iD tag rows.
     const addLists = containers.selectAll('.plateau-additions');
-    const adds = addLists.selectAll('li.plateau-addition')
+    const adds = addLists.selectAll('li.tag-row')
       .data(
         d => (d.state === 'CANDIDATE'
           ? (d.missingTags ?? []).map(k => ({ key: k, value: d.plateauFeature?.tags?.[k] }))
@@ -118,11 +121,19 @@ export function uiSectionPlateauTags(context) {
 
     adds.exit().remove();
 
-    adds.enter()
+    const addsEnter = adds.enter()
       .append('li')
-      .attr('class', 'plateau-addition')
-      .merge(adds)
-      .text(d => `${d.key} = ${d.value}`);
+      .attr('class', 'tag-row readonly');
+
+    const innerWrap = addsEnter.append('div').attr('class', 'inner-wrap');
+    innerWrap.append('div').attr('class', 'key-wrap')
+      .append('input').attr('type', 'text').attr('class', 'key').attr('readonly', true);
+    innerWrap.append('div').attr('class', 'value-wrap')
+      .append('input').attr('type', 'text').attr('class', 'value').attr('readonly', true);
+
+    const addsMerge = adds.merge(addsEnter);
+    addsMerge.select('input.key').property('value', d => d.key);
+    addsMerge.select('input.value').property('value', d => d.value);
 
     // Fix list: only CANDIDATE is actionable.
     const fixLists = containers.selectAll('.issue-fix-list');
