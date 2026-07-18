@@ -18,7 +18,7 @@ const STATE_STYLE = {
  * PixiLayerHeightTransfer
  * Draws one icon per candidate produced by `context.systems.heightTransfer`
  * (see `HeightTransferMode`), colored/shaped by `candidate.state`. A click on
- * an icon forwards the candidate back to `heightTransfer.select(candidate)`.
+ * an icon selects the candidate's underlying OSM building via `select-osm` mode.
  *
  * Visible only while `heightTransfer.active` is true. Within that:
  *  - CANDIDATE icons appear at zoom >= 17
@@ -106,7 +106,7 @@ export class PixiLayerHeightTransfer extends AbstractLayer {
       if (!style) continue;
       if (zoom < style.minZoom) continue;
 
-      const icon = this._makeIcon(candidate, style, viewport, mode);
+      const icon = this._makeIcon(candidate, style, viewport);
       if (icon) this._container.addChild(icon);
     }
   }
@@ -118,10 +118,9 @@ export class PixiLayerHeightTransfer extends AbstractLayer {
    * @param  candidate  MatchCandidate (see HeightTransferMatcher)
    * @param  style      Entry from STATE_STYLE for `candidate.state`
    * @param  viewport   Pixi viewport, used to project the representative point to screen space
-   * @param  mode       The heightTransfer system, so the click handler can call `.select()`
    * @return {PIXI.Graphics|null}
    */
-  _makeIcon(candidate, style, viewport, mode) {
+  _makeIcon(candidate, style, viewport) {
     const rp = candidate.plateauFeature?.representativePoint;
     if (!rp) return null;
 
@@ -145,7 +144,9 @@ export class PixiLayerHeightTransfer extends AbstractLayer {
     g.label = `height-transfer-${candidate.plateauFeature.id}`;
     g.eventMode = 'static';
     g.cursor = 'pointer';
-    g.on('pointertap', () => mode.select(candidate));
+    g.on('pointertap', () => {
+      this.context.enter('select-osm', { selection: { osm: [candidate.osmFeature.id] } });
+    });
 
     return g;
   }

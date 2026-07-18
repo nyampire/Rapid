@@ -180,10 +180,16 @@ describe('PixiLayerHeightTransfer', () => {
 
 
   describe('#click forwarding', () => {
-    it('click on an icon invokes mode.select(candidate)', () => {
-      const c1 = { plateauFeature: { id: 'p1', representativePoint: [139.755, 35.679] }, state: 'CANDIDATE' };
+    it('click on an icon enters select-osm mode on the candidate\'s OSM building', () => {
+      const c1 = {
+        plateauFeature: { id: 'p1', representativePoint: [139.755, 35.679] },
+        osmFeature: { id: 'w1' },
+        state: 'CANDIDATE'
+      };
       const mode = makeMode({ candidates: [c1] });
       const scene = makeScene(mode);
+      const entered = [];
+      scene.context.enter = (modeID, opts) => entered.push([modeID, opts]);
       const layer = new Rapid.PixiLayerHeightTransfer(scene, 'height-transfer');
       layer._container = makeFakeContainer();
 
@@ -191,14 +197,24 @@ describe('PixiLayerHeightTransfer', () => {
       const icon = layer._container.children[0];
       icon.emit('pointertap');
 
-      expect(mode._selectCalls).to.eql([c1]);
+      expect(entered).to.eql([['select-osm', { selection: { osm: ['w1'] } }]]);
     });
 
-    it('each icon forwards its own candidate, not the last one rendered', () => {
-      const c1 = { plateauFeature: { id: 'p1', representativePoint: [139.755, 35.679] }, state: 'CANDIDATE' };
-      const c2 = { plateauFeature: { id: 'p2', representativePoint: [139.756, 35.680] }, state: 'CANDIDATE' };
+    it('each icon enters select-osm for its own candidate\'s OSM building, not the last one rendered', () => {
+      const c1 = {
+        plateauFeature: { id: 'p1', representativePoint: [139.755, 35.679] },
+        osmFeature: { id: 'w1' },
+        state: 'CANDIDATE'
+      };
+      const c2 = {
+        plateauFeature: { id: 'p2', representativePoint: [139.756, 35.680] },
+        osmFeature: { id: 'w2' },
+        state: 'CANDIDATE'
+      };
       const mode = makeMode({ candidates: [c1, c2] });
       const scene = makeScene(mode);
+      const entered = [];
+      scene.context.enter = (modeID, opts) => entered.push([modeID, opts]);
       const layer = new Rapid.PixiLayerHeightTransfer(scene, 'height-transfer');
       layer._container = makeFakeContainer();
 
@@ -207,7 +223,10 @@ describe('PixiLayerHeightTransfer', () => {
       icon2.emit('pointertap');
       icon1.emit('pointertap');
 
-      expect(mode._selectCalls).to.eql([c2, c1]);
+      expect(entered).to.eql([
+        ['select-osm', { selection: { osm: ['w2'] } }],
+        ['select-osm', { selection: { osm: ['w1'] } }]
+      ]);
     });
   });
 
