@@ -128,7 +128,6 @@
               "text": "shortcuts.with_plateau_selected"
             },
             {
-              "modifiers": ["⇧"],
               "shortcuts": ["shortcuts.command.apply_plateau_tags.key"],
               "text": "shortcuts.command.apply_plateau_tags.label"
             },
