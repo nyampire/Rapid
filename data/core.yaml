@@ -2605,6 +2605,7 @@ en:
     with_node_selected: With node selected
     with_way_selected: With way selected
     with_rapid_selected: With Rapid feature selected
+    with_plateau_selected: With a PLATEAU-tag building selected
     with_photo_selected: With photo selected
     drawing: Drawing
     commands: Commands
@@ -2667,6 +2668,9 @@ en:
       ignore_feature:
         label: Ignore the feature
         key: D   # <this key> to Ignore a suggested feature
+      apply_plateau_tags:
+        label: Apply PLATEAU tags to the selected building
+        key: W   # <Shift> + <this key> to apply the PLATEAU tags
 
       follow_sequence:
         label: Step to next / previous photo in sequence
