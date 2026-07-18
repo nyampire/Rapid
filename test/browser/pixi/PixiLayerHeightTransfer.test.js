@@ -32,14 +32,11 @@ describe('PixiLayerHeightTransfer', () => {
   }
 
   function makeMode(opts = {}) {
-    const selectCalls = [];
     return {
       active: opts.active ?? true,
       candidates: opts.candidates ?? [],
       on() {},
-      off() {},
-      select(candidate) { selectCalls.push(candidate); },
-      _selectCalls: selectCalls
+      off() {}
     };
   }
 

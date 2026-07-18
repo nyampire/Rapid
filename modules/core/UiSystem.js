@@ -5,7 +5,7 @@ import { AbstractSystem } from './AbstractSystem.js';
 import { utilDetect } from '../util/detect.js';
 
 import {
-  UiApiStatus, UiDefs, uiEditMenu, uiFlash, UiFullscreen, UiHeightTransferPreview, uiIntro,
+  UiApiStatus, UiDefs, uiEditMenu, uiFlash, UiFullscreen, uiIntro,
   uiLoading, UiMapFooter, UiMapToolbar, uiMapRouletteMenu, UiOvermap,
   uiSplash, uiRestore, UiShortcuts, UiSidebar, uiWhatsNew
 } from '../ui/index.js';
@@ -42,7 +42,6 @@ export class UiSystem extends AbstractSystem {
     this.MapRouletteMenu = null;
     this.Flash = null;
     this.Fullscreen = null;
-    this.HeightTransferPreview = null;
     this.MapFooter = null;
     this.MapToolbar = null;
     this.Overmap = null;
@@ -105,7 +104,6 @@ export class UiSystem extends AbstractSystem {
         this.MapRouletteMenu = uiMapRouletteMenu(context);
         this.Flash = uiFlash(context);
         this.Fullscreen = new UiFullscreen(context);
-        this.HeightTransferPreview = new UiHeightTransferPreview(context);
         this.MapFooter = new UiMapFooter(context);
         this.MapToolbar = new UiMapToolbar(context);
         this.Overmap = new UiOvermap(context);
@@ -272,7 +270,6 @@ export class UiSystem extends AbstractSystem {
       .call(map.render)
       .call(this.MapToolbar.render)
       .call(this.Overmap.render)
-      .call(this.HeightTransferPreview.render)
       .call(this.ApiStatus.render)
       .call(this.MapFooter.render);
   }

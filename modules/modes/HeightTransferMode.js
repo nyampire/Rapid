@@ -21,7 +21,7 @@ const RECOMPUTE_DEBOUNCE_MS = 200;
  * replacing it. Task 7 (Pixi layer) and Task 8 (toolbar) find it there.
  *
  * Events available:
- *   'change'       Fires on any state change: candidates recomputed, selection changed, active toggled.
+ *   'change'       Fires on any state change: candidates recomputed, active toggled.
  *   'transferred'  Fires when `apply()` completes, receives the applied candidate.
  */
 export class HeightTransferMode extends AbstractSystem {
@@ -37,7 +37,6 @@ export class HeightTransferMode extends AbstractSystem {
 
     this.active = false;
     this.candidates = [];
-    this.selectedCandidate = null;
     this.transferredIDs = new Set();   // Set<plateauFeatureID> -- session-scoped only, never persisted
 
     this._recomputeTimer = null;
@@ -74,14 +73,13 @@ export class HeightTransferMode extends AbstractSystem {
 
   /**
    * deactivate
-   * Turns the feature off: unsubscribes, clears the transient candidate/selection state.
+   * Turns the feature off: unsubscribes, clears the transient candidate state.
    * `transferredIDs` is left alone -- it's session-scoped, not mode-scoped -- but it will
    * be resynced from history the next time `activate()` runs.
    */
   deactivate() {
     if (!this.active) return;
     this.active = false;
-    this.selectedCandidate = null;
     this.candidates = [];
 
     const context = this.context;
@@ -160,27 +158,6 @@ export class HeightTransferMode extends AbstractSystem {
 
 
   /**
-   * select
-   * @param  `candidate`  A `MatchCandidate` (see HeightTransferMatcher) to mark as selected
-   */
-  select(candidate) {
-    if (!this.active) return;
-    this.selectedCandidate = candidate;
-    this.emit('change');
-  }
-
-
-  /**
-   * clearSelection
-   */
-  clearSelection() {
-    if (!this.selectedCandidate) return;
-    this.selectedCandidate = null;
-    this.emit('change');
-  }
-
-
-  /**
    * apply
    * Transfers a candidate's missing tags onto its matched OSM feature, as a normal
    * undoable edit. Only tags the PLATEAU feature actually has a value for are sent --
@@ -200,15 +177,11 @@ export class HeightTransferMode extends AbstractSystem {
       if (value !== undefined) tagsToAdd[key] = value;
     }
 
-    // Clear the selection *before* committing, not after: `editor.commit()` below fires
-    // 'stablechange' synchronously, which `_onStableChange()` handles by re-deriving
-    // `transferredIDs` from history (already includes this candidate's plateauID once
-    // committed) and calling `_recompute()` -- which re-runs `findCandidates()` (already
-    // excludes this candidate, since `findCandidates` filters against `transferredIDs`) and
-    // emits 'change'. Clearing the selection first means that single emitted 'change' already
-    // reflects the final state, so there's no need for a second manual emit here.
-    if (this.selectedCandidate === candidate) this.selectedCandidate = null;
-
+    // `editor.commit()` below fires 'stablechange' synchronously, which `_onStableChange()`
+    // handles by re-deriving `transferredIDs` from history (already includes this candidate's
+    // plateauID once committed) and calling `_recompute()` -- which re-runs `findCandidates()`
+    // (already excludes this candidate, since `findCandidates` filters against `transferredIDs`)
+    // and emits 'change'. That means there's no need for a second manual emit here.
     const action = actionTransferPlateauTags(candidate.osmFeature.id, tagsToAdd);
     editor.perform(action);
     editor.commit({
