@@ -86,7 +86,8 @@ describe('HeightTransferMode', () => {
       systems: {
         editor: new MockEditor(),
         map: new MockMap(),
-        rapid: { acceptIDs: new Set(), ignoreIDs: new Set() }
+        rapid: { acceptIDs: new Set(), ignoreIDs: new Set() },
+        gfx: { immediateRedrawCalls: 0, immediateRedraw() { this.immediateRedrawCalls++; } }
       }
     };
     return Object.assign(context, overrides);
@@ -125,6 +126,31 @@ describe('HeightTransferMode', () => {
 
     expect(mode.active).to.equal(true);
     expect(spy.called).to.equal(true);
+  });
+
+
+  it('activate() requests an immediate redraw so the dots paint at once', () => {
+    // The renderer is on-demand: without an explicit redraw, the candidate-dot
+    // layer isn't repainted until some other event triggers a redraw, so the
+    // dots appear seconds after the mode is toggled on.
+    const context = makeContext();
+    const mode = new Rapid.HeightTransferMode(context);
+
+    mode.activate();
+
+    expect(context.systems.gfx.immediateRedrawCalls).to.be.greaterThan(0);
+  });
+
+
+  it('deactivate() requests an immediate redraw so the dots clear at once', () => {
+    const context = makeContext();
+    const mode = new Rapid.HeightTransferMode(context);
+    mode.activate();
+    context.systems.gfx.immediateRedrawCalls = 0;   // reset after activate
+
+    mode.deactivate();
+
+    expect(context.systems.gfx.immediateRedrawCalls).to.be.greaterThan(0);
   });
 
 

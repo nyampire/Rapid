@@ -93,6 +93,9 @@ export class HeightTransferMode extends AbstractSystem {
       this._recomputeTimer = null;
     }
     this.emit('change');
+
+    // Clear the dots at once (the renderer is on-demand -- see `_recompute`).
+    this.context.systems.gfx?.immediateRedraw?.();
   }
 
 
@@ -261,6 +264,12 @@ export class HeightTransferMode extends AbstractSystem {
 
     this.candidates = candidates;
     this.emit('change');
+
+    // Repaint the candidate-dot layer now. The renderer is on-demand, and
+    // nothing else marks it dirty when candidates change, so without this the
+    // dots only appear on the next incidental redraw (a pan, a hover) -- a
+    // multi-second delay after toggling the mode on.
+    this.context.systems.gfx?.immediateRedraw?.();
   }
 
 }
