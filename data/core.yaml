@@ -2670,7 +2670,7 @@ en:
         key: D   # <this key> to Ignore a suggested feature
       apply_plateau_tags:
         label: Apply PLATEAU tags to the selected building
-        key: W   # <Shift> + <this key> to apply the PLATEAU tags
+        key: A   # <this key> to apply the PLATEAU tags (bound only while a candidate building is selected)
 
       follow_sequence:
         label: Step to next / previous photo in sequence

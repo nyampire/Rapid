@@ -47,6 +47,7 @@ export class HeightTransferMode extends AbstractSystem {
     this._onViewportMove = this._onViewportMove.bind(this);
     this._onStableChange = this._onStableChange.bind(this);
     this._onApplyShortcut = this._onApplyShortcut.bind(this);
+    this._refreshApplyShortcut = this._refreshApplyShortcut.bind(this);
   }
 
 
@@ -65,12 +66,12 @@ export class HeightTransferMode extends AbstractSystem {
     const editor = context.systems.editor;
     map?.on?.('move', this._onViewportMove);
     editor?.on?.('stablechange', this._onStableChange);
+    context.on?.('modechange', this._refreshApplyShortcut);
 
     // Re-derive from history rather than trust whatever `transferredIDs` last held --
     // an undo/redo may have happened while this system was inactive and unsubscribed.
     this._recomputeTransferredIDs();
-    this._recompute();
-    this._setupApplyShortcut();
+    this._recompute();   // ends by calling _refreshApplyShortcut()
     this.emit('change');
   }
 
@@ -91,6 +92,7 @@ export class HeightTransferMode extends AbstractSystem {
     const editor = context.systems.editor;
     map?.off?.('move', this._onViewportMove);
     editor?.off?.('stablechange', this._onStableChange);
+    context.off?.('modechange', this._refreshApplyShortcut);
 
     const keybinding = context.keybinding?.();
     if (keybinding && this._applyKeys) {
@@ -225,20 +227,31 @@ export class HeightTransferMode extends AbstractSystem {
 
 
   /**
-   * _setupApplyShortcut
-   * Binds the keyboard shortcut (Shift+W) that applies the PLATEAU tags to the
-   * currently selected candidate building -- the keyboard equivalent of the
-   * section's Apply button. Bound only while the feature is active.
+   * _refreshApplyShortcut
+   * Binds the Apply shortcut (A) only while a single CANDIDATE building is
+   * selected, and unbinds it otherwise. This keeps it exclusive with Rapid's
+   * own `A` (accept feature): that binds only when a Rapid feature is selected,
+   * and since selection is single, the two never coexist on the shared global
+   * keybinding (where a duplicate key would otherwise clobber the other).
+   * Called on `modechange` (selection changed) and after `_recompute`.
    */
-  _setupApplyShortcut() {
+  _refreshApplyShortcut() {
     const context = this.context;
     const keybinding = context.keybinding?.();
     const l10n = context.systems.l10n;
     if (!keybinding || !l10n) return;
 
-    if (this._applyKeys) keybinding.off(this._applyKeys);
-    this._applyKeys = [ utilCmd('⇧' + l10n.t('shortcuts.command.apply_plateau_tags.key')) ];
-    keybinding.on(this._applyKeys, this._onApplyShortcut);
+    const ids = context.selectedIDs?.() ?? [];
+    const candidate = (ids.length === 1) ? this.getCandidateForOSM(ids[0]) : null;
+    const wantBound = !!candidate && candidate.state === 'CANDIDATE';
+
+    if (wantBound && !this._applyKeys) {
+      this._applyKeys = [ utilCmd(l10n.t('shortcuts.command.apply_plateau_tags.key')) ];
+      keybinding.on(this._applyKeys, this._onApplyShortcut);
+    } else if (!wantBound && this._applyKeys) {
+      keybinding.off(this._applyKeys);
+      this._applyKeys = null;
+    }
   }
 
 
@@ -311,6 +324,10 @@ export class HeightTransferMode extends AbstractSystem {
 
     this.candidates = candidates;
     this.emit('change');
+
+    // The selected building may have gained/lost candidate status (e.g. after an
+    // apply removes it), so re-evaluate the Apply shortcut binding.
+    this._refreshApplyShortcut();
 
     // Repaint the candidate-dot layer now. The renderer is on-demand, and
     // nothing else marks it dirty when candidates change, so without this the

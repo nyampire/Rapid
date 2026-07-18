@@ -97,7 +97,11 @@ describe('HeightTransferMode', () => {
       },
       _selectedIDs: [],
       keybinding() { return keybinding; },
-      selectedIDs() { return this._selectedIDs; }
+      selectedIDs() { return this._selectedIDs; },
+      _handlers: {},
+      on(ev, fn) { (this._handlers[ev] = this._handlers[ev] || []).push(fn); return this; },
+      off(ev, fn) { if (this._handlers[ev]) this._handlers[ev] = this._handlers[ev].filter(h => h !== fn); return this; },
+      _emit(ev, ...args) { (this._handlers[ev] || []).forEach(fn => fn(...args)); }
     };
     return Object.assign(context, overrides);
   }
@@ -163,12 +167,23 @@ describe('HeightTransferMode', () => {
   });
 
 
-  it('activate() registers the apply shortcut; deactivate() removes it', () => {
+  it('binds the apply shortcut only while a candidate building is selected', () => {
     const context = makeContext();
     const mode = new Rapid.HeightTransferMode(context);
     mode.activate();
+    mode.candidates = [makeCandidate()];   // 'w1' is a CANDIDATE
+
+    // No selection yet -> not bound (so it never clobbers Rapid's own `A`).
+    expect(context.keybinding().registered.length).to.equal(0);
+
+    // Select the candidate building -> bound.
+    context._selectedIDs = ['w1'];
+    context._emit('modechange');
     expect(context.keybinding().registered.length).to.equal(1);
-    mode.deactivate();
+
+    // Select something else -> unbound again.
+    context._selectedIDs = ['w999'];
+    context._emit('modechange');
     expect(context.keybinding().registered.length).to.equal(0);
   });
 
@@ -179,6 +194,7 @@ describe('HeightTransferMode', () => {
     mode.activate();
     mode.candidates = [makeCandidate()];   // osmFeature.id 'w1', state CANDIDATE
     context._selectedIDs = ['w1'];
+    context._emit('modechange');           // selection changed -> binds the shortcut
 
     context.keybinding().registered[0].handler({ preventDefault() {} });
 
@@ -186,16 +202,29 @@ describe('HeightTransferMode', () => {
   });
 
 
-  it('the apply shortcut does nothing when the selection has no candidate', () => {
+  it('does not bind the shortcut when the selection has no candidate', () => {
     const context = makeContext();
     const mode = new Rapid.HeightTransferMode(context);
     mode.activate();
     mode.candidates = [makeCandidate()];   // 'w1'
     context._selectedIDs = ['w999'];       // a different building
+    context._emit('modechange');
 
-    context.keybinding().registered[0].handler({ preventDefault() {} });
+    expect(context.keybinding().registered.length).to.equal(0);
+  });
 
-    expect(context.systems.editor.performCalls.length).to.equal(0);
+
+  it('deactivate() unbinds the apply shortcut', () => {
+    const context = makeContext();
+    const mode = new Rapid.HeightTransferMode(context);
+    mode.activate();
+    mode.candidates = [makeCandidate()];
+    context._selectedIDs = ['w1'];
+    context._emit('modechange');
+    expect(context.keybinding().registered.length).to.equal(1);
+
+    mode.deactivate();
+    expect(context.keybinding().registered.length).to.equal(0);
   });
 
 
