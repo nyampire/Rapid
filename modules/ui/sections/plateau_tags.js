@@ -20,7 +20,10 @@ import { uiTooltip } from '../tooltip.js';
 export function uiSectionPlateauTags(context) {
   const l10n = context.systems.l10n;
   const heightTransfer = context.systems.heightTransfer;
-  const _applyTooltip = uiTooltip(context).placement('top');   // description + shortcut badge
+  // Place the tooltip to the LEFT of the button. The button is right-aligned at
+  // the sidebar edge, so a top/bottom (horizontally centered) tooltip overflows
+  // past the sidebar and gets clipped; opening leftward keeps it inside.
+  const _applyTooltip = uiTooltip(context).placement('left');   // description + shortcut badge
 
   let _entityIDs = [];
 
