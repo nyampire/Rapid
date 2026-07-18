@@ -58,23 +58,28 @@ export function uiSectionPlateauTags(context) {
     selection.html('');
     if (!cand) return;
 
+    // A soft-yellow panel marks this as the special PLATEAU proposal, distinct
+    // from the regular tag editor, without the harsh validation-warning look.
+    const $panel = selection.append('div')
+      .attr('class', 'plateau-tags-panel');
+
     if (cand.state !== 'CANDIDATE') {
       const noteKey = cand.state === 'CONFLICT'
         ? 'height_transfer.conflict_note'
         : 'height_transfer.area_mismatch_note';
-      selection.append('p')
+      $panel.append('p')
         .attr('class', 'plateau-tags-note')
         .text(l10n.t(noteKey));
       return;
     }
 
-    selection.append('p')
+    $panel.append('p')
       .attr('class', 'plateau-tags-note')
       .text(l10n.t('height_transfer.additions'));
 
     // Read-only key/value rows, reusing the raw tag editor's markup/CSS so they
     // match iD's tag editor (the "All fields" section below).
-    const $list = selection.append('ul')
+    const $list = $panel.append('ul')
       .attr('class', 'tag-list plateau-additions');
 
     for (const key of (cand.missingTags ?? [])) {
@@ -90,7 +95,7 @@ export function uiSectionPlateauTags(context) {
         .property('value', value);
     }
 
-    selection.append('div')
+    $panel.append('div')
       .attr('class', 'plateau-tags-actions')
       .append('button')
       .attr('class', 'plateau-apply')
