@@ -83,8 +83,10 @@ describe('uiSectionPlateauTags', () => {
     // hides the Apply button even though it exists in the DOM.
     expect(wrap.select('.issue-container').classed('active')).to.equal(true);
     // Added tags render one "key = value" per line, not comma-separated.
-    const adds = wrap.selectAll('li.plateau-addition').nodes().map(n => n.textContent);
-    expect(adds).to.eql(['height = 2.98', 'ele = 69.1']);
+    const keys = wrap.selectAll('.plateau-additions li.tag-row input.key').nodes().map(n => n.value);
+    const vals = wrap.selectAll('.plateau-additions li.tag-row input.value').nodes().map(n => n.value);
+    expect(keys).to.eql(['height', 'ele']);
+    expect(vals).to.eql(['2.98', '69.1']);
     const buttons = wrap.selectAll('.issue-fix-item button').nodes();
     expect(buttons.length).to.equal(1);
     buttons[0].dispatchEvent(new MouseEvent('click'));
