@@ -24,7 +24,6 @@ export { UiFilterStatus } from './UiFilterStatus.js';
 export { uiFlash } from './flash.js';
 export { uiFormFields } from './form_fields.js';
 export { UiFullscreen } from './UiFullscreen.js';
-export { UiHeightTransferPreview } from './panes/UiHeightTransferPreview.js';
 export { uiIcon } from './icon.js';
 export { uiIntro } from './intro/intro.js';
 export { UiInfoCards } from './UiInfoCards.js';

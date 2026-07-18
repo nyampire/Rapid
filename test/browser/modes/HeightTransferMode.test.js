@@ -111,7 +111,6 @@ describe('HeightTransferMode', () => {
     const mode = new Rapid.HeightTransferMode(makeContext());
     expect(mode.active).to.equal(false);
     expect(mode.candidates).to.eql([]);
-    expect(mode.selectedCandidate).to.equal(null);
     expect(mode.transferredIDs.size).to.equal(0);
   });
 
@@ -129,16 +128,15 @@ describe('HeightTransferMode', () => {
   });
 
 
-  it('deactivate() clears selection and emits change', () => {
+  it('deactivate() clears candidates and emits change', () => {
     const mode = new Rapid.HeightTransferMode(makeContext());
     mode.activate();
-    mode.select(makeCandidate());
-    expect(mode.selectedCandidate).to.not.equal(null);
+    mode.candidates = [makeCandidate()];   // simulate a non-empty candidate list
 
     mode.deactivate();
 
     expect(mode.active).to.equal(false);
-    expect(mode.selectedCandidate).to.equal(null);
+    expect(mode.candidates).to.eql([]);
   });
 
 
