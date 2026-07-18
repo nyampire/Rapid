@@ -31,6 +31,15 @@ export function uiSectionPlateauTags(context) {
     .shouldDisplay(_shouldDisplayNow)
     .disclosureContent(renderContent);
 
+  // `HeightTransferMode` recomputes its candidates on `stablechange` (which fires
+  // after the entity editor's `stagingchange`, the only event that normally causes
+  // this section to re-render) and then emits its own 'change'. Without this
+  // subscription the section keeps showing a stale candidate + Apply button after
+  // the user clicks Apply, until the building is reselected.
+  const _onChange = () => section.reRender();
+  heightTransfer?.off?.('change', _onChange);
+  heightTransfer?.on?.('change', _onChange);
+
 
   function _candidate() {
     if (!heightTransfer?.getCandidateForOSM) return null;
@@ -54,13 +63,17 @@ export function uiSectionPlateauTags(context) {
 
     const itemsEnter = containersEnter
       .append('div')
-      .attr('class', d => `issue severity-${d.state === 'CANDIDATE' ? 'warning' : 'other'}`);
+      .attr('class', 'issue');
 
     const labelsEnter = itemsEnter
       .append('div')
       .attr('class', 'issue-label');
 
-    labelsEnter
+    const textEnter = labelsEnter
+      .append('button')
+      .attr('class', 'issue-text');
+
+    textEnter
       .append('span')
       .attr('class', 'issue-message');
 
@@ -69,6 +82,14 @@ export function uiSectionPlateauTags(context) {
       .attr('class', 'issue-fix-list');
 
     containers = containers.merge(containersEnter);
+
+    // Keep the severity class current on every render (not only on enter), so it
+    // stays correct if a candidate's state changes in place. CANDIDATE is
+    // actionable (warning); CONFLICT/AREA_MISMATCH are informational only and use
+    // `severity-suggestion`, the closest styled "informational" severity (there is
+    // no `severity-other` in css/80_app.css, so that class rendered unstyled).
+    containers.select('.issue')
+      .attr('class', d => `issue severity-${d.state === 'CANDIDATE' ? 'warning' : 'suggestion'}`);
 
     containers.selectAll('.issue-message')
       .text(d => _message(d));
