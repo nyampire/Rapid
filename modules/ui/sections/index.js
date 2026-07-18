@@ -12,6 +12,7 @@ export { uiSectionMapInteractionOptions } from './map_interaction_options.js';
 export { uiSectionMapStyleOptions } from './map_style_options.js';
 export { uiSectionOverlayList } from './overlay_list.js';
 export { uiSectionPhotoOverlays } from './photo_overlays.js';
+export { uiSectionPlateauTags } from './plateau_tags.js';
 export { uiSectionPresetFields } from './preset_fields.js';
 export { uiSectionPrivacy } from './privacy.js';
 export { uiSectionRawMemberEditor } from './raw_member_editor.js';
