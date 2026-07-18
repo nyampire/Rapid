@@ -745,7 +745,7 @@
     },
     "height_transfer": {
       "current_tags": "現在のタグ",
-      "additions": "追加するタグ（不足分のみ）",
+      "additions": "PLATEAUから追加",
       "apply": "適用",
       "cancel": "キャンセル",
       "conflict_note": "既存の OSM の値が PLATEAU と異なります。上書きは保留中です（フェーズ3、コミュニティでの合意待ち）。",
