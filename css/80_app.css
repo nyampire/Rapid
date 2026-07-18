@@ -3669,17 +3669,23 @@ li.issue-fix-item button:not(.actionable) .fix-icon {
 
 ul.plateau-additions {
     margin: 0;
-    padding: 2px 10px 6px 20px;
+    padding: 4px 10px 6px 20px;
     list-style: none;
 }
 .ideditor[dir='rtl'] ul.plateau-additions {
-    padding: 2px 20px 6px 10px;
+    padding: 4px 20px 6px 10px;
+}
+/* Share the warning tint of the label/fix-list so the section reads as one
+   continuous colored block instead of a white gap in the middle. */
+.issue.severity-warning ul.plateau-additions {
+    background: #ffc;
 }
 li.plateau-addition {
     display: block;
-    padding: 1px 0;
+    padding: 2px 0;
     font-family: monospace;
-    font-size: 11px;
+    font-size: 12px;
+    color: #663;
 }
 
 .issue-container:not(.active) ul.issue-fix-list {
