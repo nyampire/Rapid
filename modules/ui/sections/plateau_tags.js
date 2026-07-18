@@ -83,6 +83,13 @@ export function uiSectionPlateauTags(context) {
 
     containers = containers.merge(containersEnter);
 
+    // Always mark the (single) container active. CSS hides the fix list with
+    // `.issue-container:not(.active) ul.issue-fix-list { display: none }`, so
+    // without this the Apply button renders but stays invisible. Unlike
+    // `entity_issues` (which activates only one of many issues), this section
+    // ever shows one candidate, so it is always the active one.
+    containers.classed('active', true);
+
     // Keep the severity class current on every render (not only on enter), so it
     // stays correct if a candidate's state changes in place. CANDIDATE is
     // actionable (warning); CONFLICT/AREA_MISMATCH are informational only and use

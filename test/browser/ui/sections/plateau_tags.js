@@ -78,6 +78,10 @@ describe('uiSectionPlateauTags', () => {
     const cand = candidate('CANDIDATE', { missingTags: ['height', 'ele'] });
     render(new MockContext(cand));
     expect(wrap.select('.section-plateau-tags').classed('hide')).to.equal(false);
+    // The container must be `.active`, otherwise CSS
+    // (`.issue-container:not(.active) ul.issue-fix-list { display: none }`)
+    // hides the Apply button even though it exists in the DOM.
+    expect(wrap.select('.issue-container').classed('active')).to.equal(true);
     const buttons = wrap.selectAll('.issue-fix-item button').nodes();
     expect(buttons.length).to.equal(1);
     buttons[0].dispatchEvent(new MouseEvent('click'));
