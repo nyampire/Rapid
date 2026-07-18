@@ -747,6 +747,7 @@
       "current_tags": "現在のタグ",
       "additions": "PLATEAUから追加",
       "apply": "適用",
+      "apply_tooltip": "PLATEAUのタグを選択中の建物に追加します。",
       "cancel": "キャンセル",
       "conflict_note": "既存の OSM の値が PLATEAU と異なります。上書きは保留中です（フェーズ3、コミュニティでの合意待ち）。",
       "covered_note": "対象タグはすべて存在し、PLATEAU の値と一致しています。",
