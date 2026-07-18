@@ -225,6 +225,20 @@ export class HeightTransferMode extends AbstractSystem {
 
 
   /**
+   * getCandidateForOSM
+   * Returns the single MatchCandidate for a selected OSM building, or null.
+   * Used by `uiSectionPlateauTags` to render the proposal inside the entity editor.
+   * Returns null when the feature is toggled off, so the section stays hidden.
+   * @param  {string}  entityID  OSM entity id (e.g. 'w123')
+   * @return {Object|null}  the MatchCandidate whose osmFeature.id matches, or null
+   */
+  getCandidateForOSM(entityID) {
+    if (!this.active) return null;
+    return this.candidates.find(c => c.osmFeature?.id === entityID) ?? null;
+  }
+
+
+  /**
    * _recompute
    * Rebuilds `candidates` for the current viewport by gathering all loaded PLATEAU
    * entities and the OSM entities in view, then running them through `findCandidates`.
