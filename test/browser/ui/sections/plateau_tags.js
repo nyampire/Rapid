@@ -78,16 +78,12 @@ describe('uiSectionPlateauTags', () => {
     const cand = candidate('CANDIDATE', { missingTags: ['height', 'ele'] });
     render(new MockContext(cand));
     expect(wrap.select('.section-plateau-tags').classed('hide')).to.equal(false);
-    // The container must be `.active`, otherwise CSS
-    // (`.issue-container:not(.active) ul.issue-fix-list { display: none }`)
-    // hides the Apply button even though it exists in the DOM.
-    expect(wrap.select('.issue-container').classed('active')).to.equal(true);
-    // Added tags render one "key = value" per line, not comma-separated.
+    // Added tags render as read-only key/value tag-rows (iD tag-editor layout).
     const keys = wrap.selectAll('.plateau-additions li.tag-row input.key').nodes().map(n => n.value);
     const vals = wrap.selectAll('.plateau-additions li.tag-row input.value').nodes().map(n => n.value);
     expect(keys).to.eql(['height', 'ele']);
     expect(vals).to.eql(['2.98', '69.1']);
-    const buttons = wrap.selectAll('.issue-fix-item button').nodes();
+    const buttons = wrap.selectAll('button.plateau-apply').nodes();
     expect(buttons.length).to.equal(1);
     buttons[0].dispatchEvent(new MouseEvent('click'));
     expect(applied).to.eql([cand]);
@@ -99,14 +95,15 @@ describe('uiSectionPlateauTags', () => {
     });
     render(new MockContext(cand));
     expect(wrap.select('.section-plateau-tags').classed('hide')).to.equal(false);
-    expect(wrap.selectAll('.issue-fix-item button').nodes().length).to.equal(0);
-    expect(wrap.selectAll('.issue-message').text()).to.contain('conflict_note');
+    expect(wrap.selectAll('button.plateau-apply').nodes().length).to.equal(0);
+    expect(wrap.selectAll('.plateau-tags-note').text()).to.contain('conflict_note');
   });
 
   it('shows AREA_MISMATCH as information only, with no fix button', () => {
     render(new MockContext(candidate('AREA_MISMATCH')));
     expect(wrap.select('.section-plateau-tags').classed('hide')).to.equal(false);
-    expect(wrap.selectAll('.issue-fix-item button').nodes().length).to.equal(0);
+    expect(wrap.selectAll('button.plateau-apply').nodes().length).to.equal(0);
+    expect(wrap.selectAll('.plateau-tags-note').text()).to.contain('area_mismatch_note');
   });
 
   it('re-renders and hides once the candidate is cleared by a heightTransfer change event', () => {

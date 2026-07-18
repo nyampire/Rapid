@@ -3667,12 +3667,38 @@ li.issue-fix-item button:not(.actionable) .fix-icon {
     fill: #555;
 }
 
-/* The added tags reuse the raw tag editor's `.tag-list`/`.tag-row` styling so
-   they match iD's tag layout; just tighten the spacing inside the section. */
+/* Neutral, iD-like layout for the PLATEAU tags section: a muted note, the
+   read-only tag table (reusing `.tag-list`/`.tag-row` for iD parity), and a
+   plain Apply button -- no validation warning colors. */
+.plateau-tags-note {
+    margin: 2px 0 0;
+    color: #666;
+    font-size: 12px;
+}
 ul.plateau-additions.tag-list {
-    margin: 6px 0 8px;
+    margin: 8px 0;
     padding: 0;
     list-style: none;
+}
+.plateau-tags-actions {
+    margin-top: 2px;
+}
+button.plateau-apply {
+    padding: 5px 16px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background: #fff;
+    color: #333;
+    cursor: pointer;
+}
+@media (hover: hover) {
+    button.plateau-apply:hover {
+        background: #ececec;
+    }
+}
+button.plateau-apply:active,
+button.plateau-apply:focus {
+    background: #e0e0e0;
 }
 
 .issue-container:not(.active) ul.issue-fix-list {
