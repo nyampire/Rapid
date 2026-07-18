@@ -33,6 +33,7 @@ export function analyzeTagStates(osmFeature, plateauFeature) {
 
 export function findCandidates({
   plateauEntities, osmEntities,
+  plateauGraph, osmGraph,
   transferredIDs, acceptIDs, ignoreIDs
 }) {
   const outlines = plateauEntities.filter(f =>
@@ -55,12 +56,12 @@ export function findCandidates({
     const rp = turfPoint(outline.representativePoint);
 
     let outlineGeo;
-    try { outlineGeo = outline.asGeoJSON(); } catch (_err) { continue; }
+    try { outlineGeo = outline.asGeoJSON(plateauGraph); } catch (_err) { continue; }
 
     let matched = [];
     for (const osm of osmBuildings) {
       let osmGeo;
-      try { osmGeo = osm.asGeoJSON(); } catch (_err) { continue; }
+      try { osmGeo = osm.asGeoJSON(osmGraph); } catch (_err) { continue; }
       if (booleanPointInPolygon(rp, osmGeo)) matched.push({ osm, osmGeo });
     }
     if (matched.length !== 1) continue;   // ambiguous or no hit

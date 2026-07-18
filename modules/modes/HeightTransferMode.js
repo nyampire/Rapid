@@ -241,27 +241,38 @@ export class HeightTransferMode extends AbstractSystem {
       return;
     }
 
-    const plateauEntities = [];
+    const extent = context.systems.map?.extent ? context.systems.map.extent() : undefined;
+    const osmEntities = editor.intersects ? editor.intersects(extent) : [];
+    // `asGeoJSON(resolver)` needs the graph the OSM entities were resolved
+    // against; that's the editor's current (staging) graph.
+    const osmGraph = editor.staging?.graph;
+
+    const acceptIDs = rapid?.acceptIDs ?? new Set();
+    const ignoreIDs = rapid?.ignoreIDs ?? new Set();
+
+    // Plateau entities live in per-dataset graphs (their node refs resolve only
+    // there), so match each dataset's entities with its own graph resolver.
+    const candidates = [];
     const datasets = plateau.getAvailableDatasets ? plateau.getAvailableDatasets() : [];
     for (const dataset of datasets) {
       // skipConflation: the default `getData()` conflation hides Plateau
       // buildings that overlap OSM, but height transfer needs exactly those
       // overlapping pairs to work.
       const entities = plateau.getData ? plateau.getData(dataset.id, { skipConflation: true }) : null;
-      if (entities) plateauEntities.push(...entities);
+      if (!entities || !entities.length) continue;
+      const plateauGraph = plateau.graph ? plateau.graph(dataset.id) : undefined;
+      candidates.push(...findCandidates({
+        plateauEntities: entities,
+        osmEntities,
+        plateauGraph,
+        osmGraph,
+        transferredIDs: this.transferredIDs,
+        acceptIDs,
+        ignoreIDs
+      }));
     }
 
-    const extent = context.systems.map?.extent ? context.systems.map.extent() : undefined;
-    const osmEntities = editor.intersects ? editor.intersects(extent) : [];
-
-    this.candidates = findCandidates({
-      plateauEntities,
-      osmEntities,
-      transferredIDs: this.transferredIDs,
-      acceptIDs: rapid?.acceptIDs ?? new Set(),
-      ignoreIDs: rapid?.ignoreIDs ?? new Set()
-    });
-
+    this.candidates = candidates;
     this.emit('change');
   }
 
