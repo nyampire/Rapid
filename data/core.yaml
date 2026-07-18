@@ -26,7 +26,7 @@ en:
     zoom_overview_tooltip: Snap to zoom 14 so tiles stop loading and panning stays fast.<br>Buildings render from z16.
   height_transfer:
     section_title: PLATEAU tags
-    additions: Adding (missing tags only)
+    additions: Add from PLATEAU
     apply: Apply
     conflict_note: Existing OSM values differ from PLATEAU. Override deferred (Phase 3, pending community consultation).
     area_mismatch_note: Area ratio outside 0.5–2.0. Likely block-level mapping or PLATEAU under-partition; please review manually.
