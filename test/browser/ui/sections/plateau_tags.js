@@ -18,7 +18,8 @@ describe('uiSectionPlateauTags', () => {
       this.services = {};
       this.systems = {
         l10n: new MockL10n(),
-        heightTransfer: new MockHeightTransfer(candidate)
+        heightTransfer: new MockHeightTransfer(candidate),
+        storage: { getItem: () => null, setItem: () => {} }
       };
     }
   }
@@ -43,18 +44,25 @@ describe('uiSectionPlateauTags', () => {
 
   it('is hidden when there is no candidate', () => {
     render(new MockContext(null));
-    expect(section.shouldDisplay()).to.be.false;
+    expect(wrap.select('.section-plateau-tags').classed('hide')).to.equal(true);
   });
 
   it('is hidden for a COVERED candidate', () => {
     render(new MockContext(candidate('COVERED')));
-    expect(section.shouldDisplay()).to.be.false;
+    expect(wrap.select('.section-plateau-tags').classed('hide')).to.equal(true);
+  });
+
+  it('renders a labeled heading (not a bare content block)', () => {
+    const cand = candidate('CANDIDATE', { missingTags: ['height', 'ele'] });
+    render(new MockContext(cand));
+    expect(wrap.select('.section-plateau-tags').classed('hide')).to.equal(false);
+    expect(wrap.select('.hide-toggle-text').text()).to.contain('height_transfer.section_title');
   });
 
   it('shows an actionable Apply fix for a CANDIDATE', () => {
     const cand = candidate('CANDIDATE', { missingTags: ['height', 'ele'] });
     render(new MockContext(cand));
-    expect(section.shouldDisplay()).to.be.true;
+    expect(wrap.select('.section-plateau-tags').classed('hide')).to.equal(false);
     const buttons = wrap.selectAll('.issue-fix-item button').nodes();
     expect(buttons.length).to.equal(1);
     buttons[0].dispatchEvent(new MouseEvent('click'));
@@ -66,14 +74,14 @@ describe('uiSectionPlateauTags', () => {
       conflictingTags: [{ key: 'height', osmValue: '10', plateauValue: '2.98' }]
     });
     render(new MockContext(cand));
-    expect(section.shouldDisplay()).to.be.true;
+    expect(wrap.select('.section-plateau-tags').classed('hide')).to.equal(false);
     expect(wrap.selectAll('.issue-fix-item button').nodes().length).to.equal(0);
     expect(wrap.selectAll('.issue-message').text()).to.contain('conflict_note');
   });
 
   it('shows AREA_MISMATCH as information only, with no fix button', () => {
     render(new MockContext(candidate('AREA_MISMATCH')));
-    expect(section.shouldDisplay()).to.be.true;
+    expect(wrap.select('.section-plateau-tags').classed('hide')).to.equal(false);
     expect(wrap.selectAll('.issue-fix-item button').nodes().length).to.equal(0);
   });
 });

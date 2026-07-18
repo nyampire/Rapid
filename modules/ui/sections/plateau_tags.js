@@ -26,22 +26,10 @@ export function uiSectionPlateauTags(context) {
     return !!cand && cand.state !== 'COVERED';
   }
 
-  // Plain `.content()`, not `.disclosureContent()`: the disclosure wrapper
-  // (expand/collapse chevron) unconditionally reads a user preference via
-  // `context.systems.storage`, which this section has no need of and which
-  // isn't guaranteed to exist on every context that mounts this section.
   const section = uiSection(context, 'plateau-tags')
     .label(() => l10n.t('height_transfer.section_title'))
     .shouldDisplay(_shouldDisplayNow)
-    .content(renderContent);
-
-  // `uiSection#shouldDisplay()` called with no arguments returns the raw
-  // (possibly wrapped) function passed to the setter, not its invoked
-  // result -- fine for the internal render loop (which calls it), but not
-  // useful as a public "is this visible" query. Override it here so external
-  // callers (and tests) get the boolean directly, the same way `.entityIDs()`
-  // below is overridden to behave as a plain accessor.
-  section.shouldDisplay = _shouldDisplayNow;
+    .disclosureContent(renderContent);
 
 
   function _candidate() {
