@@ -25,12 +25,12 @@ en:
     zoom_overview_label: Zoom 14
     zoom_overview_tooltip: Snap to zoom 14 so tiles stop loading and panning stays fast.<br>Buildings render from z16.
   height_transfer:
-    section_title: PLATEAU tags
-    additions: Add from PLATEAU
+    section_title: Plateau tags
+    additions: Add from Plateau
     apply: Apply
-    apply_tooltip: Add these PLATEAU tags to the selected building.
-    conflict_note: Existing OSM values differ from PLATEAU. Override deferred (Phase 3, pending community consultation).
-    area_mismatch_note: Area ratio outside 0.5–2.0. Likely block-level mapping or PLATEAU under-partition; please review manually.
+    apply_tooltip: Add these Plateau tags to the selected building.
+    conflict_note: Existing OSM values differ from Plateau. Override deferred (Phase 3, pending community consultation).
+    area_mismatch_note: Area ratio outside 0.5–2.0. Likely block-level mapping or Plateau under-partition; please review manually.
   title:
     format:
       context: "{base} – {context}"
@@ -2606,7 +2606,7 @@ en:
     with_node_selected: With node selected
     with_way_selected: With way selected
     with_rapid_selected: With Rapid feature selected
-    with_plateau_selected: With a PLATEAU-tag building selected
+    with_plateau_selected: With a Plateau-tag building selected
     with_photo_selected: With photo selected
     drawing: Drawing
     commands: Commands
@@ -2670,7 +2670,7 @@ en:
         label: Ignore the feature
         key: D   # <this key> to Ignore a suggested feature
       apply_plateau_tags:
-        label: Apply PLATEAU tags to the selected building
+        label: Apply Plateau tags to the selected building
         key: A   # <this key> to apply the PLATEAU tags (bound only while a candidate building is selected)
 
       follow_sequence:
