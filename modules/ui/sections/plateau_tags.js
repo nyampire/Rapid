@@ -77,6 +77,11 @@ export function uiSectionPlateauTags(context) {
       .append('span')
       .attr('class', 'issue-message');
 
+    // One "key = value" per line, so the added tags are easy to scan.
+    itemsEnter
+      .append('ul')
+      .attr('class', 'plateau-additions');
+
     itemsEnter
       .append('ul')
       .attr('class', 'issue-fix-list');
@@ -101,6 +106,24 @@ export function uiSectionPlateauTags(context) {
     containers.selectAll('.issue-message')
       .text(d => _message(d));
 
+    // Additions list: one "key = value" per line (CANDIDATE only).
+    const addLists = containers.selectAll('.plateau-additions');
+    const adds = addLists.selectAll('li.plateau-addition')
+      .data(
+        d => (d.state === 'CANDIDATE'
+          ? (d.missingTags ?? []).map(k => ({ key: k, value: d.plateauFeature?.tags?.[k] }))
+          : []),
+        d => d.key
+      );
+
+    adds.exit().remove();
+
+    adds.enter()
+      .append('li')
+      .attr('class', 'plateau-addition')
+      .merge(adds)
+      .text(d => `${d.key} = ${d.value}`);
+
     // Fix list: only CANDIDATE is actionable.
     const fixLists = containers.selectAll('.issue-fix-list');
     const fixes = fixLists.selectAll('.issue-fix-item')
@@ -124,8 +147,8 @@ export function uiSectionPlateauTags(context) {
 
   function _message(cand) {
     if (cand.state === 'CANDIDATE') {
-      const keys = (cand.missingTags ?? []).join(', ');
-      return l10n.t('height_transfer.additions') + ': ' + keys;
+      // Header only; the individual tags render below as a per-line list.
+      return l10n.t('height_transfer.additions');
     } else if (cand.state === 'CONFLICT') {
       return l10n.t('height_transfer.conflict_note');
     } else if (cand.state === 'AREA_MISMATCH') {
@@ -135,12 +158,10 @@ export function uiSectionPlateauTags(context) {
   }
 
 
-  function _fixTitle(cand) {
-    const plateauTags = cand.plateauFeature?.tags ?? {};
-    const added = (cand.missingTags ?? [])
-      .map(k => `${k}=${plateauTags[k]}`)
-      .join(', ');
-    return `${l10n.t('height_transfer.apply')} (${added})`;
+  function _fixTitle() {
+    // Values are shown in the per-line additions list above, so the button
+    // stays a plain "Apply".
+    return l10n.t('height_transfer.apply');
   }
 
 
