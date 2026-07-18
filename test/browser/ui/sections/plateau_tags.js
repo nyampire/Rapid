@@ -8,9 +8,24 @@ describe('uiSectionPlateauTags', () => {
   }
 
   class MockHeightTransfer {
-    constructor(candidate) { this._cand = candidate; applied = []; }
+    constructor(candidate) {
+      this._cand = candidate;
+      this._handlers = {};
+      applied = [];
+    }
     getCandidateForOSM(id) { return (this._cand && this._cand.osmFeature.id === id) ? this._cand : null; }
     apply(cand) { applied.push(cand); }
+    setCandidate(cand) { this._cand = cand; }
+    on(evt, fn) {
+      (this._handlers[evt] = this._handlers[evt] || []).push(fn);
+    }
+    off(evt, fn) {
+      if (!this._handlers[evt]) return;
+      this._handlers[evt] = this._handlers[evt].filter(f => f !== fn);
+    }
+    emit(evt, ...args) {
+      (this._handlers[evt] || []).slice().forEach(fn => fn(...args));
+    }
   }
 
   class MockContext {
@@ -83,5 +98,19 @@ describe('uiSectionPlateauTags', () => {
     render(new MockContext(candidate('AREA_MISMATCH')));
     expect(wrap.select('.section-plateau-tags').classed('hide')).to.equal(false);
     expect(wrap.selectAll('.issue-fix-item button').nodes().length).to.equal(0);
+  });
+
+  it('re-renders and hides once the candidate is cleared by a heightTransfer change event', () => {
+    const cand = candidate('CANDIDATE', { missingTags: ['height', 'ele'] });
+    const context = new MockContext(cand);
+    render(context);
+    expect(wrap.select('.section-plateau-tags').classed('hide')).to.equal(false);
+
+    // Simulate what happens after Apply: HeightTransferMode recomputes candidates
+    // on 'stablechange' and this building no longer qualifies, then emits 'change'.
+    context.systems.heightTransfer.setCandidate(null);
+    context.systems.heightTransfer.emit('change');
+
+    expect(wrap.select('.section-plateau-tags').classed('hide')).to.equal(true);
   });
 });
