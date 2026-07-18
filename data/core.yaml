@@ -25,6 +25,7 @@ en:
     zoom_overview_label: Zoom 14
     zoom_overview_tooltip: Snap to zoom 14 so tiles stop loading and panning stays fast.<br>Buildings render from z16.
   height_transfer:
+    section_title: PLATEAU tags
     current_tags: Current tags
     additions: Adding (missing tags only)
     apply: Apply
