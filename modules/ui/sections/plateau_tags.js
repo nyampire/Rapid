@@ -4,15 +4,16 @@ import { uiSection } from '../section.js';
 /**
  * uiSectionPlateauTags
  * A dedicated entity-editor section that surfaces the PLATEAU tag-transfer
- * proposal for the selected OSM building. It reuses the validation issue
- * markup/CSS (`.issue-*`, `.issue-fix-*`) so it reads like the Issues section,
- * but is a separate `uiSection` fed by `heightTransfer.getCandidateForOSM`,
- * not routed through the validator (so it never inflates the Issues count).
+ * proposal for the selected OSM building. It is a standalone `uiSection` fed by
+ * `heightTransfer.getCandidateForOSM`, not routed through the validator (so it
+ * never inflates the Issues count). The added tags render as read-only
+ * key/value rows reusing the raw tag editor's `.tag-list`/`.tag-row` markup, so
+ * the layout matches iD's neutral tag editor rather than a validation warning.
  *
  * States (see HeightTransferMatcher):
- *   CANDIDATE      -> lists missing tags + an actionable "Apply" fix
- *   CONFLICT       -> information only (conflict note), no fix
- *   AREA_MISMATCH  -> information only (area note), no fix
+ *   CANDIDATE      -> read-only key/value table of missing tags + an Apply button
+ *   CONFLICT       -> information only (conflict note), no Apply
+ *   AREA_MISMATCH  -> information only (area note), no Apply
  *   COVERED        -> section hidden
  */
 export function uiSectionPlateauTags(context) {
@@ -49,130 +50,52 @@ export function uiSectionPlateauTags(context) {
 
 
   function renderContent(selection) {
-    selection.classed('grouped-items-area', true);
     const cand = _candidate();
 
-    let containers = selection.selectAll('.issue-container')
-      .data(cand ? [cand] : [], d => d.osmFeature.id);
+    // Full rebuild: this only re-renders on selection/candidate changes (not per
+    // frame), and a clean neutral layout is far simpler to keep correct across
+    // the states than a d3 enter/update dance.
+    selection.html('');
+    if (!cand) return;
 
-    containers.exit().remove();
+    if (cand.state !== 'CANDIDATE') {
+      const noteKey = cand.state === 'CONFLICT'
+        ? 'height_transfer.conflict_note'
+        : 'height_transfer.area_mismatch_note';
+      selection.append('p')
+        .attr('class', 'plateau-tags-note')
+        .text(l10n.t(noteKey));
+      return;
+    }
 
-    const containersEnter = containers.enter()
-      .append('div')
-      .attr('class', 'issue-container');
+    selection.append('p')
+      .attr('class', 'plateau-tags-note')
+      .text(l10n.t('height_transfer.additions'));
 
-    const itemsEnter = containersEnter
-      .append('div')
-      .attr('class', 'issue');
-
-    const labelsEnter = itemsEnter
-      .append('div')
-      .attr('class', 'issue-label');
-
-    const textEnter = labelsEnter
-      .append('button')
-      .attr('class', 'issue-text');
-
-    textEnter
-      .append('span')
-      .attr('class', 'issue-message');
-
-    // Added tags render as a read-only key/value table, reusing the raw tag
-    // editor's `.tag-list`/`.tag-row` markup so the layout matches iD's tag
-    // editor (the "All fields" section below).
-    itemsEnter
-      .append('ul')
+    // Read-only key/value rows, reusing the raw tag editor's markup/CSS so they
+    // match iD's tag editor (the "All fields" section below).
+    const $list = selection.append('ul')
       .attr('class', 'tag-list plateau-additions');
 
-    itemsEnter
-      .append('ul')
-      .attr('class', 'issue-fix-list');
-
-    containers = containers.merge(containersEnter);
-
-    // Always mark the (single) container active. CSS hides the fix list with
-    // `.issue-container:not(.active) ul.issue-fix-list { display: none }`, so
-    // without this the Apply button renders but stays invisible. Unlike
-    // `entity_issues` (which activates only one of many issues), this section
-    // ever shows one candidate, so it is always the active one.
-    containers.classed('active', true);
-
-    // Keep the severity class current on every render (not only on enter), so it
-    // stays correct if a candidate's state changes in place. CANDIDATE is
-    // actionable (warning); CONFLICT/AREA_MISMATCH are informational only and use
-    // `severity-suggestion`, the closest styled "informational" severity (there is
-    // no `severity-other` in css/80_app.css, so that class rendered unstyled).
-    containers.select('.issue')
-      .attr('class', d => `issue severity-${d.state === 'CANDIDATE' ? 'warning' : 'suggestion'}`);
-
-    containers.selectAll('.issue-message')
-      .text(d => _message(d));
-
-    // Additions: read-only key/value rows (CANDIDATE only), same markup as the
-    // raw tag editor so they read as iD tag rows.
-    const addLists = containers.selectAll('.plateau-additions');
-    const adds = addLists.selectAll('li.tag-row')
-      .data(
-        d => (d.state === 'CANDIDATE'
-          ? (d.missingTags ?? []).map(k => ({ key: k, value: d.plateauFeature?.tags?.[k] }))
-          : []),
-        d => d.key
-      );
-
-    adds.exit().remove();
-
-    const addsEnter = adds.enter()
-      .append('li')
-      .attr('class', 'tag-row readonly');
-
-    const innerWrap = addsEnter.append('div').attr('class', 'inner-wrap');
-    innerWrap.append('div').attr('class', 'key-wrap')
-      .append('input').attr('type', 'text').attr('class', 'key').attr('readonly', true);
-    innerWrap.append('div').attr('class', 'value-wrap')
-      .append('input').attr('type', 'text').attr('class', 'value').attr('readonly', true);
-
-    const addsMerge = adds.merge(addsEnter);
-    addsMerge.select('input.key').property('value', d => d.key);
-    addsMerge.select('input.value').property('value', d => d.value);
-
-    // Fix list: only CANDIDATE is actionable.
-    const fixLists = containers.selectAll('.issue-fix-list');
-    const fixes = fixLists.selectAll('.issue-fix-item')
-      .data(d => (d.state === 'CANDIDATE' ? [d] : []), d => d.osmFeature.id);
-
-    fixes.exit().remove();
-
-    const fixesEnter = fixes.enter()
-      .append('li')
-      .attr('class', 'issue-fix-item');
-
-    fixesEnter
-      .append('button')
-      .attr('class', 'actionable')
-      .on('click', (d3_event, d) => heightTransfer.apply(d))
-      .append('span')
-      .attr('class', 'fix-message')
-      .text(d => _fixTitle(d));
-  }
-
-
-  function _message(cand) {
-    if (cand.state === 'CANDIDATE') {
-      // Header only; the individual tags render below as a per-line list.
-      return l10n.t('height_transfer.additions');
-    } else if (cand.state === 'CONFLICT') {
-      return l10n.t('height_transfer.conflict_note');
-    } else if (cand.state === 'AREA_MISMATCH') {
-      return l10n.t('height_transfer.area_mismatch_note');
+    for (const key of (cand.missingTags ?? [])) {
+      const value = cand.plateauFeature?.tags?.[key];
+      const $inner = $list.append('li')
+        .attr('class', 'tag-row readonly')
+        .append('div').attr('class', 'inner-wrap');
+      $inner.append('div').attr('class', 'key-wrap')
+        .append('input').attr('type', 'text').attr('class', 'key').attr('readonly', true)
+        .property('value', key);
+      $inner.append('div').attr('class', 'value-wrap')
+        .append('input').attr('type', 'text').attr('class', 'value').attr('readonly', true)
+        .property('value', value);
     }
-    return '';
-  }
 
-
-  function _fixTitle() {
-    // Values are shown in the per-line additions list above, so the button
-    // stays a plain "Apply".
-    return l10n.t('height_transfer.apply');
+    selection.append('div')
+      .attr('class', 'plateau-tags-actions')
+      .append('button')
+      .attr('class', 'plateau-apply')
+      .text(l10n.t('height_transfer.apply'))
+      .on('click', () => heightTransfer.apply(cand));
   }
 
 
