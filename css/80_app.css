@@ -3667,6 +3667,21 @@ li.issue-fix-item button:not(.actionable) .fix-icon {
     fill: #555;
 }
 
+ul.plateau-additions {
+    margin: 0;
+    padding: 2px 10px 6px 20px;
+    list-style: none;
+}
+.ideditor[dir='rtl'] ul.plateau-additions {
+    padding: 2px 20px 6px 10px;
+}
+li.plateau-addition {
+    display: block;
+    padding: 1px 0;
+    font-family: monospace;
+    font-size: 11px;
+}
+
 .issue-container:not(.active) ul.issue-fix-list {
     display: none;
 }
