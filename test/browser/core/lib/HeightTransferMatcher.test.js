@@ -158,4 +158,50 @@ describe('HeightTransferMatcher', () => {
       expect(out).to.eql([]);
     });
   });
+
+  // Regression: the mock helpers above expose a zero-arg `asGeoJSON()`, but the
+  // real `osmWay.asGeoJSON(resolver)` requires a graph resolver and throws
+  // without one. `findCandidates` must pass the correct resolver for each side
+  // (Plateau graph for outlines, OSM graph for buildings), otherwise every
+  // outline is silently skipped and zero candidates ever render.
+  describe('findCandidates with real entities', () => {
+    // Build a closed square way + its nodes in a real Graph.
+    function realBuilding(idPrefix, coords, tags) {
+      const nodes = coords.map((loc, i) =>
+        Rapid.osmNode({ id: `${idPrefix}n${i}`, loc }));
+      // Close the ring by reusing the first node as the last ref.
+      const nodeIDs = nodes.map(n => n.id);
+      nodeIDs.push(nodes[0].id);
+      const way = Rapid.osmWay({ id: `${idPrefix}w`, tags, nodes: nodeIDs });
+      return { way, entities: [...nodes, way] };
+    }
+
+    // Distinct corner locs (no repeated closing coord — the way closes by ref).
+    const SQR_CORNERS = [[139.755, 35.679], [139.756, 35.679],
+                         [139.756, 35.680], [139.755, 35.680]];
+    const SQR_CENTER = [139.7555, 35.6795];
+
+    it('finds a CANDIDATE using real osmWay.asGeoJSON(resolver)', () => {
+      // `area=yes` forces `isArea()` true so `asGeoJSON` yields a Polygon here;
+      // in the running app that comes from `osmAreaKeys` (loaded from presets),
+      // which isn't populated in this unit-test context. The point of the test
+      // is that `findCandidates` threads a graph resolver into `asGeoJSON`.
+      const p = realBuilding('p', SQR_CORNERS, { building: 'yes', area: 'yes', height: '12' });
+      p.way.representativePoint = SQR_CENTER;
+      const o = realBuilding('o', SQR_CORNERS, { building: 'yes', area: 'yes' });
+
+      const plateauGraph = new Rapid.Graph(p.entities);
+      const osmGraph = new Rapid.Graph(o.entities);
+
+      const out = Rapid.findCandidates({
+        plateauEntities: [p.way], osmEntities: [o.way],
+        plateauGraph, osmGraph,
+        transferredIDs: new Set(), acceptIDs: new Set(), ignoreIDs: new Set()
+      });
+
+      expect(out).to.have.lengthOf(1);
+      expect(out[0].state).to.equal('CANDIDATE');
+      expect(out[0].missingTags).to.eql(['height']);
+    });
+  });
 });
