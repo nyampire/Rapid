@@ -1199,7 +1199,7 @@ en:
         description: "Road network data sourced from TomTom, available through the Overture Maps Foundation."
     plateauJapan:
       label: Plateau Japan Buildings
-      description: Building footprints from Japan's PLATEAU 3D city model project, provided by OSMFJ.
+      description: Building footprints from Japan's Plateau 3D city model project, provided by OSMFJ.
     ignored_ids:
       link: "{count} ignored Overture IDs"
       link_one: "{count} ignored Overture ID"
@@ -1635,8 +1635,8 @@ en:
       open_source_h: "Open Source"
       open_source: "The Rapid editor is a collaborative open source project, and you are using version {version} now. The source code is available [on GitHub](https://github.com/facebook/Rapid)."
       open_source_help: "You can help Rapid by [reporting bugs](https://github.com/facebook/Rapid/issues)."
-      open_source_plateau_h: "PLATEAU Edition"
-      open_source_plateau: "This edition extends Rapid with integration for [PLATEAU](https://www.mlit.go.jp/plateau/), Japan's open 3D city data. It spans three repositories:\n\n- [Editor](https://github.com/nyampire/Rapid) — this fork of Rapid\n- [API](https://github.com/nyampire/rapid_plateau_api) — backend that serves PLATEAU building data\n- [Dashboard](https://github.com/nyampire/rapid_plateau_dashboard) — visualization of import progress"
+      open_source_plateau_h: "About the Plateau import features"
+      open_source_plateau: "This is a fork of Rapid with added features for importing building data from [Plateau](https://www.mlit.go.jp/plateau/), Japan's open 3D city model, into OpenStreetMap. It spans three repositories:\n\n- [Editor](https://github.com/nyampire/Rapid) — this fork of Rapid\n- [API](https://github.com/nyampire/rapid_plateau_api) — backend that serves Plateau building data\n- [Dashboard](https://github.com/nyampire/rapid_plateau_dashboard) — visualization of import progress"
     overview:
       title: Overview
       navigation_h: "Navigation"
@@ -2671,7 +2671,7 @@ en:
         key: D   # <this key> to Ignore a suggested feature
       apply_plateau_tags:
         label: Apply Plateau tags to the selected building
-        key: A   # <this key> to apply the PLATEAU tags (bound only while a candidate building is selected)
+        key: A   # <this key> to apply the Plateau tags (bound only while a candidate building is selected)
 
       follow_sequence:
         label: Step to next / previous photo in sequence
