@@ -76,7 +76,16 @@ export function findCandidates({
     let state;
     let tagStates;
 
-    if (ratio < AREA_RATIO_MIN || ratio > AREA_RATIO_MAX) {
+    // A Plateau outline far SMALLER than the OSM building it sits in is an
+    // ancillary structure Plateau models as its own `building` -- a rooftop
+    // stair enclosure, a shed. Its height describes that structure, not the
+    // building, so transferring it would be wrong and flagging it is only
+    // noise (observed: 7-9 m2 outlines inside a 214 m2 OSM building). Drop it.
+    if (ratio < AREA_RATIO_MIN) continue;
+
+    if (ratio > AREA_RATIO_MAX) {
+      // Plateau outline far LARGER than the OSM building: block-level or
+      // partial OSM mapping under one Plateau outline. Worth a human look.
       state = 'AREA_MISMATCH';
       tagStates = analyzeTagStates(osm, outline);
     } else {

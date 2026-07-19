@@ -93,12 +93,31 @@ describe('HeightTransferMatcher', () => {
       expect(out[0].state).to.equal('CONFLICT');
     });
 
-    it('returns AREA_MISMATCH when area ratio is outside 0.5..2.0', () => {
-      // OSM building is 10x wider than Plateau
+    it('skips a Plateau outline far smaller than the OSM building (sub-structure)', () => {
+      // OSM building is 10x wider than the Plateau outline -> ratio ~0.1.
+      // In real data this is a rooftop stair enclosure / shed that Plateau
+      // carries as its own `building`, sitting inside a much larger OSM
+      // footprint. Transferring its height would be wrong, and flagging it
+      // is just noise, so it produces no candidate at all.
       const bigOsm = [[139.750, 35.679], [139.760, 35.679],
                       [139.760, 35.680], [139.750, 35.680], [139.750, 35.679]];
       const p = outline('p1', SQR, { height: '12' }, SQR_CENTER);
       const o = osmBuilding('o1', bigOsm);
+      const out = Rapid.findCandidates({
+        plateauEntities: [p], osmEntities: [o],
+        transferredIDs: new Set(), acceptIDs: new Set(), ignoreIDs: new Set()
+      });
+      expect(out).to.eql([]);
+    });
+
+    it('returns AREA_MISMATCH when the Plateau outline is far larger than the OSM building', () => {
+      // Plateau outline is ~10x wider than the OSM building -> ratio ~10.
+      // This is the reviewable case: OSM has block-level or partial mapping
+      // under one large Plateau outline, so a human should look at it.
+      const bigPlateau = [[139.750, 35.679], [139.760, 35.679],
+                          [139.760, 35.680], [139.750, 35.680], [139.750, 35.679]];
+      const p = outline('p1', bigPlateau, { height: '12' }, SQR_CENTER);
+      const o = osmBuilding('o1', SQR);
       const out = Rapid.findCandidates({
         plateauEntities: [p], osmEntities: [o],
         transferredIDs: new Set(), acceptIDs: new Set(), ignoreIDs: new Set()
