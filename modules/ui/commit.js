@@ -10,7 +10,8 @@ import { uiChangesetEditor } from './changeset_editor.js';
 import { uiSectionChanges } from './sections/changes.js';
 import { uiCommitWarnings } from './commit_warnings.js';
 import { uiSectionRawTagEditor } from './sections/raw_tag_editor.js';
-import { utilDetect, utilRebind } from '../util/index.js';
+import { utilApplyPlateauSourceTags, utilClearPlateauSourceRef, utilDetect, utilRebind } from '../util/index.js';
+import { PLATEAU_SOURCE, PLATEAU_TOOL_SOURCE } from '../util/plateau_changeset_tags.js';
 
 
 const readOnlyTags = [
@@ -211,7 +212,7 @@ export function uiCommit(context) {
     const toRemove = [
       'aerial imagery', 'streetlevel imagery',
       'mapillary', 'kartaview', 'streetside',
-      'mapwithai', 'esri', 'RapiD_Plateau_JP',
+      'mapwithai', 'esri', PLATEAU_SOURCE, PLATEAU_TOOL_SOURCE,
     ];
     for (const v of toRemove) {
       sources.delete(v);
@@ -257,18 +258,27 @@ export function uiCommit(context) {
     // Rapid, Esri, or Custom datasets
     // Update `data_used` tag
     let setDataUsed;
+    let usedPlateau = false;
     if (used.data.size) {
       for (const v of used.data) {
         const match = v.match(/(mapwithai|esri)/i);
         if (match !== null) {
           sources.add(match[1]);
         }
-        // Add Plateau-specific source tag when Plateau buildings data is used
         if (/plateau/i.test(v)) {
-          sources.add('RapiD_Plateau_JP');
+          usedPlateau = true;
         }
       }
       setDataUsed = context.cleanTagValue(Array.from(used.data).filter(Boolean).join(';'));
+    }
+
+    // Record the data origin and the tool when Plateau buildings data is used.
+    // `source_ref` has to be withdrawn again when it isn't -- this runs on every
+    // render, so an undone transfer must not leave the provenance behind.
+    if (usedPlateau) {
+      utilApplyPlateauSourceTags(sources, tags);
+    } else {
+      utilClearPlateauSourceRef(tags);
     }
     if (setDataUsed) {
       tags.data_used = setDataUsed;
