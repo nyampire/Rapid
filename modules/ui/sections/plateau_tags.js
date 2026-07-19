@@ -2,6 +2,13 @@ import { uiSection } from '../section.js';
 import { uiTooltip } from '../tooltip.js';
 
 
+// States that get an explanatory note above the proposal. CANDIDATE needs none.
+const NOTE_KEYS = {
+  CONFLICT:      'height_transfer.conflict_note',
+  AREA_MISMATCH: 'height_transfer.area_mismatch_note'
+};
+
+
 /**
  * uiSectionPlateauTags
  * A dedicated entity-editor section that surfaces the PLATEAU tag-transfer
@@ -11,10 +18,13 @@ import { uiTooltip } from '../tooltip.js';
  * key/value rows reusing the raw tag editor's `.tag-list`/`.tag-row` markup, so
  * the layout matches iD's neutral tag editor rather than a validation warning.
  *
- * States (see HeightTransferMatcher):
- *   CANDIDATE      -> read-only key/value table of missing tags + an Apply button
- *   CONFLICT       -> information only (conflict note), no Apply
- *   AREA_MISMATCH  -> information only (area note), no Apply
+ * The state decides whether an explanatory note appears; the presence of tags to
+ * add decides whether the read-only key/value table and Apply button appear.
+ * Those two are independent, which is what lets AREA_MISMATCH warn and still
+ * offer the fix (see HeightTransferMatcher):
+ *   CANDIDATE      -> table + Apply, no note
+ *   CONFLICT       -> conflict note only (its `missingTags` is always empty)
+ *   AREA_MISMATCH  -> area note, plus table + Apply when there is something to add
  *   COVERED        -> section hidden
  */
 export function uiSectionPlateauTags(context) {
@@ -68,15 +78,20 @@ export function uiSectionPlateauTags(context) {
     const $panel = selection.append('div')
       .attr('class', 'plateau-tags-panel');
 
-    if (cand.state !== 'CANDIDATE') {
-      const noteKey = cand.state === 'CONFLICT'
-        ? 'height_transfer.conflict_note'
-        : 'height_transfer.area_mismatch_note';
+    const noteKey = NOTE_KEYS[cand.state];
+    if (noteKey) {
       $panel.append('p')
         .attr('class', 'plateau-tags-note')
         .text(l10n.t(noteKey));
-      return;
     }
+
+    // The proposal itself depends only on whether there is anything to add, not
+    // on the state. That gives AREA_MISMATCH the same table + Apply button as a
+    // plain CANDIDATE (the note above it carries the warning), and leaves
+    // CONFLICT with the note alone -- a CONFLICT always has an empty
+    // `missingTags`, since state precedence puts `missing` ahead of
+    // `conflicting`, so it needs no special case here.
+    if (!cand.missingTags?.length) return;
 
     $panel.append('p')
       .attr('class', 'plateau-tags-note')

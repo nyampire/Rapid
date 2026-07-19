@@ -228,8 +228,10 @@ export class HeightTransferMode extends AbstractSystem {
 
   /**
    * _refreshApplyShortcut
-   * Binds the Apply shortcut (A) only while a single CANDIDATE building is
-   * selected, and unbinds it otherwise. This keeps it exclusive with Rapid's
+   * Binds the Apply shortcut (A) only while a single building whose candidate
+   * has tags to add is selected, and unbinds it otherwise. That is the same
+   * condition `uiSectionPlateauTags` uses to show its Apply button, so the key
+   * and the button are never out of step. This keeps it exclusive with Rapid's
    * own `A` (accept feature): that binds only when a Rapid feature is selected,
    * and since selection is single, the two never coexist on the shared global
    * keybinding (where a duplicate key would otherwise clobber the other).
@@ -243,7 +245,7 @@ export class HeightTransferMode extends AbstractSystem {
 
     const ids = context.selectedIDs?.() ?? [];
     const candidate = (ids.length === 1) ? this.getCandidateForOSM(ids[0]) : null;
-    const wantBound = !!candidate && candidate.state === 'CANDIDATE';
+    const wantBound = !!candidate?.missingTags?.length;
 
     if (wantBound && !this._applyKeys) {
       this._applyKeys = [ utilCmd(l10n.t('shortcuts.command.apply_plateau_tags.key')) ];
@@ -258,16 +260,16 @@ export class HeightTransferMode extends AbstractSystem {
   /**
    * _onApplyShortcut
    * Applies the candidate for the currently selected OSM building, if any. Does
-   * nothing unless exactly one building is selected and it is a CANDIDATE (the
-   * only actionable state) -- so the key is inert on conflicts, area mismatches,
-   * or a plain selection with no PLATEAU match.
+   * nothing unless exactly one building is selected and its candidate has tags
+   * to add -- so the key is inert on conflicts, on area mismatches with nothing
+   * left to transfer, or on a plain selection with no PLATEAU match.
    */
   _onApplyShortcut(e) {
     const ids = this.context.selectedIDs?.() ?? [];
     if (ids.length !== 1) return;
 
     const candidate = this.getCandidateForOSM(ids[0]);
-    if (!candidate || candidate.state !== 'CANDIDATE') return;
+    if (!candidate?.missingTags?.length) return;
 
     e?.preventDefault?.();
     this.apply(candidate);
