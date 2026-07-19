@@ -33,7 +33,7 @@
       "apply": "Apply",
       "apply_tooltip": "Add these Plateau tags to the selected building.",
       "conflict_note": "Existing OSM values differ from Plateau. Override deferred (Phase 3, pending community consultation).",
-      "area_mismatch_note": "The Plateau outline is at least twice the area of the OSM building. They may not describe the same building — compare with aerial imagery before applying."
+      "area_mismatch_note": "The Plateau outline is at least twice the area of the OSM building.\nThey may not describe the same building — compare with aerial imagery or Mapillary before applying."
     },
     "title": {
       "format": {

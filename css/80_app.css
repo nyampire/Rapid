@@ -3681,6 +3681,10 @@ li.issue-fix-item button:not(.actionable) .fix-icon {
     margin: 0 0 4px;
     color: #7a6a1a;
     font-size: 12px;
+    /* The notes are rendered with .text(), so newlines in the l10n strings are
+       the only way to break a line. `pre-line` honours them while still
+       collapsing runs of spaces and wrapping long lines normally. */
+    white-space: pre-line;
 }
 ul.plateau-additions.tag-list {
     margin: 6px 0 8px;
