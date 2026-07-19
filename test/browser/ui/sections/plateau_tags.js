@@ -99,11 +99,31 @@ describe('uiSectionPlateauTags', () => {
     expect(wrap.selectAll('.plateau-tags-note').text()).to.contain('conflict_note');
   });
 
-  it('shows AREA_MISMATCH as information only, with no fix button', () => {
+  it('shows AREA_MISMATCH with nothing to add as information only, with no fix button', () => {
     render(new MockContext(candidate('AREA_MISMATCH')));
     expect(wrap.select('.section-plateau-tags').classed('hide')).to.equal(false);
     expect(wrap.selectAll('button.plateau-apply').nodes().length).to.equal(0);
     expect(wrap.selectAll('.plateau-tags-note').text()).to.contain('area_mismatch_note');
+  });
+
+  it('offers the same Apply fix for an AREA_MISMATCH that still has tags to add', () => {
+    const cand = candidate('AREA_MISMATCH', { missingTags: ['height', 'ele'] });
+    render(new MockContext(cand));
+    expect(wrap.select('.section-plateau-tags').classed('hide')).to.equal(false);
+
+    // The area note still warns the mapper to check imagery first...
+    expect(wrap.selectAll('.plateau-tags-note').text()).to.contain('area_mismatch_note');
+
+    // ...but the proposal itself renders exactly as it does for a CANDIDATE.
+    const keys = wrap.selectAll('.plateau-additions li.tag-row input.key').nodes().map(n => n.value);
+    const vals = wrap.selectAll('.plateau-additions li.tag-row input.value').nodes().map(n => n.value);
+    expect(keys).to.eql(['height', 'ele']);
+    expect(vals).to.eql(['2.98', '69.1']);
+
+    const buttons = wrap.selectAll('button.plateau-apply').nodes();
+    expect(buttons.length).to.equal(1);
+    buttons[0].dispatchEvent(new MouseEvent('click'));
+    expect(applied).to.eql([cand]);
   });
 
   it('re-renders and hides once the candidate is cleared by a heightTransfer change event', () => {

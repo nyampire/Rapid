@@ -202,6 +202,39 @@ describe('HeightTransferMode', () => {
   });
 
 
+  it('binds the shortcut for an AREA_MISMATCH that still has tags to add', () => {
+    const context = makeContext();
+    const mode = new Rapid.HeightTransferMode(context);
+    mode.activate();
+    // The section offers an Apply button whenever there are tags to add, so the
+    // shortcut has to follow the same rule or the button works and the key doesn't.
+    mode.candidates = [makeCandidate({ state: 'AREA_MISMATCH', ratio: 4.0 })];
+    context._selectedIDs = ['w1'];
+    context._emit('modechange');
+
+    expect(context.keybinding().registered.length).to.equal(1);
+
+    context.keybinding().registered[0].handler({ preventDefault() {} });
+    expect(context.systems.editor.performCalls.length).to.equal(1);
+  });
+
+
+  it('does not bind the shortcut for a candidate with nothing to add', () => {
+    const context = makeContext();
+    const mode = new Rapid.HeightTransferMode(context);
+    mode.activate();
+    mode.candidates = [makeCandidate({
+      state: 'CONFLICT',
+      missingTags: [],
+      conflictingTags: [{ key: 'height', osmValue: '10', plateauValue: '12' }]
+    })];
+    context._selectedIDs = ['w1'];
+    context._emit('modechange');
+
+    expect(context.keybinding().registered.length).to.equal(0);
+  });
+
+
   it('does not bind the shortcut when the selection has no candidate', () => {
     const context = makeContext();
     const mode = new Rapid.HeightTransferMode(context);
