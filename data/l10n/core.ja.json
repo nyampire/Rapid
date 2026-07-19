@@ -745,13 +745,10 @@
     },
     "height_transfer": {
       "section_title": "Plateauタグ転記",
-      "current_tags": "現在のタグ",
       "additions": "Plateauから追加",
       "apply": "適用",
       "apply_tooltip": "Plateauのタグを選択中の建物に追加します。",
-      "cancel": "キャンセル",
       "conflict_note": "既存の OSM の値が Plateau と異なります。上書きは保留中です（フェーズ3、コミュニティでの合意待ち）。",
-      "covered_note": "対象タグはすべて存在し、Plateau の値と一致しています。",
       "area_mismatch_note": "Plateau の外形が OSM 建物の 2 倍以上の面積です。\n同じ建物を指していない可能性があるため、航空写真やMapillary等と見比べてから転記してください。"
     },
     "help": {
