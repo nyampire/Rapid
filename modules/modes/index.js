@@ -6,6 +6,7 @@ import { DragNodeMode } from './DragNodeMode.js';
 import { DragNoteMode } from './DragNoteMode.js';
 import { DrawAreaMode } from './DrawAreaMode.js';
 import { DrawLineMode } from './DrawLineMode.js';
+import { HeightTransferMode } from './HeightTransferMode.js';
 import { MoveMode } from './MoveMode.js';
 import { RotateMode } from './RotateMode.js';
 import { SaveMode } from './SaveMode.js';
@@ -21,6 +22,7 @@ export {
   DragNoteMode,
   DrawAreaMode,
   DrawLineMode,
+  HeightTransferMode,
   MoveMode,
   RotateMode,
   SaveMode,
@@ -30,6 +32,10 @@ export {
 
 
 // At init time, we will instantiate any that are in the 'available' collection.
+// Note: `HeightTransferMode` is intentionally NOT registered here. It isn't an
+// exclusive editing mode swapped in via `context.enter()` -- it needs to run
+// alongside whatever mode (browse/select/draw) the user is actually in. It's
+// registered as `context.systems.heightTransfer` instead (see modules/core/index.js).
 export const modes = {
   available: new Map()   // Map (id -> Mode constructor)
 };

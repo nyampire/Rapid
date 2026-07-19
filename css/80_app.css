@@ -3667,6 +3667,49 @@ li.issue-fix-item button:not(.actionable) .fix-icon {
     fill: #555;
 }
 
+/* PLATEAU tags section: a soft-yellow panel marks it as the special PLATEAU
+   proposal (distinct from the regular tag editor) without the harsh
+   validation-warning colors. The tag table keeps iD's `.tag-list`/`.tag-row`
+   look; the Apply button is amber and right-aligned. */
+.plateau-tags-panel {
+    background: #fffbe0;
+    border: 1px solid #ecdd9a;
+    border-radius: 6px;
+    padding: 8px 10px 10px;
+}
+.plateau-tags-note {
+    margin: 0 0 4px;
+    color: #7a6a1a;
+    font-size: 12px;
+}
+ul.plateau-additions.tag-list {
+    margin: 6px 0 8px;
+    padding: 0;
+    list-style: none;
+}
+.plateau-tags-actions {
+    margin-top: 8px;
+    text-align: right;
+}
+button.plateau-apply {
+    padding: 5px 18px;
+    border: 1px solid #e0c860;
+    border-radius: 4px;
+    background: #ffdf70;
+    color: #5a4a00;
+    font-weight: bold;
+    cursor: pointer;
+}
+@media (hover: hover) {
+    button.plateau-apply:hover {
+        background: #ffd84d;
+    }
+}
+button.plateau-apply:active,
+button.plateau-apply:focus {
+    background: #f5c92e;
+}
+
 .issue-container:not(.active) ul.issue-fix-list {
     display: none;
 }

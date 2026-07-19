@@ -124,6 +124,14 @@
               "text": "shortcuts.command.ignore_feature.label"
             },
             {
+              "section": "plateau",
+              "text": "shortcuts.with_plateau_selected"
+            },
+            {
+              "shortcuts": ["shortcuts.command.apply_plateau_tags.key"],
+              "text": "shortcuts.command.apply_plateau_tags.label"
+            },
+            {
               "section": "photo_selected",
               "text": "shortcuts.with_photo_selected"
             },

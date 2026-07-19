@@ -19,10 +19,18 @@ en:
     favorites: Favorites
     add_feature: Add Feature
     rapid_features: Assist
+    height_transfer: Tag transfer mode
     dashboard_label: Dashboard
     dashboard_tooltip: Open the Rapid Plateau progress dashboard (new tab)
     zoom_overview_label: Zoom 14
     zoom_overview_tooltip: Snap to zoom 14 so tiles stop loading and panning stays fast.<br>Buildings render from z16.
+  height_transfer:
+    section_title: Plateau tags
+    additions: Add from Plateau
+    apply: Apply
+    apply_tooltip: Add these Plateau tags to the selected building.
+    conflict_note: Existing OSM values differ from Plateau. Override deferred (Phase 3, pending community consultation).
+    area_mismatch_note: Area ratio outside 0.5–2.0. Likely block-level mapping or Plateau under-partition; please review manually.
   title:
     format:
       context: "{base} – {context}"
@@ -2598,6 +2606,7 @@ en:
     with_node_selected: With node selected
     with_way_selected: With way selected
     with_rapid_selected: With Rapid feature selected
+    with_plateau_selected: With a Plateau-tag building selected
     with_photo_selected: With photo selected
     drawing: Drawing
     commands: Commands
@@ -2660,6 +2669,9 @@ en:
       ignore_feature:
         label: Ignore the feature
         key: D   # <this key> to Ignore a suggested feature
+      apply_plateau_tags:
+        label: Apply Plateau tags to the selected building
+        key: A   # <this key> to apply the PLATEAU tags (bound only while a candidate building is selected)
 
       follow_sequence:
         label: Step to next / previous photo in sequence
