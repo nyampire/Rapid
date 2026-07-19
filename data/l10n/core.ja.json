@@ -866,8 +866,8 @@
         "open_source": "iDエディタは共同作業のオープンソースプロジェクトであり、現在のバージョンは{version} です。ソースコードは[GitHub上](https://github.com/openstreetmap/iD)にあります。",
         "open_source_h": "オープンソース",
         "open_source_help": "あなたも[翻訳](https://github.com/openstreetmap/iD/blob/develop/CONTRIBUTING.md#translating)したり[バグ報告](https://github.com/openstreetmap/iD/issues)したりすることでiDを支援できます。",
-        "open_source_plateau_h": "PLATEAU 統合版について",
-        "open_source_plateau": "このエディタは [PLATEAU](https://www.mlit.go.jp/plateau/) (国土交通省が公開する 3D 都市データ) を統合した Rapid のフォークです。次の 3 リポジトリで構成されています:\n\n- [Editor](https://github.com/nyampire/Rapid) — このフォーク (本リポジトリ)\n- [API](https://github.com/nyampire/rapid_plateau_api) — PLATEAU 建物データを配信するバックエンド\n- [Dashboard](https://github.com/nyampire/rapid_plateau_dashboard) — インポート進捗の可視化",
+        "open_source_plateau_h": "Plateau インポート機能について",
+        "open_source_plateau": "このエディタは、[Plateau](https://www.mlit.go.jp/plateau/) (国土交通省が公開する 3D 都市モデル) の建築物データを OpenStreetMap にインポートする作業を支援する機能を追加した Rapid のフォークです。次の 3 リポジトリで構成されています:\n\n- [Editor](https://github.com/nyampire/Rapid) — このフォーク (本リポジトリ)\n- [API](https://github.com/nyampire/rapid_plateau_api) — Plateau 建物データを配信するバックエンド\n- [Dashboard](https://github.com/nyampire/rapid_plateau_dashboard) — インポート進捗の可視化",
         "title": "ヘルプ",
         "welcome": "[OpenStreetMap](https://www.openstreetmap.org/)用のiDエディタへようこそ。このエディタを使うと自分のブラウザから直接OpenStreetMapを更新できます。"
       },

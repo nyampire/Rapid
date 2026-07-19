@@ -1,114 +1,232 @@
-# Plateau 開発者向け情報
+# Plateau Import Features — Developer Guide
 
-このドキュメントは、Rapid エディタにおける Plateau データ統合に関する開発者向け情報をまとめたものです。
+*日本語版: [PLATEAU.ja.md](PLATEAU.ja.md)*
 
-## アーキテクチャ概要
+This guide covers the features this fork adds to Rapid for importing Plateau
+building data into OpenStreetMap: how they are implemented and how to work on
+them.
 
-Plateau データは `MapWithAIService`（`modules/services/MapWithAIService.js`）を通じて取得・管理されます。
+This fork deals with **Plateau building data only**. Plateau also publishes
+bridges, tunnels, vegetation and other categories; those are out of scope.
 
-- **データセットID**: `plateauJapan`
-- **サービス**: `mapwithai`
-- **データ形式**: OSM XML
-- **タイルズームレベル**: 16以上
+The project spans three repositories.
+
+| Repository | Role |
+|---|---|
+| [nyampire/Rapid](https://github.com/nyampire/Rapid) | The editor (this repository) |
+| [nyampire/rapid_plateau_api](https://github.com/nyampire/rapid_plateau_api) | Backend that serves the building data |
+| [nyampire/rapid_plateau_dashboard](https://github.com/nyampire/rapid_plateau_dashboard) | Visualization of import progress |
+
+## Architecture overview
+
+Plateau data is fetched and managed by `PlateauService`
+(`modules/services/PlateauService.js`).
+
+- **Dataset ID**: `plateauJapan`
+- **Data format**: OSM XML
+- **Tile zoom**: 16 and above
+
+Plateau-specific handling (relations, conflation, coverage, highlighting) is
+kept independent of upstream's MapWithAI / PMTiles code, so that
+`git merge upstream/main` does not drag Plateau into the conflict.
+
+Data emitted by this service carries `__service__ = 'plateau'`.
+
+### Plateau-specific modules
+
+| Module | Role |
+|---|---|
+| `modules/services/PlateauService.js` | API fetching, relation assembly, conflation, coverage |
+| `modules/pixi/PixiLayerPlateauCoverage.js` | Coverage area fill |
+| `modules/pixi/PixiLayerHeightTransfer.js` | Tag-transfer candidate dots |
+| `modules/modes/HeightTransferMode.js` | Tag-transfer mode: recompute and apply |
+| `modules/core/lib/HeightTransferMatcher.js` | Matches Plateau outlines to OSM buildings |
+| `modules/ui/sections/plateau_tags.js` | Tag-transfer section in the entity editor |
+| `modules/actions/transfer_plateau_tags.js` | The edit action that adds the tags |
 
 ## Plateau API
 
-### 本番URL
+### Production URL
 
 ```
 https://rapid.nyampire.info/api/mapwithai/buildings
 ```
 
-`MapWithAIService.js` の `PLATEAU_API_URL` 定数にハードコードされています。
+Hardcoded in the `PLATEAU_API_URL` constant in `PlateauService.js`.
 
-### ローカル開発時のAPI切り替え
+### Pointing at a local API
 
-URLハッシュパラメータでAPIエンドポイントをランタイムで上書きできます。
+The endpoint can be overridden at runtime with a URL hash parameter.
 
 ```
 http://127.0.0.1:8080/#plateau_api_url=http://localhost:8000/api/mapwithai/buildings
 ```
 
-ローカルで Plateau API サーバー（`rapid_plateau_api`）を起動し、上記のようにアクセスすることで、本番APIの代わりにローカルAPIを使用できます。
+Run the Plateau API server (`rapid_plateau_api`) locally and load the editor as
+above to use it instead of production.
 
-## URLハッシュパラメータ一覧
+## URL hash parameters
 
-| パラメータ | 説明 | 例 |
+| Parameter | Purpose | Example |
 |---|---|---|
-| `plateau_api_url` | Plateau APIエンドポイントの上書き | `#plateau_api_url=http://localhost:8000/api/mapwithai/buildings` |
-| `plateau_conflation` | クライアントサイドconflationの無効化 | `#plateau_conflation=false` |
+| `plateau_api_url` | Override the Plateau API endpoint | `#plateau_api_url=http://localhost:8000/api/mapwithai/buildings` |
+| `plateau_conflation` | Disable client-side conflation | `#plateau_conflation=false` |
 
-## Plateau対応エリア表示（zoom 5〜14）
+## Tag transfer (height / ele / building:levels)
 
-`PixiLayerPlateauCoverage` がPlateauデータが存在するエリアを半透明オレンジで表示します。
+Transfers the height information Plateau carries onto existing OSM buildings.
+Enabled from the "Tag transfer mode" toolbar button.
 
-- **データソース**: `GET /api/mapwithai/coverage` （都市単位のConcaveHull）
-- **表示ズーム**: 5〜14（15以上で実際の建物データに切り替わるため自動非表示）
-- **色**: `#FE6100`（IBM Accessible Color Palette、色覚バリアフリー対応）
-- **モジュール**: `modules/pixi/PixiLayerPlateauCoverage.js`
-- **API 取得**: `MapWithAIService.loadCoverage()` でセッション内キャッシュ
+The target tags are `height`, `ele` and `building:levels`.
 
-サーバ側の `plateau_coverage` マテリアライズドビューが必要。
-詳細は [rapid_plateau_api README](https://github.com/nyampire/rapid_plateau_api) 参照。
+### How candidates are found
 
-## クライアントサイド Conflation
+`HeightTransferMatcher.findCandidates()` looks for the OSM building that
+contains the Plateau outline's representative point (the `representative_point`
+the API returns). A candidate is formed only when exactly one building contains
+it — zero or several are ambiguous and are skipped.
 
-Plateau 建物が既存のOSM建物と重複する場合、自動的に非表示にする機能です。
+It then looks at the area ratio (Plateau outline ÷ OSM building).
 
-### 仕組み
+| Area ratio | Treatment |
+|---|---|
+| Below 0.5 | Dropped from the candidate list |
+| 0.5 to 2.0 | Decided by tag state (see below) |
+| Above 2.0 | `AREA_MISMATCH` |
 
-1. 表示範囲内のOSM建物を収集
-2. 各Plateau建物に対し、バウンディングボックスで事前フィルタ
-3. Polyclip ライブラリでポリゴン交差を精密判定
-4. 重複するPlateau建物を非表示にする
+Outlines below 0.5 are dropped because Plateau models ancillary structures —
+rooftop stair enclosures, sheds — as their own `building=yes` rather than
+`building:part`. Their representative points land inside the larger OSM
+building, so without this rule they are pure noise. Their heights describe the
+ancillary structure, not the building.
 
-### キャッシュ
+When the ratio is in range, the state comes from the target tags. Precedence is
+missing → conflicting → matching.
 
-判定結果は `_plateauConflationCache`（`checked` / `rejected`）にキャッシュされ、OSMデータの変更時（`merge` イベント）に自動で無効化されます。
+| State | Meaning | Display |
+|---|---|---|
+| `CANDIDATE` | There are tags to add | Magenta dot (zoom 17+) |
+| `CONFLICT` | OSM and Plateau values differ | Dot (zoom 18+) and a note only |
+| `AREA_MISMATCH` | Plateau outline over twice the OSM building | Orange `!?` (zoom 18+) |
+| `COVERED` | All present and matching | Section hidden entirely |
 
-### 無効化
+### Applying
 
-開発・デバッグ時にconflationを無効にしてすべてのPlateauデータを表示するには：
+Selecting a building shows a "Plateau tag transfer" section in the entity
+editor. The tags to be added are listed read-only, and can be transferred with
+the Apply button or the `A` shortcut, which is bound only while such a building
+is selected.
+
+The section is structured so that the state decides whether a note appears,
+while the presence of tags to add decides whether the table and Apply button
+appear. Those two are independent, which is why an `AREA_MISMATCH` still offers
+the Apply button alongside its warning note. A `CONFLICT` needs no special case:
+state precedence guarantees it has no tags to add, so it shows the note alone.
+
+Existing values are never overwritten. Where OSM and Plateau disagree the
+section only shows a note; whether to overwrite is pending community
+consultation.
+
+## LOD2 relation support
+
+Plateau LOD2 buildings consist of an outline plus parts such as roof sections,
+grouped by a `type=building` relation. The API emits the relations and the
+client interprets them.
+
+- Conflation at relation granularity (when only part of it overlaps OSM)
+- Highlighting relation members on select and hover for multi-section buildings
+- "Add Entire Feature" (the whole relation) versus "Add Only This Feature"
+  (just that part). The latter is `Shift+A`
+
+## Coverage display (zoom 5-15)
+
+`PixiLayerPlateauCoverage` shows the areas where Plateau data exists as a
+translucent orange fill.
+
+- **Data source**: `GET /api/mapwithai/coverage` (per-city concave hulls)
+- **Zoom range**: 5-15 (hidden from 16, where the actual building data takes over)
+- **Colour**: `#FE6100` (IBM Accessible Color Palette, colour-blind safe)
+- **Module**: `modules/pixi/PixiLayerPlateauCoverage.js`
+- **Fetching**: `PlateauService.loadCoverage()`, cached for the session
+
+Requires the `plateau_coverage` materialized view on the server. See the
+[rapid_plateau_api README](https://github.com/nyampire/rapid_plateau_api).
+
+## Client-side conflation
+
+Hides Plateau buildings that overlap an existing OSM building.
+
+### How it works
+
+1. Collect the OSM buildings in view
+2. Pre-filter each Plateau building by bounding box
+3. Decide polygon intersection precisely with the Polyclip library
+4. Hide the overlapping Plateau buildings
+
+### Caching
+
+Results are cached in `_plateauConflationCache` (`checked` / `rejected`) and
+invalidated automatically when OSM data changes (the `merge` event).
+
+### Disabling
+
+To show all Plateau data with conflation off, for development or debugging:
 
 ```
 http://127.0.0.1:8080/#plateau_conflation=false
 ```
 
-## テスト
-
-Plateau 関連のテストは以下のファイルにあります：
-
-- `test/browser/services/MapWithAIService.test.js` — XMLパース、conflationロジック
-- `test/browser/core/RapidSystem.test.js` — データセットの追加・有効化・無効化・トグル
+## Tests
 
 ```bash
 npm run test:browser
 ```
 
-## 過去の主要な変更
+The Plateau tests live mainly in:
 
-- **対応エリア表示**: [#9](https://github.com/nyampire/Rapid/issues/9) ✅ 完了 (PR #10)
-  - `PixiLayerPlateauCoverage` 追加
-  - サーバ側 [rapid_plateau_api #10](https://github.com/nyampire/rapid_plateau_api/pull/10) でAPI実装
-- **デフォルト表示位置**: 日本に変更（zoom 5.52/36.934/139.144）
-- **OAuth client_id**: Plateau 用にハードコード変更（PR #8）
+- `test/browser/services/PlateauService.test.js` — XML parsing, conflation, relations
+- `test/browser/core/lib/HeightTransferMatcher.test.js` — candidate rules and area ratio
+- `test/browser/modes/HeightTransferMode.test.js` — apply, shortcut, recompute
+- `test/browser/ui/sections/plateau_tags.js` — the editor section
+- `test/browser/core/RapidSystem.test.js` — dataset add / enable / toggle
 
-## 関連 Issue（オープン）
+## Local development
 
-- [#3 Keyboard shortcut conflict (R / Shift+R)](https://github.com/nyampire/Rapid/issues/3)
-- [#4 選択中のOSMオブジェクトと重複するPlateauオブジェクトを検索・表示する機能](https://github.com/nyampire/Rapid/issues/4)
-- [#5 OSM建物のジオメトリをPlateauジオメトリで置換する機能（履歴保持）](https://github.com/nyampire/Rapid/issues/5)
-- [#6 Plateau APIエラー時のフォールバックとユーザー通知の改善](https://github.com/nyampire/Rapid/issues/6)
-- [#7 ビルド時にclient_id/client_secretを環境変数から注入する仕組み](https://github.com/nyampire/Rapid/issues/7)
-- [#8 PlateauからOSMへのタグマッピングルールのカスタマイズ機能](https://github.com/nyampire/Rapid/issues/8)
-- [#11 テストカバレッジの拡充](https://github.com/nyampire/Rapid/issues/11)
+```bash
+npm install
+npm run start         # http://127.0.0.1:8080
+```
 
-## サーバ側との関係
+### Adding translations
 
-サーバ側リポジトリ: [nyampire/rapid_plateau_api](https://github.com/nyampire/rapid_plateau_api)
+The English source for UI strings is `data/core.yaml`. `data/l10n/core.en.json`
+is generated from it — do not edit that file directly.
 
-クライアントが利用する主な API:
+Fork-specific Japanese strings are edited directly in `data/l10n/core.ja.json`
+(upstream's strings come from Transifex).
+
+If a string you added does not show up, suspect the browser cache.
+`data/l10n/*.min.json` is cached, so a new key can keep rendering as
+"Missing translation" until the cache turns over. An incognito window tells the
+two apart.
+
+## Relationship to the server
+
+Server repository: [nyampire/rapid_plateau_api](https://github.com/nyampire/rapid_plateau_api)
+
+The main APIs the client uses:
+
 - `GET /api/mapwithai/buildings?bbox=...` → OSM XML
-- `GET /api/mapwithai/coverage` → GeoJSON FeatureCollection（対応エリア）
+- `GET /api/mapwithai/coverage` → GeoJSON FeatureCollection (coverage areas)
 
-サーバ側のアーキテクチャやデータベース構造は、上記リポジトリの README / ARCHITECTURE.md 参照。
+Building data includes `representative_point`, a point guaranteed to fall inside
+the outline, which tag transfer uses. An interior point is used rather than a
+centroid because the centroid of a concave polygon can fall outside it.
+
+For the server's architecture and database schema, see that repository's
+README / ARCHITECTURE.md.
+
+## Issues
+
+For open problems and features under discussion, see the
+[issue tracker](https://github.com/nyampire/Rapid/issues).
