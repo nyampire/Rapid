@@ -7,6 +7,7 @@ import { uiIcon } from './icon.js';
 import { utilRebind } from '../util/index.js';
 
 import { uiSectionEntityIssues } from './sections/entity_issues.js';
+import { uiSectionPlateauTags } from './sections/plateau_tags.js';
 import { uiSectionFeatureType } from './sections/feature_type.js';
 import { uiSectionPresetFields } from './sections/preset_fields.js';
 import { uiSectionRawMemberEditor } from './sections/raw_member_editor.js';
@@ -33,6 +34,7 @@ export function uiEntityEditor(context) {
     uiSectionSelectionList(context),
     uiSectionFeatureType(context).on('choose', function(selected) { dispatch.call('choose', this, selected); }),
     uiSectionEntityIssues(context),
+    uiSectionPlateauTags(context),
     uiSectionPresetFields(context).on('change', _changeTags).on('revert', _revertTags),
     uiSectionRawTagEditor(context, 'raw-tag-editor').on('change', _changeRawTags),
     uiSectionRawMemberEditor(context),

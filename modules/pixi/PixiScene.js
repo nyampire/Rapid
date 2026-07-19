@@ -20,6 +20,7 @@ import { PixiLayerRapid } from './PixiLayerRapid.js';
 import { PixiLayerRapidOverlay } from './PixiLayerRapidOverlay.js';
 import { PixiLayerStreetsidePhotos } from './PixiLayerStreetsidePhotos.js';
 import { PixiLayerGeoScribble } from './PixiLayerGeoScribble.js';
+import { PixiLayerHeightTransfer } from './PixiLayerHeightTransfer.js';
 
 
 // Convert a single value, an Array of values, or a Set of values.
@@ -84,6 +85,7 @@ export class PixiScene extends EventEmitter {
       new PixiLayerOsmNotes(this, 'notes'),
       new PixiLayerKeepRight(this, 'keepRight'),
       new PixiLayerOsmose(this, 'osmose'),
+      new PixiLayerHeightTransfer(this, 'height-transfer'),
 
       new PixiLayerMapillaryPhotos(this, 'mapillary'),
       new PixiLayerKartaPhotos(this, 'kartaview'),

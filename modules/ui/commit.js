@@ -171,6 +171,30 @@ export function uiCommit(context) {
       tags.comment = [...mrComments].join('\n');
     }
 
+    // PLATEAU height-transfer comment preset (Task 9): once the user has applied at
+    // least one PLATEAU height transfer this session, prefill (or append to) the
+    // changeset comment. Never clobber anything the user already typed -- append
+    // with '; ' instead -- and don't append twice (idempotent across re-renders of
+    // this function, which runs on every commit-panel render, not just the first).
+    //
+    // Known limitation (Phase 1): `transferredIDs` is session-scoped. After a page
+    // reload with unsaved height-transfer edits, the set is empty until the user
+    // reactivates the mode -- so this preset silently skips on a reload-then-save
+    // path unless the mode is toggled on first. Applied tags are still present in
+    // the editor's auto-saved graph and will save correctly; only the preset
+    // wording is affected. Follow-up option: source the signal from
+    // `editor.history` walking `transfer_plateau_tags` annotations directly.
+    const heightTransfer = context.systems.heightTransfer;
+    if (heightTransfer?.transferredIDs?.size > 0) {
+      const preset = 'Add height/ele/building:levels from PLATEAU building data';
+      const currentComment = tags.comment || '';
+      if (!currentComment.trim()) {
+        tags.comment = preset;
+      } else if (!currentComment.includes('PLATEAU')) {
+        tags.comment = `${currentComment}; ${preset}`;
+      }
+    }
+
     // Include '#maproulette' `hashtag`, if Maproulette was used..
     if (usedMapRoulette) {
       const hashtags = new Set((tags.hashtags || '').split(';'));
