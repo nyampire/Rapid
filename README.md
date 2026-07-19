@@ -1,3 +1,19 @@
+> ## This is a fork with added features for importing Plateau data
+>
+> This repository is a fork of [facebook/Rapid](https://github.com/facebook/Rapid) with
+> added features for importing building data from [Plateau](https://www.mlit.go.jp/plateau/),
+> Japan's open 3D city model published by the Ministry of Land, Infrastructure, Transport
+> and Tourism, into OpenStreetMap. A running instance is at **<https://rapid.nyampire.info/>**.
+>
+> For what this fork adds, how it is built, and how to work on it, see
+> **[PLATEAU.md](PLATEAU.md)** (日本語版: **[PLATEAU.ja.md](PLATEAU.ja.md)**).
+> The procedure for pulling in upstream releases is in [UPSTREAM_MERGE.md](UPSTREAM_MERGE.md).
+>
+> Everything below is upstream Rapid's own README, left as-is. Where it differs for this
+> fork — such as where to file issues or feature requests — PLATEAU.md takes precedence.
+
+---
+
 [![build](https://github.com/facebook/Rapid/actions/workflows/build.yml/badge.svg?branch=main)](https://github.com/facebook/Rapid/actions/workflows/build.yml)
 [![npm version](https://badge.fury.io/js/%40rapideditor%2Frapid.svg)](https://badge.fury.io/js/%40rapideditor%2Frapid)
 
