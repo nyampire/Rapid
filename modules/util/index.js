@@ -15,3 +15,4 @@ export { utilSetTransform } from './util.js';
 export { utilTotalExtent } from './util.js';
 export { utilTriggerEvent } from './trigger_event.js';
 export { utilBuildingRelationInfo } from './building_relation.js';
+export { utilApplyPlateauSourceTags, utilClearPlateauSourceRef } from './plateau_changeset_tags.js';
