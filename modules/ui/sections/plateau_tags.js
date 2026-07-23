@@ -125,6 +125,50 @@ export function uiSectionPlateauTags(context) {
         .title(l10n.t('height_transfer.apply_tooltip'))
         .shortcut(l10n.t('shortcuts.command.apply_plateau_tags.key'))
       );
+
+    // --- geometry replace ---
+    const inPreview = heightTransfer.replacePreview && heightTransfer.replacePreview.osmFeature?.id === cand.osmFeature?.id;
+
+    if (!cand.replaceable && !inPreview) {
+      // building shares nodes with a neighbour, or is AREA_MISMATCH: no replace here
+    } else if (!inPreview) {
+      $panel.append('div')
+        .attr('class', 'plateau-tags-actions')
+        .append('button')
+        .attr('class', 'plateau-replace')
+        .text(l10n.t('height_transfer.replace_geometry'))
+        .on('click', () => heightTransfer.previewReplace(cand));
+    } else {
+      // preview mode: list tags that will be filled, then confirm/cancel
+      const fillKeys = Object.keys(cand.plateauFeature?.tags ?? {}).filter(k => {
+        const ov = cand.osmFeature?.tags?.[k];
+        return (ov === undefined || ov === null || ov === '')
+          && !['conn', 'dupe', 'orig_id', 'debug_way_id', 'import'].includes(k);
+      });
+      $panel.append('p')
+        .attr('class', 'plateau-tags-note')
+        .text(l10n.t('height_transfer.replace_preview_note'));
+      if (fillKeys.length) {
+        $panel.append('p').attr('class', 'plateau-tags-note')
+          .text(l10n.t('height_transfer.additions'));
+        const $list = $panel.append('ul').attr('class', 'tag-list plateau-additions');
+        for (const key of fillKeys) {
+          const $inner = $list.append('li').attr('class', 'tag-row readonly').append('div').attr('class', 'inner-wrap');
+          $inner.append('div').attr('class', 'key-wrap').append('input')
+            .attr('type', 'text').attr('class', 'key').attr('readonly', true).property('value', key);
+          $inner.append('div').attr('class', 'value-wrap').append('input')
+            .attr('type', 'text').attr('class', 'value').attr('readonly', true)
+            .property('value', cand.plateauFeature.tags[key]);
+        }
+      }
+      const $actions = $panel.append('div').attr('class', 'plateau-tags-actions');
+      $actions.append('button').attr('class', 'plateau-replace-confirm')
+        .text(l10n.t('height_transfer.replace_confirm'))
+        .on('click', () => heightTransfer.confirmReplace());
+      $actions.append('button').attr('class', 'plateau-replace-cancel')
+        .text(l10n.t('height_transfer.replace_cancel'))
+        .on('click', () => heightTransfer.cancelReplace());
+    }
   }
 
 

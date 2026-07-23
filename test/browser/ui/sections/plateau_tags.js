@@ -1,5 +1,5 @@
 describe('uiSectionPlateauTags', () => {
-  let section, wrap, applied;
+  let section, wrap, applied, previewed, confirmed, cancelled;
 
   class MockL10n {
     isRTL() { return false; }
@@ -11,11 +11,18 @@ describe('uiSectionPlateauTags', () => {
     constructor(candidate) {
       this._cand = candidate;
       this._handlers = {};
+      this.replacePreview = null;
       applied = [];
+      previewed = [];
+      confirmed = 0;
+      cancelled = 0;
     }
     getCandidateForOSM(id) { return (this._cand && this._cand.osmFeature.id === id) ? this._cand : null; }
     apply(cand) { applied.push(cand); }
     setCandidate(cand) { this._cand = cand; }
+    previewReplace(cand) { previewed.push(cand); this.replacePreview = cand; this.emit('change'); }
+    confirmReplace() { confirmed++; this.replacePreview = null; this.emit('change'); }
+    cancelReplace() { cancelled++; this.replacePreview = null; this.emit('change'); }
     on(evt, fn) {
       (this._handlers[evt] = this._handlers[evt] || []).push(fn);
     }
@@ -138,5 +145,60 @@ describe('uiSectionPlateauTags', () => {
     context.systems.heightTransfer.emit('change');
 
     expect(wrap.select('.section-plateau-tags').classed('hide')).to.equal(true);
+  });
+
+  it('shows a replace-geometry button for a replaceable candidate', () => {
+    const cand = candidate('CANDIDATE', { missingTags: ['height', 'ele'], replaceable: true });
+    const context = new MockContext(cand);
+    render(context);
+    const buttons = wrap.selectAll('button.plateau-replace').nodes();
+    expect(buttons.length).to.equal(1);
+    expect(wrap.selectAll('button.plateau-replace-confirm').nodes().length).to.equal(0);
+    expect(wrap.selectAll('button.plateau-replace-cancel').nodes().length).to.equal(0);
+
+    buttons[0].dispatchEvent(new MouseEvent('click'));
+    expect(previewed).to.eql([cand]);
+  });
+
+  it('does not show a replace-geometry button for a non-replaceable candidate', () => {
+    const cand = candidate('CANDIDATE', { missingTags: ['height', 'ele'], replaceable: false });
+    render(new MockContext(cand));
+    expect(wrap.selectAll('button.plateau-replace').nodes().length).to.equal(0);
+  });
+
+  it('shows confirm/cancel and the fill-tag list while a replace is in preview', () => {
+    const cand = candidate('CANDIDATE', { missingTags: ['height', 'ele'], replaceable: true });
+    const context = new MockContext(cand);
+    context.systems.heightTransfer.replacePreview = cand;
+    render(context);
+
+    expect(wrap.selectAll('button.plateau-replace').nodes().length).to.equal(0);
+    const confirmBtn = wrap.selectAll('button.plateau-replace-confirm').nodes();
+    const cancelBtn = wrap.selectAll('button.plateau-replace-cancel').nodes();
+    expect(confirmBtn.length).to.equal(1);
+    expect(cancelBtn.length).to.equal(1);
+
+    // fill-tag list: both height and ele are missing from the OSM feature's tags.
+    // Note: the existing Apply block's own tag-list also renders (missingTags is
+    // non-empty, which is what gates renderContent past its early return), so the
+    // same two keys appear twice -- once from Apply, once from the replace preview.
+    const keys = wrap.selectAll('.plateau-additions li.tag-row input.key').nodes().map(n => n.value);
+    expect(keys).to.include('height');
+    expect(keys).to.include('ele');
+
+    confirmBtn[0].dispatchEvent(new MouseEvent('click'));
+    expect(confirmed).to.equal(1);
+  });
+
+  it('cancels a replace preview via the cancel button', () => {
+    const cand = candidate('CANDIDATE', { missingTags: ['height', 'ele'], replaceable: true });
+    const context = new MockContext(cand);
+    context.systems.heightTransfer.replacePreview = cand;
+    render(context);
+
+    const cancelBtn = wrap.selectAll('button.plateau-replace-cancel').nodes();
+    expect(cancelBtn.length).to.equal(1);
+    cancelBtn[0].dispatchEvent(new MouseEvent('click'));
+    expect(cancelled).to.equal(1);
   });
 });
