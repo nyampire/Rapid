@@ -1,5 +1,6 @@
 import { uiSection } from '../section.js';
 import { uiTooltip } from '../tooltip.js';
+import { INTERNAL_TAGS } from '../../actions/replace_building_geometry.js';
 
 
 // States that get an explanatory note above the proposal. CANDIDATE needs none.
@@ -172,7 +173,7 @@ export function uiSectionPlateauTags(context) {
     const fillKeys = Object.keys(cand.plateauFeature?.tags ?? {}).filter(k => {
       const ov = cand.osmFeature?.tags?.[k];
       return (ov === undefined || ov === null || ov === '')
-        && !['conn', 'dupe', 'orig_id', 'debug_way_id', 'import'].includes(k);
+        && !INTERNAL_TAGS.has(k);
     });
     $panel.append('p')
       .attr('class', 'plateau-tags-note')

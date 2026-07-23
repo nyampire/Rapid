@@ -51,6 +51,21 @@ describe('actionReplaceBuildingGeometry', () => {
     expect(g2.hasEntity('on0')).to.be.undefined;   // old corner gone
   });
 
+  it('keeps an old node carrying interesting tags, even if orphaned', () => {
+    const nodes = OSM_SQR.map((loc, i) => Rapid.osmNode({ id: `o${i}`, loc }));
+    // Tag one corner as an entrance -- a real, interesting OSM node.
+    nodes[0] = nodes[0].update({ tags: { entrance: 'yes' } });
+    const nodeIDs = [...nodes.map(n => n.id), nodes[0].id];
+    const way = Rapid.osmWay({ id: 'ow', tags: { building: 'yes' }, nodes: nodeIDs });
+    const osmGraph = new Rapid.Graph([...nodes, way]);
+
+    const pl = building('p', PL_SQR, { building: 'yes' });
+    const g2 = Rapid.actionReplaceBuildingGeometry('ow', pl.way, new Rapid.Graph(pl.entities))(osmGraph);
+
+    expect(g2.hasEntity('o0')).to.exist;               // tagged node survives, detached
+    expect(g2.hasEntity('o1')).to.be.undefined;         // plain untagged orphan still removed
+  });
+
   it('keeps an old node still used by another way', () => {
     const osm = building('o', OSM_SQR, { building: 'yes' });
     // a second way reuses OSM corner on0

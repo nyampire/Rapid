@@ -403,6 +403,7 @@ describe('HeightTransferMode', () => {
     expect(editor.commitCalls[0].annotation).to.eql({
       type: 'replace_building_geometry', entityID: 'w1', plateauID: 'p1'
     });
+    expect(mode.transferredIDs.has('p1')).to.be.true;
     expect(mode.replacePreview).to.equal(null);
   });
 
