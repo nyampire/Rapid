@@ -21,14 +21,14 @@
       "favorites": "Favorites",
       "add_feature": "Add Feature",
       "rapid_features": "Assist",
-      "height_transfer": "Tag transfer mode",
+      "height_transfer": "Plateau advanced mode",
       "dashboard_label": "Dashboard",
       "dashboard_tooltip": "Open the Rapid Plateau progress dashboard (new tab)",
       "zoom_overview_label": "Zoom 14",
       "zoom_overview_tooltip": "Snap to zoom 14 so tiles stop loading and panning stays fast.<br>Buildings render from z16."
     },
     "height_transfer": {
-      "section_title": "Plateau tags",
+      "section_title": "Plateau",
       "additions": "Add from Plateau",
       "apply": "Apply",
       "apply_tooltip": "Add these Plateau tags to the selected building.",

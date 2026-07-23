@@ -744,7 +744,7 @@
       "vertex": "交点"
     },
     "height_transfer": {
-      "section_title": "Plateauタグ転記",
+      "section_title": "Plateau",
       "additions": "Plateauから追加",
       "apply": "適用",
       "apply_tooltip": "Plateauのタグを選択中の建物に追加します。",
@@ -3552,7 +3552,7 @@
     },
     "toolbar": {
       "add_feature": "地物を追加",
-      "height_transfer": "タグ転記モード",
+      "height_transfer": "Plateau 拡張モード",
       "dashboard_label": "ダッシュボード",
       "dashboard_tooltip": "Rapid Plateau 進捗ダッシュボードを新しいタブで開く",
       "zoom_overview_label": "Zoom 14",
