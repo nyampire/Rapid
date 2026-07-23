@@ -222,5 +222,34 @@ describe('HeightTransferMatcher', () => {
       expect(out[0].state).to.equal('CANDIDATE');
       expect(out[0].missingTags).to.eql(['height']);
     });
+
+    it('marks an isolated building replaceable', () => {
+      const p = realBuilding('p', SQR_CORNERS, { building: 'yes', area: 'yes', height: '12' });
+      p.way.representativePoint = SQR_CENTER;
+      const o = realBuilding('o', SQR_CORNERS, { building: 'yes', area: 'yes' });
+      const out = Rapid.findCandidates({
+        plateauEntities: [p.way], osmEntities: [o.way],
+        plateauGraph: new Rapid.Graph(p.entities), osmGraph: new Rapid.Graph(o.entities),
+        transferredIDs: new Set(), acceptIDs: new Set(), ignoreIDs: new Set()
+      });
+      expect(out).to.have.lengthOf(1);
+      expect(out[0].replaceable).to.be.true;
+    });
+
+    it('marks a building sharing a node with another building NOT replaceable', () => {
+      const p = realBuilding('p', SQR_CORNERS, { building: 'yes', area: 'yes', height: '12' });
+      p.way.representativePoint = SQR_CENTER;
+      const o = realBuilding('o', SQR_CORNERS, { building: 'yes', area: 'yes' });
+      // neighbour building reuses OSM corner `on0`
+      const neigh = Rapid.osmWay({ id: 'nw', tags: { building: 'yes' }, nodes: ['on0', 'on1'] });
+      const osmGraph = new Rapid.Graph([...o.entities, neigh]);
+      const out = Rapid.findCandidates({
+        plateauEntities: [p.way], osmEntities: [o.way],
+        plateauGraph: new Rapid.Graph(p.entities), osmGraph,
+        transferredIDs: new Set(), acceptIDs: new Set(), ignoreIDs: new Set()
+      });
+      expect(out).to.have.lengthOf(1);
+      expect(out[0].replaceable).to.be.false;
+    });
   });
 });
