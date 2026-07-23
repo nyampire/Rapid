@@ -407,6 +407,37 @@ describe('HeightTransferMode', () => {
   });
 
 
+  it('previewReplace is a no-op when candidate.replaceable is false', () => {
+    const mode = makeActiveMode();
+    const cand = { osmFeature: { id: 'w1' }, plateauFeature: { id: 'p1', nodes: [], tags: {} },
+                   plateauGraph: {}, replaceable: false };
+    mode.previewReplace(cand);
+    expect(mode.replacePreview).to.equal(null);
+  });
+
+
+  it('selecting a different building clears an active replacePreview and emits change', () => {
+    const mode = makeActiveMode();
+    const context = mode.context;
+    const cand = { osmFeature: { id: 'w1' }, plateauFeature: { id: 'p1', nodes: [], tags: {} },
+                   plateauGraph: {}, replaceable: true };
+    mode.previewReplace(cand);
+    expect(mode.replacePreview).to.equal(cand);
+
+    // The auto-clear must go through `cancelReplace()` (emit + redraw), not a silent
+    // assignment -- otherwise nothing repaints on a pure selection change and the
+    // preview outline is left as a ghost until some unrelated redraw happens to fire.
+    let changeCount = 0;
+    mode.on('change', () => { changeCount++; });
+
+    context._selectedIDs = ['w999'];   // a different building than the previewed one
+    context._emit('modechange');
+
+    expect(mode.replacePreview).to.equal(null);
+    expect(changeCount).to.be.greaterThan(0);
+  });
+
+
   describe('getCandidateForOSM', () => {
     it('returns null when the system is inactive', () => {
       const mode = new Rapid.HeightTransferMode(makeContext());

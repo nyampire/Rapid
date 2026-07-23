@@ -303,8 +303,11 @@ export class HeightTransferMode extends AbstractSystem {
 
     // A selection change (including deselect) invalidates any in-progress replace
     // preview -- don't leave a ghost outline for a building the user navigated away from.
+    // Route through `cancelReplace()` (not a bare assignment) so this also emits 'change'
+    // and requests a redraw -- a pure selection change triggers neither an edit nor a
+    // viewport move, so without that nothing else would repaint the ghost outline away.
     if (this.replacePreview && !(context.selectedIDs?.() ?? []).includes(this.replacePreview.osmFeature?.id)) {
-      this.replacePreview = null;
+      this.cancelReplace();
     }
 
     const keybinding = context.keybinding?.();
