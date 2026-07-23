@@ -166,7 +166,7 @@ describe('uiSectionPlateauTags', () => {
     expect(wrap.selectAll('button.plateau-replace').nodes().length).to.equal(0);
   });
 
-  it('shows confirm/cancel and the fill-tag list while a replace is in preview', () => {
+  it('shows confirm/cancel and the fill-tag list while a replace is in preview, with no duplicate Apply block', () => {
     const cand = candidate('CANDIDATE', { missingTags: ['height', 'ele'], replaceable: true });
     const context = new MockContext(cand);
     context.systems.heightTransfer.replacePreview = cand;
@@ -178,13 +178,14 @@ describe('uiSectionPlateauTags', () => {
     expect(confirmBtn.length).to.equal(1);
     expect(cancelBtn.length).to.equal(1);
 
-    // fill-tag list: both height and ele are missing from the OSM feature's tags.
-    // Note: the existing Apply block's own tag-list also renders (missingTags is
-    // non-empty, which is what gates renderContent past its early return), so the
-    // same two keys appear twice -- once from Apply, once from the replace preview.
+    // The preview view replaces (not augments) the normal tag-Apply block, so
+    // the Apply button must not also render, and the fill-tag list must contain
+    // each key exactly once -- not doubled up with the Apply block's own list.
+    expect(wrap.selectAll('button.plateau-apply').nodes().length).to.equal(0);
     const keys = wrap.selectAll('.plateau-additions li.tag-row input.key').nodes().map(n => n.value);
-    expect(keys).to.include('height');
-    expect(keys).to.include('ele');
+    const vals = wrap.selectAll('.plateau-additions li.tag-row input.value').nodes().map(n => n.value);
+    expect(keys).to.eql(['height', 'ele']);
+    expect(vals).to.eql(['2.98', '69.1']);
 
     confirmBtn[0].dispatchEvent(new MouseEvent('click'));
     expect(confirmed).to.equal(1);
@@ -200,5 +201,48 @@ describe('uiSectionPlateauTags', () => {
     expect(cancelBtn.length).to.equal(1);
     cancelBtn[0].dispatchEvent(new MouseEvent('click'));
     expect(cancelled).to.equal(1);
+  });
+
+  it('shows a replace-geometry button for a replaceable CONFLICT candidate, alongside the conflict note', () => {
+    // CONFLICT always has empty missingTags (see the CONFLICT-only test above),
+    // so this candidate never gets an Apply block -- the Replace button must not
+    // be gated behind `missingTags.length` the way the old code accidentally was.
+    const cand = candidate('CONFLICT', {
+      conflictingTags: [{ key: 'height', osmValue: '10', plateauValue: '2.98' }],
+      replaceable: true
+    });
+    render(new MockContext(cand));
+    expect(wrap.select('.section-plateau-tags').classed('hide')).to.equal(false);
+    expect(wrap.selectAll('.plateau-tags-note').text()).to.contain('conflict_note');
+    expect(wrap.selectAll('button.plateau-apply').nodes().length).to.equal(0);
+    expect(wrap.selectAll('button.plateau-replace').nodes().length).to.equal(1);
+  });
+
+  it('shows the section and a replace-geometry button for a replaceable COVERED candidate', () => {
+    // COVERED is normally hidden entirely (see the "is hidden for a COVERED
+    // candidate" test above), but a `replaceable` COVERED building -- fully
+    // tagged already, geometry still worth swapping -- must still surface here.
+    const cand = candidate('COVERED', { replaceable: true });
+    render(new MockContext(cand));
+    expect(wrap.select('.section-plateau-tags').classed('hide')).to.equal(false);
+    expect(wrap.selectAll('button.plateau-apply').nodes().length).to.equal(0);
+    expect(wrap.selectAll('button.plateau-replace').nodes().length).to.equal(1);
+  });
+
+  it('previews a replaceable COVERED candidate with just a note and confirm/cancel (nothing to fill)', () => {
+    // Unlike the default fixture (whose osmFeature is missing height/ele), give
+    // this OSM feature every tag the Plateau feature has, so the preview's own
+    // fillKeys computation genuinely has nothing left to offer.
+    const cand = candidate('COVERED', {
+      replaceable: true,
+      osmFeature: { id: 'w1', type: 'way', tags: { building: 'yes', height: '2.98', ele: '69.1' } }
+    });
+    const context = new MockContext(cand);
+    context.systems.heightTransfer.replacePreview = cand;
+    render(context);
+    expect(wrap.select('.section-plateau-tags').classed('hide')).to.equal(false);
+    expect(wrap.selectAll('button.plateau-replace-confirm').nodes().length).to.equal(1);
+    expect(wrap.selectAll('button.plateau-replace-cancel').nodes().length).to.equal(1);
+    expect(wrap.selectAll('.plateau-additions li.tag-row').nodes().length).to.equal(0);
   });
 });
