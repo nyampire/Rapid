@@ -749,7 +749,11 @@
       "apply": "適用",
       "apply_tooltip": "Plateauのタグを選択中の建物に追加します。",
       "conflict_note": "既存の OSM の値が Plateau と異なります。上書きは保留中です（フェーズ3、コミュニティでの合意待ち）。",
-      "area_mismatch_note": "Plateau の外形が OSM 建物の 2 倍以上の面積です。\n同じ建物を指していない可能性があるため、航空写真やMapillary等と見比べてから転記してください。"
+      "area_mismatch_note": "Plateau の外形が OSM 建物の 2 倍以上の面積です。\n同じ建物を指していない可能性があるため、航空写真やMapillary等と見比べてから転記してください。",
+      "replace_geometry": "形状をPlateauで置換",
+      "replace_confirm": "置換を確定",
+      "replace_cancel": "キャンセル",
+      "replace_preview_note": "置換後の形状のプレビューです。既存タグは保持し、空のタグのみPlateauから補完します。"
     },
     "help": {
       "areas": {
