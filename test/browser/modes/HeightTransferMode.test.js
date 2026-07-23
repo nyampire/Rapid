@@ -121,6 +121,16 @@ describe('HeightTransferMode', () => {
   }
 
 
+  // Builds a `HeightTransferMode` against a fresh (or caller-supplied) mock
+  // context and activates it -- the construction+activate sequence that most
+  // tests below need before they can exercise the mode.
+  function makeActiveMode(context = makeContext()) {
+    const mode = new Rapid.HeightTransferMode(context);
+    mode.activate();
+    return mode;
+  }
+
+
   it('starts inactive with empty state', () => {
     const mode = new Rapid.HeightTransferMode(makeContext());
     expect(mode.active).to.equal(false);
@@ -146,31 +156,25 @@ describe('HeightTransferMode', () => {
     // The renderer is on-demand: without an explicit redraw, the candidate-dot
     // layer isn't repainted until some other event triggers a redraw, so the
     // dots appear seconds after the mode is toggled on.
-    const context = makeContext();
-    const mode = new Rapid.HeightTransferMode(context);
+    const mode = makeActiveMode();
 
-    mode.activate();
-
-    expect(context.systems.gfx.immediateRedrawCalls).to.be.greaterThan(0);
+    expect(mode.context.systems.gfx.immediateRedrawCalls).to.be.greaterThan(0);
   });
 
 
   it('deactivate() requests an immediate redraw so the dots clear at once', () => {
-    const context = makeContext();
-    const mode = new Rapid.HeightTransferMode(context);
-    mode.activate();
-    context.systems.gfx.immediateRedrawCalls = 0;   // reset after activate
+    const mode = makeActiveMode();
+    mode.context.systems.gfx.immediateRedrawCalls = 0;   // reset after activate
 
     mode.deactivate();
 
-    expect(context.systems.gfx.immediateRedrawCalls).to.be.greaterThan(0);
+    expect(mode.context.systems.gfx.immediateRedrawCalls).to.be.greaterThan(0);
   });
 
 
   it('binds the apply shortcut only while a candidate building is selected', () => {
-    const context = makeContext();
-    const mode = new Rapid.HeightTransferMode(context);
-    mode.activate();
+    const mode = makeActiveMode();
+    const context = mode.context;
     mode.candidates = [makeCandidate()];   // 'w1' is a CANDIDATE
 
     // No selection yet -> not bound (so it never clobbers Rapid's own `A`).
@@ -189,9 +193,8 @@ describe('HeightTransferMode', () => {
 
 
   it('the apply shortcut applies the selected candidate building', () => {
-    const context = makeContext();
-    const mode = new Rapid.HeightTransferMode(context);
-    mode.activate();
+    const mode = makeActiveMode();
+    const context = mode.context;
     mode.candidates = [makeCandidate()];   // osmFeature.id 'w1', state CANDIDATE
     context._selectedIDs = ['w1'];
     context._emit('modechange');           // selection changed -> binds the shortcut
@@ -203,9 +206,8 @@ describe('HeightTransferMode', () => {
 
 
   it('binds the shortcut for an AREA_MISMATCH that still has tags to add', () => {
-    const context = makeContext();
-    const mode = new Rapid.HeightTransferMode(context);
-    mode.activate();
+    const mode = makeActiveMode();
+    const context = mode.context;
     // The section offers an Apply button whenever there are tags to add, so the
     // shortcut has to follow the same rule or the button works and the key doesn't.
     mode.candidates = [makeCandidate({ state: 'AREA_MISMATCH', ratio: 4.0 })];
@@ -220,9 +222,8 @@ describe('HeightTransferMode', () => {
 
 
   it('does not bind the shortcut for a candidate with nothing to add', () => {
-    const context = makeContext();
-    const mode = new Rapid.HeightTransferMode(context);
-    mode.activate();
+    const mode = makeActiveMode();
+    const context = mode.context;
     mode.candidates = [makeCandidate({
       state: 'CONFLICT',
       missingTags: [],
@@ -236,9 +237,8 @@ describe('HeightTransferMode', () => {
 
 
   it('does not bind the shortcut when the selection has no candidate', () => {
-    const context = makeContext();
-    const mode = new Rapid.HeightTransferMode(context);
-    mode.activate();
+    const mode = makeActiveMode();
+    const context = mode.context;
     mode.candidates = [makeCandidate()];   // 'w1'
     context._selectedIDs = ['w999'];       // a different building
     context._emit('modechange');
@@ -248,9 +248,8 @@ describe('HeightTransferMode', () => {
 
 
   it('deactivate() unbinds the apply shortcut', () => {
-    const context = makeContext();
-    const mode = new Rapid.HeightTransferMode(context);
-    mode.activate();
+    const mode = makeActiveMode();
+    const context = mode.context;
     mode.candidates = [makeCandidate()];
     context._selectedIDs = ['w1'];
     context._emit('modechange');
@@ -262,8 +261,7 @@ describe('HeightTransferMode', () => {
 
 
   it('deactivate() clears candidates and emits change', () => {
-    const mode = new Rapid.HeightTransferMode(makeContext());
-    mode.activate();
+    const mode = makeActiveMode();
     mode.candidates = [makeCandidate()];   // simulate a non-empty candidate list
 
     mode.deactivate();
@@ -274,9 +272,8 @@ describe('HeightTransferMode', () => {
 
 
   it('apply() dispatches actionTransferPlateauTags, commits it, and updates transferredIDs', () => {
-    const context = makeContext();
-    const mode = new Rapid.HeightTransferMode(context);
-    mode.activate();
+    const mode = makeActiveMode();
+    const context = mode.context;
     const candidate = makeCandidate();
 
     mode.apply(candidate);
@@ -295,9 +292,8 @@ describe('HeightTransferMode', () => {
 
 
   it('apply() only forwards missing tags that actually have a Plateau value', () => {
-    const context = makeContext();
-    const mode = new Rapid.HeightTransferMode(context);
-    mode.activate();
+    const mode = makeActiveMode();
+    const context = mode.context;
     // 'ele' is listed as missing but the Plateau feature has no value for it.
     const candidate = makeCandidate({
       plateauFeature: { id: 'p2', tags: { height: '9' } },
@@ -314,9 +310,7 @@ describe('HeightTransferMode', () => {
 
 
   it('apply() emits the transferred event', () => {
-    const context = makeContext();
-    const mode = new Rapid.HeightTransferMode(context);
-    mode.activate();
+    const mode = makeActiveMode();
     const spy = sinon.spy();
     mode.on('transferred', spy);
 
@@ -327,9 +321,7 @@ describe('HeightTransferMode', () => {
 
 
   it('apply() fires change exactly once per call', () => {
-    const context = makeContext();
-    const mode = new Rapid.HeightTransferMode(context);
-    mode.activate();
+    const mode = makeActiveMode();
 
     let changeCount = 0;
     mode.on('change', () => { changeCount++; });
@@ -343,9 +335,8 @@ describe('HeightTransferMode', () => {
   it('recomputes candidates when the viewport moves (debounced)', async () => {
     const context = makeContext();
     const getDatasetsSpy = sinon.spy(context.services.plateau, 'getAvailableDatasets');
-    const mode = new Rapid.HeightTransferMode(context);
+    const mode = makeActiveMode(context);
 
-    mode.activate();
     expect(getDatasetsSpy.callCount).to.equal(1);   // initial recompute from activate()
 
     // Simulate a burst of viewport-change notifications
@@ -364,32 +355,55 @@ describe('HeightTransferMode', () => {
 
 
   it('removes id from transferredIDs on undo and restores it on redo', () => {
-    const context = makeContext();
-    const mode = new Rapid.HeightTransferMode(context);
-    mode.activate();
+    const mode = makeActiveMode();
     mode.apply(makeCandidate());
     expect(mode.transferredIDs.has('p1')).to.equal(true);
 
-    context.systems.editor.undo();
+    mode.context.systems.editor.undo();
     expect(mode.transferredIDs.has('p1')).to.equal(false);
 
-    context.systems.editor.redo();
+    mode.context.systems.editor.redo();
     expect(mode.transferredIDs.has('p1')).to.equal(true);
   });
 
 
   it('resyncs transferredIDs from history when reactivated after an undo while inactive', () => {
-    const context = makeContext();
-    const mode = new Rapid.HeightTransferMode(context);
-    mode.activate();
+    const mode = makeActiveMode();
     mode.apply(makeCandidate());
     mode.deactivate();
 
     // No listeners are attached while inactive, so this undo can't reach the mode directly.
-    context.systems.editor.undo();
+    mode.context.systems.editor.undo();
 
     mode.activate();   // must resync transferredIDs from history, not trust stale state
     expect(mode.transferredIDs.has('p1')).to.equal(false);
+  });
+
+
+  it('previewReplace sets replacePreview; cancelReplace clears it', () => {
+    const mode = makeActiveMode();               // 既存ヘルパー（activate 済み mode を返す）
+    const cand = { osmFeature: { id: 'w1' }, plateauFeature: { id: 'p1', nodes: [], tags: {} },
+                   plateauGraph: {}, replaceable: true };
+    mode.previewReplace(cand);
+    expect(mode.replacePreview).to.equal(cand);
+    mode.cancelReplace();
+    expect(mode.replacePreview).to.equal(null);
+  });
+
+
+  it('confirmReplace performs+commits a replace action and records the plateauID in history', () => {
+    const mode = makeActiveMode();
+    const editor = mode.context.systems.editor;  // the MockEditor
+    const cand = { osmFeature: { id: 'w1' }, plateauFeature: { id: 'p1', nodes: [], tags: {} },
+                   plateauGraph: {}, replaceable: true };
+    mode.previewReplace(cand);
+    mode.confirmReplace();
+    expect(editor.performCalls).to.have.lengthOf(1);
+    expect(editor.performCalls[0].actionName).to.equal('replace_building_geometry');
+    expect(editor.commitCalls[0].annotation).to.eql({
+      type: 'replace_building_geometry', entityID: 'w1', plateauID: 'p1'
+    });
+    expect(mode.replacePreview).to.equal(null);
   });
 
 

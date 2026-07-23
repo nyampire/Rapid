@@ -1,5 +1,6 @@
 import { AbstractSystem } from '../core/AbstractSystem.js';
 import { actionTransferPlateauTags } from '../actions/transfer_plateau_tags.js';
+import { actionReplaceBuildingGeometry } from '../actions/replace_building_geometry.js';
 import { findCandidates } from '../core/lib/HeightTransferMatcher.js';
 import { utilCmd } from '../util/index.js';
 
@@ -39,6 +40,7 @@ export class HeightTransferMode extends AbstractSystem {
     this.active = false;
     this.candidates = [];
     this.transferredIDs = new Set();   // Set<plateauFeatureID> -- session-scoped only, never persisted
+    this.replacePreview = null;   // MatchCandidate currently previewed for geometry replace, or null
 
     this._recomputeTimer = null;
     this._applyKeys = null;   // keys currently bound for the Apply shortcut
@@ -86,6 +88,7 @@ export class HeightTransferMode extends AbstractSystem {
     if (!this.active) return;
     this.active = false;
     this.candidates = [];
+    this.replacePreview = null;
 
     const context = this.context;
     const map = context.systems.map;
@@ -148,9 +151,9 @@ export class HeightTransferMode extends AbstractSystem {
   /**
    * _recomputeTransferredIDs
    * Walks the accepted (non-redo) portion of the edit history and rebuilds `transferredIDs`
-   * from any `transfer_plateau_tags` annotations found there. This is what makes undo/redo
-   * "just work": undoing past a transfer edit drops its plateauID out of history[1..index],
-   * redoing it puts it back in.
+   * from any `transfer_plateau_tags` or `replace_building_geometry` annotations found there.
+   * This is what makes undo/redo "just work": undoing past a transfer/replace edit drops its
+   * plateauID out of history[1..index], redoing it puts it back in.
    */
   _recomputeTransferredIDs() {
     const editor = this.context.systems.editor;
@@ -164,7 +167,8 @@ export class HeightTransferMode extends AbstractSystem {
     // End at `index` -- don't walk into redo-only history.
     for (let i = 1; i <= index; i++) {
       const annotation = history[i]?.annotation;
-      if (annotation?.type === 'transfer_plateau_tags' && annotation.plateauID) {
+      if ((annotation?.type === 'transfer_plateau_tags' || annotation?.type === 'replace_building_geometry')
+          && annotation.plateauID) {
         next.add(annotation.plateauID);
       }
     }
@@ -213,6 +217,63 @@ export class HeightTransferMode extends AbstractSystem {
 
 
   /**
+   * previewReplace
+   * Enters geometry-replace preview for a candidate: no graph edit yet, just marks
+   * `replacePreview` so the renderer (Task 7) and UI (Task 8) can show a preview outline.
+   * Ignored for candidates that aren't `replaceable` (e.g. area/shape mismatches Task 2
+   * decided not to offer geometry replace for).
+   * @param  `candidate`  A `MatchCandidate` to preview
+   */
+  previewReplace(candidate) {
+    if (!this.active || !candidate?.replaceable) return;
+    this.replacePreview = candidate;
+    this.emit('change');
+    this.context.systems.gfx?.immediateRedraw?.();
+  }
+
+
+  /**
+   * cancelReplace
+   * Leaves geometry-replace preview without touching the graph.
+   */
+  cancelReplace() {
+    if (!this.replacePreview) return;
+    this.replacePreview = null;
+    this.emit('change');
+    this.context.systems.gfx?.immediateRedraw?.();
+  }
+
+
+  /**
+   * confirmReplace
+   * Applies the previewed geometry replacement as a normal undoable edit via
+   * `actionReplaceBuildingGeometry`, committing with a `replace_building_geometry`
+   * annotation so `_recomputeTransferredIDs` picks up the plateauID the same way
+   * `apply()`'s `transfer_plateau_tags` edits do.
+   */
+  confirmReplace() {
+    const cand = this.replacePreview;
+    if (!cand) return;
+    const editor = this.context.systems.editor;
+    if (!editor) return;
+
+    const action = actionReplaceBuildingGeometry(cand.osmFeature.id, cand.plateauFeature, cand.plateauGraph);
+    editor.perform(action);
+    editor.commit({
+      annotation: {
+        type: action.actionName,
+        entityID: cand.osmFeature.id,
+        plateauID: cand.plateauFeature.id
+      },
+      selectedIDs: [ cand.osmFeature.id ]
+    });
+
+    this.replacePreview = null;
+    this.emit('replaced', cand);
+  }
+
+
+  /**
    * getCandidateForOSM
    * Returns the single MatchCandidate for a selected OSM building, or null.
    * Used by `uiSectionPlateauTags` to render the proposal inside the entity editor.
@@ -239,6 +300,13 @@ export class HeightTransferMode extends AbstractSystem {
    */
   _refreshApplyShortcut() {
     const context = this.context;
+
+    // A selection change (including deselect) invalidates any in-progress replace
+    // preview -- don't leave a ghost outline for a building the user navigated away from.
+    if (this.replacePreview && !(context.selectedIDs?.() ?? []).includes(this.replacePreview.osmFeature?.id)) {
+      this.replacePreview = null;
+    }
+
     const keybinding = context.keybinding?.();
     const l10n = context.systems.l10n;
     if (!keybinding || !l10n) return;
