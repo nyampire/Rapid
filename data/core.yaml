@@ -31,6 +31,10 @@ en:
     apply_tooltip: Add these Plateau tags to the selected building.
     conflict_note: Existing OSM values differ from Plateau. Override deferred (Phase 3, pending community consultation).
     area_mismatch_note: "The Plateau outline is at least twice the area of the OSM building.\nThey may not describe the same building — compare with aerial imagery or Mapillary before applying."
+    replace_geometry: Replace shape with Plateau
+    replace_confirm: Confirm replacement
+    replace_cancel: Cancel
+    replace_preview_note: Preview of the new shape. Existing tags are kept; empty ones are filled from Plateau.
   title:
     format:
       context: "{base} – {context}"
