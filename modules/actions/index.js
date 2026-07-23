@@ -36,6 +36,7 @@ export { actionSplit } from './split.js';
 export { actionStraightenNodes } from './straighten_nodes.js';
 export { actionStraightenWay } from './straighten_way.js';
 export { actionSyncCrossingTags } from './sync_crossing_tags.js';
+export { actionReplaceBuildingGeometry } from './replace_building_geometry.js';
 export { actionTransferPlateauTags } from './transfer_plateau_tags.js';
 export { actionUnrestrictTurn } from './unrestrict_turn.js';
 export { actionReflect } from './reflect.js';
