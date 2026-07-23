@@ -31,6 +31,24 @@ export function analyzeTagStates(osmFeature, plateauFeature) {
 }
 
 
+// A building whose node is shared with another building/part cannot have its
+// geometry replaced without deforming the neighbour. Guard Phase 1 against it.
+function isReplaceable(osmWay, osmGraph, state) {
+  if (state === 'AREA_MISMATCH') return false;
+  if (!osmGraph?.hasEntity || !osmGraph.parentWays) return true;   // mock/no-graph fallback
+  for (const nid of osmWay.nodes ?? []) {
+    const node = osmGraph.hasEntity(nid);
+    if (!node) continue;
+    for (const parent of osmGraph.parentWays(node)) {
+      if (parent.id !== osmWay.id && (parent.tags?.building || parent.tags?.['building:part'])) {
+        return false;
+      }
+    }
+  }
+  return true;
+}
+
+
 export function findCandidates({
   plateauEntities, osmEntities,
   plateauGraph, osmGraph,
@@ -104,7 +122,9 @@ export function findCandidates({
       missingTags: tagStates.missing,
       conflictingTags: tagStates.conflicting,
       matchingTags: tagStates.matching,
-      ratio
+      ratio,
+      replaceable: isReplaceable(osm, osmGraph, state),
+      plateauGraph
     });
   }
 
