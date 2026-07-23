@@ -1,7 +1,7 @@
 import { osmNode } from '../osm/index.js';
 
 // Plateau-internal metadata that must never reach OSM.
-const INTERNAL_TAGS = new Set(['conn', 'dupe', 'orig_id', 'debug_way_id', 'import']);
+export const INTERNAL_TAGS = new Set(['conn', 'dupe', 'orig_id', 'debug_way_id', 'import']);
 
 // Replace an OSM building way's geometry with a Plateau outline while keeping
 // the OSM way's id (and therefore its version/history). Tags are merged
@@ -41,7 +41,7 @@ export function actionReplaceBuildingGeometry(osmWayID, plateauWay, plateauGraph
     for (const oid of new Set(oldNodeIDs)) {
       if (!g.hasEntity(oid)) continue;
       const node = g.entity(oid);
-      if (g.parentWays(node).length === 0 && g.parentRelations(node).length === 0) {
+      if (g.parentWays(node).length === 0 && g.parentRelations(node).length === 0 && !node.hasInterestingTags()) {
         g = g.remove(node);
       }
     }
