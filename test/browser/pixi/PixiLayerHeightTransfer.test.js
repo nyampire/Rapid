@@ -176,6 +176,80 @@ describe('PixiLayerHeightTransfer', () => {
   });
 
 
+  describe('#_renderPreview (geometry-replace ghost)', () => {
+    // A minimal OSM-way-like entity: just enough for `_renderPreview` to call
+    // `asGeoJSON(graph)` on it and get back a closed Polygon ring.
+    function makePolygonEntity(id, coords) {
+      return {
+        id,
+        asGeoJSON() {
+          return { type: 'Polygon', coordinates: [coords] };
+        }
+      };
+    }
+
+    const squareCoords = [[0, 0], [1, 0], [1, 1], [0, 1], [0, 0]];
+
+    function makeCandidateWithPreview() {
+      return {
+        plateauFeature: makePolygonEntity('p1', squareCoords),
+        osmFeature: makePolygonEntity('w1', squareCoords),
+        plateauGraph: {}
+      };
+    }
+
+    it('draws a ghost ring and a highlight ring when replacePreview is set', () => {
+      const mode = makeMode({ candidates: [] });
+      mode.replacePreview = makeCandidateWithPreview();
+      const scene = makeScene(mode);
+      scene.context.systems.editor = { staging: { graph: {} } };
+      const layer = new Rapid.PixiLayerHeightTransfer(scene, 'height-transfer');
+      layer._container = makeFakeContainer();
+      layer._previewContainer = makeFakeContainer();
+
+      layer.render(0, projectIdentity, 18);
+
+      // one child for the ghost (fill+dash wrapper) and one for the OSM highlight
+      expect(layer._previewContainer.children.length).to.eql(2);
+      // the dot layer's own container is untouched by the preview logic
+      expect(layer._container.children.length).to.eql(0);
+    });
+
+    it('empties (and destroys) the preview container when replacePreview is null', () => {
+      const mode = makeMode({ candidates: [] });
+      mode.replacePreview = makeCandidateWithPreview();
+      const scene = makeScene(mode);
+      scene.context.systems.editor = { staging: { graph: {} } };
+      const layer = new Rapid.PixiLayerHeightTransfer(scene, 'height-transfer');
+      layer._container = makeFakeContainer();
+      layer._previewContainer = makeFakeContainer();
+
+      layer.render(0, projectIdentity, 18);
+      expect(layer._previewContainer.children.length).to.eql(2);
+      const [firstGhost, firstHighlight] = layer._previewContainer.children;
+
+      mode.replacePreview = null;
+      layer.render(1, projectIdentity, 18);
+
+      expect(layer._previewContainer.children.length).to.eql(0);
+      expect(firstGhost.destroyed).to.be.true;
+      expect(firstHighlight.destroyed).to.be.true;
+    });
+
+    it('does not draw a preview when heightTransfer has no replacePreview candidate', () => {
+      const mode = makeMode({ candidates: [] });
+      const scene = makeScene(mode);
+      const layer = new Rapid.PixiLayerHeightTransfer(scene, 'height-transfer');
+      layer._container = makeFakeContainer();
+      layer._previewContainer = makeFakeContainer();
+
+      layer.render(0, projectIdentity, 18);
+
+      expect(layer._previewContainer.children.length).to.eql(0);
+    });
+  });
+
+
   describe('#click forwarding', () => {
     it('click on an icon enters select-osm mode on the candidate\'s OSM building', () => {
       const c1 = {

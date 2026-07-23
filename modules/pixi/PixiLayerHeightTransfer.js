@@ -1,5 +1,6 @@
 import * as PIXI from 'pixi.js';
 import { AbstractLayer } from './AbstractLayer.js';
+import { DashLine } from './lib/DashLine.js';
 
 
 const MIN_CANDIDATE_ZOOM = 17;
@@ -12,6 +13,12 @@ const STATE_STYLE = {
   CONFLICT:       { color: 0xFFC107, radius: 8, glyph: '!?',  minZoom: MIN_INFO_ZOOM },
   AREA_MISMATCH:  { color: 0xFF9800, radius: 8, glyph: '!?',  minZoom: MIN_INFO_ZOOM }
 };
+
+// Geometry-replace preview visual spec (Task 5): a translucent dashed "ghost"
+// of the Plateau outline the OSM building would become, plus a solid
+// highlight stroke on the OSM building being replaced.
+const PREVIEW_GHOST_COLOR = 0x29B6F6;       // light blue - proposed Plateau outline
+const PREVIEW_HIGHLIGHT_COLOR = 0xFFD600;   // amber - target OSM building
 
 
 /**
@@ -40,6 +47,7 @@ export class PixiLayerHeightTransfer extends AbstractLayer {
     super(scene, layerID);
     this._enabled = true;   // Default ON - visibility is gated by `heightTransfer.active`, not layer toggle
     this._container = null;
+    this._previewContainer = null;
   }
 
 
@@ -63,15 +71,28 @@ export class PixiLayerHeightTransfer extends AbstractLayer {
       this._container.destroy({ children: true });
       this._container = null;
     }
+    if (this._previewContainer) {
+      this._previewContainer.destroy({ children: true });
+      this._previewContainer = null;
+    }
 
     const container = new PIXI.Container();
     container.label = this.layerID;
     container.sortableChildren = false;
     this._container = container;
 
+    // Separate container for the geometry-replace ghost preview (Task 5), so
+    // it can be fully rebuilt each render independently of the candidate dots
+    // above without disturbing them.
+    const previewContainer = new PIXI.Container();
+    previewContainer.label = `${this.layerID}-preview`;
+    previewContainer.sortableChildren = false;
+    this._previewContainer = previewContainer;
+
     const groupContainer = this.scene.groups.get('qa');
     if (groupContainer) {
       groupContainer.addChild(container);
+      groupContainer.addChild(previewContainer);
     }
   }
 
@@ -99,6 +120,9 @@ export class PixiLayerHeightTransfer extends AbstractLayer {
     }
 
     const mode = this.context.systems.heightTransfer;
+
+    this._renderPreview(mode, viewport);
+
     if (!mode || !mode.active) return;
 
     for (const candidate of mode.candidates ?? []) {
@@ -109,6 +133,117 @@ export class PixiLayerHeightTransfer extends AbstractLayer {
       const icon = this._makeIcon(candidate, style, viewport);
       if (icon) this._container.addChild(icon);
     }
+  }
+
+
+  /**
+   * _renderPreview
+   * Draws (or clears) the geometry-replace ghost preview: a translucent
+   * dashed outline of the Plateau shape the OSM building would become, plus
+   * a solid highlight stroke on the OSM building itself. Lives in its own
+   * container (`this._previewContainer`), rebuilt fully every render just
+   * like the candidate dots, and independent of `mode.active` / zoom gating
+   * so the preview stays visible while the user is mid-confirmation even if
+   * something else about the mode's display state changes.
+   * @param  mode      `context.systems.heightTransfer`, or falsy
+   * @param  viewport  Pixi viewport to use for rendering
+   */
+  _renderPreview(mode, viewport) {
+    if (!this._previewContainer) return;
+
+    const stale = this._previewContainer.removeChildren();
+    for (const child of stale) {
+      child.destroy({ children: true });
+    }
+
+    const cand = mode?.replacePreview;
+    if (!cand) return;
+
+    const plateauGeo = this._safeGeoJSON(cand.plateauFeature, cand.plateauGraph);
+    if (plateauGeo?.type === 'Polygon') {
+      for (const ring of plateauGeo.coordinates) {
+        const ghost = this._makeGhostRing(ring, viewport);
+        if (ghost) this._previewContainer.addChild(ghost);
+      }
+    }
+
+    // `cand.osmFeature` was resolved against the graph at candidate-compute
+    // time, not stored on the candidate - resolve it against the editor's
+    // current (staging) graph, same as `HeightTransferMode._recompute()` does.
+    const osmGraph = this.context.systems.editor?.staging?.graph;
+    const osmGeo = this._safeGeoJSON(cand.osmFeature, osmGraph);
+    if (osmGeo?.type === 'Polygon') {
+      for (const ring of osmGeo.coordinates) {
+        const highlight = this._makeHighlightRing(ring, viewport);
+        if (highlight) this._previewContainer.addChild(highlight);
+      }
+    }
+  }
+
+
+  /**
+   * _safeGeoJSON
+   * `asGeoJSON()` can throw if the entity's nodes don't resolve in the given
+   * graph (e.g. stale reference after an edit) - treat that as "nothing to
+   * draw this frame" rather than letting it break rendering.
+   * @param  feature  An OSM-way-like entity with an `asGeoJSON(resolver)` method, or falsy
+   * @param  graph    Graph/resolver to resolve the feature's nodes against
+   * @return {Object|null}
+   */
+  _safeGeoJSON(feature, graph) {
+    if (!feature || typeof feature.asGeoJSON !== 'function') return null;
+    try {
+      return feature.asGeoJSON(graph);
+    } catch (_err) {
+      return null;
+    }
+  }
+
+
+  /**
+   * _makeGhostRing
+   * Builds the translucent-fill + dashed-stroke ghost for one polygon ring
+   * of the proposed Plateau outline.
+   * @param  ring      Array of [lon,lat] coordinates (closed ring)
+   * @param  viewport  Pixi viewport, used to project coordinates to screen space
+   * @return {PIXI.Container|null}
+   */
+  _makeGhostRing(ring, viewport) {
+    if (!Array.isArray(ring) || ring.length < 3) return null;
+    const flat = ring.map(coord => viewport.project(coord)).flat();
+    if (flat.length < 6) return null;
+
+    const wrap = new PIXI.Container();
+    wrap.label = 'height-transfer-preview-ghost';
+
+    const fill = new PIXI.Graphics();
+    fill.poly(flat).fill({ color: PREVIEW_GHOST_COLOR, alpha: 0.25 });
+
+    const dash = new PIXI.Graphics();
+    new DashLine(this.gfx, dash, { dash: [6, 4], width: 2, color: PREVIEW_GHOST_COLOR, alpha: 0.9 }).poly(flat);
+
+    wrap.addChild(fill, dash);
+    return wrap;
+  }
+
+
+  /**
+   * _makeHighlightRing
+   * Builds a solid highlight stroke for one polygon ring of the OSM building
+   * being replaced.
+   * @param  ring      Array of [lon,lat] coordinates (closed ring)
+   * @param  viewport  Pixi viewport, used to project coordinates to screen space
+   * @return {PIXI.Graphics|null}
+   */
+  _makeHighlightRing(ring, viewport) {
+    if (!Array.isArray(ring) || ring.length < 3) return null;
+    const flat = ring.map(coord => viewport.project(coord)).flat();
+    if (flat.length < 6) return null;
+
+    const g = new PIXI.Graphics();
+    g.label = 'height-transfer-preview-highlight';
+    g.poly(flat).stroke({ width: 3, color: PREVIEW_HIGHLIGHT_COLOR, alpha: 1.0 });
+    return g;
   }
 
 
