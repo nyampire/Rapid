@@ -146,4 +146,86 @@ describe('utilBuildingRelationInfo', () => {
 
     assert.equal(Rapid.utilBuildingRelationInfo(outer, graph), null);
   });
+
+  it('accepts a multipolygon relation itself, not only its member ways', () => {
+    // 中庭建物は relation 単位で描画されるので、インスペクタが受け取る datum は
+    // relation になる。way が来ないので、relation を直接渡せる必要がある。
+    const outer = Rapid.osmWay({ id: 'w_outer', nodes: [] });
+    const inner = Rapid.osmWay({ id: 'w_inner', nodes: [] });
+    const relation = Rapid.osmRelation({
+      id: 'r_mp',
+      tags: { type: 'multipolygon', building: 'yes' },
+      members: [
+        { id: 'w_outer', type: 'way', role: 'outer' },
+        { id: 'w_inner', type: 'way', role: 'inner' }
+      ]
+    });
+    const graph = new Rapid.Graph([outer, inner, relation]);
+
+    const info = Rapid.utilBuildingRelationInfo(relation, graph);
+    assert.ok(info, 'relation 自身が受け付けられていない');
+    assert.equal(info.relation.id, 'r_mp');
+    assert.equal(info.relationType, 'multipolygon');
+    assert.equal(info.outlineCount, 1);
+    assert.equal(info.partCount, 1);
+  });
+
+  it('accepts a type=building relation itself', () => {
+    const outline = Rapid.osmWay({ id: 'w_outline', nodes: [] });
+    const part = Rapid.osmWay({ id: 'w_part', nodes: [] });
+    const relation = Rapid.osmRelation({
+      id: 'r_b',
+      tags: { type: 'building', building: 'yes' },
+      members: [
+        { id: 'w_outline', type: 'way', role: 'outline' },
+        { id: 'w_part', type: 'way', role: 'part' }
+      ]
+    });
+    const graph = new Rapid.Graph([outline, part, relation]);
+
+    const info = Rapid.utilBuildingRelationInfo(relation, graph);
+    assert.ok(info);
+    assert.equal(info.relationType, 'building');
+    assert.equal(info.outlineCount, 1);
+    assert.equal(info.partCount, 1);
+  });
+
+  it('returns null for a relation that is not a building', () => {
+    const outer = Rapid.osmWay({ id: 'w_outer', nodes: [] });
+    const relation = Rapid.osmRelation({
+      id: 'r_forest',
+      tags: { type: 'multipolygon', landuse: 'forest' },
+      members: [{ id: 'w_outer', type: 'way', role: 'outer' }]
+    });
+    const graph = new Rapid.Graph([outer, relation]);
+
+    assert.equal(Rapid.utilBuildingRelationInfo(relation, graph), null);
+  });
+
+  it('returns null for a route relation', () => {
+    const way = Rapid.osmWay({ id: 'w1', nodes: [] });
+    const relation = Rapid.osmRelation({
+      id: 'r_route',
+      tags: { type: 'route', route: 'bus' },
+      members: [{ id: 'w1', type: 'way', role: '' }]
+    });
+    const graph = new Rapid.Graph([way, relation]);
+
+    assert.equal(Rapid.utilBuildingRelationInfo(relation, graph), null);
+  });
+
+  it('does not need parentRelations when a relation is passed', () => {
+    // relation 自身を渡すときは親をたどらないので、graph が
+    // parentRelations を持たなくても答えられる。
+    const relation = Rapid.osmRelation({
+      id: 'r_mp2',
+      tags: { type: 'multipolygon', building: 'yes' },
+      members: [{ id: 'w_outer', type: 'way', role: 'outer' }]
+    });
+
+    const info = Rapid.utilBuildingRelationInfo(relation, {});
+    assert.ok(info, 'graph に依存しない経路になっていない');
+    assert.equal(info.outlineCount, 1);
+    assert.equal(info.partCount, 0);
+  });
 });
