@@ -438,12 +438,16 @@ export class UiRapidInspector {
     // Phase 4-B-1: building relation member の場合は label / description を切り替え
     // Phase 4-C: building relation member の場合は「この feature のみ追加」の opt-out を追加
     const buildingInfo = this._getBuildingRelationInfo();
-    const acceptLabelStringID = buildingInfo
-      ? 'rapid_inspector.option_accept_entire_building.label'
-      : 'rapid_inspector.option_accept.label';
-    const acceptReferenceStringID = buildingInfo
-      ? 'rapid_inspector.option_accept_entire_building.description'
-      : 'rapid_inspector.option_accept.description';
+    const isCourtyard = buildingInfo?.relationType === 'multipolygon';
+    let acceptLabelStringID = 'rapid_inspector.option_accept.label';
+    let acceptReferenceStringID = 'rapid_inspector.option_accept.description';
+    if (isCourtyard) {
+      acceptLabelStringID = 'rapid_inspector.option_accept_entire_courtyard_building.label';
+      acceptReferenceStringID = 'rapid_inspector.option_accept_entire_courtyard_building.description';
+    } else if (buildingInfo) {
+      acceptLabelStringID = 'rapid_inspector.option_accept_entire_building.label';
+      acceptReferenceStringID = 'rapid_inspector.option_accept_entire_building.description';
+    }
 
     const choiceData = [
       {
@@ -456,8 +460,10 @@ export class UiRapidInspector {
       }
     ];
 
-    // Phase 4-C: relation member 時は「この feature だけ追加」 (cascade なし) を追加
-    if (buildingInfo) {
+    // Phase 4-C: relation member 時は「この feature だけ追加」 (cascade なし) を追加。
+    // ただし multipolygon では出さない。メンバー way はタグを持たないので、
+    // 1 本だけ追加すると必ずタグの無い way になる。
+    if (buildingInfo && !isCourtyard) {
       choiceData.push({
         key: 'accept_only_this',
         iconName: '#rapid-icon-rapid-plus-circle',
@@ -506,9 +512,12 @@ export class UiRapidInspector {
     const $multiInfo = $choices.selectAll('.rapid-inspector-multi-section-building-info');
     if (buildingInfo) {
       const partCount = buildingInfo.partCount;
+      const infoStringID = isCourtyard
+        ? 'rapid_inspector.courtyard_building_info'
+        : 'rapid_inspector.multi_section_building_info';
       $multiInfo
         .style('display', null)
-        .text(l10n.t('rapid_inspector.multi_section_building_info', { n: partCount }));
+        .text(l10n.t(infoStringID, { n: partCount }));
     } else {
       $multiInfo
         .style('display', 'none')

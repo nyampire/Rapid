@@ -92,4 +92,58 @@ describe('utilBuildingRelationInfo', () => {
     };
     assert.equal(Rapid.utilBuildingRelationInfo(way, brokenGraph), null);
   });
+
+  it('recognizes a type=multipolygon relation and counts outer/inner', () => {
+    const outer = Rapid.osmWay({ id: 'w_outer', nodes: [] });
+    const inner1 = Rapid.osmWay({ id: 'w_inner1', nodes: [] });
+    const inner2 = Rapid.osmWay({ id: 'w_inner2', nodes: [] });
+    const relation = Rapid.osmRelation({
+      id: 'r_mp',
+      tags: { type: 'multipolygon', building: 'yes' },
+      members: [
+        { id: 'w_outer', type: 'way', role: 'outer' },
+        { id: 'w_inner1', type: 'way', role: 'inner' },
+        { id: 'w_inner2', type: 'way', role: 'inner' }
+      ]
+    });
+    const graph = new Rapid.Graph([outer, inner1, inner2, relation]);
+
+    const info = Rapid.utilBuildingRelationInfo(outer, graph);
+    assert.ok(info, 'multipolygon が認識されていない');
+    assert.equal(info.relationType, 'multipolygon');
+    assert.equal(info.outlineCount, 1);
+    assert.equal(info.partCount, 2);
+  });
+
+  it('reports relationType for a type=building relation', () => {
+    const outline = Rapid.osmWay({ id: 'w_outline', nodes: [] });
+    const part = Rapid.osmWay({ id: 'w_part', nodes: [] });
+    const relation = Rapid.osmRelation({
+      id: 'r_b',
+      tags: { type: 'building', building: 'yes' },
+      members: [
+        { id: 'w_outline', type: 'way', role: 'outline' },
+        { id: 'w_part', type: 'way', role: 'part' }
+      ]
+    });
+    const graph = new Rapid.Graph([outline, part, relation]);
+
+    const info = Rapid.utilBuildingRelationInfo(outline, graph);
+    assert.equal(info.relationType, 'building');
+    assert.equal(info.outlineCount, 1);
+    assert.equal(info.partCount, 1);
+  });
+
+  it('returns null for a multipolygon without a building tag', () => {
+    // 建物でない multipolygon (森林など) は対象外。
+    const outer = Rapid.osmWay({ id: 'w_outer', nodes: [] });
+    const relation = Rapid.osmRelation({
+      id: 'r_forest',
+      tags: { type: 'multipolygon', landuse: 'forest' },
+      members: [{ id: 'w_outer', type: 'way', role: 'outer' }]
+    });
+    const graph = new Rapid.Graph([outer, relation]);
+
+    assert.equal(Rapid.utilBuildingRelationInfo(outer, graph), null);
+  });
 });
