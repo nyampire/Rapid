@@ -482,4 +482,86 @@ describe('actionRapidAcceptFeature', () => {
                 'highway tag should not be overwritten when it is already specific');
         });
     });
+
+
+    describe('type=multipolygon (courtyard building)', () => {
+        // 中庭のある建物。outer が外形、inner が穴。
+        // タグは relation にだけ付き、メンバー way はタグを持たない。
+        function makeCourtyardGraph() {
+            const n1 = Rapid.osmNode({ id: 'n1', loc: [0, 0] });
+            const n2 = Rapid.osmNode({ id: 'n2', loc: [1, 0] });
+            const n3 = Rapid.osmNode({ id: 'n3', loc: [1, 1] });
+            const n4 = Rapid.osmNode({ id: 'n4', loc: [0, 1] });
+            const n5 = Rapid.osmNode({ id: 'n5', loc: [0.4, 0.4] });
+            const n6 = Rapid.osmNode({ id: 'n6', loc: [0.6, 0.4] });
+            const n7 = Rapid.osmNode({ id: 'n7', loc: [0.6, 0.6] });
+            const n8 = Rapid.osmNode({ id: 'n8', loc: [0.4, 0.6] });
+            const outer = Rapid.osmWay({ id: 'w_outer', nodes: ['n1','n2','n3','n4','n1'] });
+            const inner = Rapid.osmWay({ id: 'w_inner', nodes: ['n5','n6','n7','n8','n5'] });
+            const relation = Rapid.osmRelation({
+                id: 'r_mp',
+                tags: { type: 'multipolygon', building: 'yes', height: '12' },
+                members: [
+                    { id: outer.id, type: 'way', role: 'outer' },
+                    { id: inner.id, type: 'way', role: 'inner' }
+                ]
+            });
+            const extGraph = new Rapid.Graph([n1,n2,n3,n4,n5,n6,n7,n8, outer, inner, relation]);
+            return { extGraph, outer, inner, relation };
+        }
+
+        it('accepts the whole relation when the outer way is clicked', () => {
+            const { extGraph, outer } = makeCourtyardGraph();
+            const graph = Rapid.actionRapidAcceptFeature(outer.id, extGraph)(new Rapid.Graph());
+
+            assert.ok(graph.hasEntity('r_mp'), 'relation not in graph');
+            assert.ok(graph.hasEntity('w_outer'), 'outer not in graph');
+            assert.ok(graph.hasEntity('w_inner'), 'inner not in graph');
+        });
+
+        it('accepts the whole relation when the inner way is clicked', () => {
+            const { extGraph, inner } = makeCourtyardGraph();
+            const graph = Rapid.actionRapidAcceptFeature(inner.id, extGraph)(new Rapid.Graph());
+
+            assert.ok(graph.hasEntity('r_mp'));
+            assert.ok(graph.hasEntity('w_outer'));
+            assert.ok(graph.hasEntity('w_inner'));
+        });
+
+        it('keeps the tags on the relation and none on the member ways', () => {
+            const { extGraph, outer } = makeCourtyardGraph();
+            const graph = Rapid.actionRapidAcceptFeature(outer.id, extGraph)(new Rapid.Graph());
+
+            const rel = graph.entity('r_mp');
+            assert.equal(rel.tags.type, 'multipolygon');
+            assert.equal(rel.tags.building, 'yes');
+            assert.equal(rel.tags.height, '12');
+
+            // メンバー way にタグは足さない。relation にあるものをコピーしない。
+            assert.equal(graph.entity('w_outer').tags.building, undefined);
+            assert.equal(graph.entity('w_inner').tags.building, undefined);
+        });
+
+        it('keeps the member roles', () => {
+            const { extGraph, outer } = makeCourtyardGraph();
+            const graph = Rapid.actionRapidAcceptFeature(outer.id, extGraph)(new Rapid.Graph());
+
+            const roles = {};
+            for (const m of graph.entity('r_mp').members) roles[m.role] = m.id;
+            assert.equal(roles.outer, 'w_outer');
+            assert.equal(roles.inner, 'w_inner');
+        });
+
+        it('adds only the clicked way when skipCascade is set', () => {
+            // action 自体は skipCascade を尊重する。UI 側が multipolygon で
+            // この選択肢を出さないことは Task 2 で担保する。
+            const { extGraph, outer } = makeCourtyardGraph();
+            const graph = Rapid.actionRapidAcceptFeature(
+                outer.id, extGraph, { skipCascade: true }
+            )(new Rapid.Graph());
+
+            assert.ok(graph.hasEntity('w_outer'));
+            assert.equal(graph.hasEntity('r_mp'), undefined);
+        });
+    });
 });
