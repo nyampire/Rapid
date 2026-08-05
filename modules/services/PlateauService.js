@@ -897,9 +897,15 @@ export class PlateauService extends AbstractSystem {
     } else if (type === 'way') {
       entity = this._parseWay(element, entityID);
     } else if (type === 'relation') {
-      // Phase 3: PLATEAU LOD2 type=building relation (outline + parts) のような
-      // 構造をクライアント graph に取り込む。relation 単独では geometry を持たず
-      // メンバー way がレンダリングを担うため、parse + graph 追加だけで十分。
+      // PLATEAU の relation をクライアント graph に取り込む。2 種類ある。
+      //
+      // type=building は LOD2 の outline + parts で、メンバー way がレンダリングを担う。
+      // relation 自身は geometry を持たないので、parse して graph に入れるだけでよい。
+      //
+      // type=building タグ付きの type=multipolygon は中庭のある建物で、こちらは違う。
+      // relation 自身が geometry を持ち (osmRelation.geometry() が 'area' を返す)、
+      // PixiLayerRapid が relation を 1 つのポリゴンとして描き、メンバー way は描かない。
+      // そのためユーザが hover / select できるのは relation のほうになる。
       entity = this._parseRelation(element, entityID);
     } else {
       return null;
