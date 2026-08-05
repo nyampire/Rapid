@@ -20,7 +20,7 @@ conflation は先行して対応したが、それは 3 分の 1 にすぎなか
 |---|---|---|
 | `modules/actions/rapid_accept_feature.js:260` | `parent.tags.type === 'building'` の relation にしか cascade しない | multipolygon の外形を accept すると `acceptWay` に落ちる。タグは relation にしか無いので、**OSM に上がるのはタグの無い閉じた way**。中庭も `building` タグも失われる |
 | `modules/util/building_relation.js:24` | 同じく `type=building` のみ | インスペクタの文言が切り替わらず、hover / select の兄弟 highlight も効かない。外形をホバーしても穴が光らないので、1 棟であることが UI から伝わらない |
-| `modules/pixi/PixiLayerRapid.js:347` | `entity.type === 'way'` で絞ってから個別のポリゴンとして積む | 穴が穴として描かれない。外形の上に小さな図形が重なり、**「建物の中に建物」に見える**。api#39 で消したはずの見た目が描画側で再現する |
+| `modules/pixi/PixiLayerRapid.js:347` | `entity.type === 'way'` で絞ってから個別のポリゴンとして積む | outer・inner ともタグを持たないので `geometry()` が `'area'` を返さず、`data.polygons` に一本も乗らない。`data.lines` への振り分けも無い。**中庭のある建物が丸ごと描かれない** |
 
 隠しそこねは機会損失だが、タグの無い way の upload は公開データベースを汚す。
 影響の重さが違う。
@@ -82,6 +82,13 @@ multipolygon のときは「建物全体を追加」だけを出す。
 **そのメンバー way は二重に描かない。**
 relation が外形と穴をまとめて描くので、メンバー way を個別に積むと外形が二重になり、
 穴の上にも塗りが乗る。描画対象にした relation のメンバー way は除外する。
+
+この除外は、メンバー way がタグを持たないことに頼らない明示の invariant として持つ。
+現状はメンバー way が無タグなので `geometry()` が `'area'` を返さず、除外がなくても
+`data.polygons` には乗らない。
+だが除外を「たまたま無タグだから効いている」状態にはしない。
+メンバー way にタグが付く形に API が変わっても、relation を描画対象にした時点でそのメンバー way は
+明示的に除外されるようにする。
 
 conflation で relation を返り値から外した変更は、ここで初めて観測可能になる。
 それまでは relation が描画に届いていなかった。
