@@ -42,11 +42,13 @@ describe('PixiLayerRapid', () => {
       return { graph: g, way };
     }
 
-    function makeCourtyard(graph) {
+    // memberTags defaults to untagged, matching real data: importer-produced
+    // member ways of a courtyard relation carry no tags of their own.
+    function makeCourtyard(graph, memberTags) {
       let g = graph;
-      const o = makeWay(g, 'w_outer', [[0,0], [1,0], [1,1], [0,1]]);
+      const o = makeWay(g, 'w_outer', [[0,0], [1,0], [1,1], [0,1]], memberTags);
       g = o.graph;
-      const i = makeWay(g, 'w_inner', [[0.4,0.4], [0.6,0.4], [0.6,0.6], [0.4,0.6]]);
+      const i = makeWay(g, 'w_inner', [[0.4,0.4], [0.6,0.4], [0.6,0.6], [0.4,0.6]], memberTags);
       g = i.graph;
       const relation = Rapid.osmRelation({
         id: 'r_mp',
@@ -71,7 +73,16 @@ describe('PixiLayerRapid', () => {
     });
 
     it('does not also render the member ways of a courtyard relation', () => {
-      const mp = makeCourtyard(new Rapid.Graph());
+      // Member ways here must carry an area-suggesting tag (unlike every other
+      // fixture in this file). If they were left untagged, `osmWay#geometry()`
+      // would already return 'line' for them (isArea() needs
+      // tagSuggestingArea() !== null — see modules/osm/way.js), so
+      // `_plateauRenderables` would skip them for being non-area regardless of
+      // whether the member-way exclusion guard exists. That would make this
+      // assertion pass even with the guard deleted, proving nothing. Tagging
+      // the member ways as `building: 'yes'` makes them area-geometry ways
+      // that only the guard keeps out, so the test actually exercises it.
+      const mp = makeCourtyard(new Rapid.Graph(), { building: 'yes' });
       const layer = new Rapid.PixiLayerRapid(makeScene(), 'rapid');
       const out = layer._plateauRenderables(
         [mp.outer, mp.inner, mp.relation], mp.graph
