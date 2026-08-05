@@ -48,7 +48,11 @@ relation の判定を 1 度だけ計算し、メンバー way 全員がそれに
 ### 2. メンバーが隠れる relation は relation 自身も隠す
 
 現在の filter は relation を無条件に通す（`if (entity.type === 'relation') return true;`）。
-そのため外形が reject されると、メンバーがすべて消えた relation がグラフに残る。
+そのため外形が reject されると、メンバーがすべて消えた relation が呼び出し側に渡る。
+
+**この filter は配列を絞り込むだけで `ds.graph` を変更しない。**
+除外した way も relation もグラフには残り続ける。
+影響するのは `getData` の戻り値を受け取る側だけである。
 
 規則は relation 自身の判定に置く。
 
@@ -92,6 +96,28 @@ conflation の判定は外形だけを見るので影響しない。
 
 **形状置換機能（#5）との関係。**
 `feature/plateau-geometry-replacement` は未マージで、この変更とは独立している。
+
+## conflation だけでは足りない（実装後の最終レビューで判明）
+
+`type=multipolygon` を認識していない箇所が、conflation の他に 2 つある。
+どちらも本設計の対象外だが、**再取り込みの前に片付ける必要がある**。
+
+**accept の cascade。** `modules/actions/rapid_accept_feature.js:260` は
+`parent.tags.type === 'building'` の relation にしか cascade しない。
+multipolygon の外形をユーザが accept すると `acceptWay` に落ちる。
+タグは relation にしか無いので、**OSM に上がるのはタグの無い閉じた way になる**。
+中庭も `building` タグも失われる。
+conflation が隠しそこねるのは機会損失だが、こちらは壊れたデータの upload であり、より有害である。
+
+**hover / select の兄弟 highlight。** `modules/util/building_relation.js:24` も
+`type=building` しか返さない。外形をホバーしても穴が光らず、1 棟であることが UI から伝わらない。
+
+**描画。** `modules/pixi/PixiLayerRapid.js:347` は way だけを拾って個別のポリゴンとして積む。
+穴が穴として描かれず、外形の上に小さな図形が重なって見える。
+conflation が穴を隠さなくなった分、再取り込み後に必ず表に出る。
+
+なお同じ箇所の絞り込みにより、relation を返り値から外す変更は現時点で観測可能な効果を持たない。
+将来 relation を読む consumer が現れたときのための備えである。
 
 ## 検証
 

@@ -451,6 +451,17 @@ export class PlateauService extends AbstractSystem {
    * outline と各 parts が個別に reject される結果として「親 outline が消えて parts だけ宙に浮く」
    * 等のジオメトリ不整合を防ぐ。
    *
+   * 中庭のある建物は type=multipolygon で届く。外形が role='outer'、穴が role='inner' で、
+   * タグは relation にだけ付く。判定はジオメトリだけを見てタグを見ないので、個別に評価すると
+   * 穴が単独の建物として扱われる。type=building と同じ semantic 単位として扱ってこれを塞ぐ。
+   * 外形の役割名だけが違う (outline と outer)。
+   *
+   * 判定が true になった relation は、メンバー way だけでなく relation 自身も返り値から外す。
+   * メンバーが全部隠れた relation を呼び出し側に渡さないためである。
+   *
+   * この関数は配列を絞り込むだけで、`ds.graph` は変更しない。
+   * 除外した way も relation もグラフには残り続ける。
+   *
    * @param   {Array}  entities
    * @param   {Graph}  plateauGraph
    * @return  {Array}  Filtered entities
