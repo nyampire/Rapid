@@ -548,7 +548,20 @@ export class PlateauService extends AbstractSystem {
 
     return entities.filter(entity => {
       if (entity.type === 'node') return true;
-      if (entity.type === 'relation') return true;
+
+      if (entity.type === 'relation') {
+        // 追跡対象でない relation (type=route など) は素通しする。
+        if (!buildingRelationOutline.has(entity.id)) return true;
+        // メンバーが隠れる relation は relation 自身も隠す。
+        // 判定できない (null) ときは隠さない。way 側のフォールバックと同じ。
+        //
+        // 一覧に残っているメンバーを数えないこと。getData は表示範囲で切り取った
+        // スライスに filter をかけるので、範囲外のメンバーは単に一覧に含まれない。
+        // 数える方式にすると、パンして relation が範囲の端にかかった時点で
+        // 「メンバー 0 件」と見えて、OSM に無い建物まで消える。
+        return evalRelationOverlap(entity) !== true;
+      }
+
       if (entity.type !== 'way') return true;
 
       if (cache.rejected.has(entity.id)) return false;
