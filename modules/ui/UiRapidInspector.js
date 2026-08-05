@@ -509,9 +509,19 @@ export class UiRapidInspector {
       .text(l10n.t('rapid_inspector.prompt'));
 
     // multi-section building 情報行: 該当時のみ表示
+    //
+    // type=multipolygon + building relation は inner (courtyard) 0 件でも仕様上あり得る。
+    // 現状の 2 producer はどちらも実際には 0 件を送ってこない:
+    //   - PLATEAU API は ring が 1 つ以下なら relation でなく単一の tagged way を出す
+    //     (XML 生成側の `if len(rings) <= 1`)。
+    //   - EsriService も ways.length === 1 なら単一 tagged way を返し、relation を組むのは
+    //     複数 ring のときだけで、そのとき role 割り当てにより inner が最低 1 つ入る。
+    // それでも「0 courtyards」という文言はナンセンスなので、この行だけは防御的に非表示にする。
+    // isCourtyard 自体は partCount に依存させない (acceptOnlyThis の抑制に使われるため)。
     const $multiInfo = $choices.selectAll('.rapid-inspector-multi-section-building-info');
-    if (buildingInfo) {
-      const partCount = buildingInfo.partCount;
+    const partCount = buildingInfo?.partCount;
+    const hideAsEmptyCourtyard = isCourtyard && partCount === 0;
+    if (buildingInfo && !hideAsEmptyCourtyard) {
       const infoStringID = isCourtyard
         ? 'rapid_inspector.courtyard_building_info'
         : 'rapid_inspector.multi_section_building_info';
