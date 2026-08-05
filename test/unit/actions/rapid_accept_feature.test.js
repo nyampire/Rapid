@@ -537,9 +537,10 @@ describe('actionRapidAcceptFeature', () => {
             assert.equal(rel.tags.building, 'yes');
             assert.equal(rel.tags.height, '12');
 
-            // メンバー way にタグは足さない。relation にあるものをコピーしない。
-            assert.equal(graph.entity('w_outer').tags.building, undefined);
-            assert.equal(graph.entity('w_inner').tags.building, undefined);
+            // メンバー way にタグは足さない。relation にあるものを 1 つもコピーしない。
+            // building だけを見ると height など他のタグの混入を見逃すので、空であることを見る。
+            assert.deepEqual(graph.entity('w_outer').tags, {});
+            assert.deepEqual(graph.entity('w_inner').tags, {});
         });
 
         it('keeps the member roles', () => {
