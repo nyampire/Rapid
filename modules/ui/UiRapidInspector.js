@@ -522,9 +522,15 @@ export class UiRapidInspector {
     const partCount = buildingInfo?.partCount;
     const hideAsEmptyCourtyard = isCourtyard && partCount === 0;
     if (buildingInfo && !hideAsEmptyCourtyard) {
-      const infoStringID = isCourtyard
-        ? 'rapid_inspector.courtyard_building_info'
-        : 'rapid_inspector.multi_section_building_info';
+      // datum が relation なら建物そのものを選んでいる。way なら建物の一部を選んでいる。
+      // 中庭建物は relation 単位で描画されるので、実際に来るのは relation のほうである。
+      const isRelationDatum = this.datum?.type === 'relation';
+      let infoStringID = 'rapid_inspector.multi_section_building_info';
+      if (isCourtyard) {
+        infoStringID = isRelationDatum
+          ? 'rapid_inspector.courtyard_building_selected_info'
+          : 'rapid_inspector.courtyard_building_info';
+      }
       $multiInfo
         .style('display', null)
         .text(l10n.t(infoStringID, { n: partCount }));

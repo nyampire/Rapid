@@ -1146,6 +1146,9 @@ en:
     courtyard_building_info:
       one: This way is part of a building with {n} courtyard.
       other: This way is part of a building with {n} courtyards.
+    courtyard_building_selected_info:
+      one: This building has {n} courtyard.
+      other: This building has {n} courtyards.
     option_ignore:
       label: Ignore This Feature
       description: Ignoring this feature helps us improve our machine learning. If you are unsure whether or not this is an accurate feature, feel free to leave it as is, nothing will be saved or lost. 👍
