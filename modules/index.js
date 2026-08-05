@@ -24,3 +24,4 @@ export { Context } from './Context.js';
 // mock scenes (avoids booting a full Rapid context).
 export { PixiLayerPlateauCoverage } from './pixi/PixiLayerPlateauCoverage.js';
 export { PixiLayerHeightTransfer } from './pixi/PixiLayerHeightTransfer.js';
+export { PixiLayerRapid } from './pixi/PixiLayerRapid.js';
