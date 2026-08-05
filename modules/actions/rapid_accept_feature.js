@@ -257,10 +257,17 @@ export function actionRapidAcceptFeature(entityID, extGraph, options) {
                 var parents = extGraph.parentRelations(extWay);
                 for (var i = 0; i < parents.length; i++) {
                     var parent = parents[i];
+                    // メンバー way だけを accept すると壊れる 2 つの構造を cascade する。
+                    //
                     // type=building は PLATEAU LOD2 の outline + parts。
-                    // type=multipolygon は中庭のある建物で、外形が outer、穴が inner。
-                    // multipolygon のメンバー way はタグを持たず、タグは relation にしか無い。
-                    // cascade しないと acceptWay に落ちてタグの無い way が OSM に上がる。
+                    // メンバー way は自分のタグを持つが、relation を落とすと構造が失われる。
+                    //
+                    // type=multipolygon は複数リングのポリゴンで、外形が outer、穴が inner。
+                    // **メンバー way はタグを持たず、タグは relation にしか無い。**
+                    // cascade しないと acceptWay に落ちて、タグの無い way が OSM に上がる。
+                    // 中庭のある PLATEAU の建物がこの形で届くが、Esri も複数リングの
+                    // ポリゴンを同じ形で作る (EsriService.js の multiple rings 分岐)。
+                    // 建物に限らないので、building タグでは絞らない。
                     var parentType = parent.tags && parent.tags.type;
                     if ((parentType === 'building' || parentType === 'multipolygon')
                         && !seenRelations[parent.id]
