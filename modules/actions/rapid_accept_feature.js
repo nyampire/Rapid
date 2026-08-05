@@ -257,7 +257,12 @@ export function actionRapidAcceptFeature(entityID, extGraph, options) {
                 var parents = extGraph.parentRelations(extWay);
                 for (var i = 0; i < parents.length; i++) {
                     var parent = parents[i];
-                    if (parent.tags && parent.tags.type === 'building'
+                    // type=building は PLATEAU LOD2 の outline + parts。
+                    // type=multipolygon は中庭のある建物で、外形が outer、穴が inner。
+                    // multipolygon のメンバー way はタグを持たず、タグは relation にしか無い。
+                    // cascade しないと acceptWay に落ちてタグの無い way が OSM に上がる。
+                    var parentType = parent.tags && parent.tags.type;
+                    if ((parentType === 'building' || parentType === 'multipolygon')
                         && !seenRelations[parent.id]
                         && !inProgressRelations[parent.id]) {
                         return acceptRelation(parent);
