@@ -497,19 +497,28 @@ export class PlateauService extends AbstractSystem {
 
     if (osmBuildingData.length === 0) return entities;
 
-    // way_id → building relation のマップ + relation_id → outline way_id を記録
+    // way_id → building relation のマップ + relation_id → 外形 way_id を記録
+    //
+    // 対象は 2 種類ある。
+    // type=building は PLATEAU LOD2 の outline + parts で、外形の役割は 'outline'。
+    // type=multipolygon は中庭のある建物で、外形の役割は 'outer'、穴が 'inner'。
+    // どちらも「1 棟の建物」なので、外形の判定にメンバー全員が従う。
+    //
+    // multipolygon のメンバー way はタグを持たないため、個別に判定すると穴が
+    // 単独の建物として扱われる。ここでまとめて拾うことでその経路を塞ぐ。
     const wayToBuildingRelation = new Map();
     const buildingRelationOutline = new Map();
     for (const e of entities) {
       if (e.type !== 'relation') continue;
-      if (e.tags?.type !== 'building') continue;
+      const relType = e.tags?.type;
+      if (relType !== 'building' && relType !== 'multipolygon') continue;
       let outlineWayId;
       for (const m of e.members ?? []) {
         if (m.type !== 'way') continue;
         if (!wayToBuildingRelation.has(m.id)) {
           wayToBuildingRelation.set(m.id, e);
         }
-        if (m.role === 'outline' && outlineWayId === undefined) {
+        if ((m.role === 'outline' || m.role === 'outer') && outlineWayId === undefined) {
           outlineWayId = m.id;
         }
       }
