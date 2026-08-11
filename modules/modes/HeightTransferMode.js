@@ -197,13 +197,24 @@ export class HeightTransferMode extends AbstractSystem {
     // plateauID once committed) and calling `_recompute()` -- which re-runs `findCandidates()`
     // (already excludes this candidate, since `findCandidates` filters against `transferredIDs`)
     // and emits 'change'. That means there's no need for a second manual emit here.
+    // The changeset `source` is assembled from the `dataUsed` on each edit's
+    // annotation (see `EditSystem#_gatherSources`). Without it the transfer
+    // records no provenance at all -- no `MLIT_PLATEAU`, no `RapiD_Plateau_JP`,
+    // no `source_ref` -- while accepting a building records all three.
+    // Same lookup the accept path uses in `UiRapidInspector`.
+    const rapid = this.context.systems.rapid;
+    const datasetID = (candidate.plateauFeature.__datasetid__ ?? 'plateauJapan')
+      .replace('-conflated', '');
+    const dataset = rapid?.datasets?.get(datasetID);
+
     const action = actionTransferPlateauTags(candidate.osmFeature.id, tagsToAdd);
     editor.perform(action);
     editor.commit({
       annotation: {
         type: action.actionName,
         plateauID: candidate.plateauFeature.id,
-        entityID: candidate.osmFeature.id
+        entityID: candidate.osmFeature.id,
+        dataUsed: dataset?.dataUsed || [datasetID]
       },
       selectedIDs: [ candidate.osmFeature.id ]
     });
