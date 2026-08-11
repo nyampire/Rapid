@@ -1131,6 +1131,10 @@ en:
       label: Add Entire Feature
       description: This way is part of a multi-section building (outline + parts). Selecting this will add the outline, every part, and the relation together so the OSM structure stays consistent.
       tooltip: Add the entire feature group (outline and all parts) to the map.
+    option_accept_entire_courtyard_building:
+      label: Add Entire Building
+      description: This way is part of a building with a courtyard. The tags live on the relation, so the outline, every courtyard ring, and the relation are added together. Adding a single ring on its own would produce an untagged way.
+      tooltip: Add the whole building, including its courtyards, to the map.
     option_accept_only_this:
       label: Add Only This Feature
       description: This way is part of a multi-section building, but you can also add just this one way without the rest of the structure. The outline and other parts will stay as suggestions.
@@ -1139,6 +1143,12 @@ en:
     multi_section_building_info:
       one: This way is part of a multi-section building ({n} part).
       other: This way is part of a multi-section building ({n} parts).
+    courtyard_building_info:
+      one: This way is part of a building with {n} courtyard.
+      other: This way is part of a building with {n} courtyards.
+    courtyard_building_selected_info:
+      one: This building has {n} courtyard.
+      other: This building has {n} courtyards.
     option_ignore:
       label: Ignore This Feature
       description: Ignoring this feature helps us improve our machine learning. If you are unsure whether or not this is an accurate feature, feel free to leave it as is, nothing will be saved or lost. 👍

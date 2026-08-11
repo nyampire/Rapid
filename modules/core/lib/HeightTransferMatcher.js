@@ -6,6 +6,39 @@ export const TARGET_TAG_KEYS = ['height', 'ele', 'building:levels'];
 const AREA_RATIO_MIN = 0.5;
 const AREA_RATIO_MAX = 2.0;
 
+/**
+ * PLATEAU 側の面積を外側リングだけで測る。
+ *
+ * turf の `area` は MultiPolygon の穴を差し引く。OSM 側は単純な way で総面積なので、
+ * そのまま比べると正味面積と総面積の比較になり、中庭が広い建物ほど比が小さく出る。
+ * AREA_RATIO_MIN は「OSM の建物よりずっと小さい PLATEAU の外形は塔屋や物置である」
+ * という判定なので、中庭のある建物がそれと同じ理由で落ちてしまう。
+ *
+ * 外側リングだけで測れば、OSM 側と同種どうしの比較になる。
+ * 単純な way はリングが 1 本なので、値は全体の面積と等しく、結果は変わらない。
+ *
+ * 描画は穴を抜いた形を見せるので、この面積は画面の見た目と一致しない。
+ *
+ * `osmWay.asGeoJSON` / `osmRelation.asGeoJSON` は素のジオメトリを返すが、
+ * テストのモックは Feature を返すので、どちらの形も受ける。
+ */
+function outerRingArea(geo) {
+  const g = geo?.geometry ?? geo;
+  if (!g?.type) return 0;
+
+  if (g.type === 'Polygon') {
+    return area({ type: 'Polygon', coordinates: [g.coordinates[0]] });
+  }
+  if (g.type === 'MultiPolygon') {
+    // outer が複数あるときは全部の外側リングを合算する。1 本目だけを測らない。
+    return area({
+      type: 'MultiPolygon',
+      coordinates: g.coordinates.map(poly => [poly[0]])
+    });
+  }
+  return area(geo);
+}
+
 
 export function analyzeTagStates(osmFeature, plateauFeature) {
   const missing = [];
@@ -36,15 +69,21 @@ export function findCandidates({
   plateauGraph, osmGraph,
   transferredIDs, acceptIDs, ignoreIDs
 }) {
-  const outlines = plateauEntities.filter(f =>
-    f.type === 'way' &&
-    f.tags?.building &&
-    !f.tags['building:part'] &&
-    !transferredIDs.has(f.id) &&
-    !acceptIDs.has(f.id) &&
-    !ignoreIDs.has(f.id) &&
-    f.representativePoint
-  );
+  const outlines = plateauEntities.filter(f => {
+    // 転記元になるのは 1 棟の建物である。way は自分のタグを持ち、
+    // 中庭のある建物は type=multipolygon の relation で届いてタグは relation にだけ付く。
+    // 建物でない multipolygon (森林など) は対象外なので building タグを要求する。
+    const isWay = f.type === 'way';
+    const isCourtyard = f.type === 'relation' && f.tags?.type === 'multipolygon';
+    if (!isWay && !isCourtyard) return false;
+
+    return f.tags?.building &&
+      !f.tags['building:part'] &&
+      !transferredIDs.has(f.id) &&
+      !acceptIDs.has(f.id) &&
+      !ignoreIDs.has(f.id) &&
+      f.representativePoint;
+  });
 
   const osmBuildings = osmEntities.filter(f =>
     f.type === 'way' && f.tags?.building
@@ -68,7 +107,7 @@ export function findCandidates({
 
     const { osm, osmGeo } = matched[0];
 
-    const outlineArea = area(outlineGeo);
+    const outlineArea = outerRingArea(outlineGeo);
     const osmArea = area(osmGeo);
     if (osmArea === 0) continue;
     const ratio = outlineArea / osmArea;
