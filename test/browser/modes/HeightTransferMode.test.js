@@ -326,6 +326,40 @@ describe('HeightTransferMode', () => {
   });
 
 
+  it('apply() records the dataset on the annotation so the changeset gets a source', () => {
+    // Rapid#45: 建物を追加する経路は annotation に dataUsed を付けるが、タグ転記の
+    // 経路は付けていなかった。変更セットの source は EditSystem がこの値から
+    // 組み立てるので、無いと MLIT_PLATEAU も RapiD_Plateau_JP も source_ref も付かない。
+    const context = makeContext();
+    context.systems.rapid.datasets = new Map([
+      ['plateauJapan', { id: 'plateauJapan', dataUsed: ['osmf.jp', 'Plateau Buildings'] }]
+    ]);
+    const mode = new Rapid.HeightTransferMode(context);
+    mode.activate();
+
+    mode.apply(makeCandidate({
+      plateauFeature: { id: 'p1', tags: { height: '12' }, __datasetid__: 'plateauJapan' }
+    }));
+
+    const annotation = context.systems.editor.commitCalls[0].annotation;
+    expect(annotation.dataUsed).to.eql(['osmf.jp', 'Plateau Buildings']);
+  });
+
+
+  it('apply() falls back to the dataset id when the catalog has no entry', () => {
+    const context = makeContext();
+    const mode = new Rapid.HeightTransferMode(context);
+    mode.activate();
+
+    mode.apply(makeCandidate({
+      plateauFeature: { id: 'p1', tags: { height: '12' }, __datasetid__: 'plateauJapan' }
+    }));
+
+    const annotation = context.systems.editor.commitCalls[0].annotation;
+    expect(annotation.dataUsed).to.eql(['plateauJapan']);
+  });
+
+
   it('apply() fires change exactly once per call', () => {
     const context = makeContext();
     const mode = new Rapid.HeightTransferMode(context);
