@@ -238,9 +238,9 @@ describe('PlateauService', () => {
       // outline + parts は relation のおかげで一括 reject される
       const wayResults = result.filter(e => e.type === 'way');
       expect(wayResults).to.have.lengthOf(0);
-      // relation 自体は filter 対象外なので残る
+      // relation 自身も隠す。メンバーが全部消えた relation を残さない。
       const relResults = result.filter(e => e.type === 'relation');
-      expect(relResults).to.have.lengthOf(1);
+      expect(relResults).to.have.lengthOf(0);
     });
 
     it('keeps all relation members when outline does NOT overlap OSM building', () => {
@@ -320,6 +320,182 @@ describe('PlateauService', () => {
       // route relation 経由の cascade は無し、個別 way 判定で reject
       const wayResults = result.filter(e => e.type === 'way');
       expect(wayResults).to.have.lengthOf(0);
+    });
+
+
+    // ----------------------------------------------------------------------
+    // type=multipolygon: 中庭のある建物。outer が外形、inner が穴。
+    // タグは relation にだけ付き、メンバー way はタグを持たない。
+    // ----------------------------------------------------------------------
+
+    function makeMultipolygon(plateauGraph, relId, outerId, innerIds, outerCoords, innerCoordsArr) {
+      let g = plateauGraph;
+      const outRes = makePlateauWay(g, outerId, outerCoords);
+      g = outRes.graph;
+      const inners = [];
+      for (let i = 0; i < innerIds.length; i++) {
+        const iRes = makePlateauWay(g, innerIds[i], innerCoordsArr[i]);
+        g = iRes.graph;
+        inners.push(iRes.way);
+      }
+      const members = [{ id: outRes.way.id, type: 'way', role: 'outer' }];
+      for (const inner of inners) members.push({ id: inner.id, type: 'way', role: 'inner' });
+      const relation = Rapid.osmRelation({
+        id: relId,
+        tags: { type: 'multipolygon', building: 'yes' },
+        members: members,
+      });
+      g = g.replace(relation);
+      return { graph: g, outer: outRes.way, inners, relation };
+    }
+
+    it('rejects outer and inner together when the outer overlaps an OSM building', () => {
+      let osmGraph = new Rapid.Graph();
+      const osmRes = makeBuilding(osmGraph, 'osmB1', [[0,0], [1,0], [1,1], [0,1]]);
+      _service.context.systems.editor._graph = osmRes.graph;
+      _service.context.systems.editor._entities = [osmRes.way];
+
+      let plateauGraph = new Rapid.Graph();
+      const mp = makeMultipolygon(
+        plateauGraph, 'r_mp1', 'pOuter1', ['pInner1'],
+        [[0.5,0.5], [1.5,0.5], [1.5,1.5], [0.5,1.5]],   // outer が OSM と重なる
+        [[[1.2,1.2], [1.4,1.2], [1.4,1.4], [1.2,1.4]]], // inner は OSM の bbox 外
+      );
+      plateauGraph = mp.graph;
+
+      const entities = [mp.outer, mp.inners[0], mp.relation];
+      const result = _service._filterPlateauOverlaps(entities, plateauGraph);
+
+      const wayIds = result.filter(e => e.type === 'way').map(e => e.id);
+      expect(wayIds).to.have.lengthOf(0, 'outer と inner はまとめて隠れる');
+    });
+
+    it('keeps outer and inner together when the outer does not overlap', () => {
+      let osmGraph = new Rapid.Graph();
+      const osmRes = makeBuilding(osmGraph, 'osmB1', [[0,0], [1,0], [1,1], [0,1]]);
+      _service.context.systems.editor._graph = osmRes.graph;
+      _service.context.systems.editor._entities = [osmRes.way];
+
+      let plateauGraph = new Rapid.Graph();
+      const mp = makeMultipolygon(
+        plateauGraph, 'r_mp2', 'pOuter2', ['pInner2'],
+        [[10,10], [11,10], [11,11], [10,11]],
+        [[[10.4,10.4], [10.6,10.4], [10.6,10.6], [10.4,10.6]]],
+      );
+      plateauGraph = mp.graph;
+
+      const entities = [mp.outer, mp.inners[0], mp.relation];
+      const result = _service._filterPlateauOverlaps(entities, plateauGraph);
+
+      const wayIds = result.filter(e => e.type === 'way').map(e => e.id);
+      expect(wayIds).to.include('pOuter2');
+      expect(wayIds).to.include('pInner2');
+    });
+
+    it('does not judge an inner ring on its own', () => {
+      // inner だけを OSM 建物に重ねる。個別判定なら inner が reject される配置。
+      // outer は OSM から離れているので、意味単位で扱えば inner も残る。
+      //
+      // ジオメトリとしては inner が outer の外に出るが、conflation は外形だけを
+      // 見るので判定には影響しない。outer が OSM 建物を含む配置にすると outer 自身も
+      // 重なり判定に引っかかり、このテストの主張が検証できなくなる。
+      let osmGraph = new Rapid.Graph();
+      const osmRes = makeBuilding(osmGraph, 'osmB2', [[20.4,20.4], [20.6,20.4], [20.6,20.6], [20.4,20.6]]);
+      _service.context.systems.editor._graph = osmRes.graph;
+      _service.context.systems.editor._entities = [osmRes.way];
+
+      let plateauGraph = new Rapid.Graph();
+      const mp = makeMultipolygon(
+        plateauGraph, 'r_mp3', 'pOuter3', ['pInner3'],
+        [[30,30], [31,30], [31,31], [30,31]],             // outer は OSM から離す
+        [[[20.4,20.4], [20.6,20.4], [20.6,20.6], [20.4,20.6]]],  // inner は OSM に重なる
+      );
+      plateauGraph = mp.graph;
+
+      const entities = [mp.outer, mp.inners[0], mp.relation];
+      const result = _service._filterPlateauOverlaps(entities, plateauGraph);
+
+      const wayIds = result.filter(e => e.type === 'way').map(e => e.id);
+      expect(wayIds).to.include('pInner3', 'inner が単独で判定されている');
+    });
+
+    it('drops a multipolygon relation when its outer overlaps', () => {
+      let osmGraph = new Rapid.Graph();
+      const osmRes = makeBuilding(osmGraph, 'osmB1', [[0,0], [1,0], [1,1], [0,1]]);
+      _service.context.systems.editor._graph = osmRes.graph;
+      _service.context.systems.editor._entities = [osmRes.way];
+
+      let plateauGraph = new Rapid.Graph();
+      const mp = makeMultipolygon(
+        plateauGraph, 'r_mp4', 'pOuter4', ['pInner4'],
+        [[0.5,0.5], [1.5,0.5], [1.5,1.5], [0.5,1.5]],
+        [[[1.2,1.2], [1.4,1.2], [1.4,1.4], [1.2,1.4]]],
+      );
+      plateauGraph = mp.graph;
+
+      const result = _service._filterPlateauOverlaps(
+        [mp.outer, mp.inners[0], mp.relation], plateauGraph
+      );
+      expect(result.filter(e => e.type === 'relation')).to.have.lengthOf(0);
+    });
+
+    it('keeps a multipolygon relation when its outer does not overlap', () => {
+      let osmGraph = new Rapid.Graph();
+      const osmRes = makeBuilding(osmGraph, 'osmB1', [[0,0], [1,0], [1,1], [0,1]]);
+      _service.context.systems.editor._graph = osmRes.graph;
+      _service.context.systems.editor._entities = [osmRes.way];
+
+      let plateauGraph = new Rapid.Graph();
+      const mp = makeMultipolygon(
+        plateauGraph, 'r_mp5', 'pOuter5', ['pInner5'],
+        [[10,10], [11,10], [11,11], [10,11]],
+        [[[10.4,10.4], [10.6,10.4], [10.6,10.6], [10.4,10.6]]],
+      );
+      plateauGraph = mp.graph;
+
+      const result = _service._filterPlateauOverlaps(
+        [mp.outer, mp.inners[0], mp.relation], plateauGraph
+      );
+      expect(result.filter(e => e.type === 'relation')).to.have.lengthOf(1);
+    });
+
+    it('keeps a relation whose outer way is not in the graph', () => {
+      // 判定できない (null) ときは隠さない。way 側のフォールバックと同じ。
+      let osmGraph = new Rapid.Graph();
+      const osmRes = makeBuilding(osmGraph, 'osmB1', [[0,0], [1,0], [1,1], [0,1]]);
+      _service.context.systems.editor._graph = osmRes.graph;
+      _service.context.systems.editor._entities = [osmRes.way];
+
+      const relation = Rapid.osmRelation({
+        id: 'r_mp_missing',
+        tags: { type: 'multipolygon', building: 'yes' },
+        members: [{ id: 'pOuterMissing', type: 'way', role: 'outer' }],
+      });
+      const g = new Rapid.Graph().replace(relation);
+
+      const result = _service._filterPlateauOverlaps([relation], g);
+      expect(result.filter(e => e.type === 'relation')).to.have.lengthOf(1);
+    });
+
+    it('keeps a non-building relation regardless of its members', () => {
+      let osmGraph = new Rapid.Graph();
+      const osmRes = makeBuilding(osmGraph, 'osmB1', [[0,0], [1,0], [1,1], [0,1]]);
+      _service.context.systems.editor._graph = osmRes.graph;
+      _service.context.systems.editor._entities = [osmRes.way];
+
+      let g = new Rapid.Graph();
+      const w1 = makePlateauWay(g, 'pRouteWay2', [[0.5,0.5], [1.5,0.5], [1.5,1.5], [0.5,1.5]]);
+      g = w1.graph;
+      const routeRel = Rapid.osmRelation({
+        id: 'r_route2',
+        tags: { type: 'route', route: 'bus' },
+        members: [{ id: w1.way.id, type: 'way', role: '' }],
+      });
+      g = g.replace(routeRel);
+
+      const result = _service._filterPlateauOverlaps([w1.way, routeRel], g);
+      expect(result.filter(e => e.type === 'relation')).to.have.lengthOf(1);
+      expect(result.filter(e => e.type === 'way')).to.have.lengthOf(0);
     });
   });
 

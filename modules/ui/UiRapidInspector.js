@@ -438,12 +438,16 @@ export class UiRapidInspector {
     // Phase 4-B-1: building relation member の場合は label / description を切り替え
     // Phase 4-C: building relation member の場合は「この feature のみ追加」の opt-out を追加
     const buildingInfo = this._getBuildingRelationInfo();
-    const acceptLabelStringID = buildingInfo
-      ? 'rapid_inspector.option_accept_entire_building.label'
-      : 'rapid_inspector.option_accept.label';
-    const acceptReferenceStringID = buildingInfo
-      ? 'rapid_inspector.option_accept_entire_building.description'
-      : 'rapid_inspector.option_accept.description';
+    const isCourtyard = buildingInfo?.relationType === 'multipolygon';
+    let acceptLabelStringID = 'rapid_inspector.option_accept.label';
+    let acceptReferenceStringID = 'rapid_inspector.option_accept.description';
+    if (isCourtyard) {
+      acceptLabelStringID = 'rapid_inspector.option_accept_entire_courtyard_building.label';
+      acceptReferenceStringID = 'rapid_inspector.option_accept_entire_courtyard_building.description';
+    } else if (buildingInfo) {
+      acceptLabelStringID = 'rapid_inspector.option_accept_entire_building.label';
+      acceptReferenceStringID = 'rapid_inspector.option_accept_entire_building.description';
+    }
 
     const choiceData = [
       {
@@ -456,8 +460,10 @@ export class UiRapidInspector {
       }
     ];
 
-    // Phase 4-C: relation member 時は「この feature だけ追加」 (cascade なし) を追加
-    if (buildingInfo) {
+    // Phase 4-C: relation member 時は「この feature だけ追加」 (cascade なし) を追加。
+    // ただし multipolygon では出さない。メンバー way はタグを持たないので、
+    // 1 本だけ追加すると必ずタグの無い way になる。
+    if (buildingInfo && !isCourtyard) {
       choiceData.push({
         key: 'accept_only_this',
         iconName: '#rapid-icon-rapid-plus-circle',
@@ -503,12 +509,31 @@ export class UiRapidInspector {
       .text(l10n.t('rapid_inspector.prompt'));
 
     // multi-section building 情報行: 該当時のみ表示
+    //
+    // type=multipolygon + building relation は inner (courtyard) 0 件でも仕様上あり得る。
+    // 現状の 2 producer はどちらも実際には 0 件を送ってこない:
+    //   - PLATEAU API は ring が 1 つ以下なら relation でなく単一の tagged way を出す
+    //     (XML 生成側の `if len(rings) <= 1`)。
+    //   - EsriService も ways.length === 1 なら単一 tagged way を返し、relation を組むのは
+    //     複数 ring のときだけで、そのとき role 割り当てにより inner が最低 1 つ入る。
+    // それでも「0 courtyards」という文言はナンセンスなので、この行だけは防御的に非表示にする。
+    // isCourtyard 自体は partCount に依存させない (acceptOnlyThis の抑制に使われるため)。
     const $multiInfo = $choices.selectAll('.rapid-inspector-multi-section-building-info');
-    if (buildingInfo) {
-      const partCount = buildingInfo.partCount;
+    const partCount = buildingInfo?.partCount;
+    const hideAsEmptyCourtyard = isCourtyard && partCount === 0;
+    if (buildingInfo && !hideAsEmptyCourtyard) {
+      // datum が relation なら建物そのものを選んでいる。way なら建物の一部を選んでいる。
+      // 中庭建物は relation 単位で描画されるので、実際に来るのは relation のほうである。
+      const isRelationDatum = this.datum?.type === 'relation';
+      let infoStringID = 'rapid_inspector.multi_section_building_info';
+      if (isCourtyard) {
+        infoStringID = isRelationDatum
+          ? 'rapid_inspector.courtyard_building_selected_info'
+          : 'rapid_inspector.courtyard_building_info';
+      }
       $multiInfo
         .style('display', null)
-        .text(l10n.t('rapid_inspector.multi_section_building_info', { n: partCount }));
+        .text(l10n.t(infoStringID, { n: partCount }));
     } else {
       $multiInfo
         .style('display', 'none')

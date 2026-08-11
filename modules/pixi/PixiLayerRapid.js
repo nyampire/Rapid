@@ -343,11 +343,11 @@ export class PixiLayerRapid extends AbstractLayer {
 
       // PlateauService.getData applies its own conflation; here we only need
       // to filter out features the user already accepted or ignored and keep
-      // the polygonal members (outline + parts).
-      const entities = service.getData(datasetID)
-        .filter(entity => entity.type === 'way' && !isAcceptedOrIgnored(entity));
-
-      data.polygons = entities.filter(d => d.geometry(dsGraph) === 'area');
+      // the polygonal members (outline + parts, or a courtyard relation).
+      const renderables = this._plateauRenderables(
+        service.getData(datasetID), dsGraph, isAcceptedOrIgnored
+      );
+      data.polygons = renderables.polygons;
     }
 
     const pointsContainer = this.scene.groups.get('points');
@@ -374,6 +374,54 @@ export class PixiLayerRapid extends AbstractLayer {
     this.renderPolygons(areasContainer, dataset, dsGraph, frame, viewport, zoom, data);
     this.renderLines(linesContainer, dataset, dsGraph, frame, viewport, zoom, data);
     this.renderPoints(pointsContainer, dataset, dsGraph, frame, viewport, zoom, data);
+  }
+
+
+  /**
+   * _plateauRenderables
+   * Plateau の entity 群から、描画するポリゴンを選ぶ。
+   *
+   * 中庭のある建物は `type=multipolygon` の relation で届く。外形が role='outer'、
+   * 穴が role='inner' で、タグは relation にだけ付く。`osmRelation.geometry()` は
+   * multipolygon に対して 'area' を返し、`PixiFeaturePolygon` は外側に続く穴を
+   * 既に描けるので、relation をそのまま積めば穴が穴として描かれる。
+   *
+   * そのメンバー way は積まない。積むと外形が二重に描かれ、穴の上にも塗りが乗る。
+   *
+   * `type=building` は従来どおり outline と parts を個別に積む。穴とは別の構造なので、
+   * 描画方式は変えない。
+   *
+   * @param   {Array}  entities  service.getData() の戻り値
+   * @param   {Graph}  dsGraph   データセットのグラフ
+   * @return  {{polygons: Array}}
+   */
+  _plateauRenderables(entities, dsGraph, isAcceptedOrIgnored) {
+    const skip = isAcceptedOrIgnored || (() => false);
+
+    // 先に「relation として描く」対象を決め、そのメンバー way を除外集合に入れる。
+    const memberWayIDs = new Set();
+    const relations = [];
+    for (const entity of entities) {
+      if (entity.type !== 'relation') continue;
+      if (entity.tags?.type !== 'multipolygon' || !entity.tags?.building) continue;
+      if (skip(entity)) continue;
+      relations.push(entity);
+      for (const m of entity.members ?? []) {
+        if (m.type === 'way') memberWayIDs.add(m.id);
+      }
+    }
+
+    const polygons = [];
+    for (const relation of relations) {
+      if (relation.geometry(dsGraph) === 'area') polygons.push(relation);
+    }
+    for (const entity of entities) {
+      if (entity.type !== 'way') continue;
+      if (memberWayIDs.has(entity.id)) continue;
+      if (skip(entity)) continue;
+      if (entity.geometry(dsGraph) === 'area') polygons.push(entity);
+    }
+    return { polygons };
   }
 
 

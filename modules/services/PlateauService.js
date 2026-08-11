@@ -451,6 +451,17 @@ export class PlateauService extends AbstractSystem {
    * outline と各 parts が個別に reject される結果として「親 outline が消えて parts だけ宙に浮く」
    * 等のジオメトリ不整合を防ぐ。
    *
+   * 中庭のある建物は type=multipolygon で届く。外形が role='outer'、穴が role='inner' で、
+   * タグは relation にだけ付く。判定はジオメトリだけを見てタグを見ないので、個別に評価すると
+   * 穴が単独の建物として扱われる。type=building と同じ semantic 単位として扱ってこれを塞ぐ。
+   * 外形の役割名だけが違う (outline と outer)。
+   *
+   * 判定が true になった relation は、メンバー way だけでなく relation 自身も返り値から外す。
+   * メンバーが全部隠れた relation を呼び出し側に渡さないためである。
+   *
+   * この関数は配列を絞り込むだけで、`ds.graph` は変更しない。
+   * 除外した way も relation もグラフには残り続ける。
+   *
    * @param   {Array}  entities
    * @param   {Graph}  plateauGraph
    * @return  {Array}  Filtered entities
@@ -497,19 +508,28 @@ export class PlateauService extends AbstractSystem {
 
     if (osmBuildingData.length === 0) return entities;
 
-    // way_id → building relation のマップ + relation_id → outline way_id を記録
+    // way_id → building relation のマップ + relation_id → 外形 way_id を記録
+    //
+    // 対象は 2 種類ある。
+    // type=building は PLATEAU LOD2 の outline + parts で、外形の役割は 'outline'。
+    // type=multipolygon は中庭のある建物で、外形の役割は 'outer'、穴が 'inner'。
+    // どちらも「1 棟の建物」なので、外形の判定にメンバー全員が従う。
+    //
+    // multipolygon のメンバー way はタグを持たないため、個別に判定すると穴が
+    // 単独の建物として扱われる。ここでまとめて拾うことでその経路を塞ぐ。
     const wayToBuildingRelation = new Map();
     const buildingRelationOutline = new Map();
     for (const e of entities) {
       if (e.type !== 'relation') continue;
-      if (e.tags?.type !== 'building') continue;
+      const relType = e.tags?.type;
+      if (relType !== 'building' && relType !== 'multipolygon') continue;
       let outlineWayId;
       for (const m of e.members ?? []) {
         if (m.type !== 'way') continue;
         if (!wayToBuildingRelation.has(m.id)) {
           wayToBuildingRelation.set(m.id, e);
         }
-        if (m.role === 'outline' && outlineWayId === undefined) {
+        if ((m.role === 'outline' || m.role === 'outer') && outlineWayId === undefined) {
           outlineWayId = m.id;
         }
       }
@@ -539,7 +559,20 @@ export class PlateauService extends AbstractSystem {
 
     return entities.filter(entity => {
       if (entity.type === 'node') return true;
-      if (entity.type === 'relation') return true;
+
+      if (entity.type === 'relation') {
+        // 追跡対象でない relation (type=route など) は素通しする。
+        if (!buildingRelationOutline.has(entity.id)) return true;
+        // メンバーが隠れる relation は relation 自身も隠す。
+        // 判定できない (null) ときは隠さない。way 側のフォールバックと同じ。
+        //
+        // 一覧に残っているメンバーを数えないこと。getData は表示範囲で切り取った
+        // スライスに filter をかけるので、範囲外のメンバーは単に一覧に含まれない。
+        // 数える方式にすると、パンして relation が範囲の端にかかった時点で
+        // 「メンバー 0 件」と見えて、OSM に無い建物まで消える。
+        return evalRelationOverlap(entity) !== true;
+      }
+
       if (entity.type !== 'way') return true;
 
       if (cache.rejected.has(entity.id)) return false;
@@ -864,9 +897,15 @@ export class PlateauService extends AbstractSystem {
     } else if (type === 'way') {
       entity = this._parseWay(element, entityID);
     } else if (type === 'relation') {
-      // Phase 3: PLATEAU LOD2 type=building relation (outline + parts) のような
-      // 構造をクライアント graph に取り込む。relation 単独では geometry を持たず
-      // メンバー way がレンダリングを担うため、parse + graph 追加だけで十分。
+      // PLATEAU の relation をクライアント graph に取り込む。2 種類ある。
+      //
+      // type=building は LOD2 の outline + parts で、メンバー way がレンダリングを担う。
+      // relation 自身は geometry を持たないので、parse して graph に入れるだけでよい。
+      //
+      // type=building タグ付きの type=multipolygon は中庭のある建物で、こちらは違う。
+      // relation 自身が geometry を持ち (osmRelation.geometry() が 'area' を返す)、
+      // PixiLayerRapid が relation を 1 つのポリゴンとして描き、メンバー way は描かない。
+      // そのためユーザが hover / select できるのは relation のほうになる。
       entity = this._parseRelation(element, entityID);
     } else {
       return null;

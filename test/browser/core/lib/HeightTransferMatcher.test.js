@@ -59,6 +59,104 @@ describe('HeightTransferMatcher', () => {
                  [139.756, 35.680], [139.755, 35.680], [139.755, 35.679]];
     const SQR_CENTER = [139.7555, 35.6795];
 
+    // 中庭のある建物。asGeoJSON は MultiPolygon を返し、タグは relation にだけ付く。
+    // outerCoords が外側リング、holeCoords が穴。
+    function courtyard(id, outerCoords, holeCoords, tags, rp) {
+      return { id, type: 'relation',
+               tags: { type: 'multipolygon', building: 'yes', ...tags },
+               representativePoint: rp,
+               asGeoJSON: () => ({ type: 'MultiPolygon',
+                                   coordinates: [[outerCoords, holeCoords]] }) };
+    }
+
+    // SQR の内側に収まる、一辺がおよそ 8 割の穴。面積比でおよそ 0.36 になる。
+    const HOLE = [[139.7551, 35.6791], [139.75590, 35.6791],
+                  [139.75590, 35.67990], [139.7551, 35.67990], [139.7551, 35.6791]];
+
+    it('accepts a type=multipolygon building relation as a candidate', () => {
+      const p = courtyard('r1', SQR, HOLE, { height: '12' }, SQR_CENTER);
+      const o = osmBuilding('o1', SQR);
+      const out = Rapid.findCandidates({
+        plateauEntities: [p], osmEntities: [o],
+        transferredIDs: new Set(), acceptIDs: new Set(), ignoreIDs: new Set()
+      });
+      expect(out).to.have.lengthOf(1, '中庭建物が候補になっていない');
+      expect(out[0].state).to.equal('CANDIDATE');
+      expect(out[0].missingTags).to.eql(['height']);
+    });
+
+    it('measures the courtyard building by its outer ring, not its net area', () => {
+      // 穴を差し引くと比は 0.5 を割り、AREA_RATIO_MIN で落ちる。
+      // 外側リングで測れば OSM と同じ形なので比は 1 になる。
+      const p = courtyard('r2', SQR, HOLE, { height: '12' }, SQR_CENTER);
+      const o = osmBuilding('o2', SQR);
+      const out = Rapid.findCandidates({
+        plateauEntities: [p], osmEntities: [o],
+        transferredIDs: new Set(), acceptIDs: new Set(), ignoreIDs: new Set()
+      });
+      expect(out).to.have.lengthOf(1, '正味面積で測って落ちている');
+      expect(out[0].ratio).to.be.closeTo(1, 0.05);
+    });
+
+    it('ignores a multipolygon that is not a building', () => {
+      const forest = { id: 'r3', type: 'relation',
+                       tags: { type: 'multipolygon', landuse: 'forest', height: '12' },
+                       representativePoint: SQR_CENTER,
+                       asGeoJSON: () => ({ type: 'MultiPolygon',
+                                           coordinates: [[SQR, HOLE]] }) };
+      const o = osmBuilding('o3', SQR);
+      const out = Rapid.findCandidates({
+        plateauEntities: [forest], osmEntities: [o],
+        transferredIDs: new Set(), acceptIDs: new Set(), ignoreIDs: new Set()
+      });
+      expect(out).to.have.lengthOf(0);
+    });
+
+    it('keeps the area of a plain way unchanged', () => {
+      // 本番データの大半はこの経路。リングが 1 本なので外側リング = 全体。
+      const p = outline('p1', SQR, { height: '12' }, SQR_CENTER);
+      const o = osmBuilding('o1', SQR);
+      const out = Rapid.findCandidates({
+        plateauEntities: [p], osmEntities: [o],
+        transferredIDs: new Set(), acceptIDs: new Set(), ignoreIDs: new Set()
+      });
+      expect(out).to.have.lengthOf(1);
+      expect(out[0].ratio).to.be.closeTo(1, 0.001);
+    });
+
+    it('sums every outer ring when a multipolygon has more than one', () => {
+      // 1 本目だけを黙って測らないことを固定する。
+      // SQR と、その東隣に同じ大きさの正方形をもう 1 つ置く。
+      const EAST = SQR.map(([lon, lat]) => [lon + 0.001, lat]);
+      const twoOuters = { id: 'r4', type: 'relation',
+                          tags: { type: 'multipolygon', building: 'yes', height: '12' },
+                          representativePoint: SQR_CENTER,
+                          asGeoJSON: () => ({ type: 'MultiPolygon',
+                                              coordinates: [[SQR], [EAST]] }) };
+      const o = osmBuilding('o4', SQR);
+      const out = Rapid.findCandidates({
+        plateauEntities: [twoOuters], osmEntities: [o],
+        transferredIDs: new Set(), acceptIDs: new Set(), ignoreIDs: new Set()
+      });
+      // 2 つ分の面積なので比はおよそ 2 になる。1 本目だけを測っていれば 1 になる。
+      // このテストが見るのは比の値だけで、state は見ない。比が 2.0 の境界に乗るため
+      // CANDIDATE と AREA_MISMATCH のどちらになるかは投影の誤差で変わりうる。
+      expect(out).to.have.lengthOf(1);
+      expect(out[0].ratio).to.be.closeTo(2, 0.1);
+    });
+
+    it('does not offer a courtyard building again after it was transferred', () => {
+      // 転記後は relation の id が transferredIDs に入る。絞り込みが id で見ているので
+      // way と同じ扱いになるが、relation でも効くことを固定しておく。
+      const p = courtyard('r5', SQR, HOLE, { height: '12' }, SQR_CENTER);
+      const o = osmBuilding('o5', SQR);
+      const out = Rapid.findCandidates({
+        plateauEntities: [p], osmEntities: [o],
+        transferredIDs: new Set(['r5']), acceptIDs: new Set(), ignoreIDs: new Set()
+      });
+      expect(out).to.have.lengthOf(0);
+    });
+
     it('returns CANDIDATE when Plateau has tags and OSM is missing them', () => {
       const p = outline('p1', SQR, { height: '12' }, SQR_CENTER);
       const o = osmBuilding('o1', SQR);
