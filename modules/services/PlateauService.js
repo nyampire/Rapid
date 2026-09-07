@@ -475,16 +475,41 @@ export class PlateauService extends AbstractSystem {
     const osmGraph = editor.staging.graph;
 
     // 1. Collect OSM buildings in the visible extent
+    //
+    // 建物の描かれ方は 2 通りある。
+    // 単純な建物は building タグの付いた way で届く。
+    // 中庭のある建物は type=multipolygon の relation で届き、building タグは relation に付く。
+    // メンバーの way はタグを持たないので、way だけを集めると後者が判定の材料に入らず、
+    // すでに OSM にある建物が PLATEAU 側の候補として出てしまう。
+    //
+    // 外形 (role='outer') の way を材料に足して、この経路を無くす。
+    // 穴 (role='inner') は面から差し引かない。外形だけで重なりを見る。
+    // 中庭の中にだけ建つ別の建物を重なりと見なす場合があるが、
+    // 穴のある多角形を重なり判定に渡す変更より影響が小さい。
+    const isOsmBuilding = (tags) => tags?.building && tags.building !== 'no';
+
     const osmEntities = editor.intersects(extent);
-    const osmBuildings = osmEntities.filter(entity =>
-      entity.type === 'way' &&
-      entity.tags.building &&
-      entity.tags.building !== 'no'
-    );
+    const osmBuildings = new Map();   // way_id → way
+
+    for (const entity of osmEntities) {
+      if (entity.type === 'way') {
+        if (isOsmBuilding(entity.tags)) osmBuildings.set(entity.id, entity);
+        continue;
+      }
+      if (entity.type !== 'relation') continue;
+      if (entity.tags?.type !== 'multipolygon') continue;
+      if (!isOsmBuilding(entity.tags)) continue;
+
+      for (const m of entity.members ?? []) {
+        if (m.type !== 'way' || m.role !== 'outer') continue;
+        const outerWay = osmGraph.hasEntity(m.id);
+        if (outerWay) osmBuildings.set(outerWay.id, outerWay);
+      }
+    }
 
     // 2. Prepare OSM building bounding boxes + polygon coordinates
     const osmBuildingData = [];
-    for (const way of osmBuildings) {
+    for (const way of osmBuildings.values()) {
       try {
         if (!way.isClosed()) continue;
         const coords = way.nodes.map(nodeID => osmGraph.entity(nodeID).loc);
