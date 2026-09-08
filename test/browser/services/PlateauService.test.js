@@ -497,6 +497,199 @@ describe('PlateauService', () => {
       expect(result.filter(e => e.type === 'relation')).to.have.lengthOf(1);
       expect(result.filter(e => e.type === 'way')).to.have.lengthOf(0);
     });
+
+
+    // ----------------------------------------------------------------------
+    // OSM 側の type=multipolygon 建物。中庭のある建物はこの形で届く。
+    // building タグは relation に付き、メンバーの way にはタグが無い。
+    // way だけを集めると判定の材料に入らず、取り込み済みの建物が候補に出る。
+    // ----------------------------------------------------------------------
+
+    // Helper: create an OSM multipolygon building (tags on the relation only)
+    function makeOsmMultipolygonBuilding(graph, relId, outerId, outerCoords, innerId, innerCoords) {
+      let g = graph;
+
+      function addWay(wayId, coords) {
+        const nodeIds = [];
+        for (let i = 0; i < coords.length; i++) {
+          const nodeId = wayId + '-n' + i;
+          nodeIds.push(nodeId);
+          g = g.replace(Rapid.osmNode({ id: nodeId, loc: coords[i] }));
+        }
+        nodeIds.push(nodeIds[0]);
+        const way = Rapid.osmWay({ id: wayId, nodes: nodeIds, tags: {} });
+        g = g.replace(way);
+        return way;
+      }
+
+      const outer = addWay(outerId, outerCoords);
+      const members = [{ id: outer.id, type: 'way', role: 'outer' }];
+      let inner;
+      if (innerId) {
+        inner = addWay(innerId, innerCoords);
+        members.push({ id: inner.id, type: 'way', role: 'inner' });
+      }
+
+      const relation = Rapid.osmRelation({
+        id: relId,
+        tags: { type: 'multipolygon', building: 'yes' },
+        members: members,
+      });
+      g = g.replace(relation);
+      return { graph: g, outer, inner, relation };
+    }
+
+    it('filters out Plateau buildings that overlap an OSM multipolygon building', () => {
+      const osm = makeOsmMultipolygonBuilding(
+        new Rapid.Graph(), 'osmMp1', 'osmMpOuter1',
+        [[0,0], [1,0], [1,1], [0,1]],
+        'osmMpInner1', [[0.4,0.4], [0.6,0.4], [0.6,0.6], [0.4,0.6]]
+      );
+      _service.context.systems.editor._graph = osm.graph;
+      _service.context.systems.editor._entities = [osm.outer, osm.inner, osm.relation];
+
+      let plateauGraph = new Rapid.Graph();
+      const p = makePlateauWay(plateauGraph, 'pMp1', [[0.5,0.5], [1.5,0.5], [1.5,1.5], [0.5,1.5]]);
+      plateauGraph = p.graph;
+
+      const result = _service._filterPlateauOverlaps([p.way], plateauGraph);
+      expect(result).to.have.lengthOf(0, 'OSM の multipolygon 建物が判定の材料になっている');
+    });
+
+    it('keeps Plateau buildings that do not overlap an OSM multipolygon building', () => {
+      const osm = makeOsmMultipolygonBuilding(
+        new Rapid.Graph(), 'osmMp2', 'osmMpOuter2',
+        [[0,0], [1,0], [1,1], [0,1]],
+        'osmMpInner2', [[0.4,0.4], [0.6,0.4], [0.6,0.6], [0.4,0.6]]
+      );
+      _service.context.systems.editor._graph = osm.graph;
+      _service.context.systems.editor._entities = [osm.outer, osm.inner, osm.relation];
+
+      let plateauGraph = new Rapid.Graph();
+      const p = makePlateauWay(plateauGraph, 'pMp2', [[10,10], [11,10], [11,11], [10,11]]);
+      plateauGraph = p.graph;
+
+      const result = _service._filterPlateauOverlaps([p.way], plateauGraph);
+      expect(result.map(e => e.id)).to.include('pMp2');
+    });
+
+    it('does not treat a non-building multipolygon as an OSM building', () => {
+      // type=multipolygon でも building タグが無ければ建物ではない (例: landuse)。
+      const osm = makeOsmMultipolygonBuilding(
+        new Rapid.Graph(), 'osmMp3', 'osmMpOuter3',
+        [[0,0], [1,0], [1,1], [0,1]],
+        null, null
+      );
+      const landuse = Rapid.osmRelation({
+        id: 'osmMp3',
+        tags: { type: 'multipolygon', landuse: 'residential' },
+        members: [{ id: 'osmMpOuter3', type: 'way', role: 'outer' }],
+      });
+      _service.context.systems.editor._graph = osm.graph.replace(landuse);
+      _service.context.systems.editor._entities = [osm.outer, landuse];
+
+      let plateauGraph = new Rapid.Graph();
+      const p = makePlateauWay(plateauGraph, 'pMp3', [[0.5,0.5], [1.5,0.5], [1.5,1.5], [0.5,1.5]]);
+      plateauGraph = p.graph;
+
+      const result = _service._filterPlateauOverlaps([p.way], plateauGraph);
+      expect(result.map(e => e.id)).to.include('pMp3');
+    });
+
+    it('ignores an OSM multipolygon whose outer way is not loaded', () => {
+      // メンバーだけ範囲外で未取得の場合。判定の材料が無いので隠さない。
+      const relation = Rapid.osmRelation({
+        id: 'osmMp4',
+        tags: { type: 'multipolygon', building: 'yes' },
+        members: [{ id: 'osmMpOuterMissing', type: 'way', role: 'outer' }],
+      });
+      _service.context.systems.editor._graph = new Rapid.Graph().replace(relation);
+      _service.context.systems.editor._entities = [relation];
+
+      let plateauGraph = new Rapid.Graph();
+      const p = makePlateauWay(plateauGraph, 'pMp4', [[0.5,0.5], [1.5,0.5], [1.5,1.5], [0.5,1.5]]);
+      plateauGraph = p.graph;
+
+      const result = _service._filterPlateauOverlaps([p.way], plateauGraph);
+      expect(result.map(e => e.id)).to.include('pMp4');
+    });
+
+    it('keeps a Plateau building that sits inside the courtyard of an OSM multipolygon', () => {
+      // 中庭 (role='inner') は OSM の建物ではない。そこに建つ PLATEAU 建物は
+      // OSM に対応する要素を持たないので、候補として残す。
+      const osm = makeOsmMultipolygonBuilding(
+        new Rapid.Graph(), 'osmMp5', 'osmMpOuter5',
+        [[0,0], [10,0], [10,10], [0,10]],
+        'osmMpInner5', [[3,3], [7,3], [7,7], [3,7]]
+      );
+      _service.context.systems.editor._graph = osm.graph;
+      _service.context.systems.editor._entities = [osm.outer, osm.inner, osm.relation];
+
+      let plateauGraph = new Rapid.Graph();
+      const p = makePlateauWay(plateauGraph, 'pMp5', [[4,4], [5,4], [5,5], [4,5]]);
+      plateauGraph = p.graph;
+
+      const result = _service._filterPlateauOverlaps([p.way], plateauGraph);
+      expect(result.map(e => e.id)).to.include('pMp5', '中庭が面から差し引かれている');
+    });
+
+    it('still filters a Plateau building that straddles the courtyard and the building', () => {
+      const osm = makeOsmMultipolygonBuilding(
+        new Rapid.Graph(), 'osmMp6', 'osmMpOuter6',
+        [[0,0], [10,0], [10,10], [0,10]],
+        'osmMpInner6', [[3,3], [7,3], [7,7], [3,7]]
+      );
+      _service.context.systems.editor._graph = osm.graph;
+      _service.context.systems.editor._entities = [osm.outer, osm.inner, osm.relation];
+
+      let plateauGraph = new Rapid.Graph();
+      // 中庭の縁をまたぐ。建物の部分と重なるので候補から外れる。
+      const p = makePlateauWay(plateauGraph, 'pMp6', [[5,5], [9,5], [9,9], [5,9]]);
+      plateauGraph = p.graph;
+
+      const result = _service._filterPlateauOverlaps([p.way], plateauGraph);
+      expect(result).to.have.lengthOf(0);
+    });
+
+    it('uses a tagged inner way as an OSM building in its own right', () => {
+      // 中庭に建つ建物が OSM にあるなら、その way は building タグを持つ。
+      // 面として集めるので、同じ位置の PLATEAU 建物は候補から外れる。
+      const osm = makeOsmMultipolygonBuilding(
+        new Rapid.Graph(), 'osmMp7', 'osmMpOuter7',
+        [[0,0], [10,0], [10,10], [0,10]],
+        'osmMpInner7', [[3,3], [7,3], [7,7], [3,7]]
+      );
+      const taggedInner = osm.inner.update({ tags: { building: 'yes' } });
+      _service.context.systems.editor._graph = osm.graph.replace(taggedInner);
+      _service.context.systems.editor._entities = [osm.outer, taggedInner, osm.relation];
+
+      let plateauGraph = new Rapid.Graph();
+      const p = makePlateauWay(plateauGraph, 'pMp7', [[4,4], [5,4], [5,5], [4,5]]);
+      plateauGraph = p.graph;
+
+      const result = _service._filterPlateauOverlaps([p.way], plateauGraph);
+      expect(result).to.have.lengthOf(0);
+    });
+
+    it('lets the relation shape win when the outer way is also tagged as a building', () => {
+      // 外形の way にも building タグが付いている場合。穴の無い面としても集めると
+      // 中庭が埋まるので、relation 側の形だけを使う。
+      const osm = makeOsmMultipolygonBuilding(
+        new Rapid.Graph(), 'osmMp8', 'osmMpOuter8',
+        [[0,0], [10,0], [10,10], [0,10]],
+        'osmMpInner8', [[3,3], [7,3], [7,7], [3,7]]
+      );
+      const taggedOuter = osm.outer.update({ tags: { building: 'yes' } });
+      _service.context.systems.editor._graph = osm.graph.replace(taggedOuter);
+      _service.context.systems.editor._entities = [taggedOuter, osm.inner, osm.relation];
+
+      let plateauGraph = new Rapid.Graph();
+      const p = makePlateauWay(plateauGraph, 'pMp8', [[4,4], [5,4], [5,5], [4,5]]);
+      plateauGraph = p.graph;
+
+      const result = _service._filterPlateauOverlaps([p.way], plateauGraph);
+      expect(result.map(e => e.id)).to.include('pMp8');
+    });
   });
 
 
