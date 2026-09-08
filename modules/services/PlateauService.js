@@ -475,35 +475,86 @@ export class PlateauService extends AbstractSystem {
     const osmGraph = editor.staging.graph;
 
     // 1. Collect OSM buildings in the visible extent
+    //
+    // 建物の描かれ方は 2 通りある。
+    // 単純な建物は building タグの付いた way で届く。
+    // 中庭のある建物は type=multipolygon の relation で届き、building タグは relation に付く。
+    // メンバーの way はタグを持たないので、way だけを集めると後者が判定の材料に入らず、
+    // すでに OSM にある建物が PLATEAU 側の候補として出てしまう。
+    //
+    // 中庭 (role='inner') は面から差し引く。
+    // 池田市の OSM を見ると、この穴の多くは 2 から 67 平方メートルで、中には高さ 2.7 から
+    // 18.5 メートルの PLATEAU 建物がある。中庭ではなく、階段室や塔屋のような構造を、
+    // 一括取り込みが building:part ではなく穴にしたものである。
+    // 差し引かないと、OSM に対応する要素を持たない建物まで候補から外れる。
+    const isOsmBuilding = (tags) => tags?.building && tags.building !== 'no';
+
+    // 閉じた way の座標列を返す。取得できないときは null。
+    const ringOf = (way) => {
+      try {
+        if (!way.isClosed()) return null;
+        const coords = way.nodes.map(nodeID => osmGraph.entity(nodeID).loc);
+        return coords.length >= 4 ? coords : null;
+      } catch (e) {
+        return null;
+      }
+    };
+
     const osmEntities = editor.intersects(extent);
-    const osmBuildings = osmEntities.filter(entity =>
-      entity.type === 'way' &&
-      entity.tags.building &&
-      entity.tags.building !== 'no'
-    );
+    const osmPolygons = [];       // 各要素は環の配列。先頭が外形、以降が穴。
+    const outerWayIDs = new Set();
+
+    for (const entity of osmEntities) {
+      if (entity.type !== 'relation') continue;
+      if (entity.tags?.type !== 'multipolygon') continue;
+      if (!isOsmBuilding(entity.tags)) continue;
+
+      let outer = null;
+      const inners = [];
+      for (const m of entity.members ?? []) {
+        if (m.type !== 'way') continue;
+        const way = osmGraph.hasEntity(m.id);
+        if (!way) continue;
+        const ring = ringOf(way);
+        if (!ring) continue;
+
+        if (m.role === 'outer' && !outer) {
+          outer = ring;
+          // 外形の way 自身にも building タグが付いている場合、穴の無い面としても
+          // 集めると穴が埋まる。relation 側の形を優先する。
+          outerWayIDs.add(way.id);
+        } else if (m.role === 'inner') {
+          inners.push(ring);
+        }
+      }
+      if (outer) osmPolygons.push([outer, ...inners]);
+    }
+
+    // 穴のメンバー way に building タグが付いていれば、それは中庭に建つ建物なので
+    // ここで面として集まる。
+    for (const entity of osmEntities) {
+      if (entity.type !== 'way') continue;
+      if (!isOsmBuilding(entity.tags)) continue;
+      if (outerWayIDs.has(entity.id)) continue;
+      const ring = ringOf(entity);
+      if (ring) osmPolygons.push([ring]);
+    }
 
     // 2. Prepare OSM building bounding boxes + polygon coordinates
+    // 外接矩形は外形から作る。穴は矩形を狭めない。
     const osmBuildingData = [];
-    for (const way of osmBuildings) {
-      try {
-        if (!way.isClosed()) continue;
-        const coords = way.nodes.map(nodeID => osmGraph.entity(nodeID).loc);
-        if (coords.length < 4) continue;
-
-        let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
-        for (const c of coords) {
-          if (c[0] < minX) minX = c[0];
-          if (c[0] > maxX) maxX = c[0];
-          if (c[1] < minY) minY = c[1];
-          if (c[1] > maxY) maxY = c[1];
-        }
-        osmBuildingData.push({
-          coords: [coords],
-          bbox: { minX, minY, maxX, maxY }
-        });
-      } catch (e) {
-        continue;
+    for (const rings of osmPolygons) {
+      let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
+      for (const c of rings[0]) {
+        if (c[0] < minX) minX = c[0];
+        if (c[0] > maxX) maxX = c[0];
+        if (c[1] < minY) minY = c[1];
+        if (c[1] > maxY) maxY = c[1];
       }
+      osmBuildingData.push({
+        coords: rings,
+        bbox: { minX, minY, maxX, maxY }
+      });
     }
 
     if (osmBuildingData.length === 0) return entities;
