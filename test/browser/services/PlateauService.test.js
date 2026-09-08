@@ -693,6 +693,134 @@ describe('PlateauService', () => {
   });
 
 
+  describe('#getData の材料の確認', () => {
+    // 判定は編集ソフトの中にある OSM の建物だけを材料にする。
+    // 材料が集まらない状態では、重なりが無いのか確かめられていないのかを
+    // 区別できない。区別できないまま候補を出すと、すでに OSM にある建物を
+    // 重ねて登録することになる。
+
+    // 表示範囲を覆うタイルの id を、判定と同じ計算で求める
+    function tileIDsInView(service) {
+      return service._tiler.getTiles(service.context.viewport).tiles.map(t => t.id);
+    }
+
+    function setupDataset(coords) {
+      const base = new Rapid.Graph();
+      const tree = new Rapid.Tree(base);   // 空の graph から作り、差分で登録させる
+      let graph = base;
+      const nodeIds = [];
+      for (let i = 0; i < coords.length; i++) {
+        const nodeId = 'pgd-n' + i;
+        nodeIds.push(nodeId);
+        graph = graph.replace(Rapid.osmNode({ id: nodeId, loc: coords[i] }));
+      }
+      nodeIds.push(nodeIds[0]);
+      const way = Rapid.osmWay({ id: 'pgdWay', nodes: nodeIds, tags: { building: 'yes' } });
+      graph = graph.replace(way);
+      _service._datasets.ds1 = { id: 'ds1', graph, tree, cache: {}, lastv: null };
+      return way;
+    }
+
+    function setOsmState(service, { layerEnabled = true, tilesLoaded = true } = {}) {
+      const ctx = service.context;
+      const loaded = new Set(tilesLoaded ? tileIDsInView(service) : []);
+      ctx.services = { osm: { _tileCache: { loaded: loaded } } };
+      ctx.systems.gfx.scene = { layers: new Map([['osm', { id: 'osm', enabled: layerEnabled }]]) };
+    }
+
+    beforeEach(() => {
+      const c = _service.context.viewport.visibleExtent().center();
+      setupDataset([
+        [c[0] - 0.0001, c[1] - 0.0001], [c[0] + 0.0001, c[1] - 0.0001],
+        [c[0] + 0.0001, c[1] + 0.0001], [c[0] - 0.0001, c[1] + 0.0001]
+      ]);
+    });
+
+    it('sanity: the test dataset yields the building', () => {
+      setOsmState(_service, {});
+      const ways = _service.getData('ds1', { skipConflation: true }).filter(e => e.type === 'way');
+      expect(ways).to.have.lengthOf(1, '下ごしらえが効いている');
+    });
+
+    it('returns no candidates while the OSM layer is switched off', () => {
+      setOsmState(_service, { layerEnabled: false });
+      expect(_service.getData('ds1')).to.have.lengthOf(0, 'OSM のレイヤーが消えている');
+    });
+
+    it('returns no candidates while the OSM tiles covering the view are not loaded', () => {
+      setOsmState(_service, { tilesLoaded: false });
+      expect(_service.getData('ds1')).to.have.lengthOf(0, 'タイルが未取得');
+    });
+
+    it('returns candidates once the layer is on and the tiles are loaded', () => {
+      setOsmState(_service, {});
+      const ways = _service.getData('ds1').filter(e => e.type === 'way');
+      expect(ways).to.have.lengthOf(1, '材料が揃っている');
+    });
+
+    it('still returns everything for the height transfer path', () => {
+      // 高さの転記は、OSM の建物と重なる PLATEAU 建物を必要とする。
+      // 材料の有無で結果を変えない。
+      setOsmState(_service, { layerEnabled: false, tilesLoaded: false });
+      const ways = _service.getData('ds1', { skipConflation: true }).filter(e => e.type === 'way');
+      expect(ways).to.have.lengthOf(1);
+    });
+
+    it('judges as before when the OSM state cannot be read', () => {
+      // 上流の取り込みで持ち物の形が変わったときに、候補が出なくなるのを避ける。
+      _service.context.services = {};
+      _service.context.systems.gfx.scene = undefined;
+      const ways = _service.getData('ds1').filter(e => e.type === 'way');
+      expect(ways).to.have.lengthOf(1);
+    });
+
+    // 候補が出ない理由を利用者に伝える。
+    // レイヤーを消したままなのは利用者が直せる状態なので伝える。
+    // タイルの取得は待てば終わるので伝えない。
+    function mockFlash() {
+      const f = () => { f.calls.push(f._label); return f; };
+      f.calls = [];
+      f.duration = () => f;
+      f.label = (t) => { f._label = t; return f; };
+      return f;
+    }
+
+    function withUi(service) {
+      const flash = mockFlash();
+      service.context.systems.ui = { Flash: flash };
+      service.context.systems.l10n = { t: (k) => k };
+      return flash;
+    }
+
+    it('tells the user once while the OSM layer stays switched off', () => {
+      const flash = withUi(_service);
+      setOsmState(_service, { layerEnabled: false });
+      _service.getData('ds1');
+      _service.getData('ds1');
+      expect(flash.calls).to.have.lengthOf(1, '同じ状態で何度も出さない');
+      expect(flash.calls[0]).to.equal('plateau_conflation.osm_layer_off');
+    });
+
+    it('stays quiet while the tiles are still loading', () => {
+      const flash = withUi(_service);
+      setOsmState(_service, { tilesLoaded: false });
+      _service.getData('ds1');
+      expect(flash.calls).to.have.lengthOf(0);
+    });
+
+    it('tells the user again after the layer is switched on and off', () => {
+      const flash = withUi(_service);
+      setOsmState(_service, { layerEnabled: false });
+      _service.getData('ds1');
+      setOsmState(_service, { layerEnabled: true });
+      _service.getData('ds1');
+      setOsmState(_service, { layerEnabled: false });
+      _service.getData('ds1');
+      expect(flash.calls).to.have.lengthOf(2);
+    });
+  });
+
+
   describe('#_checkWayOverlapsOsmBuildings', () => {
     function makePlateauWay(graph, wayId, coords) {
       const nodeIds = [];
