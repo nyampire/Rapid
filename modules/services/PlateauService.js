@@ -48,6 +48,9 @@ export class PlateauService extends AbstractSystem {
       rejected: new Set()    // Set(entityID) - overlapping with OSM
     };
 
+    // OSM のレイヤーが消えている件を伝えたかどうか。レイヤーが戻ると false に戻す。
+    this._osmLayerOffNotified = false;
+
     // Cache for coverage area GeoJSON (loaded once, used by PixiLayerPlateauCoverage)
     this._coverageData = null;          // GeoJSON FeatureCollection or null
     this._coveragePromise = null;       // Promise<FeatureCollection> when inflight
@@ -337,10 +340,67 @@ export class PlateauService extends AbstractSystem {
     // Client-side conflation: hide Plateau buildings that overlap existing OSM
     const useConflationStr = utilStringQs(window.location.hash).plateau_conflation;
     if (useConflationStr !== 'false' && useConflationStr !== 'no') {
+      const missing = this._osmDataMissing();
+      if (missing) {
+        if (missing === 'layer-off') this._notifyOsmLayerOff();
+        return [];
+      }
       entities = this._filterPlateauOverlaps(entities, ds.graph);
     }
 
     return entities;
+  }
+
+
+  /**
+   * _osmDataMissing
+   * 重なりの判定は、編集ソフトの中にある OSM の建物だけを材料にする。
+   * 材料が集まっていない状態では「OSM に無い建物」と「まだ確かめられていない建物」を
+   * 区別できない。区別しないまま候補を出すと、すでに OSM にある建物を重ねて
+   * 登録することになるため、そのときは候補を出さない。
+   *
+   * OSM のレイヤーを消すと `PixiLayerOsm` の描画が先頭で止まり、その先の
+   * `context.loadTiles()` に届かない。画面から消えるだけでなく、編集ソフトの中身も
+   * 空のままになる。
+   *
+   * @return {string?}  材料が揃っていない理由。'layer-off' か 'tiles'。揃っていれば null
+   */
+  _osmDataMissing() {
+    const layer = this.context.systems.gfx?.scene?.layers?.get('osm');
+    if (layer && layer.enabled === false) return 'layer-off';
+    this._osmLayerOffNotified = false;
+
+    // タイルの取得に失敗したまま再取得されない経路もあるため、取得済みかどうかも見る。
+    // 取得済みの一覧は上流のファイルの持ち物で、上流を取り込んだときに形が変わりうる。
+    // 読めないときは判断せず、これまでどおり判定に進む。
+    const loaded = this.context.services?.osm?._tileCache?.loaded;
+    if (!(loaded instanceof Set)) return null;
+
+    const tiles = this._tiler.getTiles(this.context.viewport).tiles;
+    if (!tiles.length) return null;
+
+    return tiles.some(tile => !loaded.has(tile.id)) ? 'tiles' : null;
+  }
+
+
+  /**
+   * _notifyOsmLayerOff
+   * 候補が出ない理由を利用者に伝える。
+   * レイヤーが消えたままなのは利用者が直せる状態なので伝える。
+   * タイルの取得は待てば終わるので伝えない。
+   * 同じ状態が続くあいだは一度だけ出し、レイヤーが戻ったときに出し直せるようにする。
+   */
+  _notifyOsmLayerOff() {
+    if (this._osmLayerOffNotified) return;
+    this._osmLayerOffNotified = true;
+
+    const flash = this.context.systems.ui?.Flash;
+    if (typeof flash !== 'function') return;
+
+    const l10n = this.context.systems.l10n;
+    const key = 'plateau_conflation.osm_layer_off';
+    flash.duration(5000).label(l10n ? l10n.t(key) : key);
+    flash();
   }
 
 
