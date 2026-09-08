@@ -24,6 +24,8 @@ en:
     dashboard_tooltip: Open the Rapid Plateau progress dashboard (new tab)
     zoom_overview_label: Zoom 14
     zoom_overview_tooltip: Snap to zoom 14 so tiles stop loading and panning stays fast.<br>Buildings render from z16.
+  plateau_conflation:
+    osm_layer_off: "Plateau buildings stay hidden while the OpenStreetMap data layer is off, because existing buildings cannot be checked for duplicates. Press Shift+O to turn it back on."
   height_transfer:
     section_title: Plateau tags
     additions: Add from Plateau
