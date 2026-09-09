@@ -2963,7 +2963,9 @@
       "hires": "高解像度"
     },
     "plateau_conflation": {
-      "osm_layer_off": "OpenStreetMap のデータのレイヤーが消えているあいだは、Plateau の建物を表示しません。既存の建物と重なるかを確かめられないためです。Shift+O で戻せます。"
+      "osm_layer_off": "OpenStreetMap のデータのレイヤーが消えているあいだは、Plateau の建物を表示しません。既存の建物と重なるかを確かめられないためです。Shift+O で戻せます。",
+      "osm_layer_off_title": "PLATEAU の建物を表示していません",
+      "dont_show_again": "次から表示しない"
     },
     "preferences": {
       "color_selection": {

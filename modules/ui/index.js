@@ -53,6 +53,7 @@ export { uiOsmoseHeader } from './osmose_header.js';
 export { UiOvermap } from './UiOvermap.js';
 export { uiPane } from './pane.js';
 export { UiPhotoViewer } from './UiPhotoViewer.js';
+export { UiPlateauOsmLayerOffDialog } from './UiPlateauOsmLayerOffDialog.js';
 export { uiPopover } from './popover.js';
 export { uiPresetIcon } from './preset_icon.js';
 export { uiPresetList } from './preset_list.js';
