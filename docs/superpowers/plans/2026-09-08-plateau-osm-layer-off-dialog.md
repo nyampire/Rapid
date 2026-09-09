@@ -309,15 +309,21 @@ describe('UiPlateauOsmLayerOffDialog', () => {
     d3.selectAll('.shaded').remove();
   });
 
+  // `no-new` を避けるために関数の戻り値として返す。
+  // この部品は組み立てた時点で `osmlayeroff` の購読を始めるので、戻り値は使わない試験が多い。
+  function mountDialog(ctx) {
+    return new Rapid.UiPlateauOsmLayerOffDialog(ctx);
+  }
+
 
   it('opens the dialog when the service announces the switched-off layer', () => {
-    new Rapid.UiPlateauOsmLayerOffDialog(context);
+    mountDialog(context);
     context.services.plateau.emit('osmlayeroff');
     expect(elem.selectAll('.modal').size()).to.equal(1);
   });
 
   it('shows the title, the reason and the checkbox', () => {
-    new Rapid.UiPlateauOsmLayerOffDialog(context);
+    mountDialog(context);
     context.services.plateau.emit('osmlayeroff');
     expect(elem.selectAll('.modal-section.header h3').text())
       .to.equal('plateau_conflation.osm_layer_off_title');
@@ -328,13 +334,13 @@ describe('UiPlateauOsmLayerOffDialog', () => {
 
   it('does not open the dialog when the user asked not to see it', () => {
     context.systems.storage.setItem(HIDDEN_KEY, 'true');
-    new Rapid.UiPlateauOsmLayerOffDialog(context);
+    mountDialog(context);
     context.services.plateau.emit('osmlayeroff');
     expect(elem.selectAll('.modal').size()).to.equal(0);
   });
 
   it('remembers the choice when the checkbox is ticked', () => {
-    new Rapid.UiPlateauOsmLayerOffDialog(context);
+    mountDialog(context);
     context.services.plateau.emit('osmlayeroff');
     const node = elem.select('.plateau-dont-show-again input').node();
     node.checked = true;
@@ -343,7 +349,7 @@ describe('UiPlateauOsmLayerOffDialog', () => {
   });
 
   it('forgets the choice when the checkbox is unticked', () => {
-    new Rapid.UiPlateauOsmLayerOffDialog(context);
+    mountDialog(context);
     context.services.plateau.emit('osmlayeroff');
     const node = elem.select('.plateau-dont-show-again input').node();
     node.checked = true;
@@ -469,10 +475,13 @@ export { UiPlateauOsmLayerOffDialog } from './UiPlateauOsmLayerOffDialog.js';
 実行:
 
 ```bash
-cd /Users/nyampire/git/Rapid && npm run build && npm run dist && npx karma start karma.conf.cjs --single-run
+cd /Users/nyampire/git/Rapid && npx eslint modules test && npm run build && npm run dist && npx karma start karma.conf.cjs --single-run
 ```
 
-期待する結果: 776 件成功、5 件スキップ、失敗 0 件。Task 1 の 771 件に、この課題の 5 件が足されます。
+期待する結果: 静的検査はエラー 0 件、警告 42 件。試験は 776 件成功、5 件スキップ、失敗 0 件。Task 1 の 771 件に、この課題の 5 件が足されます。
+
+試験を足す課題では、試験だけでなく静的検査も実行します。
+この計画の初版では Task 2 に静的検査を入れておらず、`no-new` の違反を 5 件見落としました。
 
 - [ ] **手順 6: 記録する**
 
@@ -539,6 +548,10 @@ import {
 ```
 
 描画処理には手を入れません。この部品は出来事を受け取ったときだけ画面に要素を足します。
+
+あわせて、`UiSystem` の constructor にある持ち物の一覧に `this.PlateauOsmLayerOffDialog = null;` を足します。
+このファイルでは、`initAsync` で組み立てる部品をすべて constructor で `null` にしてから代入しており、それに合わせます。
+（この 1 行は計画の初版に書き漏らしていました。実装後に追記しています。）
 
 - [ ] **手順 3: 静的検査と試験を通す**
 
