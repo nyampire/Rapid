@@ -27,6 +27,8 @@ const TILEZOOM = 16;
  *
  * Events available:
  *   `loadedData`
+ *   `osmlayeroff`  OSM のデータのレイヤーが消えているために候補を伏せたときに発生する。
+ *                  引数は無い。ページを開き直すまでに 1 回しか発生しない。
  */
 export class PlateauService extends AbstractSystem {
 
@@ -344,7 +346,9 @@ export class PlateauService extends AbstractSystem {
       if (missing) {
         if (missing === 'layer-off' && !this._osmLayerOffNotified) {
           this._osmLayerOffNotified = true;
-          this.emit('osmlayeroff');
+          // `getData` は Pixi の描画の途中で呼ばれる。受け取り側がここで例外を投げると
+          // 描画の繰り返しがそのページの間止まるため、描画の外に出してから知らせる。
+          window.setTimeout(() => this.emit('osmlayeroff'), 0);
         }
         return [];
       }
