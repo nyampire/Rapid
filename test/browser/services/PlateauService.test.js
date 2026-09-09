@@ -774,49 +774,45 @@ describe('PlateauService', () => {
       expect(ways).to.have.lengthOf(1);
     });
 
-    // 候補が出ない理由を利用者に伝える。
-    // レイヤーを消したままなのは利用者が直せる状態なので伝える。
-    // タイルの取得は待てば終わるので伝えない。
-    function mockFlash() {
-      const f = () => { f.calls.push(f._label); return f; };
-      f.calls = [];
-      f.duration = () => f;
-      f.label = (t) => { f._label = t; return f; };
-      return f;
+    // 候補を伏せた理由がレイヤーの消灯であることを、一度だけ知らせる。
+    // 画面に何を出すかは `UiPlateauOsmLayerOffDialog` が決める。
+    function countOsmLayerOff(service) {
+      const seen = { count: 0 };
+      service.on('osmlayeroff', () => { seen.count++; });
+      return seen;
     }
 
-    function withUi(service) {
-      const flash = mockFlash();
-      service.context.systems.ui = { Flash: flash };
-      service.context.systems.l10n = { t: (k) => k };
-      return flash;
-    }
+    it('announces the switched-off OSM layer', () => {
+      const seen = countOsmLayerOff(_service);
+      setOsmState(_service, { layerEnabled: false });
+      _service.getData('ds1');
+      expect(seen.count).to.equal(1);
+    });
 
-    it('tells the user once while the OSM layer stays switched off', () => {
-      const flash = withUi(_service);
+    it('announces it only once while the layer stays switched off', () => {
+      const seen = countOsmLayerOff(_service);
       setOsmState(_service, { layerEnabled: false });
       _service.getData('ds1');
       _service.getData('ds1');
-      expect(flash.calls).to.have.lengthOf(1, '同じ状態で何度も出さない');
-      expect(flash.calls[0]).to.equal('plateau_conflation.osm_layer_off');
+      expect(seen.count).to.equal(1, '同じ状態で何度も知らせない');
     });
 
-    it('stays quiet while the tiles are still loading', () => {
-      const flash = withUi(_service);
-      setOsmState(_service, { tilesLoaded: false });
-      _service.getData('ds1');
-      expect(flash.calls).to.have.lengthOf(0);
-    });
-
-    it('tells the user again after the layer is switched on and off', () => {
-      const flash = withUi(_service);
+    it('does not announce it again after the layer is switched on and off', () => {
+      const seen = countOsmLayerOff(_service);
       setOsmState(_service, { layerEnabled: false });
       _service.getData('ds1');
       setOsmState(_service, { layerEnabled: true });
       _service.getData('ds1');
       setOsmState(_service, { layerEnabled: false });
       _service.getData('ds1');
-      expect(flash.calls).to.have.lengthOf(2);
+      expect(seen.count).to.equal(1, 'ページを開き直すまでは 1 回だけ');
+    });
+
+    it('stays quiet while the tiles are still loading', () => {
+      const seen = countOsmLayerOff(_service);
+      setOsmState(_service, { tilesLoaded: false });
+      _service.getData('ds1');
+      expect(seen.count).to.equal(0);
     });
   });
 

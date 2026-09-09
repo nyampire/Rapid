@@ -48,7 +48,7 @@ export class PlateauService extends AbstractSystem {
       rejected: new Set()    // Set(entityID) - overlapping with OSM
     };
 
-    // OSM のレイヤーが消えている件を伝えたかどうか。レイヤーが戻ると false に戻す。
+    // OSM のレイヤーが消えている件を知らせたかどうか。ページを開き直すまで戻さない。
     this._osmLayerOffNotified = false;
 
     // Cache for coverage area GeoJSON (loaded once, used by PixiLayerPlateauCoverage)
@@ -342,7 +342,10 @@ export class PlateauService extends AbstractSystem {
     if (useConflationStr !== 'false' && useConflationStr !== 'no') {
       const missing = this._osmDataMissing();
       if (missing) {
-        if (missing === 'layer-off') this._notifyOsmLayerOff();
+        if (missing === 'layer-off' && !this._osmLayerOffNotified) {
+          this._osmLayerOffNotified = true;
+          this.emit('osmlayeroff');
+        }
         return [];
       }
       entities = this._filterPlateauOverlaps(entities, ds.graph);
@@ -368,7 +371,6 @@ export class PlateauService extends AbstractSystem {
   _osmDataMissing() {
     const layer = this.context.systems.gfx?.scene?.layers?.get('osm');
     if (layer && layer.enabled === false) return 'layer-off';
-    this._osmLayerOffNotified = false;
 
     // タイルの取得に失敗したまま再取得されない経路もあるため、取得済みかどうかも見る。
     // 取得済みの一覧は上流のファイルの持ち物で、上流を取り込んだときに形が変わりうる。
@@ -380,27 +382,6 @@ export class PlateauService extends AbstractSystem {
     if (!tiles.length) return null;
 
     return tiles.some(tile => !loaded.has(tile.id)) ? 'tiles' : null;
-  }
-
-
-  /**
-   * _notifyOsmLayerOff
-   * 候補が出ない理由を利用者に伝える。
-   * レイヤーが消えたままなのは利用者が直せる状態なので伝える。
-   * タイルの取得は待てば終わるので伝えない。
-   * 同じ状態が続くあいだは一度だけ出し、レイヤーが戻ったときに出し直せるようにする。
-   */
-  _notifyOsmLayerOff() {
-    if (this._osmLayerOffNotified) return;
-    this._osmLayerOffNotified = true;
-
-    const flash = this.context.systems.ui?.Flash;
-    if (typeof flash !== 'function') return;
-
-    const l10n = this.context.systems.l10n;
-    const key = 'plateau_conflation.osm_layer_off';
-    flash.duration(5000).label(l10n ? l10n.t(key) : key);
-    flash();
   }
 
 
