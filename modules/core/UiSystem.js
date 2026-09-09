@@ -7,7 +7,8 @@ import { utilDetect } from '../util/detect.js';
 import {
   UiApiStatus, UiDefs, uiEditMenu, uiFlash, UiFullscreen, uiIntro,
   uiLoading, UiMapFooter, UiMapToolbar, uiMapRouletteMenu, UiOvermap,
-  uiSplash, uiRestore, UiShortcuts, UiSidebar, uiWhatsNew
+  UiPlateauOsmLayerOffDialog, uiSplash, uiRestore, UiShortcuts, UiSidebar,
+  uiWhatsNew
 } from '../ui/index.js';
 
 
@@ -45,6 +46,7 @@ export class UiSystem extends AbstractSystem {
     this.MapFooter = null;
     this.MapToolbar = null;
     this.Overmap = null;
+    this.PlateauOsmLayerOffDialog = null;
     this.Shortcuts = null;
     this.Sidebar = null;
 
@@ -107,6 +109,7 @@ export class UiSystem extends AbstractSystem {
         this.MapFooter = new UiMapFooter(context);
         this.MapToolbar = new UiMapToolbar(context);
         this.Overmap = new UiOvermap(context);
+        this.PlateauOsmLayerOffDialog = new UiPlateauOsmLayerOffDialog(context);
         this.Shortcuts = new UiShortcuts(context);
         this.Sidebar = new UiSidebar(context);
 

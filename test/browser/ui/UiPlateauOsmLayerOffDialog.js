@@ -55,12 +55,14 @@ describe('UiPlateauOsmLayerOffDialog', () => {
 
 
   it('opens the dialog when the service announces the switched-off layer', () => {
+    // eslint-disable-next-line no-new
     new Rapid.UiPlateauOsmLayerOffDialog(context);
     context.services.plateau.emit('osmlayeroff');
     expect(elem.selectAll('.modal').size()).to.equal(1);
   });
 
   it('shows the title, the reason and the checkbox', () => {
+    // eslint-disable-next-line no-new
     new Rapid.UiPlateauOsmLayerOffDialog(context);
     context.services.plateau.emit('osmlayeroff');
     expect(elem.selectAll('.modal-section.header h3').text())
@@ -72,12 +74,14 @@ describe('UiPlateauOsmLayerOffDialog', () => {
 
   it('does not open the dialog when the user asked not to see it', () => {
     context.systems.storage.setItem(HIDDEN_KEY, 'true');
+    // eslint-disable-next-line no-new
     new Rapid.UiPlateauOsmLayerOffDialog(context);
     context.services.plateau.emit('osmlayeroff');
     expect(elem.selectAll('.modal').size()).to.equal(0);
   });
 
   it('remembers the choice when the checkbox is ticked', () => {
+    // eslint-disable-next-line no-new
     new Rapid.UiPlateauOsmLayerOffDialog(context);
     context.services.plateau.emit('osmlayeroff');
     const node = elem.select('.plateau-dont-show-again input').node();
@@ -87,6 +91,7 @@ describe('UiPlateauOsmLayerOffDialog', () => {
   });
 
   it('forgets the choice when the checkbox is unticked', () => {
+    // eslint-disable-next-line no-new
     new Rapid.UiPlateauOsmLayerOffDialog(context);
     context.services.plateau.emit('osmlayeroff');
     const node = elem.select('.plateau-dont-show-again input').node();
