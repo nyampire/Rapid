@@ -216,7 +216,7 @@ EOF
 
 **やり取りする名前:**
 - 使うもの: Task 1 の `osmlayeroff`。`context.services.plateau.on('osmlayeroff', fn)` で受け取ります。
-- 提供するもの: `UiPlateauOsmLayerOffDialog` という class。`new UiPlateauOsmLayerOffDialog(context)` で組み立て、`show()` を持ちます。`show()` はダイアログの d3 選択を返すか、出さなかった場合は `undefined` を返します。
+- 提供するもの: `UiPlateauOsmLayerOffDialog` という class。`new UiPlateauOsmLayerOffDialog(context)` で組み立て、引数を取らない `show()` を持ちます。`show()` はダイアログの d3 選択を返すか、出さなかった場合は `undefined` を返します。
 
 - [ ] **手順 1: 文言を足す**
 
@@ -343,10 +343,11 @@ describe('UiPlateauOsmLayerOffDialog', () => {
   });
 
   it('forgets the choice when the checkbox is unticked', () => {
-    context.systems.storage.setItem(HIDDEN_KEY, 'true');
-    const dialog = new Rapid.UiPlateauOsmLayerOffDialog(context);
-    dialog.show({ force: true });
+    new Rapid.UiPlateauOsmLayerOffDialog(context);
+    context.services.plateau.emit('osmlayeroff');
     const node = elem.select('.plateau-dont-show-again input').node();
+    node.checked = true;
+    happen.once(node, { type: 'change' });
     node.checked = false;
     happen.once(node, { type: 'change' });
     expect(context.systems.storage.getItem(HIDDEN_KEY)).to.be.null;
@@ -354,7 +355,8 @@ describe('UiPlateauOsmLayerOffDialog', () => {
 });
 ```
 
-最後の試験だけ `show({ force: true })` を直接呼びます。保存された印がある状態で出来事を発生させてもダイアログが開かないため、チェックを外す操作を試せないからです。
+最後の試験は、開いたダイアログの中でチェックを入れてから外します。
+利用者も同じ操作ができるので、試験のためだけの引数は要りません。
 
 - [ ] **手順 3: 落ちることを確かめる**
 
@@ -407,17 +409,15 @@ export class UiPlateauOsmLayerOffDialog {
 
   /**
    * show
-   * ダイアログを開く。
-   * @param   {Object}   options?
-   * @param   {boolean}  options.force?  true なら保存された印を無視して開く
+   * ダイアログを開く。「次から表示しない」を選んだ利用者には開かない。
    * @return  {d3-selection?}  開いたダイアログ。開かなかった場合は undefined
    */
-  show(options = {}) {
+  show() {
     const context = this.context;
     const storage = context.systems.storage;
     const l10n = context.systems.l10n;
 
-    if (!options.force && storage?.getItem(HIDDEN_KEY) === 'true') return;
+    if (storage?.getItem(HIDDEN_KEY) === 'true') return;
 
     const $modal = uiConfirm(context, context.container());
 
