@@ -782,22 +782,29 @@ describe('PlateauService', () => {
       return seen;
     }
 
-    it('announces the switched-off OSM layer', () => {
+    // 出来事は描画の外に出してから発生するので、1 拍待ってから数える。
+    function nextTurn() {
+      return new Promise(resolve => { window.setTimeout(resolve, 0); });
+    }
+
+    it('announces the switched-off OSM layer', async () => {
       const seen = countOsmLayerOff(_service);
       setOsmState(_service, { layerEnabled: false });
       _service.getData('ds1');
+      await nextTurn();
       expect(seen.count).to.equal(1);
     });
 
-    it('announces it only once while the layer stays switched off', () => {
+    it('announces it only once while the layer stays switched off', async () => {
       const seen = countOsmLayerOff(_service);
       setOsmState(_service, { layerEnabled: false });
       _service.getData('ds1');
       _service.getData('ds1');
+      await nextTurn();
       expect(seen.count).to.equal(1, '同じ状態で何度も知らせない');
     });
 
-    it('does not announce it again after the layer is switched on and off', () => {
+    it('does not announce it again after the layer is switched on and off', async () => {
       const seen = countOsmLayerOff(_service);
       setOsmState(_service, { layerEnabled: false });
       _service.getData('ds1');
@@ -805,13 +812,15 @@ describe('PlateauService', () => {
       _service.getData('ds1');
       setOsmState(_service, { layerEnabled: false });
       _service.getData('ds1');
+      await nextTurn();
       expect(seen.count).to.equal(1, 'ページを開き直すまでは 1 回だけ');
     });
 
-    it('stays quiet while the tiles are still loading', () => {
+    it('stays quiet while the tiles are still loading', async () => {
       const seen = countOsmLayerOff(_service);
       setOsmState(_service, { tilesLoaded: false });
       _service.getData('ds1');
+      await nextTurn();
       expect(seen.count).to.equal(0);
     });
   });
