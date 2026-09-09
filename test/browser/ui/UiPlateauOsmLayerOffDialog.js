@@ -41,6 +41,12 @@ describe('UiPlateauOsmLayerOffDialog', () => {
 
   let context;
 
+  // `no-new` を避けるために関数の戻り値として返す。
+  // この部品は組み立てた時点で `osmlayeroff` の購読を始めるので、戻り値は使わない試験が多い。
+  function mountDialog(ctx) {
+    return new Rapid.UiPlateauOsmLayerOffDialog(ctx);
+  }
+
   beforeEach(() => {
     elem = d3.select('body')
       .append('div')
@@ -55,15 +61,13 @@ describe('UiPlateauOsmLayerOffDialog', () => {
 
 
   it('opens the dialog when the service announces the switched-off layer', () => {
-    // eslint-disable-next-line no-new
-    new Rapid.UiPlateauOsmLayerOffDialog(context);
+    mountDialog(context);
     context.services.plateau.emit('osmlayeroff');
     expect(elem.selectAll('.modal').size()).to.equal(1);
   });
 
   it('shows the title, the reason and the checkbox', () => {
-    // eslint-disable-next-line no-new
-    new Rapid.UiPlateauOsmLayerOffDialog(context);
+    mountDialog(context);
     context.services.plateau.emit('osmlayeroff');
     expect(elem.selectAll('.modal-section.header h3').text())
       .to.equal('plateau_conflation.osm_layer_off_title');
@@ -74,15 +78,13 @@ describe('UiPlateauOsmLayerOffDialog', () => {
 
   it('does not open the dialog when the user asked not to see it', () => {
     context.systems.storage.setItem(HIDDEN_KEY, 'true');
-    // eslint-disable-next-line no-new
-    new Rapid.UiPlateauOsmLayerOffDialog(context);
+    mountDialog(context);
     context.services.plateau.emit('osmlayeroff');
     expect(elem.selectAll('.modal').size()).to.equal(0);
   });
 
   it('remembers the choice when the checkbox is ticked', () => {
-    // eslint-disable-next-line no-new
-    new Rapid.UiPlateauOsmLayerOffDialog(context);
+    mountDialog(context);
     context.services.plateau.emit('osmlayeroff');
     const node = elem.select('.plateau-dont-show-again input').node();
     node.checked = true;
@@ -91,8 +93,7 @@ describe('UiPlateauOsmLayerOffDialog', () => {
   });
 
   it('forgets the choice when the checkbox is unticked', () => {
-    // eslint-disable-next-line no-new
-    new Rapid.UiPlateauOsmLayerOffDialog(context);
+    mountDialog(context);
     context.services.plateau.emit('osmlayeroff');
     const node = elem.select('.plateau-dont-show-again input').node();
     node.checked = true;
