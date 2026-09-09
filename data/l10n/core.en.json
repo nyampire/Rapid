@@ -28,7 +28,9 @@
       "zoom_overview_tooltip": "Snap to zoom 14 so tiles stop loading and panning stays fast.<br>Buildings render from z16."
     },
     "plateau_conflation": {
-      "osm_layer_off": "Plateau buildings stay hidden while the OpenStreetMap data layer is off, because existing buildings cannot be checked for duplicates. Press Shift+O to turn it back on."
+      "osm_layer_off": "Plateau buildings stay hidden while the OpenStreetMap data layer is off, because existing buildings cannot be checked for duplicates. Press Shift+O to turn it back on.",
+      "osm_layer_off_title": "PLATEAU buildings are hidden",
+      "dont_show_again": "Do not show this again"
     },
     "height_transfer": {
       "section_title": "Plateau tags",
