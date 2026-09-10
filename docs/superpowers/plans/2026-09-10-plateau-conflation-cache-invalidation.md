@@ -260,8 +260,8 @@ cd /Users/nyampire/git/Rapid && npm run build && npm run dist && npm run test:br
    * _differenceTouchesBuilding
    * 編集の差分に建物が含まれるかどうか。
    *
-   * 重なりの判定が見ているのは OSM の建物だけなので、建物が含まれない編集では
-   * 判定の結果は変わらない。記憶を残して無駄な作り直しを避ける。
+   * 重なりの判定が見ているのは OSM の建物だけである。
+   * 建物が含まれない編集では判定の結果が変わらないので、記憶を残す。
    *
    * 差分の形は上流のファイルの持ち物で、上流を取り込んだときに変わりうる。
    * 読めないときは判断せず、記憶を消す側に倒す。
@@ -415,8 +415,8 @@ cd /Users/nyampire/git/Rapid && npm run build && npm run dist && npm run test:br
 あわせて、関数の説明の `@param` の上に、次の 2 行を足します。
 
 ```js
-   * 変更後の地物は `complete()` から取る。親の way と relation を含むため、
-   * 建物の node を動かした場合もここに建物が現れる。
+   * 変更後の地物は `complete()` から取る。
+   * 親の way と relation を含むため、建物の node を動かした場合もここに建物が現れる。
 ```
 
 - [ ] **Step 4: 試験を走らせて通ることを確認する**
@@ -510,8 +510,8 @@ cd /Users/nyampire/git/Rapid && npm run build && npm run dist && npm run test:br
         if (isBuilding(entity)) return true;
       }
 
-      // 建物を削除した場合と building タグを外した場合は、変更後の地物に建物が
-      // 現れない。変更前の地物でしか分からないので、こちらも見る。
+      // 建物を削除した場合と building タグを外した場合は、変更後の地物に建物が現れない。
+      // 変更前の地物でしか分からないので、こちらも見る。
       for (const change of difference.changes.values()) {
         if (isBuilding(change?.base)) return true;
       }
@@ -523,8 +523,9 @@ cd /Users/nyampire/git/Rapid && npm run build && npm run dist && npm run test:br
 あわせて、関数の説明の `@param` の上に、次の 2 行を足します。
 
 ```js
-   * 変更前の地物は `changes` から取る。建物を削除した場合と `building` タグを
-   * 外した場合は、変更後の地物に建物が現れないため、こちらでしか分からない。
+   * 変更前の地物は `changes` から取る。
+   * 建物を削除した場合と `building` タグを外した場合は、変更後の地物に建物が現れない。
+   * そのため、こちらでしか分からない。
 ```
 
 - [ ] **Step 4: 試験を走らせて通ることを確認する**
