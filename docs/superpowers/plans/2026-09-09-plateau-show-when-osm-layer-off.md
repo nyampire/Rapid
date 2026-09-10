@@ -327,11 +327,17 @@ EOF
 
 ```bash
 npm run build && npm run dist
-grep -rn "plateau_conflation" modules/ data/ test/
+grep -rn "plateau_conflation\.osm_layer_off\|plateau_conflation\"" modules/ data/ test/
+grep -rn "osm_layer_off" modules/ data/ test/
 ```
 
-期待する結果: `grep` は何も出力しない。
+期待する結果: どちらの `grep` も何も出力しない。
 出力がある場合は、その参照を消してから次へ進む。
+
+`modules/services/PlateauService.js` には `utilStringQs(window.location.hash).plateau_conflation` という行が残る。
+これは重なりの除去を URL の指定で切るための引数で、文言とは関係がない。
+上の `grep` はこの行に当たらない書き方にしてある。
+この行は削除しない。
 
 - [ ] **Step 6: 試験を実行し、成功を確かめる**
 
