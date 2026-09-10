@@ -2991,8 +2991,8 @@
         "tooltip": "この地物を地図に追加して編集を始めます。",
         "disabled": "OSM のデータ品質を保つため、1 回のマッピングで追加できる AI 地物は {n} 件までです。まずはこれまでの編集を見直してください。保存すればさらに追加できます。",
         "disabled_flash": "OSM のデータ品質を保つため、1 回のマッピングで追加できる AI 地物は {n} 件までです。",
-        "disabled_osm_layer_off": "OpenStreetMap のデータのレイヤーが消えているあいだは、PLATEAU の建物を追加できません。既存の建物と重なるかを確かめられないためです。Shift+O で戻せます。",
-        "disabled_osm_layer_off_flash": "OpenStreetMap のデータのレイヤーが消えているあいだは、PLATEAU の建物を追加できません。Shift+O で戻せます。"
+        "disabled_osm_layer_off": "OpenStreetMap のデータのレイヤーが消えているあいだは、Plateau の建物を追加できません。既存の建物と重なるかを確かめられないためです。Shift+O で戻せます。",
+        "disabled_osm_layer_off_flash": "OpenStreetMap のデータのレイヤーが消えているあいだは、Plateau の建物を追加できません。Shift+O で戻せます。"
       },
       "option_accept_entire_building": {
         "label": "地物全体を追加",
