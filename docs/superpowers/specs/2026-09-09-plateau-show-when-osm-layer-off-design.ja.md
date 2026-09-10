@@ -14,7 +14,9 @@ Pull Request #52 で、重なりの判定に使う OSM の建物が編集ソフ�
 いまの実装ではこの場面で PLATEAU の建物も消えるため、目的を果たせません。
 
 Pull Request #53 は、候補を伏せた理由をダイアログで伝えるものでした。
-表示を止めること自体をやめるため、この Pull Request は close します。
+表示を止めること自体をやめるため、この Pull Request は不要になります。
+close するのは、この設計の変更が動くことを実機で確認したあとにします。
+それまでは open のまま残し、ブランチ `feature/plateau-osm-layer-off-notice` も残します。
 
 ## 決めたこと
 
