@@ -1571,6 +1571,30 @@ describe('PlateauService', () => {
 
       expect(cacheSizes(_service)).to.eql([0, 0]);
     });
+
+
+    it('clears the cache when the difference cannot be read', () => {
+      const editor = _service.context.systems.editor;
+      const broken = {
+        complete() { throw new Error('shape changed upstream'); },
+        get changes() { throw new Error('shape changed upstream'); }
+      };
+
+      seedCache(_service);
+      editor.emit('stablechange', broken);
+
+      expect(cacheSizes(_service)).to.eql([0, 0]);
+    });
+
+
+    it('clears the cache when new OSM data is merged', () => {
+      const editor = _service.context.systems.editor;
+
+      seedCache(_service);
+      editor.emit('merge', ['w-1']);
+
+      expect(cacheSizes(_service)).to.eql([0, 0]);
+    });
   });
 
 });
