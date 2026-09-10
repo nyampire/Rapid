@@ -22,7 +22,19 @@ describe('PixiLayerRapid', () => {
       immediateRedraw() {}
     };
     const context = { services: {}, systems: { gfx: gfx } };
-    const scene = { gfx: gfx, context: context, groups: new Map([['basemap', null]]) };
+    // `PixiLayerRapid` subscribes to `layerchange` in its constructor
+    // (it repaints PLATEAU candidates when the OSM layer is toggled).
+    // The real scene is an EventEmitter; this mock records handlers and can
+    // replay them via `emit`, following the same shape as
+    // `test/browser/ui/UiRapidInspector.js`'s `MockScene`.
+    const _handlers = {};
+    const scene = {
+      gfx: gfx,
+      context: context,
+      groups: new Map([['basemap', null]]),
+      on(type, fn) { (_handlers[type] ??= []).push(fn); return this; },
+      emit(type) { for (const fn of _handlers[type] ?? []) fn(); }
+    };
     gfx.scene = scene;
     return scene;
   }
@@ -123,6 +135,62 @@ describe('PixiLayerRapid', () => {
       expect(ids).to.include('w_outline');
       expect(ids).to.include('w_part');
       expect(ids).to.not.include('r_b');
+    });
+  });
+
+
+  describe('_addBlocked 塗り直しの判定', () => {
+    // コンストラクタは `_addBlocked` に直前の可否をキャッシュし、`layerchange` の
+    // たびに値が反転したときだけ `dirtyLayer()` を呼ぶ。`layerchange` はどの
+    // レイヤーの切り替えでも発生するため、可否が変わらない切り替えでは
+    // 塗り方の変わらない他のデータセットまで作り直さないための間引きである。
+
+    // `enabled = true` (コンストラクタが設定する) の setter が
+    // `context.services` に載っている各サービスの `startAsync()` を呼ぶため、
+    // mock にもそれを生やしておく。
+    function mockPlateauService(blocked) {
+      return { isAddBlocked: () => blocked, startAsync: () => Promise.resolve() };
+    }
+
+    it('dirties the layer on the first change (null → true)', () => {
+      const scene = makeScene();
+      scene.context.services.plateau = mockPlateauService(true);
+      const layer = new Rapid.PixiLayerRapid(scene, 'rapid');
+
+      let calls = 0;
+      layer.dirtyLayer = () => { calls++; };
+      scene.emit('layerchange');
+
+      expect(calls).to.eql(1);
+      expect(layer._addBlocked).to.be.true;
+    });
+
+    it('does not dirty the layer when the value stays the same (true → true)', () => {
+      const scene = makeScene();
+      scene.context.services.plateau = mockPlateauService(true);
+      const layer = new Rapid.PixiLayerRapid(scene, 'rapid');
+      scene.emit('layerchange');  // null → true, dirties once
+
+      let calls = 0;
+      layer.dirtyLayer = () => { calls++; };
+      scene.emit('layerchange');  // true → true
+
+      expect(calls).to.eql(0);
+    });
+
+    it('dirties the layer again when the value flips back (true → false)', () => {
+      const scene = makeScene();
+      scene.context.services.plateau = mockPlateauService(true);
+      const layer = new Rapid.PixiLayerRapid(scene, 'rapid');
+      scene.emit('layerchange');  // null → true
+
+      scene.context.services.plateau.isAddBlocked = () => false;
+      let calls = 0;
+      layer.dirtyLayer = () => { calls++; };
+      scene.emit('layerchange');  // true → false
+
+      expect(calls).to.eql(1);
+      expect(layer._addBlocked).to.be.false;
     });
   });
 });
