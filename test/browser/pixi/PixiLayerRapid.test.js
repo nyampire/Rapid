@@ -22,7 +22,10 @@ describe('PixiLayerRapid', () => {
       immediateRedraw() {}
     };
     const context = { services: {}, systems: { gfx: gfx } };
-    const scene = { gfx: gfx, context: context, groups: new Map([['basemap', null]]) };
+    // `PixiLayerRapid` subscribes to `layerchange` in its constructor
+    // (it repaints PLATEAU candidates when the OSM layer is toggled).
+    // The real scene is an EventEmitter; this mock only needs a no-op `on`.
+    const scene = { gfx: gfx, context: context, groups: new Map([['basemap', null]]), on() {} };
     gfx.scene = scene;
     return scene;
   }
