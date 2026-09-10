@@ -89,6 +89,14 @@ export class PlateauService extends AbstractSystem {
         this._plateauConflationCache.checked.clear();
         this._plateauConflationCache.rejected.clear();
       });
+
+      // 編集が確定したときも、重なりの判定をやり直す必要がある。
+      // すでに OSM にある建物を動かすと重なりの有無が変わる。
+      // 記憶が残っていると、候補の表示が古いままになる。
+      editor.on('stablechange', () => {
+        this._plateauConflationCache.checked.clear();
+        this._plateauConflationCache.rejected.clear();
+      });
     }
 
     // Phase 4-B-2: hover で relation の他 members を highlight
