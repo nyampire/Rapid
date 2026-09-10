@@ -1,12 +1,19 @@
 describe('UiRapidInspector', () => {
   let inspector;
 
+  class MockScene {
+    constructor() { this._handlers = {}; }
+    on(type, fn) { (this._handlers[type] ??= []).push(fn); return this; }
+    emit(type) { for (const fn of this._handlers[type] ?? []) fn(); }
+  }
+
   class MockContext {
     constructor() {
       this.systems = {
         l10n: { t: (key) => key, isRTL: () => false, on: () => {} },
         rapid: { taskExtent: null, acceptIDs: new Set() },
-        urlhash: { getParam: () => null }
+        urlhash: { getParam: () => null },
+        gfx: { scene: new MockScene() }
       };
       this.services = { plateau: { isAddBlocked: () => false } };
     }
@@ -55,5 +62,12 @@ describe('UiRapidInspector', () => {
     inspector.context.services = {};
     inspector.datum = { __service__: 'plateau' };
     expect(inspector.isAcceptFeatureDisabled()).to.be.null;
+  });
+
+  it('re-renders when the scene emits a layerchange event', () => {
+    let calls = 0;
+    inspector.render = () => { calls++; };
+    inspector.context.systems.gfx.scene.emit('layerchange');
+    expect(calls).to.eql(1);
   });
 });

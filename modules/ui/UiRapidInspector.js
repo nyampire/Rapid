@@ -71,6 +71,11 @@ export class UiRapidInspector {
     const l10n = context.systems.l10n;
     l10n.on('localechange', this._setupKeybinding);
     this._setupKeybinding();
+
+    // OSM のレイヤーを切り替えると、PLATEAU の候補を追加できるかどうかが変わる。
+    // 選んだままレイヤーを戻したとき、無効の見た目と説明が残らないよう描き直す。
+    const scene = context.systems.gfx?.scene;
+    scene?.on('layerchange', () => this.render());
   }
 
 
