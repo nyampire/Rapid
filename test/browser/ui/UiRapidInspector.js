@@ -64,6 +64,30 @@ describe('UiRapidInspector', () => {
     expect(inspector.isAcceptFeatureDisabled()).to.be.null;
   });
 
+  it('ignores the accept limit while working on a task', () => {
+    // タスク作業中は「追加できる数の上限」を外す仕様 (isAcceptFeatureDisabled 内
+    // `if (rapid.taskExtent) return null;`)。上限に達していても non-PLATEAU は
+    // ブロックしない。
+    const ids = new Set();
+    for (let i = 0; i < 50; i++) ids.add('w' + i);
+    inspector.context.systems.rapid.acceptIDs = ids;
+    inspector.context.systems.rapid.taskExtent = {};
+    inspector.datum = { __service__: 'mapwithai' };
+    expect(inspector.isAcceptFeatureDisabled()).to.be.null;
+  });
+
+  it('still blocks a Plateau candidate while working on a task, when the OSM layer is off', () => {
+    // タスク作業中でも、重なりを確かめる材料が無い理由 ('osm-layer-off') は
+    // taskExtent のバイパスより先に見るため効いたままになる。
+    const ids = new Set();
+    for (let i = 0; i < 50; i++) ids.add('w' + i);
+    inspector.context.systems.rapid.acceptIDs = ids;
+    inspector.context.systems.rapid.taskExtent = {};
+    inspector.context.services.plateau.isAddBlocked = () => true;
+    inspector.datum = { __service__: 'plateau' };
+    expect(inspector.isAcceptFeatureDisabled()).to.eql('osm-layer-off');
+  });
+
   it('re-renders when the scene emits a layerchange event', () => {
     let calls = 0;
     inspector.render = () => { calls++; };
