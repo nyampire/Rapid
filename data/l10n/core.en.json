@@ -27,9 +27,6 @@
       "zoom_overview_label": "Zoom 14",
       "zoom_overview_tooltip": "Snap to zoom 14 so tiles stop loading and panning stays fast.<br>Buildings render from z16."
     },
-    "plateau_conflation": {
-      "osm_layer_off": "Plateau buildings stay hidden while the OpenStreetMap data layer is off, because existing buildings cannot be checked for duplicates. Press Shift+O to turn it back on."
-    },
     "height_transfer": {
       "section_title": "Plateau tags",
       "additions": "Add from Plateau",
@@ -1408,7 +1405,9 @@
         "annotation": "Added a Rapid feature.",
         "tooltip": "Add this feature to the map to begin editing.",
         "disabled": "To help improve OSM data quality, we only allow {n} AI features to be added in each mapping session. Please try to fix issues on your edits so far. You will be able to add more AI features after saving.",
-        "disabled_flash": "To help improve OSM data quality, we only allow {n} AI Features to be added in each mapping session."
+        "disabled_flash": "To help improve OSM data quality, we only allow {n} AI Features to be added in each mapping session.",
+        "disabled_osm_layer_off": "Plateau buildings cannot be added while the OpenStreetMap data layer is off, because existing buildings cannot be checked for duplicates. Press Shift+O to turn it back on.",
+        "disabled_osm_layer_off_flash": "Plateau buildings cannot be added while the OpenStreetMap data layer is off. Press Shift+O to turn it back on."
       },
       "option_accept_entire_building": {
         "label": "Add Entire Feature",
