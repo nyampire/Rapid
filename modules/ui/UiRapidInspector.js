@@ -74,8 +74,17 @@ export class UiRapidInspector {
 
     // OSM のレイヤーを切り替えると、PLATEAU の候補を追加できるかどうかが変わる。
     // 選んだままレイヤーを戻したとき、無効の見た目と説明が残らないよう描き直す。
+    //
+    // `layerchange` はどのレイヤーの切り替えでも発生する。`render()` は
+    // `$parent` が d3 selection でなければ抜けるだけだが、`$parent` はサイドバーが
+    // リセットされたあとも detached な DOM を指したまま残るため、この条件では
+    // 弾けない。候補を選んでいない (`this.datum` が無い) あいだは描き直す意味が
+    // 無いので、ここで先に弾く。
     const scene = context.systems.gfx?.scene;
-    scene?.on('layerchange', () => this.render());
+    scene?.on('layerchange', () => {
+      if (!this.datum) return;
+      this.render();
+    });
   }
 
 
