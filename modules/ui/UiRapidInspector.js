@@ -142,6 +142,24 @@ export class UiRapidInspector {
 
 
   /**
+   * _osmLayerOffDisabled
+   * PLATEAU の候補で、OSM レイヤーが消えているために重なりを確かめられない状態かどうか。
+   * `isAcceptFeatureDisabled()` (「この地物を追加」) と `renderChoice()` の
+   * 「この地物のみ追加」の両方がこの理由だけを個別に必要とするため、判定を独立させた。
+   * 「この地物のみ追加」には件数上限 ('limit') を適用しない。
+   * @return {string?}  無効な理由 'osm-layer-off'。該当しなければ null
+   */
+  _osmLayerOffDisabled() {
+    // 重なりを確かめる材料が無いまま PLATEAU の建物を追加すると、すでに OSM に
+    // ある建物を重ねて登録することになる。追加できる数の上限とは別の理由なので、
+    // 上限を外している利用者にも効かせるため先に見る。
+    const plateau = this.context.services?.plateau;
+    if (this.datum?.__service__ === 'plateau' && plateau?.isAddBlocked?.()) return 'osm-layer-off';
+    return null;
+  }
+
+
+  /**
    * isAcceptFeatureDisabled
    * The "Add Feature" button is disabled for two reasons:
    *  - 'osm-layer-off': the OSM data layer is switched off, so a Plateau candidate
@@ -155,11 +173,8 @@ export class UiRapidInspector {
     const rapid = context.systems.rapid;
     const urlhash = context.systems.urlhash;
 
-    // 重なりを確かめる材料が無いまま PLATEAU の建物を追加すると、すでに OSM に
-    // ある建物を重ねて登録することになる。追加できる数の上限とは別の理由なので、
-    // 上限を外している利用者にも効かせるため先に見る。
-    const plateau = context.services?.plateau;
-    if (this.datum?.__service__ === 'plateau' && plateau?.isAddBlocked?.()) return 'osm-layer-off';
+    const osmLayerOffReason = this._osmLayerOffDisabled();
+    if (osmLayerOffReason) return osmLayerOffReason;
 
     // If Rapid is working with on a task, "add roads" is always enabled
     if (rapid.taskExtent) return null;
@@ -623,7 +638,13 @@ export class UiRapidInspector {
     const context = this.context;
     const l10n = context.systems.l10n;
 
-    const disabledReason = (d.key === 'accept') ? this.isAcceptFeatureDisabled() : null;
+    // 'accept_only_this' は 'accept' と同じ onClick (acceptFeature) を共有していて、
+    // クリックすればガードに当たって flash するだけなので、見た目もそれに揃える。
+    // ただし件数上限 ('limit') は 'accept' だけに効かせる仕様なので、
+    // ここでは OSM レイヤー起因の理由だけを見る _osmLayerOffDisabled() を使う。
+    const disabledReason = (d.key === 'accept') ? this.isAcceptFeatureDisabled()
+      : (d.key === 'accept_only_this') ? this._osmLayerOffDisabled()
+      : null;
     const isDisabled = !!disabledReason;
 
     // .choice-wrap
@@ -692,9 +713,14 @@ export class UiRapidInspector {
         shortcut = l10n.t('shortcuts.command.accept_feature.key');
       }
     } else if (d.key === 'accept_only_this') {
-      title = l10n.t('rapid_inspector.option_accept_only_this.tooltip');
-      // utilCmd.display renders the platform-correct modifier glyph (⇧ / Shift)
-      shortcut = utilCmd.display(this.context, '⇧' + l10n.t('shortcuts.command.accept_feature.key'));
+      if (disabledReason === 'osm-layer-off') {
+        title = l10n.t('rapid_inspector.option_accept.disabled_osm_layer_off');
+        shortcut = '';
+      } else {
+        title = l10n.t('rapid_inspector.option_accept_only_this.tooltip');
+        // utilCmd.display renders the platform-correct modifier glyph (⇧ / Shift)
+        shortcut = utilCmd.display(this.context, '⇧' + l10n.t('shortcuts.command.accept_feature.key'));
+      }
     } else if (d.key === 'ignore') {
       title = l10n.t('rapid_inspector.option_ignore.tooltip');
       shortcut = l10n.t('shortcuts.command.ignore_feature.key');
