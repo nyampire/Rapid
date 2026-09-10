@@ -133,6 +133,9 @@ export class PlateauService extends AbstractSystem {
    * 差分の形は上流のファイルの持ち物で、上流を取り込んだときに変わりうる。
    * 読めないときは判断せず、記憶を消す側に倒す。
    *
+   * 変更後の地物は `complete()` から取る。
+   * 親の way と relation を含むため、建物の node を動かした場合もここに建物が現れる。
+   *
    * @param   {Difference}  difference - 編集システムが渡す差分
    * @return  {boolean}     建物が含まれれば true
    */
@@ -145,8 +148,10 @@ export class PlateauService extends AbstractSystem {
     };
 
     try {
-      for (const change of difference.changes.values()) {
-        if (isBuilding(change?.head)) return true;
+      // `complete()` は変わった地物に加えて、親の way と relation も返す。
+      // 建物の node を動かした場合は、ここに親の建物が現れる。
+      for (const entity of difference.complete().values()) {
+        if (isBuilding(entity)) return true;
       }
     } catch (e) {
       return true;
