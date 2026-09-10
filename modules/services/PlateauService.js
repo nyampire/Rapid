@@ -136,6 +136,10 @@ export class PlateauService extends AbstractSystem {
    * 変更後の地物は `complete()` から取る。
    * 親の way と relation を含むため、建物の node を動かした場合もここに建物が現れる。
    *
+   * 変更前の地物は `changes` から取る。
+   * 建物を削除した場合と `building` タグを外した場合は、変更後の地物に建物が現れない。
+   * そのため、こちらでしか分からない。
+   *
    * @param   {Difference}  difference - 編集システムが渡す差分
    * @return  {boolean}     建物が含まれれば true
    */
@@ -150,8 +154,15 @@ export class PlateauService extends AbstractSystem {
     try {
       // `complete()` は変わった地物に加えて、親の way と relation も返す。
       // 建物の node を動かした場合は、ここに親の建物が現れる。
+      // 削除された地物は値が undefined になるので、isBuilding が false を返す。
       for (const entity of difference.complete().values()) {
         if (isBuilding(entity)) return true;
+      }
+
+      // 建物を削除した場合と building タグを外した場合は、変更後の地物に建物が現れない。
+      // 変更前の地物でしか分からないので、こちらも見る。
+      for (const change of difference.changes.values()) {
+        if (isBuilding(change?.base)) return true;
       }
     } catch (e) {
       return true;

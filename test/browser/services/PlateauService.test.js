@@ -1547,6 +1547,30 @@ describe('PlateauService', () => {
 
       expect(cacheSizes(_service)).to.eql([0, 0]);
     });
+
+
+    it('clears the cache when a building is deleted', () => {
+      const editor = _service.context.systems.editor;
+      const base = graphWithBuilding('w-1', SQUARE);
+      const head = base.remove(base.entity('w-1'));
+
+      seedCache(_service);
+      editor.emit('stablechange', new Rapid.Difference(base, head));
+
+      expect(cacheSizes(_service)).to.eql([0, 0]);
+    });
+
+
+    it('clears the cache when the building tag is removed', () => {
+      const editor = _service.context.systems.editor;
+      const base = graphWithBuilding('w-1', SQUARE);
+      const head = base.replace(base.entity('w-1').update({ tags: { barrier: 'wall' } }));
+
+      seedCache(_service);
+      editor.emit('stablechange', new Rapid.Difference(base, head));
+
+      expect(cacheSizes(_service)).to.eql([0, 0]);
+    });
   });
 
 });
