@@ -70,4 +70,41 @@ describe('UiRapidInspector', () => {
     inspector.context.systems.gfx.scene.emit('layerchange');
     expect(calls).to.eql(1);
   });
+
+
+  describe('#_osmLayerOffDisabled', () => {
+    // renderChoice() では 'accept_only_this' (この地物のみ追加) にもこの理由を
+    // 効かせる。'accept' と onClick (acceptFeature) を共有していて、クリックすれば
+    // どのみちガードに当たるため、見た目も揃える。ただし件数上限 ('limit') は
+    // 'accept' 専用の仕様なので、この関数は OSM レイヤー起因の理由だけを返す。
+
+    it('returns "osm-layer-off" for a blocked Plateau candidate', () => {
+      inspector.context.services.plateau.isAddBlocked = () => true;
+      inspector.datum = { __service__: 'plateau' };
+      expect(inspector._osmLayerOffDisabled()).to.eql('osm-layer-off');
+    });
+
+    it('returns null when the Plateau candidate is not blocked', () => {
+      inspector.context.services.plateau.isAddBlocked = () => false;
+      inspector.datum = { __service__: 'plateau' };
+      expect(inspector._osmLayerOffDisabled()).to.be.null;
+    });
+
+    it('leaves other datasets alone while the OSM layer is switched off', () => {
+      inspector.context.services.plateau.isAddBlocked = () => true;
+      inspector.datum = { __service__: 'mapwithai' };
+      expect(inspector._osmLayerOffDisabled()).to.be.null;
+    });
+
+    it('never reports the accept-count limit', () => {
+      // isAcceptFeatureDisabled() は上限に達すると 'limit' を返すが、
+      // _osmLayerOffDisabled() はその判定を持たない。'accept_only_this' に
+      // 上限を効かせないための切り分けなので、混ざっていないことを確かめる。
+      const ids = new Set();
+      for (let i = 0; i < 50; i++) ids.add('w' + i);
+      inspector.context.systems.rapid.acceptIDs = ids;
+      inspector.datum = { __service__: 'mapwithai' };
+      expect(inspector._osmLayerOffDisabled()).to.be.null;
+    });
+  });
 });
