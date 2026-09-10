@@ -138,23 +138,32 @@ export class UiRapidInspector {
 
   /**
    * isAcceptFeatureDisabled
-   * The "Add Feature" button is disabled if the user has already added more than the
-   *  ACCEPT_FEATURES_LIMIT - unless they are working on a task, or in poweruser mode.
-   * @return {boolean}  `true` if Add Feature is disabled, `false` if enabled.
+   * The "Add Feature" button is disabled for two reasons:
+   *  - 'osm-layer-off': the OSM data layer is switched off, so a Plateau candidate
+   *      cannot be checked against existing OSM buildings before adding it.
+   *  - 'limit': the user has already added more than the ACCEPT_FEATURES_LIMIT,
+   *      unless they are working on a task, or in poweruser mode.
+   * @return {string?}  無効な理由 'osm-layer-off' か 'limit'。有効なら null
    */
   isAcceptFeatureDisabled() {
     const context = this.context;
     const rapid = context.systems.rapid;
     const urlhash = context.systems.urlhash;
 
+    // 重なりを確かめる材料が無いまま PLATEAU の建物を追加すると、すでに OSM に
+    // ある建物を重ねて登録することになる。追加できる数の上限とは別の理由なので、
+    // 上限を外している利用者にも効かせるため先に見る。
+    const plateau = context.services?.plateau;
+    if (this.datum?.__service__ === 'plateau' && plateau?.isAddBlocked?.()) return 'osm-layer-off';
+
     // If Rapid is working with on a task, "add roads" is always enabled
-    if (rapid.taskExtent) return false;
+    if (rapid.taskExtent) return null;
 
     // Power users aren't limited by the max features limit
     const isPowerUser = urlhash.getParam('poweruser') === 'true';
-    if (isPowerUser) return false;
+    if (isPowerUser) return null;
 
-    return rapid.acceptIDs.size >= ACCEPT_FEATURES_LIMIT;
+    return rapid.acceptIDs.size >= ACCEPT_FEATURES_LIMIT ? 'limit' : null;
   }
 
 
@@ -175,13 +184,13 @@ export class UiRapidInspector {
     const rapid = context.systems.rapid;
     const scene = context.systems.gfx.scene;
 
-    if (this.isAcceptFeatureDisabled()) {
-      const flash = uiFlash(context)
-        .duration(5000)
-        .label(l10n.t(
-          'rapid_inspector.option_accept.disabled_flash',
-          { n: ACCEPT_FEATURES_LIMIT }
-        ));
+    const disabledReason = this.isAcceptFeatureDisabled();
+    if (disabledReason) {
+      const label = (disabledReason === 'osm-layer-off')
+        ? l10n.t('rapid_inspector.option_accept.disabled_osm_layer_off_flash')
+        : l10n.t('rapid_inspector.option_accept.disabled_flash', { n: ACCEPT_FEATURES_LIMIT });
+
+      const flash = uiFlash(context).duration(5000).label(label);
       flash();
       return;
     }
@@ -609,7 +618,8 @@ export class UiRapidInspector {
     const context = this.context;
     const l10n = context.systems.l10n;
 
-    const isDisabled = (d.key === 'accept' && this.isAcceptFeatureDisabled());
+    const disabledReason = (d.key === 'accept') ? this.isAcceptFeatureDisabled() : null;
+    const isDisabled = !!disabledReason;
 
     // .choice-wrap
     let $choiceWrap = $choice.selectAll('.choice-wrap')
@@ -666,7 +676,10 @@ export class UiRapidInspector {
     // localize tooltip
     let title, shortcut;
     if (d.key === 'accept') {
-      if (isDisabled) {
+      if (disabledReason === 'osm-layer-off') {
+        title = l10n.t('rapid_inspector.option_accept.disabled_osm_layer_off');
+        shortcut = '';
+      } else if (isDisabled) {
         title = l10n.t('rapid_inspector.option_accept.disabled', { n: ACCEPT_FEATURES_LIMIT } );
         shortcut = '';
       } else {
