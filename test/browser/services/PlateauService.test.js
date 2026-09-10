@@ -728,6 +728,33 @@ describe('PlateauService', () => {
       ctx.systems.gfx.scene = { layers: new Map([['osm', { id: 'osm', enabled: layerEnabled }]]) };
     }
 
+    // 編集ソフトの中に OSM の建物を 1 棟置く。重なりの除去の材料になる。
+    function setupOsmBuilding(service, coords) {
+      const editor = service.context.systems.editor;
+      let graph = editor._graph;
+      const nodeIds = [];
+      for (let i = 0; i < coords.length; i++) {
+        const nodeId = 'osmb-n' + i;
+        nodeIds.push(nodeId);
+        graph = graph.replace(Rapid.osmNode({ id: nodeId, loc: coords[i] }));
+      }
+      nodeIds.push(nodeIds[0]);
+      const way = Rapid.osmWay({ id: 'osmbWay', nodes: nodeIds, tags: { building: 'yes' } });
+      graph = graph.replace(way);
+      editor._graph = graph;
+      editor._entities = [way];
+      return way;
+    }
+
+    // PLATEAU の建物と同じ四隅。100 パーセント重なる。
+    function sameFootprint(service) {
+      const c = service.context.viewport.visibleExtent().center();
+      return [
+        [c[0] - 0.0001, c[1] - 0.0001], [c[0] + 0.0001, c[1] - 0.0001],
+        [c[0] + 0.0001, c[1] + 0.0001], [c[0] - 0.0001, c[1] + 0.0001]
+      ];
+    }
+
     beforeEach(() => {
       const c = _service.context.viewport.visibleExtent().center();
       setupDataset([
@@ -742,9 +769,24 @@ describe('PlateauService', () => {
       expect(ways).to.have.lengthOf(1, '下ごしらえが効いている');
     });
 
-    it('returns no candidates while the OSM layer is switched off', () => {
+    it('returns candidates while the OSM layer is switched off', () => {
       setOsmState(_service, { layerEnabled: false });
-      expect(_service.getData('ds1')).to.have.lengthOf(0, 'OSM のレイヤーが消えている');
+      const ways = _service.getData('ds1').filter(e => e.type === 'way');
+      expect(ways).to.have.lengthOf(1, 'レイヤーが消えていても表示は続ける');
+    });
+
+    it('does not remove overlapping candidates while the OSM layer is switched off', () => {
+      setupOsmBuilding(_service, sameFootprint(_service));
+      setOsmState(_service, { layerEnabled: false });
+      const ways = _service.getData('ds1').filter(e => e.type === 'way');
+      expect(ways).to.have.lengthOf(1, '重なりの除去を行わない');
+    });
+
+    it('removes overlapping candidates once the layer is switched on', () => {
+      setupOsmBuilding(_service, sameFootprint(_service));
+      setOsmState(_service, {});
+      const ways = _service.getData('ds1').filter(e => e.type === 'way');
+      expect(ways).to.have.lengthOf(0, '材料が揃えば除去する');
     });
 
     it('returns no candidates while the OSM tiles covering the view are not loaded', () => {
@@ -774,49 +816,19 @@ describe('PlateauService', () => {
       expect(ways).to.have.lengthOf(1);
     });
 
-    // 候補が出ない理由を利用者に伝える。
-    // レイヤーを消したままなのは利用者が直せる状態なので伝える。
-    // タイルの取得は待てば終わるので伝えない。
-    function mockFlash() {
-      const f = () => { f.calls.push(f._label); return f; };
-      f.calls = [];
-      f.duration = () => f;
-      f.label = (t) => { f._label = t; return f; };
-      return f;
-    }
-
-    function withUi(service) {
-      const flash = mockFlash();
-      service.context.systems.ui = { Flash: flash };
-      service.context.systems.l10n = { t: (k) => k };
-      return flash;
-    }
-
-    it('tells the user once while the OSM layer stays switched off', () => {
-      const flash = withUi(_service);
+    it('reports that adding is blocked while the OSM layer is switched off', () => {
       setOsmState(_service, { layerEnabled: false });
-      _service.getData('ds1');
-      _service.getData('ds1');
-      expect(flash.calls).to.have.lengthOf(1, '同じ状態で何度も出さない');
-      expect(flash.calls[0]).to.equal('plateau_conflation.osm_layer_off');
+      expect(_service.isAddBlocked()).to.be.true;
     });
 
-    it('stays quiet while the tiles are still loading', () => {
-      const flash = withUi(_service);
+    it('does not report a block while the tiles are still loading', () => {
       setOsmState(_service, { tilesLoaded: false });
-      _service.getData('ds1');
-      expect(flash.calls).to.have.lengthOf(0);
+      expect(_service.isAddBlocked()).to.be.false;
     });
 
-    it('tells the user again after the layer is switched on and off', () => {
-      const flash = withUi(_service);
-      setOsmState(_service, { layerEnabled: false });
-      _service.getData('ds1');
-      setOsmState(_service, { layerEnabled: true });
-      _service.getData('ds1');
-      setOsmState(_service, { layerEnabled: false });
-      _service.getData('ds1');
-      expect(flash.calls).to.have.lengthOf(2);
+    it('does not report a block once the layer is on and the tiles are loaded', () => {
+      setOsmState(_service, {});
+      expect(_service.isAddBlocked()).to.be.false;
     });
   });
 
