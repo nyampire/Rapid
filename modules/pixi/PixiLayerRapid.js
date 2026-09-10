@@ -27,10 +27,20 @@ export class PixiLayerRapid extends AbstractLayer {
 
     this._resolved = new Map();  // Map<entityID, GeoJSON feature>
 
-    // OSM のレイヤーを切り替えると、PLATEAU の候補の塗り方が変わる。
+    // PLATEAU の候補は、OSM への追加ができないあいだ塗り方が変わる。
     // `renderPolygons()` の `style` の代入は `feature.dirty` のときだけ行われるため、
-    // 切り替えのたびにこのレイヤーの図形を塗り直す。
-    scene.on('layerchange', () => this.dirtyLayer());
+    // 状態が変わった時点でこのレイヤーの図形を塗り直す。
+    //
+    // `layerchange` はどのレイヤーの切り替えでも発生する。毎回塗り直すと、
+    // 塗り方の変わらない他のデータセットまで作り直すことになるため、
+    // 追加の可否が実際に変わったときだけ塗り直す。
+    this._addBlocked = null;   // 直前の可否。初回の切り替えでは必ず塗り直す
+    scene.on('layerchange', () => {
+      const addBlocked = !!this.context.services?.plateau?.isAddBlocked?.();
+      if (addBlocked === this._addBlocked) return;
+      this._addBlocked = addBlocked;
+      this.dirtyLayer();
+    });
 
 //// shader experiment:
 //this._uniforms = {
