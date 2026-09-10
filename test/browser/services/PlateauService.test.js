@@ -1521,6 +1521,21 @@ describe('PlateauService', () => {
 
       expect(cacheSizes(_service)).to.eql([0, 0]);
     });
+
+    it('keeps the cache when only non-building features change', () => {
+      const editor = _service.context.systems.editor;
+      let base = new Rapid.Graph();
+      base = base.replace(Rapid.osmNode({ id: 'n-1', loc: [0, 0] }));
+      base = base.replace(Rapid.osmNode({ id: 'n-2', loc: [0, 0.001] }));
+      base = base.replace(Rapid.osmWay({ id: 'w-road', nodes: ['n-1', 'n-2'], tags: { highway: 'residential' } }));
+
+      const head = base.replace(base.entity('n-2').move([0, 0.002]));
+
+      seedCache(_service);
+      editor.emit('stablechange', new Rapid.Difference(base, head));
+
+      expect(cacheSizes(_service)).to.eql([1, 1]);
+    });
   });
 
 });

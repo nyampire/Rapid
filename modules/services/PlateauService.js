@@ -85,17 +85,15 @@ export class PlateauService extends AbstractSystem {
     // Invalidate conflation cache when OSM data changes
     const editor = this.context.systems.editor;
     if (editor) {
-      editor.on('merge', () => {
-        this._plateauConflationCache.checked.clear();
-        this._plateauConflationCache.rejected.clear();
-      });
+      editor.on('merge', () => this._invalidateConflationCache());
 
       // 編集が確定したときも、重なりの判定をやり直す必要がある。
       // すでに OSM にある建物を動かすと重なりの有無が変わる。
       // 記憶が残っていると、候補の表示が古いままになる。
-      editor.on('stablechange', () => {
-        this._plateauConflationCache.checked.clear();
-        this._plateauConflationCache.rejected.clear();
+      // 判定が見ているのは建物だけなので、差分に建物が含まれるときだけ消す。
+      editor.on('stablechange', difference => {
+        if (!this._differenceTouchesBuilding(difference)) return;
+        this._invalidateConflationCache();
       });
     }
 
@@ -111,6 +109,50 @@ export class PlateauService extends AbstractSystem {
     }
 
     return Promise.resolve();
+  }
+
+
+  /**
+   * _invalidateConflationCache
+   * 重なりの判定の記憶を消す。
+   * 次に `getData()` が呼ばれたときに、表示範囲の候補を計算し直す。
+   */
+  _invalidateConflationCache() {
+    this._plateauConflationCache.checked.clear();
+    this._plateauConflationCache.rejected.clear();
+  }
+
+
+  /**
+   * _differenceTouchesBuilding
+   * 編集の差分に建物が含まれるかどうか。
+   *
+   * 重なりの判定が見ているのは OSM の建物だけである。
+   * 建物が含まれない編集では判定の結果が変わらないので、記憶を残す。
+   *
+   * 差分の形は上流のファイルの持ち物で、上流を取り込んだときに変わりうる。
+   * 読めないときは判断せず、記憶を消す側に倒す。
+   *
+   * @param   {Difference}  difference - 編集システムが渡す差分
+   * @return  {boolean}     建物が含まれれば true
+   */
+  _differenceTouchesBuilding(difference) {
+    if (!difference) return true;
+
+    const isBuilding = (entity) => {
+      const building = entity?.tags?.building;
+      return Boolean(building) && building !== 'no';
+    };
+
+    try {
+      for (const change of difference.changes.values()) {
+        if (isBuilding(change?.head)) return true;
+      }
+    } catch (e) {
+      return true;
+    }
+
+    return false;
   }
 
 
