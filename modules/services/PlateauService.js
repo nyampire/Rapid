@@ -80,6 +80,7 @@ export class PlateauService extends AbstractSystem {
    * startAsync
    */
   startAsync() {
+    if (this._started) return Promise.resolve();
     this._started = true;
 
     // Invalidate conflation cache when OSM data changes
