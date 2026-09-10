@@ -1536,6 +1536,17 @@ describe('PlateauService', () => {
 
       expect(cacheSizes(_service)).to.eql([1, 1]);
     });
+
+    it('clears the cache when a node of a building moves', () => {
+      const editor = _service.context.systems.editor;
+      const base = graphWithBuilding('w-1', SQUARE);
+      const head = base.replace(base.entity('w-1-n0').move([0.0005, 0.0005]));
+
+      seedCache(_service);
+      editor.emit('stablechange', new Rapid.Difference(base, head));
+
+      expect(cacheSizes(_service)).to.eql([0, 0]);
+    });
   });
 
 });
