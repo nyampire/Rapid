@@ -830,6 +830,40 @@ describe('PlateauService', () => {
       setOsmState(_service, {});
       expect(_service.isAddBlocked()).to.be.false;
     });
+
+
+    // ----------------------------------------------------------------------
+    // `#plateau_conflation=false` (または `no`) はユーザが重なりの除去そのものを
+    // 明示的に止めるための URL hash フラグ。`getData()` はこのフラグを既に見ているが、
+    // `isAddBlocked()` が見ていないと、フラグを降ろしても追加だけ止まったままになる。
+    // ----------------------------------------------------------------------
+
+    describe('plateau_conflation フラグ', () => {
+      let _originalHash;
+
+      beforeEach(() => {
+        _originalHash = window.location.hash;
+      });
+
+      afterEach(() => {
+        window.history.replaceState(null, '', window.location.pathname + _originalHash);
+      });
+
+      it('does not block adding when the flag is off and the layer is off', () => {
+        window.history.replaceState(null, '', window.location.pathname + '#plateau_conflation=false');
+        setOsmState(_service, { layerEnabled: false });
+
+        expect(_service.isAddBlocked()).to.be.false;
+
+        const ways = _service.getData('ds1').filter(e => e.type === 'way');
+        expect(ways).to.have.lengthOf(1, 'フラグが降りていれば候補を返す');
+      });
+
+      it('blocks adding when the flag is absent and the layer is off', () => {
+        setOsmState(_service, { layerEnabled: false });
+        expect(_service.isAddBlocked()).to.be.true;
+      });
+    });
   });
 
 

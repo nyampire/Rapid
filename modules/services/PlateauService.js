@@ -335,8 +335,7 @@ export class PlateauService extends AbstractSystem {
     if (options.skipConflation) return entities;
 
     // Client-side conflation: hide Plateau buildings that overlap existing OSM
-    const useConflationStr = utilStringQs(window.location.hash).plateau_conflation;
-    if (useConflationStr !== 'false' && useConflationStr !== 'no') {
+    if (this._conflationEnabled()) {
       const missing = this._osmDataMissing();
 
       // レイヤーが消えているあいだは、重なりの除去をせずにそのまま返す。
@@ -351,6 +350,20 @@ export class PlateauService extends AbstractSystem {
     }
 
     return entities;
+  }
+
+
+  /**
+   * _conflationEnabled
+   * `#plateau_conflation=false` (または `no`) が URL hash に付いているあいだは、
+   * 重なりの除去そのものをユーザが明示的に止めている。`getData()` と `isAddBlocked()`
+   * の両方がこのフラグを見るので、読み出しをここに集約して食い違いを防ぐ。
+   *
+   * @return {boolean}  重なりの除去を行ってよければ true
+   */
+  _conflationEnabled() {
+    const useConflationStr = utilStringQs(window.location.hash).plateau_conflation;
+    return useConflationStr !== 'false' && useConflationStr !== 'no';
   }
 
 
@@ -393,9 +406,13 @@ export class PlateauService extends AbstractSystem {
    *
    * 描画 (`PixiLayerRapid`) と画面部品 (`UiRapidInspector`) の両方がここを見る。
    *
+   * `#plateau_conflation=false` (または `no`) で重なりの除去そのものを止めている場合は、
+   * `getData()` 側もすでに除去をスキップしているので、ここで止める理由が無い。
+   *
    * @return {boolean}  追加できない状態なら true
    */
   isAddBlocked() {
+    if (!this._conflationEnabled()) return false;
     return this._osmDataMissing() === 'layer-off';
   }
 
