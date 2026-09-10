@@ -27,6 +27,11 @@ export class PixiLayerRapid extends AbstractLayer {
 
     this._resolved = new Map();  // Map<entityID, GeoJSON feature>
 
+    // OSM のレイヤーを切り替えると、PLATEAU の候補の塗り方が変わる。
+    // `renderPolygons()` の `style` の代入は `feature.dirty` のときだけ行われるため、
+    // 切り替えのたびにこのレイヤーの図形を塗り直す。
+    scene.on('layerchange', () => this.dirtyLayer());
+
 //// shader experiment:
 //this._uniforms = {
 // u_resolution: [300.0, 300.0],
@@ -432,6 +437,12 @@ export class PixiLayerRapid extends AbstractLayer {
     const color = new PIXI.Color(dataset.color);
     const l10n = this.context.systems.l10n;
 
+    // OSM のレイヤーが消えているあいだ、PLATEAU の候補は OSM へ追加できない。
+    // その状態を斜めの縞模様で示す。`construction` は `PixiTextures` が読み込む
+    // 模様の 1 つ。建物が画面上で 32 ピクセル未満のときは模様が外れる。
+    const plateau = this.context.services?.plateau;
+    const addBlocked = (dataset.service === 'plateau') && !!plateau?.isAddBlocked?.();
+
     for (const entity of data.polygons) {
       // Cache GeoJSON resolution, as we expect the rewind and asGeoJSON calls to be kinda slow.
       // This is ok because the rapid features won't change once loaded.
@@ -473,8 +484,9 @@ export class PixiLayerRapid extends AbstractLayer {
         if (feature.dirty) {
           const style = {
             labelTint: color,
-            fill: { width: 2, color: color, alpha: 0.3 },
-            // fill: { width: 2, color: color, alpha: 1, pattern: 'stripe' }
+            fill: addBlocked
+              ? { width: 2, color: color, alpha: 0.3, pattern: 'construction' }
+              : { width: 2, color: color, alpha: 0.3 }
           };
           feature.style = style;
           feature.label = l10n.displayName(entity.tags);
