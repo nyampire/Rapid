@@ -88,11 +88,23 @@ describe('UiRapidInspector', () => {
     expect(inspector.isAcceptFeatureDisabled()).to.eql('osm-layer-off');
   });
 
-  it('re-renders when the scene emits a layerchange event', () => {
+  it('re-renders when the scene emits a layerchange event while a feature is selected', () => {
+    inspector.datum = { __service__: 'plateau' };
     let calls = 0;
     inspector.render = () => { calls++; };
     inspector.context.systems.gfx.scene.emit('layerchange');
     expect(calls).to.eql(1);
+  });
+
+  it('does not re-render on layerchange when nothing is selected', () => {
+    // サイドバーがリセットされたあとも `$parent` は detached な DOM を
+    // 指したまま残るため、`render()` 側の `$parent` チェックでは弾けない。
+    // `this.datum` が無いあいだは描き直す意味が無い。
+    inspector.datum = null;
+    let calls = 0;
+    inspector.render = () => { calls++; };
+    inspector.context.systems.gfx.scene.emit('layerchange');
+    expect(calls).to.eql(0);
   });
 
 
