@@ -5,10 +5,20 @@ describe('PlateauService', () => {
     constructor() {
       this._graph = new Rapid.Graph();
       this._entities = [];
+      this._listeners = new Map();   // Map(eventName -> Array(callback))
     }
     get staging() { return { graph: this._graph }; }
     intersects() { return this._entities; }
-    on() { return this; }
+    on(eventName, callback) {
+      if (!this._listeners.has(eventName)) this._listeners.set(eventName, []);
+      this._listeners.get(eventName).push(callback);
+      return this;
+    }
+    emit(eventName, ...args) {
+      for (const callback of this._listeners.get(eventName) ?? []) {
+        callback(...args);
+      }
+    }
   }
 
   class MockContext {
@@ -1461,6 +1471,55 @@ describe('PlateauService', () => {
       // Sibling way still gets the turf fallback — only the relation is excluded.
       const way = result.find(e => e.type === 'way' && e.id === 'w50');
       expect(way.representativePoint).to.exist;
+    });
+  });
+
+
+  describe('#_plateauConflationCache invalidation', () => {
+    // 建物 1 棟だけを持つグラフを作る。
+    function graphWithBuilding(wayID, coords, tags = { building: 'yes' }) {
+      let graph = new Rapid.Graph();
+      const nodeIDs = [];
+      for (let i = 0; i < coords.length; i++) {
+        const nodeID = `${wayID}-n${i}`;
+        nodeIDs.push(nodeID);
+        graph = graph.replace(Rapid.osmNode({ id: nodeID, loc: coords[i] }));
+      }
+      nodeIDs.push(nodeIDs[0]);   // 閉じる
+      graph = graph.replace(Rapid.osmWay({ id: wayID, nodes: nodeIDs, tags: tags }));
+      return graph;
+    }
+
+    const SQUARE = [[0, 0], [0, 0.001], [0.001, 0.001], [0.001, 0]];
+
+    // 記憶に印を 2 つ置く。消えたかどうかはこの 2 つで見る。
+    function seedCache(service) {
+      service._plateauConflationCache.checked.add('plateau-checked');
+      service._plateauConflationCache.rejected.add('plateau-rejected');
+    }
+
+    function cacheSizes(service) {
+      return [
+        service._plateauConflationCache.checked.size,
+        service._plateauConflationCache.rejected.size
+      ];
+    }
+
+    beforeEach(() => {
+      return _service.startAsync();   // 購読は startAsync で足される
+    });
+
+
+    it('clears the cache when a building way itself changes', () => {
+      const editor = _service.context.systems.editor;
+      const base = graphWithBuilding('w-1', SQUARE);
+      const way = base.entity('w-1');
+      const head = base.replace(way.update({ nodes: way.nodes.slice().reverse() }));
+
+      seedCache(_service);
+      editor.emit('stablechange', new Rapid.Difference(base, head));
+
+      expect(cacheSizes(_service)).to.eql([0, 0]);
     });
   });
 
