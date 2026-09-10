@@ -742,3 +742,67 @@ Pull Request #53 は、この変更が公開中のサイトで動くことを確
 ブランチ `feature/plateau-osm-layer-off-notice` もそれまで残す。
 
 公開リポジトリへ出す前に、変更したファイル、コミットメッセージ、Pull Request 本文の 3 つで機微情報を確認する。
+
+---
+
+## 実装との差
+
+この計画のステップそのものは書き換えない（実行した記録として残す）。
+最終レビュー (task-4) で見つかった、実装が計画・設計から離れた箇所を記録する。
+
+### `PixiLayerRapid` の塗り直しが「毎回」から「反転したときだけ」に変わった
+
+Task 4 の Step 2 と設計書 §4 は `scene.on('layerchange', () => this.dirtyLayer());` という、
+`layerchange` のたびに無条件で塗り直す形を書いている。
+
+実装はこれとは違い、直前の `isAddBlocked()` の値を `_addBlocked` にキャッシュしておき、
+値が実際に反転したときだけ `dirtyLayer()` を呼ぶ。
+`layerchange` は OSM レイヤー以外の切り替えでも発生するため、素朴な実装のままだと
+PLATEAU の塗り方が変わらない切り替え (例えば背景衛星写真のレイヤーを切り替えたとき) でも
+このレイヤーの全図形を作り直すことになり、無駄な描画コストが生まれる。
+この間引きは計画の完了後、レビュー段階で加えられた。
+
+### `UiRapidInspector` も `layerchange` を購読している
+
+計画にも設計書にも、`UiRapidInspector` が `layerchange` を購読するという記述は無い。
+Task 3 はもっぱら `isAcceptFeatureDisabled()` と `acceptFeature()` /
+`renderChoice()` の変更を扱っており、選択済みの候補の見た目を
+OSM レイヤーの復帰にあわせて更新する経路には触れていない。
+
+実装ではコンストラクタで `scene?.on('layerchange', () => { if (!this.datum) return; this.render(); });`
+を購読している。PLATEAU の候補を選んだまま `Shift+O` でレイヤーを消し、また戻したとき、
+無効なボタンの見た目とツールチップの文言がレイヤーの状態に追従して消えるようにするための経路で、
+実装の過程で追加された。
+
+### `isAddBlocked()` の呼び出し方が `?.()` になった
+
+設計書 §5 のスニペットは `plateau?.isAddBlocked()` と書いているが、実装は
+`plateau?.isAddBlocked?.()` である。`plateau` サービス自体は optional chaining で
+守っているのに `isAddBlocked` がメソッドとして存在する保証まではしていなかったため、
+実装側でメソッド呼び出しにも `?.` を足して揃えた。
+
+### `plateau_conflation` フラグと `isAddBlocked()` の食い違い（task-4 で修正）
+
+計画にも設計書にも `#plateau_conflation` フラグへの言及が無い。
+`PlateauService.getData()` はこのフラグが `false` / `no` のとき重なりの除去
+（`_osmDataMissing()` を含む）を丸ごとスキップしていたが、`isAddBlocked()` は
+このフラグを見ずに `_osmDataMissing()` を直接呼んでいた。
+そのため `#plateau_conflation=false` を付けて重なりの除去そのものを明示的に
+止めても、OSM レイヤーが消えているあいだは追加だけが止まったままになる、
+という実際のバグが最終レビューで見つかった。
+読み出しを `_conflationEnabled()` に集約し、`getData()` と `isAddBlocked()`
+の両方から使う形で修正した（task-4 の変更 1、設計書 §2 を参照）。
+
+### 「この地物のみ追加」(`accept_only_this`) が計画の対象外だった
+
+計画の Task 3 は `renderChoice()` の `disabledReason` を `d.key === 'accept'` のときだけ
+計算する前提で進んでいた。`accept_only_this` は `accept` と同じ `onClick`
+(`acceptFeature`) を共有しているため、クリックすればガードに当たって実際には
+追加されなかったが、ボタンの見た目・ツールチップ・`⇧A` のショートカット表示は
+無効化されないまま残っていた。`accept_only_this` は `type=building` relation の
+メンバー (PLATEAU LOD2 の標準的な構造) に表示されるため、これは PLATEAU では
+珍しくない経路だった。
+最終レビューで指摘され、`_osmLayerOffDisabled()` を切り出して
+`isAcceptFeatureDisabled()` と `renderChoice()` の両方から使う形で対応した
+（task-4 の変更 2、設計書 §5-1 を参照）。件数上限 (`'limit'`) は `accept`
+専用のままなので、この修正では持ち込んでいない。

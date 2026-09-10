@@ -84,13 +84,24 @@ entities = this._filterPlateauOverlaps(entities, ds.graph);
 OSM のレイヤーが消えているかどうかは、`PlateauService` に問い合わせる形にします。
 `_osmDataMissing()` は非公開なので、公開の問い合わせを 1 つ足します。
 
+`getData()` はもう 1 つ、`#plateau_conflation=false`（または `no`）という URL hash フラグも見ています。
+これは重なりの除去そのものをユーザが明示的に止めるための、既存の脱出口です。
+`isAddBlocked()` もこのフラグを見ないと、除去を止めたユーザに対して追加のほうだけが止まったままになります。
+そこでフラグの読み出しを `_conflationEnabled()` に集約し、`getData()` と `isAddBlocked()` の両方から使います。
+
 ```js
+_conflationEnabled() {
+  const useConflationStr = utilStringQs(window.location.hash).plateau_conflation;
+  return useConflationStr !== 'false' && useConflationStr !== 'no';
+}
+
 /**
  * isAddBlocked
  * OSM のレイヤーが消えているために、候補を OSM へ追加できない状態かどうか。
  * @return {boolean}
  */
 isAddBlocked() {
+  if (!this._conflationEnabled()) return false;
   return this._osmDataMissing() === 'layer-off';
 }
 ```
@@ -113,8 +124,20 @@ PLATEAU 以外のデータセットのポリゴンには模様を付けません
 `renderPolygons()` の `style` の代入は `if (feature.dirty)` の中にあります。
 すでに描画オブジェクトが作られている候補は、レイヤーの状態が変わっただけでは塗り直されません。
 
-`PixiLayerRapid` の組み立て時に `PixiScene` の `layerchange` を購読し、`this.dirtyLayer()` を呼びます。
-`layerchange` はレイヤーの切り替えのたびに `PixiScene` が発生させます。
+`PixiLayerRapid` の組み立て時に `PixiScene` の `layerchange` を購読します。
+`layerchange` はどのレイヤーの切り替えでも発生するため、素朴に毎回 `dirtyLayer()` を呼ぶと、塗り方の変わらない他のデータセットまで作り直すことになります。
+そこで直前の `isAddBlocked()` の値を `_addBlocked` にキャッシュしておき、値が実際に反転したときだけ `dirtyLayer()` を呼びます。
+
+```js
+this._addBlocked = null;   // 直前の可否。初回の切り替えでは必ず塗り直す
+scene.on('layerchange', () => {
+  const addBlocked = !!this.context.services?.plateau?.isAddBlocked?.();
+  if (addBlocked === this._addBlocked) return;
+  this._addBlocked = addBlocked;
+  this.dirtyLayer();
+});
+```
+
 `dirtyLayer()` は `AbstractLayer` が持つ、そのレイヤーの図形をすべて塗り直す指示です。
 
 これで `Shift` + `O` を押した瞬間に模様が付き、戻した瞬間に消えます。
@@ -124,15 +147,24 @@ PLATEAU 以外のデータセットのポリゴンには模様を付けません
 `isAcceptFeatureDisabled()` は、いまは真偽値を返します。
 無効になる理由が 2 つに増えるため、理由の文字列か `null` を返す形に変えます。
 
+PLATEAU レイヤー起因の判定 (`'osm-layer-off'`) だけを `_osmLayerOffDisabled()` として切り出します。
+理由は「この地物のみ追加」(`accept_only_this`) にも同じ理由を効かせる必要があるためです（詳細は後述）。
+件数上限 (`'limit'`) の判定はそちらには含めません。
+
 ```js
+_osmLayerOffDisabled() {
+  const plateau = this.context.services?.plateau;
+  if (this.datum?.__service__ === 'plateau' && plateau?.isAddBlocked?.()) return 'osm-layer-off';
+  return null;
+}
+
 /**
  * isAcceptFeatureDisabled
  * @return {string?}  無効な理由。'osm-layer-off' か 'limit'。有効なら null
  */
 isAcceptFeatureDisabled() {
-  const datum = this.datum;
-  const plateau = this.context.services.plateau;
-  if (datum?.__service__ === 'plateau' && plateau?.isAddBlocked()) return 'osm-layer-off';
+  const osmLayerOffReason = this._osmLayerOffDisabled();
+  if (osmLayerOffReason) return osmLayerOffReason;
 
   // 以下はいまの判定をそのまま残し、戻り値だけ真偽値から文字列に変える
   const rapid = this.context.systems.rapid;
@@ -147,12 +179,50 @@ PLATEAU の判定を先頭に置きます。
 既存の `taskExtent` と `poweruser` は追加できる数の上限を外すためのもので、重なりを確かめられない状態とは関係がないためです。
 上限を外している利用者でも、レイヤーが消えているあいだは追加できません。
 
-呼び出しは 2 か所です。
+`isAcceptFeatureDisabled()` の呼び出しは 2 か所です。
 
 `acceptFeature()` の中では、理由に応じて画面下端に出す文言を選びます。
-`renderChoice()` の中では、`isDisabled` の判定はそのまま（文字列は真として扱われる）で、ツールチップの文言を理由に応じて選びます。
+`renderChoice()` の中では、`d.key === 'accept'` のときに `isAcceptFeatureDisabled()` を、`isDisabled` の判定はそのまま（文字列は真として扱われる）で、ツールチップの文言を理由に応じて選びます。
 
 PLATEAU 以外のデータセットの候補には影響しません。
+
+#### 5-1. 「この地物のみ追加」(`accept_only_this`) も同じ理由で止める
+
+`accept_only_this` は `type=building` relation のメンバー (PLATEAU LOD2 の外形+部材という、PLATEAU の標準的な構造) にだけ表示される選択肢で、`accept` と同じ `onClick` (`acceptFeature`) を共有します。
+そのため `isAddBlocked()` が真のときにクリックしても、`acceptFeature()` 内のガードに当たって flash するだけで実際には追加されません。
+
+しかしボタンの見た目 (`disabled` クラス、ツールチップ、`⇧A` のショートカット表示) は `accept` にしか連動しておらず、`accept_only_this` は見た目だけ有効なまま残っていました。
+`renderChoice()` の `disabledReason` を次のように拡張し、`accept_only_this` にも `_osmLayerOffDisabled()` の結果を効かせます。
+件数上限 (`'limit'`) は `accept` 専用のままなので、`isAcceptFeatureDisabled()` 全体ではなく `_osmLayerOffDisabled()` だけを渡します。
+
+```js
+const disabledReason = (d.key === 'accept') ? this.isAcceptFeatureDisabled()
+  : (d.key === 'accept_only_this') ? this._osmLayerOffDisabled()
+  : null;
+```
+
+ツールチップの文言も、`accept_only_this` が `'osm-layer-off'` のときは `accept` の無効時と同じ文言 (`rapid_inspector.option_accept.disabled_osm_layer_off`) を出し、ショートカットの表示を消します。
+
+#### 5-2. `plateau_conflation` フラグとの関係
+
+`#plateau_conflation=false`（または `no`）で重なりの除去そのものを止めているとき、`isAddBlocked()` は `false` を返します（§2 参照）。
+`isAcceptFeatureDisabled()` と `_osmLayerOffDisabled()` はどちらも `isAddBlocked()` を経由するため、この場合は自動的に追加を止めなくなります。
+フラグを明示的に降ろしたユーザに対して、追加のボタンだけが無効のまま残る、という食い違いが起きないようにするためです。
+
+#### 5-3. `UiRapidInspector` 自身の再描画
+
+OSM のレイヤーを切り替えると、PLATEAU の候補を追加できるかどうかが変わります。
+候補を選んだままレイヤーを戻したとき、無効の見た目と説明が残らないよう、`UiRapidInspector` のコンストラクタでも `PixiScene` の `layerchange` を購読し、そのつど `render()` を呼び直します。
+
+```js
+scene?.on('layerchange', () => {
+  if (!this.datum) return;
+  this.render();
+});
+```
+
+`render()` 自身は `$parent` が d3 selection でなければ抜けますが、`$parent` はサイドバーがリセットされたあとも detached な DOM を指したまま残るため、この条件だけでは「候補を選んでいない」ケースを弾けません。
+候補を選んでいない (`this.datum` が無い) あいだは描き直す意味が無いため、ハンドラの先頭で `this.datum` を確認します。
 
 ### 6. 文言
 
@@ -204,6 +274,13 @@ PLATEAU 以外のデータセットの候補には影響しません。
 東京の緯度で拡大率 17.5 のとき画面の 1 ピクセルはおよそ 0.7 メートルなので、一辺 10 メートルの住宅には模様が付きません。
 住宅の多い場所では、追加できない状態が画面から分かりません。
 候補を選べば、ツールチップと無効なボタンで理由が分かります。
+
+`PixiFeaturePolygon` はさらに 2 通り、塗りそのものが消える、または模様を運ばない代替に切り替わる場面があります。
+
+- ワイヤーフレームモードでは `fill.visible = !isWireframeMode` により塗り自体が非表示になるため、模様も含めて何も見えません。
+- 画面上の幅・高さが 20 ピクセル未満になると、`fill` ではなく `lowRes` という代替スプライトに切り替わります (`fill.visible = false`)。この `lowRes` は形状ごとの簡易アイコンで、`construction` 模様を運びません。
+
+どちらも 32 ピクセル未満のケースと同じく、候補を選べばツールチップと無効なボタンで理由が分かります。
 
 すでに OSM にある建物も候補として並ぶため、候補の数が普段より多くなります。
 レイヤーを戻したときに数が減ります。
