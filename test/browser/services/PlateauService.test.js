@@ -365,6 +365,44 @@ describe('PlateauService', () => {
       expect(ids).to.include('pB');
     });
 
+    it('still hides relation members when the overlap is a different building', () => {
+      // relation のメンバーではない建物が OSM 側にある。
+      // 受理したものではないので、これまでどおり隠れる。
+      let osmGraph = new Rapid.Graph();
+      const other = makeBuilding(osmGraph, 'osmOther', [[0,0], [1,0], [1,1], [0,1]]);
+      _service.context.systems.editor._graph = other.graph;
+      _service.context.systems.editor._entities = [other.way];
+
+      let plateauGraph = new Rapid.Graph();
+      const rel = makeBuildingRelationWithParts(
+        plateauGraph, 'pOutline', ['pPart1'],
+        [[0,0], [1,0], [1,1], [0,1]],
+        [[[0.1,0.1], [0.4,0.1], [0.4,0.4], [0.1,0.4]]]
+      );
+      plateauGraph = rel.graph;
+
+      const entities = [rel.outline, rel.parts[0], rel.relation];
+      const result = _service._filterPlateauOverlaps(entities, plateauGraph);
+
+      expect(result.map(e => e.id)).to.not.include('pPart1');
+    });
+
+    it('still hides a standalone candidate that overlaps an accepted building', () => {
+      // relation に属さない候補は、受理済みの建物と重なれば隠れる。
+      // 外す集合は relation の判定のときだけ渡される。
+      let osmGraph = new Rapid.Graph();
+      const accepted = makeBuilding(osmGraph, 'pAccepted', [[0,0], [1,0], [1,1], [0,1]]);
+      _service.context.systems.editor._graph = accepted.graph;
+      _service.context.systems.editor._entities = [accepted.way];
+
+      const plateauResult = makePlateauWay(new Rapid.Graph(),
+        'pLone', [[0.2,0.2], [0.8,0.2], [0.8,0.8], [0.2,0.8]]);
+
+      const result = _service._filterPlateauOverlaps([plateauResult.way], plateauResult.graph);
+
+      expect(result.map(e => e.id)).to.not.include('pLone');
+    });
+
 
     it('falls back to per-way check when relation has no outline member', () => {
       // OSM building at (0,0)-(1,1)
@@ -962,6 +1000,15 @@ describe('PlateauService', () => {
       it('blocks adding when the flag is absent and the layer is off', () => {
         setOsmState(_service, { layerEnabled: false });
         expect(_service.isAddBlocked()).to.be.true;
+      });
+
+      it('does not remove overlapping candidates when the flag is off', () => {
+        window.history.replaceState(null, '', window.location.pathname + '#plateau_conflation=false');
+        setupOsmBuilding(_service, sameFootprint(_service));
+        setOsmState(_service, {});
+
+        const ways = _service.getData('ds1').filter(e => e.type === 'way');
+        expect(ways).to.have.lengthOf(1, 'フラグが降りていれば重なっていても残す');
       });
     });
   });
