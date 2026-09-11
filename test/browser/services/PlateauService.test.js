@@ -1641,7 +1641,8 @@ describe('PlateauService', () => {
 
     const SQUARE = [[0, 0], [0, 0.001], [0.001, 0.001], [0.001, 0]];
 
-    // 記憶に印を 2 つ置く。消えたかどうかはこの 2 つで見る。
+    // 記憶に印を 2 つ置く。
+    // 消えたかどうかはこの 2 つで見る。
     function seedCache(service) {
       service._plateauConflationCache.checked.add('plateau-checked');
       service._plateauConflationCache.rejected.add('plateau-rejected');
