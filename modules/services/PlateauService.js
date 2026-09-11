@@ -732,6 +732,26 @@ export class PlateauService extends AbstractSystem {
       buildingRelationOutline.set(e.id, outlineWayId);
     }
 
+    // relation 自身から来た面を、材料から外すための id の集合。
+    //
+    // メンバーを受理すると、その地物は Plateau 側と同じ id のまま OSM のグラフに入る。
+    // 外形と同じ形なので必ず重なり、残りのメンバーまで候補から外れてしまう。
+    // 画面の文言は「外形とほかの部分は提案のまま残ります」と約束している。
+    //
+    // relation ごとに一度だけ作って使い回す。
+    const ownSourceIDsCache = new Map();
+    const ownSourceIDsOf = (relation) => {
+      const cached = ownSourceIDsCache.get(relation.id);
+      if (cached) return cached;
+
+      const ids = new Set([relation.id]);
+      for (const m of relation.members ?? []) {
+        if (m.type === 'way') ids.add(m.id);
+      }
+      ownSourceIDsCache.set(relation.id, ids);
+      return ids;
+    };
+
     const relationOverlapDecision = new Map();
 
     const evalRelationOverlap = (relation) => {
@@ -748,7 +768,9 @@ export class PlateauService extends AbstractSystem {
         relationOverlapDecision.set(relation.id, null);
         return null;
       }
-      const decision = this._checkWayOverlapsOsmBuildings(outlineWay, plateauGraph, osmBuildingData);
+      const decision = this._checkWayOverlapsOsmBuildings(
+        outlineWay, plateauGraph, osmBuildingData, ownSourceIDsOf(relation)
+      );
       relationOverlapDecision.set(relation.id, decision);
       return decision;
     };
