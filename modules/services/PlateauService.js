@@ -80,14 +80,21 @@ export class PlateauService extends AbstractSystem {
    * startAsync
    */
   startAsync() {
+    if (this._started) return Promise.resolve();
     this._started = true;
 
     // Invalidate conflation cache when OSM data changes
     const editor = this.context.systems.editor;
     if (editor) {
-      editor.on('merge', () => {
-        this._plateauConflationCache.checked.clear();
-        this._plateauConflationCache.rejected.clear();
+      editor.on('merge', () => this._invalidateConflationCache());
+
+      // 編集が確定したときも、重なりの判定をやり直す必要がある。
+      // すでに OSM にある建物を動かすと重なりの有無が変わる。
+      // 記憶が残っていると、候補の表示が古いままになる。
+      // 判定が見ているのは建物だけなので、差分に建物が含まれるときだけ消す。
+      editor.on('stablechange', difference => {
+        if (!this._differenceTouchesBuilding(difference)) return;
+        this._invalidateConflationCache();
       });
     }
 
@@ -103,6 +110,69 @@ export class PlateauService extends AbstractSystem {
     }
 
     return Promise.resolve();
+  }
+
+
+  /**
+   * _invalidateConflationCache
+   * 重なりの判定の記憶を消す。
+   * 次に `getData()` が呼ばれたときに、表示範囲の候補を計算し直す。
+   */
+  _invalidateConflationCache() {
+    this._plateauConflationCache.checked.clear();
+    this._plateauConflationCache.rejected.clear();
+  }
+
+
+  /**
+   * _differenceTouchesBuilding
+   * 編集の差分に建物が含まれるかどうか。
+   *
+   * 重なりの判定が見ているのは OSM の建物だけである。
+   * 建物が含まれない編集では判定の結果が変わらないので、記憶を残す。
+   *
+   * 差分の形は上流のファイルの持ち物で、上流を取り込んだときに変わりうる。
+   * 読めないときは判断せず、記憶を消す側に倒す。
+   *
+   * まず `changes` を見る。
+   * 建物の way を編集した場合、建物を作った場合、建物を消した場合、`building` タグを外した場合は、
+   * 変更後の地物 `head` か変更前の地物 `base` のどちらかに建物が現れるので、ここで片付く。
+   *
+   * 残るのは建物の node だけを動かした場合である。
+   * `complete()` は親の way と relation を返すので、ここでのみ親の建物が現れる。
+   * この関数は親をたどって新しい Map を作る重い処理なので、後に置く。
+   *
+   * @param   {Difference}  difference - 編集システムが渡す差分
+   * @return  {boolean}     建物が含まれれば true
+   */
+  _differenceTouchesBuilding(difference) {
+    if (!difference) return true;
+
+    const isBuilding = (entity) => {
+      const building = entity?.tags?.building;
+      return Boolean(building) && building !== 'no';
+    };
+
+    try {
+      // まず変わった地物そのものを見る。
+      // 建物の way を編集した場合、建物を作った場合、建物を消した場合、
+      // building タグを外した場合は、ここで片付く。
+      for (const change of difference.changes.values()) {
+        if (isBuilding(change?.head)) return true;
+        if (isBuilding(change?.base)) return true;
+      }
+
+      // 残るのは建物の node だけを動かした場合である。
+      // complete() は親の way と relation も返すので、ここで親の建物が現れる。
+      // 親をたどって新しい Map を作る重い処理なので、後に置く。
+      for (const entity of difference.complete().values()) {
+        if (isBuilding(entity)) return true;
+      }
+    } catch (e) {
+      return true;
+    }
+
+    return false;
   }
 
 
@@ -574,7 +644,10 @@ export class PlateauService extends AbstractSystem {
     };
 
     const osmEntities = editor.intersects(extent);
-    const osmPolygons = [];       // 各要素は環の配列。先頭が外形、以降が穴。
+    // 各要素は { sourceID, rings }。
+    // rings の先頭が外形、以降が穴。
+    // sourceID は面の元になった地物の id で、判定のときに材料から外すために使う。
+    const osmPolygons = [];
     const outerWayIDs = new Set();
 
     for (const entity of osmEntities) {
@@ -600,7 +673,7 @@ export class PlateauService extends AbstractSystem {
           inners.push(ring);
         }
       }
-      if (outer) osmPolygons.push([outer, ...inners]);
+      if (outer) osmPolygons.push({ sourceID: entity.id, rings: [outer, ...inners] });
     }
 
     // 穴のメンバー way に building タグが付いていれば、それは中庭に建つ建物なので
@@ -610,13 +683,14 @@ export class PlateauService extends AbstractSystem {
       if (!isOsmBuilding(entity.tags)) continue;
       if (outerWayIDs.has(entity.id)) continue;
       const ring = ringOf(entity);
-      if (ring) osmPolygons.push([ring]);
+      if (ring) osmPolygons.push({ sourceID: entity.id, rings: [ring] });
     }
 
     // 2. Prepare OSM building bounding boxes + polygon coordinates
     // 外接矩形は外形から作る。穴は矩形を狭めない。
     const osmBuildingData = [];
-    for (const rings of osmPolygons) {
+    for (const polygon of osmPolygons) {
+      const rings = polygon.rings;
       let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
       for (const c of rings[0]) {
         if (c[0] < minX) minX = c[0];
@@ -625,6 +699,7 @@ export class PlateauService extends AbstractSystem {
         if (c[1] > maxY) maxY = c[1];
       }
       osmBuildingData.push({
+        sourceID: polygon.sourceID,
         coords: rings,
         bbox: { minX, minY, maxX, maxY }
       });
@@ -660,6 +735,26 @@ export class PlateauService extends AbstractSystem {
       buildingRelationOutline.set(e.id, outlineWayId);
     }
 
+    // relation 自身から来た面を、材料から外すための id の集合。
+    //
+    // メンバーを受理すると、その地物は Plateau 側と同じ id のまま OSM のグラフに入る。
+    // 外形と同じ形なので必ず重なり、残りのメンバーまで候補から外れてしまう。
+    // 画面の文言は「外形とほかの部分は提案のまま残ります」と約束している。
+    //
+    // relation ごとに一度だけ作って使い回す。
+    const ownSourceIDsCache = new Map();
+    const ownSourceIDsOf = (relation) => {
+      const cached = ownSourceIDsCache.get(relation.id);
+      if (cached) return cached;
+
+      const ids = new Set([relation.id]);
+      for (const m of relation.members ?? []) {
+        if (m.type === 'way') ids.add(m.id);
+      }
+      ownSourceIDsCache.set(relation.id, ids);
+      return ids;
+    };
+
     const relationOverlapDecision = new Map();
 
     const evalRelationOverlap = (relation) => {
@@ -676,7 +771,9 @@ export class PlateauService extends AbstractSystem {
         relationOverlapDecision.set(relation.id, null);
         return null;
       }
-      const decision = this._checkWayOverlapsOsmBuildings(outlineWay, plateauGraph, osmBuildingData);
+      const decision = this._checkWayOverlapsOsmBuildings(
+        outlineWay, plateauGraph, osmBuildingData, ownSourceIDsOf(relation)
+      );
       relationOverlapDecision.set(relation.id, decision);
       return decision;
     };
@@ -716,7 +813,12 @@ export class PlateauService extends AbstractSystem {
         // decision === null → relation 判定不能、個別 way 判定にフォールバック
       }
 
-      const decision = this._checkWayOverlapsOsmBuildings(entity, plateauGraph, osmBuildingData);
+      // 外形の役割を持つメンバーが無い relation では、ここで 1 本ずつ判定する。
+      // その場合も、同じ relation から来た面は材料から外す。
+      const decision = this._checkWayOverlapsOsmBuildings(
+        entity, plateauGraph, osmBuildingData,
+        parentRel ? ownSourceIDsOf(parentRel) : undefined
+      );
       if (decision === true) {
         cache.rejected.add(entity.id);
         return false;
@@ -731,9 +833,10 @@ export class PlateauService extends AbstractSystem {
    * _checkWayOverlapsOsmBuildings
    * 1つの Plateau way が OSM 建物群と重複するか判定する純粋ロジック。
    *
+   * @param {Set?} skipSourceIDs - 材料から外す地物の id。省略すると全部の面を見る
    * @return {boolean | null} true = overlap, false = no overlap, null = couldn't evaluate
    */
-  _checkWayOverlapsOsmBuildings(way, plateauGraph, osmBuildingData) {
+  _checkWayOverlapsOsmBuildings(way, plateauGraph, osmBuildingData, skipSourceIDs) {
     try {
       if (!way.isClosed()) return null;
 
@@ -749,6 +852,7 @@ export class PlateauService extends AbstractSystem {
       }
 
       for (const osm of osmBuildingData) {
+        if (skipSourceIDs?.has(osm.sourceID)) continue;
         const ob = osm.bbox;
         if (oMaxX < ob.minX || oMinX > ob.maxX || oMaxY < ob.minY || oMinY > ob.maxY) {
           continue;

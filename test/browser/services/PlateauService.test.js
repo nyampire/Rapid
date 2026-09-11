@@ -5,10 +5,20 @@ describe('PlateauService', () => {
     constructor() {
       this._graph = new Rapid.Graph();
       this._entities = [];
+      this._listeners = new Map();   // Map(eventName -> Array(callback))
     }
     get staging() { return { graph: this._graph }; }
     intersects() { return this._entities; }
-    on() { return this; }
+    on(eventName, callback) {
+      if (!this._listeners.has(eventName)) this._listeners.set(eventName, []);
+      this._listeners.get(eventName).push(callback);
+      return this;
+    }
+    emit(eventName, ...args) {
+      for (const callback of this._listeners.get(eventName) ?? []) {
+        callback(...args);
+      }
+    }
   }
 
   class MockContext {
@@ -265,6 +275,134 @@ describe('PlateauService', () => {
       const wayResults = result.filter(e => e.type === 'way');
       expect(wayResults).to.have.lengthOf(2);  // outline + 1 part 両方残る
     });
+
+
+    it('keeps the other members after the outline itself was accepted', () => {
+      // 外形と同じ形の建物が OSM 側にある。
+      // 外形を受理した直後の状態を表す。
+      // 受理した地物は Plateau 側と同じ id のまま OSM のグラフに入る。
+      let osmGraph = new Rapid.Graph();
+      const accepted = makeBuilding(osmGraph, 'pOutline', [[0,0], [1,0], [1,1], [0,1]]);
+      _service.context.systems.editor._graph = accepted.graph;
+      _service.context.systems.editor._entities = [accepted.way];
+
+      let plateauGraph = new Rapid.Graph();
+      const rel = makeBuildingRelationWithParts(
+        plateauGraph, 'pOutline', ['pPart1', 'pPart2'],
+        [[0,0], [1,0], [1,1], [0,1]],
+        [
+          [[0.1,0.1], [0.4,0.1], [0.4,0.4], [0.1,0.4]],
+          [[0.6,0.6], [0.9,0.6], [0.9,0.9], [0.6,0.9]],
+        ]
+      );
+      plateauGraph = rel.graph;
+
+      const entities = [rel.outline, rel.parts[0], rel.parts[1], rel.relation];
+      const result = _service._filterPlateauOverlaps(entities, plateauGraph);
+      const ids = result.map(e => e.id);
+
+      expect(ids).to.include('pPart1');
+      expect(ids).to.include('pPart2');
+    });
+
+
+    it('keeps the outline and the other part after one part was accepted', () => {
+      // parts の 1 本と同じ形の建物が OSM 側にある。
+      // その part を受理した直後を表す。
+      let osmGraph = new Rapid.Graph();
+      const accepted = makeBuilding(osmGraph, 'pPart1', [[0.1,0.1], [0.4,0.1], [0.4,0.4], [0.1,0.4]]);
+      _service.context.systems.editor._graph = accepted.graph;
+      _service.context.systems.editor._entities = [accepted.way];
+
+      let plateauGraph = new Rapid.Graph();
+      const rel = makeBuildingRelationWithParts(
+        plateauGraph, 'pOutline', ['pPart1', 'pPart2'],
+        [[0,0], [1,0], [1,1], [0,1]],
+        [
+          [[0.1,0.1], [0.4,0.1], [0.4,0.4], [0.1,0.4]],
+          [[0.6,0.6], [0.9,0.6], [0.9,0.9], [0.6,0.9]],
+        ]
+      );
+      plateauGraph = rel.graph;
+
+      const entities = [rel.outline, rel.parts[0], rel.parts[1], rel.relation];
+      const result = _service._filterPlateauOverlaps(entities, plateauGraph);
+      const ids = result.map(e => e.id);
+
+      expect(ids).to.include('pOutline');
+      expect(ids).to.include('pPart2');
+    });
+
+    it('keeps the other members of an outline-less relation after one was accepted', () => {
+      // メンバーの 1 本と同じ形の建物が OSM 側にある。
+      // その 1 本を受理した直後を表す。
+      let osmGraph = new Rapid.Graph();
+      const accepted = makeBuilding(osmGraph, 'pA', [[0,0], [1,0], [1,1], [0,1]]);
+      _service.context.systems.editor._graph = accepted.graph;
+      _service.context.systems.editor._entities = [accepted.way];
+
+      let plateauGraph = new Rapid.Graph();
+      const a = makePlateauWay(plateauGraph, 'pA', [[0,0], [1,0], [1,1], [0,1]]);
+      plateauGraph = a.graph;
+      const b = makePlateauWay(plateauGraph, 'pB', [[0.2,0.2], [0.8,0.2], [0.8,0.8], [0.2,0.8]]);
+      plateauGraph = b.graph;
+
+      // 外形の役割を持つメンバーが無い relation。
+      const relation = Rapid.osmRelation({
+        id: 'r_no_outline',
+        tags: { type: 'building', building: 'yes' },
+        members: [
+          { id: 'pA', type: 'way', role: 'part' },
+          { id: 'pB', type: 'way', role: 'part' }
+        ]
+      });
+      plateauGraph = plateauGraph.replace(relation);
+
+      const entities = [a.way, b.way, relation];
+      const result = _service._filterPlateauOverlaps(entities, plateauGraph);
+      const ids = result.map(e => e.id);
+
+      expect(ids).to.include('pB');
+    });
+
+    it('still hides relation members when the overlap is a different building', () => {
+      // relation のメンバーではない建物が OSM 側にある。
+      // 受理したものではないので、これまでどおり隠れる。
+      let osmGraph = new Rapid.Graph();
+      const other = makeBuilding(osmGraph, 'osmOther', [[0,0], [1,0], [1,1], [0,1]]);
+      _service.context.systems.editor._graph = other.graph;
+      _service.context.systems.editor._entities = [other.way];
+
+      let plateauGraph = new Rapid.Graph();
+      const rel = makeBuildingRelationWithParts(
+        plateauGraph, 'pOutline', ['pPart1'],
+        [[0,0], [1,0], [1,1], [0,1]],
+        [[[0.1,0.1], [0.4,0.1], [0.4,0.4], [0.1,0.4]]]
+      );
+      plateauGraph = rel.graph;
+
+      const entities = [rel.outline, rel.parts[0], rel.relation];
+      const result = _service._filterPlateauOverlaps(entities, plateauGraph);
+
+      expect(result.map(e => e.id)).to.not.include('pPart1');
+    });
+
+    it('still hides a standalone candidate that overlaps an accepted building', () => {
+      // relation に属さない候補は、受理済みの建物と重なれば隠れる。
+      // 外す集合は relation の判定のときだけ渡される。
+      let osmGraph = new Rapid.Graph();
+      const accepted = makeBuilding(osmGraph, 'pAccepted', [[0,0], [1,0], [1,1], [0,1]]);
+      _service.context.systems.editor._graph = accepted.graph;
+      _service.context.systems.editor._entities = [accepted.way];
+
+      const plateauResult = makePlateauWay(new Rapid.Graph(),
+        'pLone', [[0.2,0.2], [0.8,0.2], [0.8,0.8], [0.2,0.8]]);
+
+      const result = _service._filterPlateauOverlaps([plateauResult.way], plateauResult.graph);
+
+      expect(result.map(e => e.id)).to.not.include('pLone');
+    });
+
 
     it('falls back to per-way check when relation has no outline member', () => {
       // OSM building at (0,0)-(1,1)
@@ -863,6 +1001,15 @@ describe('PlateauService', () => {
         setOsmState(_service, { layerEnabled: false });
         expect(_service.isAddBlocked()).to.be.true;
       });
+
+      it('does not remove overlapping candidates when the flag is off', () => {
+        window.history.replaceState(null, '', window.location.pathname + '#plateau_conflation=false');
+        setupOsmBuilding(_service, sameFootprint(_service));
+        setOsmState(_service, {});
+
+        const ways = _service.getData('ds1').filter(e => e.type === 'way');
+        expect(ways).to.have.lengthOf(1, 'フラグが降りていれば重なっていても残す');
+      });
     });
   });
 
@@ -881,7 +1028,7 @@ describe('PlateauService', () => {
       return { graph, way };
     }
 
-    function makeOsmBuildingData(coords) {
+    function makeOsmBuildingData(coords, sourceID) {
       const closed = coords.concat([coords[0]]);
       let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
       for (const c of closed) {
@@ -890,7 +1037,7 @@ describe('PlateauService', () => {
         if (c[1] < minY) minY = c[1];
         if (c[1] > maxY) maxY = c[1];
       }
-      return [{ coords: [closed], bbox: { minX, minY, maxX, maxY } }];
+      return [{ sourceID: sourceID, coords: [closed], bbox: { minX, minY, maxX, maxY } }];
     }
 
     it('returns true when way overlaps OSM building', () => {
@@ -914,6 +1061,18 @@ describe('PlateauService', () => {
       const osmData = makeOsmBuildingData([[0,0], [1,0], [1,1], [0,1]]);
       const result = _service._checkWayOverlapsOsmBuildings(openWay, new Rapid.Graph(), osmData);
       expect(result).to.be.null;
+    });
+
+    it('ignores an OSM building whose source is in the skip set', () => {
+      const plateauResult = makePlateauWay(new Rapid.Graph(),
+        'pW', [[0.5,0.5], [1.5,0.5], [1.5,1.5], [0.5,1.5]]);
+      const osmData = makeOsmBuildingData([[0,0], [1,0], [1,1], [0,1]], 'pW');
+
+      const result = _service._checkWayOverlapsOsmBuildings(
+        plateauResult.way, plateauResult.graph, osmData, new Set(['pW'])
+      );
+
+      expect(result).to.be.false;
     });
   });
 
@@ -1461,6 +1620,130 @@ describe('PlateauService', () => {
       // Sibling way still gets the turf fallback — only the relation is excluded.
       const way = result.find(e => e.type === 'way' && e.id === 'w50');
       expect(way.representativePoint).to.exist;
+    });
+  });
+
+
+  describe('#_plateauConflationCache invalidation', () => {
+    // 建物 1 棟だけを持つグラフを作る。
+    function graphWithBuilding(wayID, coords, tags = { building: 'yes' }) {
+      let graph = new Rapid.Graph();
+      const nodeIDs = [];
+      for (let i = 0; i < coords.length; i++) {
+        const nodeID = `${wayID}-n${i}`;
+        nodeIDs.push(nodeID);
+        graph = graph.replace(Rapid.osmNode({ id: nodeID, loc: coords[i] }));
+      }
+      nodeIDs.push(nodeIDs[0]);   // 閉じる
+      graph = graph.replace(Rapid.osmWay({ id: wayID, nodes: nodeIDs, tags: tags }));
+      return graph;
+    }
+
+    const SQUARE = [[0, 0], [0, 0.001], [0.001, 0.001], [0.001, 0]];
+
+    // 記憶に印を 2 つ置く。
+    // 消えたかどうかはこの 2 つで見る。
+    function seedCache(service) {
+      service._plateauConflationCache.checked.add('plateau-checked');
+      service._plateauConflationCache.rejected.add('plateau-rejected');
+    }
+
+    function cacheSizes(service) {
+      return [
+        service._plateauConflationCache.checked.size,
+        service._plateauConflationCache.rejected.size
+      ];
+    }
+
+    beforeEach(() => {
+      return _service.startAsync();   // 購読は startAsync で足される
+    });
+
+
+    it('clears the cache when a building way itself changes', () => {
+      const editor = _service.context.systems.editor;
+      const base = graphWithBuilding('w-1', SQUARE);
+      const way = base.entity('w-1');
+      const head = base.replace(way.update({ nodes: way.nodes.slice().reverse() }));
+
+      seedCache(_service);
+      editor.emit('stablechange', new Rapid.Difference(base, head));
+
+      expect(cacheSizes(_service)).to.eql([0, 0]);
+    });
+
+    it('keeps the cache when only non-building features change', () => {
+      const editor = _service.context.systems.editor;
+      let base = new Rapid.Graph();
+      base = base.replace(Rapid.osmNode({ id: 'n-1', loc: [0, 0] }));
+      base = base.replace(Rapid.osmNode({ id: 'n-2', loc: [0, 0.001] }));
+      base = base.replace(Rapid.osmWay({ id: 'w-road', nodes: ['n-1', 'n-2'], tags: { highway: 'residential' } }));
+
+      const head = base.replace(base.entity('n-2').move([0, 0.002]));
+
+      seedCache(_service);
+      editor.emit('stablechange', new Rapid.Difference(base, head));
+
+      expect(cacheSizes(_service)).to.eql([1, 1]);
+    });
+
+    it('clears the cache when a node of a building moves', () => {
+      const editor = _service.context.systems.editor;
+      const base = graphWithBuilding('w-1', SQUARE);
+      const head = base.replace(base.entity('w-1-n0').move([0.0005, 0.0005]));
+
+      seedCache(_service);
+      editor.emit('stablechange', new Rapid.Difference(base, head));
+
+      expect(cacheSizes(_service)).to.eql([0, 0]);
+    });
+
+
+    it('clears the cache when a building is deleted', () => {
+      const editor = _service.context.systems.editor;
+      const base = graphWithBuilding('w-1', SQUARE);
+      const head = base.remove(base.entity('w-1'));
+
+      seedCache(_service);
+      editor.emit('stablechange', new Rapid.Difference(base, head));
+
+      expect(cacheSizes(_service)).to.eql([0, 0]);
+    });
+
+
+    it('clears the cache when the building tag is removed', () => {
+      const editor = _service.context.systems.editor;
+      const base = graphWithBuilding('w-1', SQUARE);
+      const head = base.replace(base.entity('w-1').update({ tags: { barrier: 'wall' } }));
+
+      seedCache(_service);
+      editor.emit('stablechange', new Rapid.Difference(base, head));
+
+      expect(cacheSizes(_service)).to.eql([0, 0]);
+    });
+
+
+    it('clears the cache when the difference cannot be read', () => {
+      const editor = _service.context.systems.editor;
+      const broken = {
+        complete() { throw new Error('shape changed upstream'); },
+        get changes() { throw new Error('shape changed upstream'); }
+      };
+
+      seedCache(_service);
+      editor.emit('stablechange', broken);
+
+      expect(cacheSizes(_service)).to.eql([0, 0]);
+    });
+
+
+    it('clears the cache when new OSM data is merged', () => {
+      const editor = _service.context.systems.editor;
+
+      seedCache(_service);
+      editor.emit('merge', ['w-1']);
+
+      expect(cacheSizes(_service)).to.eql([0, 0]);
     });
   });
 
