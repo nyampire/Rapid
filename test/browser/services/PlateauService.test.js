@@ -891,7 +891,7 @@ describe('PlateauService', () => {
       return { graph, way };
     }
 
-    function makeOsmBuildingData(coords) {
+    function makeOsmBuildingData(coords, sourceID) {
       const closed = coords.concat([coords[0]]);
       let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
       for (const c of closed) {
@@ -900,7 +900,7 @@ describe('PlateauService', () => {
         if (c[1] < minY) minY = c[1];
         if (c[1] > maxY) maxY = c[1];
       }
-      return [{ coords: [closed], bbox: { minX, minY, maxX, maxY } }];
+      return [{ sourceID: sourceID, coords: [closed], bbox: { minX, minY, maxX, maxY } }];
     }
 
     it('returns true when way overlaps OSM building', () => {
@@ -924,6 +924,18 @@ describe('PlateauService', () => {
       const osmData = makeOsmBuildingData([[0,0], [1,0], [1,1], [0,1]]);
       const result = _service._checkWayOverlapsOsmBuildings(openWay, new Rapid.Graph(), osmData);
       expect(result).to.be.null;
+    });
+
+    it('ignores an OSM building whose source is in the skip set', () => {
+      const plateauResult = makePlateauWay(new Rapid.Graph(),
+        'pW', [[0.5,0.5], [1.5,0.5], [1.5,1.5], [0.5,1.5]]);
+      const osmData = makeOsmBuildingData([[0,0], [1,0], [1,1], [0,1]], 'pW');
+
+      const result = _service._checkWayOverlapsOsmBuildings(
+        plateauResult.way, plateauResult.graph, osmData, new Set(['pW'])
+      );
+
+      expect(result).to.be.false;
     });
   });
 
