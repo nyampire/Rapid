@@ -641,7 +641,10 @@ export class PlateauService extends AbstractSystem {
     };
 
     const osmEntities = editor.intersects(extent);
-    const osmPolygons = [];       // 各要素は環の配列。先頭が外形、以降が穴。
+    // 各要素は { sourceID, rings }。
+    // rings の先頭が外形、以降が穴。
+    // sourceID は面の元になった地物の id で、判定のときに材料から外すために使う。
+    const osmPolygons = [];
     const outerWayIDs = new Set();
 
     for (const entity of osmEntities) {
@@ -667,7 +670,7 @@ export class PlateauService extends AbstractSystem {
           inners.push(ring);
         }
       }
-      if (outer) osmPolygons.push([outer, ...inners]);
+      if (outer) osmPolygons.push({ sourceID: entity.id, rings: [outer, ...inners] });
     }
 
     // 穴のメンバー way に building タグが付いていれば、それは中庭に建つ建物なので
@@ -677,13 +680,14 @@ export class PlateauService extends AbstractSystem {
       if (!isOsmBuilding(entity.tags)) continue;
       if (outerWayIDs.has(entity.id)) continue;
       const ring = ringOf(entity);
-      if (ring) osmPolygons.push([ring]);
+      if (ring) osmPolygons.push({ sourceID: entity.id, rings: [ring] });
     }
 
     // 2. Prepare OSM building bounding boxes + polygon coordinates
     // 外接矩形は外形から作る。穴は矩形を狭めない。
     const osmBuildingData = [];
-    for (const rings of osmPolygons) {
+    for (const polygon of osmPolygons) {
+      const rings = polygon.rings;
       let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
       for (const c of rings[0]) {
         if (c[0] < minX) minX = c[0];
@@ -692,6 +696,7 @@ export class PlateauService extends AbstractSystem {
         if (c[1] > maxY) maxY = c[1];
       }
       osmBuildingData.push({
+        sourceID: polygon.sourceID,
         coords: rings,
         bbox: { minX, minY, maxX, maxY }
       });
@@ -798,9 +803,10 @@ export class PlateauService extends AbstractSystem {
    * _checkWayOverlapsOsmBuildings
    * 1つの Plateau way が OSM 建物群と重複するか判定する純粋ロジック。
    *
+   * @param {Set?} skipSourceIDs - 材料から外す地物の id。省略すると全部の面を見る
    * @return {boolean | null} true = overlap, false = no overlap, null = couldn't evaluate
    */
-  _checkWayOverlapsOsmBuildings(way, plateauGraph, osmBuildingData) {
+  _checkWayOverlapsOsmBuildings(way, plateauGraph, osmBuildingData, skipSourceIDs) {
     try {
       if (!way.isClosed()) return null;
 
@@ -816,6 +822,7 @@ export class PlateauService extends AbstractSystem {
       }
 
       for (const osm of osmBuildingData) {
+        if (skipSourceIDs?.has(osm.sourceID)) continue;
         const ob = osm.bbox;
         if (oMaxX < ob.minX || oMinX > ob.maxX || oMaxY < ob.minY || oMinY > ob.maxY) {
           continue;
