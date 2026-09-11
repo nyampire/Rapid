@@ -108,16 +108,16 @@ Plateau 側に同じ建物が二重に入っている場合（Issue #35）に、
 | # | 守るべきもの | 出どころ | 固定する試験 |
 |---|---|---|---|
 | 1 | OSM の建物と重なる候補は出さない | Phase 4-A の設計 | `filters out Plateau buildings that overlap with OSM buildings` ほか |
-| 2 | 同じ relation の中で 1 つを受理しても、残りは候補のまま残る | 画面の文言 `rapid_inspector.option_accept_only_this.description` | **この設計で足す** |
+| 2 | 同じ relation の中で 1 つを受理しても、残りは候補のまま残る | 画面の文言 `rapid_inspector.option_accept_only_this.description` | `keeps the other members after the outline itself was accepted`、`keeps the outline and the other part after one part was accepted`、`keeps the other members of an outline-less relation after one was accepted`。仕組みの側は `ignores an OSM building whose source is in the skip set` |
 | 3 | 材料のタイルが揃っていないあいだは候補を出さない | Pull Request #52 | `returns no candidates while the OSM tiles covering the view are not loaded` |
 | 4 | OSM のレイヤーが消えているあいだは候補を出し、追加を止める | Pull Request #54 | `returns candidates while the OSM layer is switched off`、`reports that adding is blocked while the OSM layer is switched off` |
 | 5 | 編集が確定したら判定をやり直す。建物に関わる編集のときだけ | 2026-09-10 の設計 | `clears the cache when a building way itself changes` ほか 6 件 |
-| 6 | `#plateau_conflation=false` のときは、除去も追加の抑止も行わない | Phase 4-A の設計 | 抑止の側は `does not block adding when the flag is off and the layer is off`。除去の側は **この設計で足す** |
+| 6 | `#plateau_conflation=false` のときは、除去も追加の抑止も行わない | Phase 4-A の設計 | 抑止の側は `does not block adding when the flag is off and the layer is off`。除去の側は `does not remove overlapping candidates when the flag is off` |
 | 7 | 高さの転記の経路は判定を通らない | Pull Request #38 | `still returns everything for the height transfer path` |
 | 8 | 中庭（`role=inner`）は面から差し引く | Pull Request #46 | `keeps a Plateau building that sits inside the courtyard of an OSM multipolygon`、`does not judge an inner ring on its own` |
 
-2 番と 6 番の除去の側に試験がありません。
-ほかの 6 項目は、いまある 72 件の中で固定されています。
+8 項目すべてに、対応する試験があります。
+表に挙げた 14 件の名前が試験ファイルに 1 件ずつ存在することを、実装のあとに確かめました。
 
 この一覧は、重なりの判定と候補の表示に範囲を限ります。
 hover の強調、カバレッジの読み込み、代表点の解釈は含めません。
