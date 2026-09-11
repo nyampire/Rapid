@@ -810,7 +810,12 @@ export class PlateauService extends AbstractSystem {
         // decision === null → relation 判定不能、個別 way 判定にフォールバック
       }
 
-      const decision = this._checkWayOverlapsOsmBuildings(entity, plateauGraph, osmBuildingData);
+      // 外形の役割を持つメンバーが無い relation では、ここで 1 本ずつ判定する。
+      // その場合も、同じ relation から来た面は材料から外す。
+      const decision = this._checkWayOverlapsOsmBuildings(
+        entity, plateauGraph, osmBuildingData,
+        parentRel ? ownSourceIDsOf(parentRel) : undefined
+      );
       if (decision === true) {
         cache.rejected.add(entity.id);
         return false;

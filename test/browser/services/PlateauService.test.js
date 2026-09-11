@@ -333,6 +333,38 @@ describe('PlateauService', () => {
       expect(ids).to.include('pPart2');
     });
 
+    it('keeps the other members of an outline-less relation after one was accepted', () => {
+      // メンバーの 1 本と同じ形の建物が OSM 側にある。
+      // その 1 本を受理した直後を表す。
+      let osmGraph = new Rapid.Graph();
+      const accepted = makeBuilding(osmGraph, 'pA', [[0,0], [1,0], [1,1], [0,1]]);
+      _service.context.systems.editor._graph = accepted.graph;
+      _service.context.systems.editor._entities = [accepted.way];
+
+      let plateauGraph = new Rapid.Graph();
+      const a = makePlateauWay(plateauGraph, 'pA', [[0,0], [1,0], [1,1], [0,1]]);
+      plateauGraph = a.graph;
+      const b = makePlateauWay(plateauGraph, 'pB', [[0.2,0.2], [0.8,0.2], [0.8,0.8], [0.2,0.8]]);
+      plateauGraph = b.graph;
+
+      // 外形の役割を持つメンバーが無い relation。
+      const relation = Rapid.osmRelation({
+        id: 'r_no_outline',
+        tags: { type: 'building', building: 'yes' },
+        members: [
+          { id: 'pA', type: 'way', role: 'part' },
+          { id: 'pB', type: 'way', role: 'part' }
+        ]
+      });
+      plateauGraph = plateauGraph.replace(relation);
+
+      const entities = [a.way, b.way, relation];
+      const result = _service._filterPlateauOverlaps(entities, plateauGraph);
+      const ids = result.map(e => e.id);
+
+      expect(ids).to.include('pB');
+    });
+
 
     it('falls back to per-way check when relation has no outline member', () => {
       // OSM building at (0,0)-(1,1)
