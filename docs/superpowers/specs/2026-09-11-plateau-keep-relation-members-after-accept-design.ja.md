@@ -69,6 +69,15 @@ relation を判定するときは、その relation 自身とメンバーの way
 この経路にも同じ集合を渡します。
 約束は relation の形によらないためです。
 
+### parts のタグについて
+
+公開中の API は、parts に `building:part` を付けます（`osmfj_plateau_api.py` の `add_tag('building:part', ...)`）。
+判定の材料に入るのは `building` タグを持つ地物だけなので、実際の運用で約束が破れるのは outline を受理したときだけです。
+
+試験のヘルパ `makePlateauWay` は、outline にも parts にも `building` を付けます。
+ヘルパはそのままにします。
+約束はタグの付き方によらず守るべきもので、タグに依存した試験にすると、API の出力が変わったときに気づけなくなるためです。
+
 ### 変えないこと
 
 relation に属さない候補の判定は変えません。
