@@ -276,6 +276,64 @@ describe('PlateauService', () => {
       expect(wayResults).to.have.lengthOf(2);  // outline + 1 part 両方残る
     });
 
+
+    it('keeps the other members after the outline itself was accepted', () => {
+      // 外形と同じ形の建物が OSM 側にある。
+      // 外形を受理した直後の状態を表す。
+      // 受理した地物は Plateau 側と同じ id のまま OSM のグラフに入る。
+      let osmGraph = new Rapid.Graph();
+      const accepted = makeBuilding(osmGraph, 'pOutline', [[0,0], [1,0], [1,1], [0,1]]);
+      _service.context.systems.editor._graph = accepted.graph;
+      _service.context.systems.editor._entities = [accepted.way];
+
+      let plateauGraph = new Rapid.Graph();
+      const rel = makeBuildingRelationWithParts(
+        plateauGraph, 'pOutline', ['pPart1', 'pPart2'],
+        [[0,0], [1,0], [1,1], [0,1]],
+        [
+          [[0.1,0.1], [0.4,0.1], [0.4,0.4], [0.1,0.4]],
+          [[0.6,0.6], [0.9,0.6], [0.9,0.9], [0.6,0.9]],
+        ]
+      );
+      plateauGraph = rel.graph;
+
+      const entities = [rel.outline, rel.parts[0], rel.parts[1], rel.relation];
+      const result = _service._filterPlateauOverlaps(entities, plateauGraph);
+      const ids = result.map(e => e.id);
+
+      expect(ids).to.include('pPart1');
+      expect(ids).to.include('pPart2');
+    });
+
+
+    it('keeps the outline and the other part after one part was accepted', () => {
+      // parts の 1 本と同じ形の建物が OSM 側にある。
+      // その part を受理した直後を表す。
+      let osmGraph = new Rapid.Graph();
+      const accepted = makeBuilding(osmGraph, 'pPart1', [[0.1,0.1], [0.4,0.1], [0.4,0.4], [0.1,0.4]]);
+      _service.context.systems.editor._graph = accepted.graph;
+      _service.context.systems.editor._entities = [accepted.way];
+
+      let plateauGraph = new Rapid.Graph();
+      const rel = makeBuildingRelationWithParts(
+        plateauGraph, 'pOutline', ['pPart1', 'pPart2'],
+        [[0,0], [1,0], [1,1], [0,1]],
+        [
+          [[0.1,0.1], [0.4,0.1], [0.4,0.4], [0.1,0.4]],
+          [[0.6,0.6], [0.9,0.6], [0.9,0.9], [0.6,0.9]],
+        ]
+      );
+      plateauGraph = rel.graph;
+
+      const entities = [rel.outline, rel.parts[0], rel.parts[1], rel.relation];
+      const result = _service._filterPlateauOverlaps(entities, plateauGraph);
+      const ids = result.map(e => e.id);
+
+      expect(ids).to.include('pOutline');
+      expect(ids).to.include('pPart2');
+    });
+
+
     it('falls back to per-way check when relation has no outline member', () => {
       // OSM building at (0,0)-(1,1)
       let osmGraph = new Rapid.Graph();
