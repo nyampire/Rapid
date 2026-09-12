@@ -10,7 +10,7 @@ import { OsmService } from './OsmService.js';
 import { OsmoseService } from './OsmoseService.js';
 import { OsmWikibaseService } from './OsmWikibaseService.js';
 import { OvertureService } from './OvertureService.js';
-import { PlateauService } from './PlateauService.js';
+import { PlateauService, PLATEAU_BUILDINGS_MINZOOM } from './PlateauService.js';
 import { StreetsideService } from './StreetsideService.js';
 import { TaginfoService } from './TaginfoService.js';
 import { VectorTileService } from './VectorTileService.js';
@@ -40,6 +40,8 @@ export {
   WikidataService,
   WikipediaService
 };
+
+export { PLATEAU_BUILDINGS_MINZOOM };
 
 // At init time, we will instantiate any that are in the 'available' collection.
 export const services = {

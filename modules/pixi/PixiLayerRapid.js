@@ -6,6 +6,7 @@ import { AbstractLayer } from './AbstractLayer.js';
 import { PixiFeatureLine } from './PixiFeatureLine.js';
 import { PixiFeaturePoint } from './PixiFeaturePoint.js';
 import { PixiFeaturePolygon } from './PixiFeaturePolygon.js';
+import { PLATEAU_BUILDINGS_MINZOOM } from '../services/PlateauService.js';
 
 const MINZOOM = 15;
 
@@ -352,9 +353,18 @@ export class PixiLayerRapid extends AbstractLayer {
 
     /* Plateau (Japan 3D building data from nyampire/rapid_plateau_api) */
     } else if (dataset.service === 'plateau') {
-      if (zoom >= 16) {  // avoid firing off too many API requests
-        service.loadTiles(datasetID);
-      }
+      // 取得と描画を同じ閾値で止める。
+      //
+      // 閾値に届かないズームで描画に入ると、取得要求が 1 回も出ないまま
+      // `getData()` が毎回 0 件を返す。待っても状態が変わらないため、
+      // 恒久的に何も表示されない範囲ができる。
+      //
+      // 比べるのは地図のズームそのものにする。引数の `zoom` は緯度で補正された
+      // `MapSystem.effectiveZoom()` の値で、同じ閾値が那覇と札幌で 0.36 ずれる。
+      const mapZoom = context.viewport.transform.zoom;
+      if (mapZoom < PLATEAU_BUILDINGS_MINZOOM) return;
+
+      service.loadTiles(datasetID);
 
       // PlateauService.getData applies its own conflation; here we only need
       // to filter out features the user already accepted or ignored and keep
