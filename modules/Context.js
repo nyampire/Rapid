@@ -10,7 +10,14 @@ import { systems } from './core/index.js';
 
 import { utilKeybinding } from './util/keybinding.js';
 
-const MINZOOM = 15;
+// OSM のデータを取得し始める地図のズーム。
+//
+// ズーム 15 では視野を覆うズーム 16 のタイルが 96 枚から 144 枚になる。
+// ズーム 16 では 24 枚から 45 枚に収まる。
+//
+// Plateau の建物はズーム 17 から出る (`PLATEAU_BUILDINGS_MINZOOM`)。
+// OSM を 1 段手前から取得することで、重なりの判定の材料が先にそろう。
+const MINZOOM = 16;
 
 
 /**

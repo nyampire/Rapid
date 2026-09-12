@@ -39,9 +39,14 @@ describe('PixiLayerPlateauCoverage', () => {
       deferredRedraw() { gfx.deferredRedrawCount++; },
       immediateRedraw() {}
     };
+    // ズームの判定は地図のズームそのものを見る。
+    // 引数で渡る `zoom` は緯度で補正された値で、建物の側と物差しが違うと
+    // 範囲と建物が入れ替わる位置が緯度でずれる。
+    // 既定の 10 は表示する範囲の内側にあり、ズーム以外の試験はこの値を使う。
     const context = {
       services: opts.services ?? {},
-      systems: { gfx: gfx }
+      systems: { gfx: gfx },
+      viewport: { transform: { zoom: opts.mapZoom ?? 10 } }
     };
     const scene = {
       gfx: gfx,
@@ -52,15 +57,21 @@ describe('PixiLayerPlateauCoverage', () => {
     return scene;
   }
 
-  function makeLayer(serviceOpts) {
+  function makeLayer(serviceOpts, sceneOpts = {}) {
     const scene = makeScene({
-      services: { plateau: serviceOpts === null ? undefined : makeService(serviceOpts) }
+      services: { plateau: serviceOpts === null ? undefined : makeService(serviceOpts) },
+      mapZoom: sceneOpts.mapZoom
     });
     const layer = new Rapid.PixiLayerPlateauCoverage(scene, 'plateau-coverage');
     // Stub the actual feature rendering so we don't need Pixi
     layer._renderFeaturesCalls = 0;
     layer._renderFeatures = () => { layer._renderFeaturesCalls++; };
     return { layer, scene, service: scene.context.services.plateau };
+  }
+
+  // 地図のズームを差し替える
+  function setMapZoom(scene, z) {
+    scene.context.viewport.transform.zoom = z;
   }
 
 
@@ -78,16 +89,19 @@ describe('PixiLayerPlateauCoverage', () => {
 
 
   describe('#render zoom range', () => {
-    it('does nothing when zoom is below MINZOOM (5)', () => {
-      const { layer, service } = makeLayer({});
+    it('does nothing when the map zoom is below MINZOOM (5)', () => {
+      const { layer, scene, service } = makeLayer({});
+      setMapZoom(scene, 4);
       layer.render(1, null, 4);
       expect(service._calls.loadCoverage).to.eql(0);
       expect(layer._renderFeaturesCalls).to.eql(0);
     });
 
-    it('does nothing when zoom is above MAXZOOM (15)', () => {
-      const { layer, service } = makeLayer({});
-      layer.render(1, null, 16);
+    it('does nothing once the map zoom reaches the buildings zoom', () => {
+      // この値から `PixiLayerRapid` が建物を描くので、範囲は引き下がる。
+      const { layer, scene, service } = makeLayer({});
+      setMapZoom(scene, Rapid.PLATEAU_BUILDINGS_MINZOOM);
+      layer.render(1, null, 17);
       expect(service._calls.loadCoverage).to.eql(0);
       expect(layer._renderFeaturesCalls).to.eql(0);
     });
@@ -99,14 +113,22 @@ describe('PixiLayerPlateauCoverage', () => {
       expect(layer._renderFeaturesCalls).to.eql(1);
     });
 
-    it('handles MINZOOM and MAXZOOM as inclusive bounds', () => {
+    it('hands over to the buildings exactly at the buildings zoom', () => {
+      // 下限は含み、上限は含まない。
+      // 範囲が消えるズームと建物が出るズームが同じなので、
+      // どちらも出ないズームができない。
       const fc = { type: 'FeatureCollection', features: [] };
-      const { layer } = makeLayer({ coverageData: fc });
-      layer.render(1, null, 5);    // MINZOOM inclusive
-      layer.render(2, null, 15);   // MAXZOOM inclusive
-      // Both calls should pass the zoom gate; _renderFeatures is invoked
-      // (even with empty features, the function is called, then iterates over nothing).
-      expect(layer._renderFeaturesCalls).to.eql(2);
+      const { layer, scene } = makeLayer({ coverageData: fc });
+
+      setMapZoom(scene, 5);                                        // 下限は含む
+      layer.render(1, null, 5);
+      setMapZoom(scene, Rapid.PLATEAU_BUILDINGS_MINZOOM - 0.01);   // 建物の手前
+      layer.render(2, null, 17);
+      expect(layer._renderFeaturesCalls).to.eql(2, '手前までは範囲を描く');
+
+      setMapZoom(scene, Rapid.PLATEAU_BUILDINGS_MINZOOM);          // 建物が出る値
+      layer.render(3, null, 17);
+      expect(layer._renderFeaturesCalls).to.eql(2, 'ここからは建物に渡す');
     });
   });
 
