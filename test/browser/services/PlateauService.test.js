@@ -929,7 +929,11 @@ describe('PlateauService', () => {
 
     it('returns no candidates while the OSM tiles covering the view are not loaded', () => {
       setOsmState(_service, { tilesLoaded: false });
-      expect(_service.getData('ds1')).to.have.lengthOf(0, 'タイルが未取得');
+      // 数えるのは way だけにする。
+      // 建物の node は、重なりの判定でも素通しする作りなので常に返る。
+      // 描画は多角形だけを取るので、node が残っても候補としては見えない。
+      const ways = _service.getData('ds1').filter(e => e.type === 'way');
+      expect(ways).to.have.lengthOf(0, 'タイルが未取得');
     });
 
     it('returns candidates once the layer is on and the tiles are loaded', () => {
@@ -1010,6 +1014,163 @@ describe('PlateauService', () => {
         const ways = _service.getData('ds1').filter(e => e.type === 'way');
         expect(ways).to.have.lengthOf(1, 'フラグが降りていれば重なっていても残す');
       });
+    });
+  });
+
+
+  describe('#getData のタイル単位の判定', () => {
+    // 重なりの判定の材料は、編集システムの中にある OSM の建物である。
+    // 材料がそろっているかどうかは、視野全体ではなく建物ごとに決める。
+    // 取得済みの場所の建物は出し、未取得の場所の建物だけを出さない。
+
+    // 正解の側は Tiler から取る。判定に使う計算とは別の経路で求める。
+    function tileIDContaining(service, loc) {
+      const tiles = service._tiler.getTiles(service.context.viewport).tiles;
+      const hit = tiles.find(t => t.wgs84Extent.contains(new Rapid.sdk.Extent(loc, loc)));
+      return hit ? hit.id : null;
+    }
+
+    // 中心 center に小さな正方形の建物を 1 棟作り、graph に足す
+    function addBuilding(graph, prefix, center, tags) {
+      const d = 0.00008;
+      const coords = [
+        [center[0] - d, center[1] - d], [center[0] + d, center[1] - d],
+        [center[0] + d, center[1] + d], [center[0] - d, center[1] + d]
+      ];
+      const nodeIds = [];
+      for (let i = 0; i < coords.length; i++) {
+        const nodeId = `${prefix}-n${i}`;
+        nodeIds.push(nodeId);
+        graph = graph.replace(Rapid.osmNode({ id: nodeId, loc: coords[i] }));
+      }
+      nodeIds.push(nodeIds[0]);
+      const way = Rapid.osmWay({ id: `${prefix}-w`, nodes: nodeIds, tags: tags ?? { building: 'yes' } });
+      return { graph: graph.replace(way), way };
+    }
+
+    function installDataset(service, build) {
+      const base = new Rapid.Graph();
+      const tree = new Rapid.Tree(base);   // 空の graph から作り、差分で登録させる
+      const result = build(base);
+      service._datasets.ds1 = { id: 'ds1', graph: result.graph, tree, cache: {}, lastv: null };
+      return result;
+    }
+
+    // OSM のレイヤーは点いたまま、取得済みのタイルだけを指定する
+    function setOsmLoadedTiles(service, tileIDs) {
+      const ctx = service.context;
+      ctx.services = { osm: { _tileCache: { loaded: new Set(tileIDs) } } };
+      ctx.systems.gfx.scene = { layers: new Map([['osm', { id: 'osm', enabled: true }]]) };
+    }
+
+    // 視野の中で、別のタイルに載る 2 点を返す
+    function twoLocsInDifferentTiles(service) {
+      const c = service.context.viewport.visibleExtent().center();
+      return [[c[0] - 0.006, c[1]], [c[0] + 0.006, c[1]]];
+    }
+
+    // 範囲に重なるタイルの id を Tiler から集める。
+    // 2 点が離れていると、そのあいだのタイルも範囲に入る。
+    function tileIDsIntersecting(service, extent) {
+      return service._tiler.getTiles(service.context.viewport).tiles
+        .filter(t => t.wgs84Extent.intersects(extent))
+        .map(t => t.id);
+    }
+
+    // relation とメンバーの way 2 本を組んだ 1 棟を作る
+    function installBuildingRelation(service, locOutline, locPart) {
+      const result = installDataset(service, (base) => {
+        const outline = addBuilding(base, 'outline', locOutline);
+        const part = addBuilding(outline.graph, 'part', locPart, { 'building:part': 'yes' });
+        const relation = Rapid.osmRelation({
+          id: 'bldgRel',
+          tags: { type: 'building', building: 'yes' },
+          members: [
+            { id: 'outline-w', type: 'way', role: 'outline' },
+            { id: 'part-w', type: 'way', role: 'part' }
+          ]
+        });
+        return { graph: part.graph.replace(relation) };
+      });
+      const graph = service._datasets.ds1.graph;
+      return { graph, extent: graph.entity('bldgRel').extent(graph), result };
+    }
+
+
+    it('returns only the building whose covering tile is loaded', () => {
+      const [locA, locB] = twoLocsInDifferentTiles(_service);
+      installDataset(_service, (base) => {
+        const a = addBuilding(base, 'bldgA', locA);
+        return addBuilding(a.graph, 'bldgB', locB);
+      });
+
+      const tileA = tileIDContaining(_service, locA);
+      const tileB = tileIDContaining(_service, locB);
+      expect(tileA).to.be.a('string');
+      expect(tileB).to.be.a('string');
+      expect(tileA).to.not.equal(tileB, '2 棟は別のタイルに載っている');
+
+      setOsmLoadedTiles(_service, [tileA]);   // 片方だけ取得済み
+
+      const wayIDs = _service.getData('ds1').filter(e => e.type === 'way').map(e => e.id);
+      expect(wayIDs).to.deep.equal(['bldgA-w'], '取得済みの側だけを返す');
+    });
+
+
+    it('returns both buildings once both covering tiles are loaded', () => {
+      const [locA, locB] = twoLocsInDifferentTiles(_service);
+      installDataset(_service, (base) => {
+        const a = addBuilding(base, 'bldgA', locA);
+        return addBuilding(a.graph, 'bldgB', locB);
+      });
+
+      setOsmLoadedTiles(_service, [
+        tileIDContaining(_service, locA), tileIDContaining(_service, locB)
+      ]);
+
+      const wayIDs = _service.getData('ds1').filter(e => e.type === 'way').map(e => e.id).sort();
+      expect(wayIDs).to.deep.equal(['bldgA-w', 'bldgB-w']);
+    });
+
+
+    it('hides a whole building relation when one of its tiles is not loaded', () => {
+      // relation とメンバーの way は 1 棟として扱う。
+      // 半分だけ確かめた状態で外形や部分を出すと、形の不整合が画面に見える。
+      const [locA, locB] = twoLocsInDifferentTiles(_service);
+      const { extent } = installBuildingRelation(_service, locA, locB);
+
+      const spanned = tileIDsIntersecting(_service, extent);
+      expect(spanned.length).to.be.above(1, '1 棟が複数のタイルに跨っている');
+
+      setOsmLoadedTiles(_service, spanned.slice(0, -1));   // 1 枚だけ未取得にする
+
+      const ids = _service.getData('ds1')
+        .filter(e => e.type === 'way' || e.type === 'relation').map(e => e.id);
+      expect(ids).to.deep.equal([], '外形も部分も relation も出さない');
+    });
+
+
+    it('shows the whole building relation once every tile it spans is loaded', () => {
+      const [locA, locB] = twoLocsInDifferentTiles(_service);
+      const { extent } = installBuildingRelation(_service, locA, locB);
+
+      setOsmLoadedTiles(_service, tileIDsIntersecting(_service, extent));
+
+      const ids = _service.getData('ds1').filter(e => e.type === 'way').map(e => e.id).sort();
+      expect(ids).to.deep.equal(['outline-w', 'part-w'].sort());
+    });
+
+
+    it('computes the same tile id as the Tiler does', () => {
+      // 判定は緯度経度からタイル番号を直接求める。
+      // Tiler と 1 つでもずれると、取得済みの照会が常に外れる。
+      const tiles = _service._tiler.getTiles(_service.context.viewport).tiles;
+      expect(tiles.length).to.be.above(3, '視野が複数のタイルに跨っている');
+
+      for (const tile of tiles) {
+        const center = tile.wgs84Extent.center();
+        expect(_service._osmTileIDAt(center)).to.equal(tile.id, `中心 ${center} のタイル番号`);
+      }
     });
   });
 

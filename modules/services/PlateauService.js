@@ -12,6 +12,28 @@ import { utilFetchResponse, utilBuildingRelationInfo } from '../util/index.js';
 const PLATEAU_API_URL = 'https://rapid.nyampire.info/api/mapwithai/buildings';  // Production: nyampire/rapid_plateau_api
 const TILEZOOM = 16;
 
+// Web Mercator が扱える緯度の限界
+const MAX_MERCATOR_LAT = 85.0511287798066;
+
+// 1 棟の建物が跨るタイルの枚数の上限。
+// 建物はズーム 16 のタイル 1 枚か、境目に載っても数枚に収まる。
+// これを超える範囲は壊れたデータなので、取得の途中の状態とは区別する。
+const MAX_TILES_PER_BUILDING = 64;
+
+/**
+ * PLATEAU_BUILDINGS_MINZOOM
+ * Plateau の建物を取得して描き始める地図のズーム。
+ *
+ * 緯度で補正した `MapSystem.effectiveZoom()` ではなく、
+ * `viewport.transform.zoom`（URL の `#map=` と同じ値）で比べる。
+ * 補正値で比べると、同じ閾値が那覇と札幌で 0.36 ずれる。
+ *
+ * `PixiLayerRapid` は、この値に届かないあいだ取得も描画もしない。
+ * `PixiLayerPlateauCoverage` は、この値の手前までを都市の範囲の表示に使う。
+ * 範囲と建物がちょうど入れ替わるように、両方が同じ値を読む。
+ */
+export const PLATEAU_BUILDINGS_MINZOOM = 17;
+
 
 /**
  * `PlateauService`
@@ -47,6 +69,14 @@ export class PlateauService extends AbstractSystem {
       checked: new Set(),    // Set(entityID) - already checked, not overlapping
       rejected: new Set()    // Set(entityID) - overlapping with OSM
     };
+
+    // 1 棟の建物が跨るタイルの id。Map(unitID -> string[] | null)
+    //
+    // 記憶してよいのは、Plateau の建物の形が読み込んだあと変わらないからである。
+    // 取得済みかどうかは記憶しない。毎回 `_tileCache.loaded` に照会するので、
+    // タイルが増えたときに次の描画でそのまま反映される。
+    // null は範囲が壊れていて数えられなかった建物を表す。
+    this._unitTileIDs = new Map();
 
     // Cache for coverage area GeoJSON (loaded once, used by PixiLayerPlateauCoverage)
     this._coverageData = null;          // GeoJSON FeatureCollection or null
@@ -330,6 +360,10 @@ export class PlateauService extends AbstractSystem {
         splitWays: new Map()         // unused for Plateau but kept for parity
       };
     }
+
+    // graph を作り直すので、建物の id から引いたタイルの記憶も捨てる
+    this._unitTileIDs.clear();
+
     return Promise.resolve();
   }
 
@@ -338,7 +372,7 @@ export class PlateauService extends AbstractSystem {
    * loadCoverage
    * Fetch Plateau coverage area GeoJSON once and cache it.
    * Used by PixiLayerPlateauCoverage to display where Plateau data exists
-   * at zoom 5-14.
+   * below PLATEAU_BUILDINGS_MINZOOM.
    *
    * The endpoint returns a FeatureCollection where each Feature is a
    * convex-hull polygon of one city's buildings, with properties:
@@ -406,15 +440,14 @@ export class PlateauService extends AbstractSystem {
 
     // Client-side conflation: hide Plateau buildings that overlap existing OSM
     if (this._conflationEnabled()) {
-      const missing = this._osmDataMissing();
-
       // レイヤーが消えているあいだは、重なりの除去をせずにそのまま返す。
       // 材料が無いので除去できないが、表示は続ける。すでに OSM にある建物も
       // 候補に並ぶため、OSM への追加は `isAddBlocked()` を見る側が止める。
-      if (missing === 'layer-off') return entities;
+      if (this._osmLayerOff()) return entities;
 
-      // タイルの取得が終わっていないだけなら、待てば材料が揃う。候補は出さない。
-      if (missing) return [];
+      // 取得の済んだ場所の建物だけを判定に進める。
+      // 視野全体ではなく建物ごとに見るので、読み込めた範囲から順に候補が出る。
+      entities = this._withOsmDataLoaded(entities, ds.graph);
 
       entities = this._filterPlateauOverlaps(entities, ds.graph);
     }
@@ -438,33 +471,179 @@ export class PlateauService extends AbstractSystem {
 
 
   /**
-   * _osmDataMissing
-   * 重なりの判定は、編集ソフトの中にある OSM の建物だけを材料にする。
-   * 材料が集まっていない状態では「OSM に無い建物」と「まだ確かめられていない建物」を
-   * 区別できない。
+   * _osmLayerOff
+   * OSM のレイヤーが消えているかどうか。
    *
-   * OSM のレイヤーを消すと `PixiLayerOsm` の描画が先頭で止まり、その先の
-   * `context.loadTiles()` に届かない。画面から消えるだけでなく、編集ソフトの中身も
-   * 空のままになる。この場合は候補をそのまま表示し、OSM への追加のほうを止める。
+   * 重なりの判定は、編集システムの中にある OSM の建物だけを材料にする。
+   * レイヤーを消すと `PixiLayerOsm` の描画が先頭で止まり、その先の
+   * `context.loadTiles()` に届かない。画面から消えるだけでなく、編集システムの
+   * 中身も空のままになる。
    *
-   * タイルの取得が終わっていないだけの場合は、待てば材料が揃うので候補を出さない。
+   * この場合は候補をそのまま表示し、OSM への追加のほうを `isAddBlocked()` で止める。
    *
-   * @return {string?}  材料が揃っていない理由。'layer-off' か 'tiles'。揃っていれば null
+   * @return {boolean}  レイヤーが消えていれば true
    */
-  _osmDataMissing() {
+  _osmLayerOff() {
     const layer = this.context.systems.gfx?.scene?.layers?.get('osm');
-    if (layer && layer.enabled === false) return 'layer-off';
+    return !!(layer && layer.enabled === false);
+  }
 
-    // タイルの取得に失敗したまま再取得されない経路もあるため、取得済みかどうかも見る。
-    // 取得済みの一覧は上流のファイルの持ち物で、上流を取り込んだときに形が変わりうる。
-    // 読めないときは判断せず、これまでどおり判定に進む。
+
+  /**
+   * _osmTileXYAt
+   * 緯度経度からズーム `TILEZOOM` のタイル番号を求める。
+   *
+   * `Tiler.getTiles()` はワールドのピクセル座標をタイルの大きさで割って
+   * 切り捨てた値をタイル番号にしている。標準の Web Mercator の XYZ と同じなので、
+   * 同じ値を緯度経度から直接計算できる。
+   *
+   * 建物 1 棟ごとに呼ぶため、視野を作って `getTiles()` を呼ぶ形では重すぎる。
+   * 一致することは試験で固定している。
+   *
+   * @param   {Array}  loc  [lon, lat]
+   * @return  {Array}  [x, y]
+   */
+  _osmTileXYAt(loc) {
+    const n = Math.pow(2, TILEZOOM);
+    const clamp = (v, lo, hi) => Math.max(lo, Math.min(hi, v));
+
+    const lon = clamp(loc[0], -180, 180);
+    const lat = clamp(loc[1], -MAX_MERCATOR_LAT, MAX_MERCATOR_LAT);
+    const latRad = lat * Math.PI / 180;
+
+    const x = clamp(Math.floor((lon + 180) / 360 * n), 0, n - 1);
+    const mercY = Math.log(Math.tan(latRad) + 1 / Math.cos(latRad)) / Math.PI;
+    const y = clamp(Math.floor((1 - mercY) / 2 * n), 0, n - 1);
+
+    return [x, y];
+  }
+
+
+  /**
+   * _osmTileIDAt
+   * 緯度経度を含むタイルの id。`Tiler` が付ける id と同じ形にする。
+   *
+   * @param   {Array}    loc  [lon, lat]
+   * @return  {string}   'x,y,z'
+   */
+  _osmTileIDAt(loc) {
+    const [x, y] = this._osmTileXYAt(loc);
+    return `${x},${y},${TILEZOOM}`;
+  }
+
+
+  /**
+   * _osmTileIDsCovering
+   * 範囲を覆うタイルの id を全部返す。
+   *
+   * 枚数が `MAX_TILES_PER_BUILDING` を超える範囲は、建物としてありえない大きさである。
+   * メンバーの座標が壊れた relation などで起きる。
+   * 取得の途中と区別するため null を返し、呼ぶ側は隠さない側に倒す。
+   *
+   * @param   {Extent}    extent
+   * @return  {Array?}    タイルの id の配列。数えられないときは null
+   */
+  _osmTileIDsCovering(extent) {
+    const [minLon, minLat] = extent.min;
+    const [maxLon, maxLat] = extent.max;
+
+    const [xMin, yMin] = this._osmTileXYAt([minLon, maxLat]);   // 北西の角
+    const [xMax, yMax] = this._osmTileXYAt([maxLon, minLat]);   // 南東の角
+
+    const count = (xMax - xMin + 1) * (yMax - yMin + 1);
+    if (!Number.isFinite(count) || count > MAX_TILES_PER_BUILDING) return null;
+
+    const ids = [];
+    for (let y = yMin; y <= yMax; y++) {
+      for (let x = xMin; x <= xMax; x++) {
+        ids.push(`${x},${y},${TILEZOOM}`);
+      }
+    }
+    return ids;
+  }
+
+
+  /**
+   * _withOsmDataLoaded
+   * 重なりの判定の材料がそろっている建物だけに絞り込む。
+   *
+   * 材料がそろっていない場所では「OSM に無い建物」と「まだ確かめていない建物」を
+   * 区別できない。確かめずに候補として出すと、すでに OSM にある建物を重ねて
+   * 登録することになる。
+   *
+   * 判定の単位は 1 棟である。
+   * `type=building` と `type=multipolygon` の relation は relation の範囲で判定し、
+   * メンバーの way は親の判定に従う。relation を持たない way はその way の範囲で判定する。
+   * `_filterPlateauOverlaps()` と同じ単位にすることで、外形だけが出て
+   * 部分が消えるような形の不整合を防ぐ。
+   *
+   * 取得済みの一覧は `OsmService` の持ち物で、上流を取り込んだときに形が変わりうる。
+   * 読めないときは絞り込まず、全部を判定に進める。
+   *
+   * @param   {Array}  entities
+   * @param   {Graph}  plateauGraph
+   * @return  {Array}  絞り込んだ entities
+   */
+  _withOsmDataLoaded(entities, plateauGraph) {
     const loaded = this.context.services?.osm?._tileCache?.loaded;
-    if (!(loaded instanceof Set)) return null;
+    if (!(loaded instanceof Set)) return entities;
 
-    const tiles = this._tiler.getTiles(this.context.viewport).tiles;
-    if (!tiles.length) return null;
+    // メンバーの way から親の relation を引くための対応表
+    const wayToBuildingRelation = new Map();
+    const isBuildingRelation = (entity) => {
+      const relType = entity.tags?.type;
+      return relType === 'building' || relType === 'multipolygon';
+    };
 
-    return tiles.some(tile => !loaded.has(tile.id)) ? 'tiles' : null;
+    for (const entity of entities) {
+      if (entity.type !== 'relation' || !isBuildingRelation(entity)) continue;
+      for (const m of entity.members ?? []) {
+        if (m.type !== 'way') continue;
+        if (!wayToBuildingRelation.has(m.id)) wayToBuildingRelation.set(m.id, entity);
+      }
+    }
+
+    const decision = new Map();   // Map(unitID -> boolean)
+
+    const tileIDsOf = (unit) => {
+      if (this._unitTileIDs.has(unit.id)) return this._unitTileIDs.get(unit.id);
+
+      let ids = null;
+      try {
+        ids = this._osmTileIDsCovering(unit.extent(plateauGraph));
+      } catch (e) {
+        ids = null;   // メンバーの node が graph に無い relation など
+      }
+      this._unitTileIDs.set(unit.id, ids);
+      return ids;
+    };
+
+    const isVerified = (unit) => {
+      if (decision.has(unit.id)) return decision.get(unit.id);
+
+      const ids = tileIDsOf(unit);
+      // 数えられなかった建物は、取得の途中ではなくデータの異常である。
+      // 待っても状態が変わらないので、隠さずに判定へ進める。
+      const verified = (ids === null) ? true : ids.every(id => loaded.has(id));
+
+      decision.set(unit.id, verified);
+      return verified;
+    };
+
+    return entities.filter(entity => {
+      if (entity.type === 'node') return true;
+
+      if (entity.type === 'relation') {
+        // 追跡対象でない relation (type=route など) は素通しする
+        if (!isBuildingRelation(entity)) return true;
+        return isVerified(entity);
+      }
+
+      if (entity.type !== 'way') return true;
+
+      const parentRel = wayToBuildingRelation.get(entity.id);
+      return isVerified(parentRel ?? entity);
+    });
   }
 
 
@@ -483,7 +662,7 @@ export class PlateauService extends AbstractSystem {
    */
   isAddBlocked() {
     if (!this._conflationEnabled()) return false;
-    return this._osmDataMissing() === 'layer-off';
+    return this._osmLayerOff();
   }
 
 
