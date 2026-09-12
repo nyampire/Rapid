@@ -1,10 +1,10 @@
 import { AbstractLayer } from './AbstractLayer.js';
 import { PixiFeaturePolygon } from './PixiFeaturePolygon.js';
+import { PLATEAU_BUILDINGS_MINZOOM } from '../services/PlateauService.js';
 
 
 const LAYERID = 'plateau-coverage';
 const MINZOOM = 5;
-const MAXZOOM = 15;
 // Vivid orange — colorblind-safe (IBM Accessible Color Palette),
 // stands out against Japan's green-heavy OSM background (forests, parks).
 const PLATEAU_COVERAGE_COLOR = 0xFE6100;
@@ -17,8 +17,9 @@ const PLATEAU_COVERAGE_COLOR = 0xFE6100;
  * Each polygon is a convex hull of one city's building centroids,
  * fetched from the rapid_plateau_api server.
  *
- * Visible at zoom 5-15. At zoom 16+ the actual building data starts
- * loading (see PixiLayerRapid), so this overview layer hides itself.
+ * Visible from map zoom 5 up to PLATEAU_BUILDINGS_MINZOOM. At that zoom the
+ * actual building data starts loading (see PixiLayerRapid), so this overview
+ * layer hides itself and the two hand over exactly.
  *
  * @class
  */
@@ -64,7 +65,15 @@ export class PixiLayerPlateauCoverage extends AbstractLayer {
    */
   render(frame, viewport, zoom) {
     if (!this.enabled) return;
-    if (zoom < MINZOOM || zoom > MAXZOOM) return;
+
+    // 上限は建物が出るズームの手前までにする。
+    // 都市の範囲と建物がちょうど入れ替わり、Plateau のデータがある場所で
+    // 手がかりが何も出ないズームを作らない。
+    //
+    // 比べるのは地図のズームそのものにする。引数の `zoom` は緯度で補正された値で、
+    // 建物の側と物差しが違うと入れ替わる位置が緯度でずれる。
+    const mapZoom = this.context.viewport.transform.zoom;
+    if (mapZoom < MINZOOM || mapZoom >= PLATEAU_BUILDINGS_MINZOOM) return;
 
     const service = this.context.services.plateau;
     if (!service) return;
