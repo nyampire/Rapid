@@ -60,6 +60,52 @@ describe('PixiLayerHeightTransfer', () => {
 
 
   describe('#render', () => {
+    it('marks a CANDIDATE with a height warning with a red ring and "!"', () => {
+      const c1 = {
+        plateauFeature: { id: 'p1', representativePoint: [139.755, 35.679], heightWarnings: ['absolute'] },
+        state: 'CANDIDATE'
+      };
+      const layer = new Rapid.PixiLayerHeightTransfer(makeScene(makeMode()), 'height-transfer');
+
+      const style = layer._styleFor(c1);
+      expect(style.ring).to.eql(0xE53935);
+      expect(style.glyph).to.eql('!');
+      expect(style.color).to.eql(0xD500F9);
+    });
+
+    it('keeps the plain CANDIDATE mark without a warning', () => {
+      const c1 = { plateauFeature: { id: 'p1', representativePoint: [139.755, 35.679] }, state: 'CANDIDATE' };
+      const layer = new Rapid.PixiLayerHeightTransfer(makeScene(makeMode()), 'height-transfer');
+
+      const style = layer._styleFor(c1);
+      expect(style.ring).to.be.undefined;
+      expect(style.glyph).to.be.null;
+    });
+
+    it('keeps the AREA_MISMATCH mark even with a height warning', () => {
+      const c1 = {
+        plateauFeature: { id: 'p1', representativePoint: [139.755, 35.679], heightWarnings: ['absolute'] },
+        state: 'AREA_MISMATCH'
+      };
+      const layer = new Rapid.PixiLayerHeightTransfer(makeScene(makeMode()), 'height-transfer');
+
+      expect(layer._styleFor(c1).glyph).to.eql('!?');
+    });
+
+    it('draws the "!" on the icon of a CANDIDATE with a height warning', () => {
+      const c1 = {
+        plateauFeature: { id: 'p1', representativePoint: [139.755, 35.679], heightWarnings: ['absolute'] },
+        state: 'CANDIDATE'
+      };
+      const layer = new Rapid.PixiLayerHeightTransfer(makeScene(makeMode({ candidates: [c1] })), 'height-transfer');
+      layer._container = makeFakeContainer();
+
+      layer.render(0, projectIdentity, 17);
+
+      const icon = layer._container.children[0];
+      expect(icon.children[0].text).to.eql('!');
+    });
+
     it('renders nothing when mode is inactive', () => {
       const mode = makeMode({ active: false, candidates: [
         { plateauFeature: { id: 'p1', representativePoint: [139.755, 35.679] }, state: 'CANDIDATE' }
