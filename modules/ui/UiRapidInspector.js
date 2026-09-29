@@ -9,6 +9,8 @@ import { uiTooltip } from './tooltip.js';
 import { utilCmd } from '../util/cmd.js';
 import { utilKeybinding } from '../util/keybinding.js';
 import { utilBuildingRelationInfo } from '../util/building_relation.js';
+import { uiPlateauHeightWarning } from './plateau_height_warning.js';
+import { utilPlateauHeightWarningMessages } from '../util/plateau_height_warning.js';
 
 const ACCEPT_FEATURES_LIMIT = 50;
 
@@ -56,6 +58,7 @@ export class UiRapidInspector {
     this.render = this.render.bind(this);
     this.renderFeatureInfo = this.renderFeatureInfo.bind(this);
     this.renderTagInfo = this.renderTagInfo.bind(this);
+    this.renderHeightWarning = this.renderHeightWarning.bind(this);
     this.renderChoices = this.renderChoices.bind(this);
     this.renderChoice = this.renderChoice.bind(this);
     this.renderNotice = this.renderNotice.bind(this);
@@ -144,6 +147,7 @@ export class UiRapidInspector {
 
     $inspector.selectAll('.body')
       .call(this.renderFeatureInfo)
+      .call(this.renderHeightWarning)
       .call(this.renderTagInfo)
       .call(this.renderChoices)
       .call(this.renderNotice);
@@ -404,6 +408,25 @@ export class UiRapidInspector {
       .attr('title', l10n.t('rapid_poweruser.beta'));   // alt text
   }
 
+
+  /**
+   * renderHeightWarning
+   * PLATEAU の建物の高さが怪しいとき、タグ一覧の上に警告を出す。
+   * 追加の操作は止めない。
+   * 警告を読んだうえで追加し、あとから高さを直すこともできるためである。
+   * @param {d3-selection} $selection - 描く先
+   */
+  renderHeightWarning($selection) {
+    const datum = this.datum;
+    const context = this.context;
+    const l10n = context.systems.l10n;
+
+    const service = datum ? context.services[datum.__service__] : null;
+    const graph = service?.graph?.(datum.__datasetid__) ?? null;
+    const messages = utilPlateauHeightWarningMessages(datum, graph, l10n);
+
+    uiPlateauHeightWarning($selection, messages, l10n, '.tag-info');
+  }
 
   /**
    * renderTagInfo
