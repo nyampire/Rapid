@@ -43,6 +43,57 @@ export function utilPlateauHeightWarningMessages(entity, graph, l10n) {
 }
 
 
+/**
+ * utilPlateauTransferWarningMessages
+ * タグ転記の転記元の外形について、転記する値に関わる高さの警告を、利用者に見せる文にする。
+ * 転記するのは外形の高さだけなので、部分立体自身の高さの問題は数えない。
+ * ただし部分立体の part-over-outline は、外形の高さの誤りを示しうるので数える。
+ * 外形の警告を先に、部分立体の警告を後に並べ、同じ文は 1 回だけ返す。
+ *
+ * @param   {osmEntity} outline  転記元の外形の way か relation
+ * @param   {Graph?}    graph    PLATEAU の graph。無ければ外形自身の警告だけを見る
+ * @param   {Object}    l10n     `t(key, params)` を持つ翻訳の仕組み
+ * @return  {string[]}
+ */
+export function utilPlateauTransferWarningMessages(outline, graph, l10n) {
+  const messages = [];
+  for (const [key, params] of _transferWarningItems(outline, graph)) {
+    const text = params ? l10n.t(key, params) : l10n.t(key);
+    if (!messages.includes(text)) messages.push(text);
+  }
+  return messages;
+}
+
+
+/**
+ * utilPlateauHasTransferWarning
+ * utilPlateauTransferWarningMessages と同じ範囲に、警告が 1 つでもあるか。
+ *
+ * @param   {osmEntity} outline  転記元の外形の way か relation
+ * @param   {Graph?}    graph    PLATEAU の graph。無ければ外形自身の警告だけを見る
+ * @return  {boolean}
+ */
+export function utilPlateauHasTransferWarning(outline, graph) {
+  return _transferWarningItems(outline, graph).length > 0;
+}
+
+
+function _transferWarningItems(outline, graph) {
+  if (!outline) return [];
+
+  const items = _warningItems(outline, graph);
+  const info = graph ? utilBuildingRelationInfo(outline, graph) : null;
+  if (info) {
+    for (const m of info.relation.members ?? []) {
+      if (m.role !== 'part') continue;
+      const part = graph.hasEntity(m.id);
+      if (part) items.push(..._warningItems(part, graph, ['part-over-outline']));
+    }
+  }
+  return items;
+}
+
+
 function _fmt(value, digits = 1) {
   return Number(value).toFixed(digits);
 }
@@ -61,13 +112,15 @@ function _findOutline(entity, graph) {
  * _warningItems
  * 1 つの entity の警告を、[文言のキー, 値] の組にする。
  * 値を入れられないときは、値の無い文言を使う。
+ * only を渡すと、その名前の検査だけを見る。
  */
-function _warningItems(entity, graph) {
+function _warningItems(entity, graph, only = null) {
   const items = [];
   const tags = entity.tags ?? {};
   const height = parseFloat(tags.height);
 
   for (const check of entity.heightWarnings ?? []) {
+    if (only && !only.includes(check)) continue;
     if (check === 'degenerate-area') {
       items.push(['plateau_height_warning.degenerate_area', null]);
 

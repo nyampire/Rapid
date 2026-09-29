@@ -1,5 +1,6 @@
 import * as PIXI from 'pixi.js';
 import { AbstractLayer } from './AbstractLayer.js';
+import { utilPlateauHasTransferWarning } from '../util/plateau_height_warning.js';
 
 
 const MIN_CANDIDATE_ZOOM = 17;
@@ -128,8 +129,11 @@ export class PixiLayerHeightTransfer extends AbstractLayer {
    * @return {Object?}  STATE_STYLE の値か WARNING_CANDIDATE_STYLE
    */
   _styleFor(candidate) {
-    if (candidate.state === 'CANDIDATE' && candidate.plateauFeature?.heightWarnings?.length) {
-      return WARNING_CANDIDATE_STYLE;
+    if (candidate.state === 'CANDIDATE') {
+      // 転記の欄と同じ範囲の警告を見る。
+      const feature = candidate.plateauFeature;
+      const graph = this.context.services?.plateau?.graph?.(feature?.__datasetid__) ?? null;
+      if (utilPlateauHasTransferWarning(feature, graph)) return WARNING_CANDIDATE_STYLE;
     }
     return STATE_STYLE[candidate.state];
   }

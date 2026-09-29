@@ -73,6 +73,26 @@ describe('PixiLayerHeightTransfer', () => {
       expect(style.color).to.eql(0xD500F9);
     });
 
+    it('marks a CANDIDATE whose part has a part-over-outline warning with a red ring', () => {
+      const outline = Rapid.osmWay({ id: 'w1', tags: { building: 'yes', height: '9.1' }, nodes: [] });
+      const part = Object.assign(
+        Rapid.osmWay({ id: 'w2', tags: { 'building:part': 'yes', height: '149.2' }, nodes: [] }),
+        { heightWarnings: ['part-over-outline'] });
+      const relation = Rapid.osmRelation({
+        id: 'r1', tags: { type: 'building', building: 'yes', height: '9.1' },
+        members: [{ id: 'w1', type: 'way', role: 'outline' },
+                  { id: 'w2', type: 'way', role: 'part' }]
+      });
+      const graph = new Rapid.Graph([outline, part, relation]);
+
+      const scene = makeScene(makeMode());
+      scene.context.services.plateau = { graph: () => graph };
+      const layer = new Rapid.PixiLayerHeightTransfer(scene, 'height-transfer');
+
+      const style = layer._styleFor({ plateauFeature: outline, state: 'CANDIDATE' });
+      expect(style.ring).to.eql(0xE53935);
+    });
+
     it('keeps the plain CANDIDATE mark without a warning', () => {
       const c1 = { plateauFeature: { id: 'p1', representativePoint: [139.755, 35.679] }, state: 'CANDIDATE' };
       const layer = new Rapid.PixiLayerHeightTransfer(makeScene(makeMode()), 'height-transfer');

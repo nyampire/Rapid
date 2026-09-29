@@ -116,3 +116,93 @@ describe('utilPlateauHeightWarningMessages', () => {
     ]);
   });
 });
+
+
+describe('utilPlateauTransferWarningMessages / utilPlateauHasTransferWarning', () => {
+  // 転記するのは外形の高さだけである。
+  // 部分立体の警告のうち、外形の高さの誤りを示しうる part-over-outline だけを数える。
+  const l10n = {
+    t: (key, params) => params ? `${key} ${JSON.stringify(params)}` : key
+  };
+
+  function way(id, tags, extra = {}) {
+    return Object.assign(Rapid.osmWay({ id, tags, nodes: [] }), extra);
+  }
+
+  function building(outline, part) {
+    const relation = Rapid.osmRelation({
+      id: 'r1', tags: { type: 'building', building: 'yes', height: outline.tags.height },
+      members: [{ id: outline.id, type: 'way', role: 'outline' },
+                { id: part.id, type: 'way', role: 'part' }]
+    });
+    return new Rapid.Graph([outline, part, relation]);
+  }
+
+  it('counts the part-over-outline warning of a part', () => {
+    const outline = way('w1', { building: 'yes', height: '9.1' });
+    const part = way('w2', { 'building:part': 'yes', height: '149.2' },
+      { heightWarnings: ['part-over-outline'] });
+    const graph = building(outline, part);
+
+    expect(Rapid.utilPlateauTransferWarningMessages(outline, graph, l10n)).to.eql([
+      'plateau_height_warning.part_over_outline {"part":"149.2","outline":"9.1","diff":"140.1"}'
+    ]);
+    expect(Rapid.utilPlateauHasTransferWarning(outline, graph)).to.be.true;
+  });
+
+  it('ignores the other warnings of a part', () => {
+    const outline = way('w1', { building: 'yes', height: '9.1' });
+    const part = way('w2', { 'building:part': 'yes', height: '0.5' },
+      { heightWarnings: ['absolute'] });
+    const graph = building(outline, part);
+
+    expect(Rapid.utilPlateauTransferWarningMessages(outline, graph, l10n)).to.eql([]);
+    expect(Rapid.utilPlateauHasTransferWarning(outline, graph)).to.be.false;
+    // サイドバー用は建物全体の警告を出す。
+    expect(Rapid.utilPlateauHeightWarningMessages(outline, graph, l10n)).to.eql([
+      'plateau_height_warning.absolute {"height":"0.5"}'
+    ]);
+  });
+
+  it('counts every warning of the outline itself', () => {
+    const outline = way('w1', { building: 'yes', height: '0.5' },
+      { heightWarnings: ['absolute'] });
+    const graph = new Rapid.Graph([outline]);
+
+    expect(Rapid.utilPlateauTransferWarningMessages(outline, graph, l10n)).to.eql([
+      'plateau_height_warning.absolute {"height":"0.5"}'
+    ]);
+    expect(Rapid.utilPlateauHasTransferWarning(outline, graph)).to.be.true;
+  });
+
+  it('puts the outline first and says the same thing only once', () => {
+    const outline = way('w1', { building: 'yes', height: '0.5' },
+      { heightWarnings: ['absolute'] });
+    const part = way('w2', { 'building:part': 'yes', height: '9' },
+      { heightWarnings: ['part-over-outline', 'absolute'] });
+    const relation = Object.assign(Rapid.osmRelation({
+      id: 'r1', tags: { type: 'building', building: 'yes', height: '0.5' },
+      members: [{ id: 'w1', type: 'way', role: 'outline' },
+                { id: 'w2', type: 'way', role: 'part' }]
+    }), { heightWarnings: ['absolute'] });
+    const graph = new Rapid.Graph([outline, part, relation]);
+
+    expect(Rapid.utilPlateauTransferWarningMessages(outline, graph, l10n)).to.eql([
+      'plateau_height_warning.absolute {"height":"0.5"}',
+      'plateau_height_warning.part_over_outline {"part":"9.0","outline":"0.5","diff":"8.5"}'
+    ]);
+  });
+
+  it('looks only at the outline itself without a graph', () => {
+    const plain = way('w1', { building: 'yes', height: '7' });
+    const warned = way('w2', { building: 'yes', height: '0.5' },
+      { heightWarnings: ['absolute'] });
+
+    expect(Rapid.utilPlateauTransferWarningMessages(plain, null, l10n)).to.eql([]);
+    expect(Rapid.utilPlateauHasTransferWarning(plain, null)).to.be.false;
+    expect(Rapid.utilPlateauTransferWarningMessages(warned, null, l10n)).to.eql([
+      'plateau_height_warning.absolute {"height":"0.5"}'
+    ]);
+    expect(Rapid.utilPlateauHasTransferWarning(warned, null)).to.be.true;
+  });
+});
