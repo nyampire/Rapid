@@ -61,6 +61,7 @@ export { UiRapidCatalog } from './UiRapidCatalog.js';
 export { uiRapidColorpicker } from './rapid_colorpicker.js';
 export { UiRapidDatasetToggle } from './UiRapidDatasetToggle.js';
 export { uiRapidFirstEditDialog } from './rapid_first_edit_dialog.js';
+export { uiPlateauHeightWarning } from './plateau_height_warning.js';
 export { UiRapidInspector } from './UiRapidInspector.js';
 export { UiRapidPowerUserFeatures } from './UiRapidPowerUserFeatures.js';
 // export { uiRapidSplash } from './rapid_splash.js';

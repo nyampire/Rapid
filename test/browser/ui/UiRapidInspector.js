@@ -143,4 +143,50 @@ describe('UiRapidInspector', () => {
       expect(inspector._osmLayerOffDisabled()).to.be.null;
     });
   });
+
+  describe('#renderHeightWarning', () => {
+    function plateauDatum(extra = {}) {
+      return Object.assign(
+        Rapid.osmWay({ id: 'w1', tags: { building: 'yes', height: '0.5' }, nodes: [] }),
+        { __service__: 'plateau', __datasetid__: 'plateauJapan' },
+        extra
+      );
+    }
+
+    afterEach(() => d3.selectAll('.test-body').remove());
+
+    it('shows the warning above the tags for a building with a warning', () => {
+      const datum = plateauDatum({ heightWarnings: ['absolute'] });
+      inspector.context.services.plateau.graph = () => new Rapid.Graph([datum]);
+      inspector.datum = datum;
+
+      const $body = d3.select('body').append('div').attr('class', 'test-body');
+      $body.append('div').attr('class', 'tag-info');
+      inspector.renderHeightWarning($body);
+
+      const $warning = $body.select('.plateau-height-warning');
+      expect($warning.empty()).to.be.false;
+      expect($warning.text()).to.contain('plateau_height_warning.title');
+      expect($warning.text()).to.contain('plateau_height_warning.absolute');
+      expect($warning.text()).to.contain('plateau_height_warning.advice');
+      // タグ一覧より前に置く。
+      expect($body.node().firstChild.classList.contains('plateau-height-warning')).to.be.true;
+    });
+
+    it('shows nothing for a building without a warning', () => {
+      const datum = plateauDatum();
+      inspector.context.services.plateau.graph = () => new Rapid.Graph([datum]);
+      inspector.datum = datum;
+
+      const $body = d3.select('body').append('div').attr('class', 'test-body');
+      inspector.renderHeightWarning($body);
+
+      expect($body.select('.plateau-height-warning').empty()).to.be.true;
+    });
+
+    it('does not stop the accept button', () => {
+      inspector.datum = plateauDatum({ heightWarnings: ['absolute'] });
+      expect(inspector.isAcceptFeatureDisabled()).to.be.null;
+    });
+  });
 });

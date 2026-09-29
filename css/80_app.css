@@ -3686,6 +3686,28 @@ li.issue-fix-item button:not(.actionable) .fix-icon {
        collapsing runs of spaces and wrapping long lines normally. */
     white-space: pre-line;
 }
+
+/* PLATEAU の高さの警告。
+   追加を止めない注意なので、赤ではなく橙の帯にする。 */
+.plateau-height-warning {
+    margin: 0 0 8px;
+    padding: 6px 8px;
+    border-left: 4px solid #e65100;
+    background: #fff3e0;
+    color: #4e342e;
+    font-size: 12px;
+}
+.plateau-height-warning-title {
+    margin: 0 0 4px;
+    font-weight: bold;
+}
+.plateau-height-warning ul {
+    margin: 0 0 4px;
+    padding-left: 16px;
+}
+.plateau-height-warning-advice {
+    margin: 0;
+}
 ul.plateau-additions.tag-list {
     margin: 6px 0 8px;
     padding: 0;
