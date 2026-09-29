@@ -47,7 +47,8 @@
       "absolute_generic": "The height is too low for a building.",
       "floor_height_high": "Each floor is {per_floor} m tall, too tall for a residential building.",
       "floor_height_low": "Each floor is {per_floor} m tall, too low for a residential building.",
-      "floor_height_generic": "The height per floor is unusual for a residential building."
+      "floor_height_generic": "The height per floor is unusual for a residential building.",
+      "unknown": "This building was flagged for a suspicious height."
     },
     "title": {
       "format": {

@@ -108,6 +108,11 @@ function _warningItems(entity, graph) {
       } else {
         items.push(['plateau_height_warning.floor_height_generic', null]);
       }
+
+    } else {
+      // 知らない検査の名前でも、警告があることは伝える。
+      // 地図は警告の点を描くので、文が空だと理由が分からなくなる。
+      items.push(['plateau_height_warning.unknown', null]);
     }
   }
   return items;

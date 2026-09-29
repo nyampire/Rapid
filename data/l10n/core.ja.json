@@ -763,7 +763,8 @@
       "absolute_generic": "建物としては高さが低すぎます。",
       "floor_height_high": "1 階あたりの高さが {per_floor} m で、住宅としては高すぎます。",
       "floor_height_low": "1 階あたりの高さが {per_floor} m で、住宅としては低すぎます。",
-      "floor_height_generic": "住宅としては 1 階あたりの高さが極端です。"
+      "floor_height_generic": "住宅としては 1 階あたりの高さが極端です。",
+      "unknown": "高さが怪しいと判定されました。"
     },
     "help": {
       "areas": {
