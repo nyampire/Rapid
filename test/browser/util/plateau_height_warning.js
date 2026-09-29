@@ -106,4 +106,13 @@ describe('utilPlateauHeightWarningMessages', () => {
       'plateau_height_warning.absolute {"height":"0.5"}'
     ]);
   });
+
+  it('shows a generic message for a check name it does not know', () => {
+    // 地図は警告の点を描くので、文が空にならないようにする。
+    const w = way('w1', { building: 'yes', height: '7' },
+      { heightWarnings: ['some-new-check'] });
+    expect(Rapid.utilPlateauHeightWarningMessages(w, null, l10n)).to.eql([
+      'plateau_height_warning.unknown'
+    ]);
+  });
 });
