@@ -19,7 +19,7 @@ export function uiPlateauHeightWarning($parent, messages, l10n, before) {
 
   $warning
     .attr('class', 'plateau-height-warning')
-    .attr('role', 'alert');
+    .attr('role', 'status');
 
   $warning.append('p')
     .attr('class', 'plateau-height-warning-title')

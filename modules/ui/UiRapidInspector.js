@@ -428,6 +428,7 @@ export class UiRapidInspector {
     uiPlateauHeightWarning($selection, messages, l10n, '.tag-info');
   }
 
+
   /**
    * renderTagInfo
    * Renders the 'tag-info' section
