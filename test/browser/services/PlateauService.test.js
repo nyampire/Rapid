@@ -1785,6 +1785,83 @@ describe('PlateauService', () => {
   });
 
 
+  describe('#height warning parsing', () => {
+    function _makeService() {
+      return new Rapid.PlateauService(new MockContext());
+    }
+    function _fakeDataset() {
+      return { id: 'plateauJapan', cache: { seen: new Set() } };
+    }
+    function _parseXMLAsync(service, xml) {
+      const doc = new window.DOMParser().parseFromString(xml, 'application/xml');
+      return new Promise((resolve, reject) => {
+        service._parseXML(_fakeDataset(), doc, { id: 'fake-tile' }, (err, result) => {
+          if (err) reject(err);
+          else resolve(result);
+        });
+      });
+    }
+    const nodes = `
+      <node id="1" lat="35.6795" lon="139.7560"/>
+      <node id="2" lat="35.6795" lon="139.7566"/>
+      <node id="3" lat="35.6800" lon="139.7566"/>
+      <node id="4" lat="35.6800" lon="139.7560"/>`;
+
+    it('lifts the warning tags onto entity properties and removes them from tags', async () => {
+      const xml = `<?xml version="1.0"?><osm version="0.6">${nodes}
+        <way id="10">
+          <nd ref="1"/><nd ref="2"/><nd ref="3"/><nd ref="4"/><nd ref="1"/>
+          <tag k="building" v="yes"/>
+          <tag k="height" v="18.4"/>
+          <tag k="plateau:height_warning" v="needle;floor-height"/>
+          <tag k="plateau:footprint_m2" v="0.0036"/>
+        </way></osm>`;
+
+      const result = await _parseXMLAsync(_makeService(), xml);
+      const way = result.find(e => e.id === 'w10');
+
+      expect(way.heightWarnings).to.eql(['needle', 'floor-height']);
+      expect(way.footprintM2).to.eql(0.0036);
+      expect(way.tags['plateau:height_warning']).to.be.undefined;
+      expect(way.tags['plateau:footprint_m2']).to.be.undefined;
+      expect(way.tags.height).to.eql('18.4');
+    });
+
+    it('leaves the properties off when there is no warning', async () => {
+      const xml = `<?xml version="1.0"?><osm version="0.6">${nodes}
+        <way id="10">
+          <nd ref="1"/><nd ref="2"/><nd ref="3"/><nd ref="4"/><nd ref="1"/>
+          <tag k="building" v="yes"/>
+        </way></osm>`;
+
+      const result = await _parseXMLAsync(_makeService(), xml);
+      const way = result.find(e => e.id === 'w10');
+
+      expect(way.heightWarnings).to.be.undefined;
+      expect(way.footprintM2).to.be.undefined;
+    });
+
+    it('lifts the warning off a relation too', async () => {
+      const xml = `<?xml version="1.0"?><osm version="0.6">${nodes}
+        <way id="10">
+          <nd ref="1"/><nd ref="2"/><nd ref="3"/><nd ref="4"/><nd ref="1"/>
+        </way>
+        <relation id="20">
+          <member type="way" ref="10" role="outline"/>
+          <tag k="type" v="building"/>
+          <tag k="building" v="yes"/>
+          <tag k="plateau:height_warning" v="absolute"/>
+        </relation></osm>`;
+
+      const result = await _parseXMLAsync(_makeService(), xml);
+      const relation = result.find(e => e.id === 'r20');
+
+      expect(relation.heightWarnings).to.eql(['absolute']);
+      expect(relation.tags['plateau:height_warning']).to.be.undefined;
+    });
+  });
+
+
   describe('#_plateauConflationCache invalidation', () => {
     // 建物 1 棟だけを持つグラフを作る。
     function graphWithBuilding(wayID, coords, tags = { building: 'yes' }) {
