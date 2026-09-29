@@ -193,4 +193,29 @@ describe('PixiLayerRapid', () => {
       expect(layer._addBlocked).to.be.false;
     });
   });
+
+  describe('#_polygonFill', () => {
+    function layer() {
+      const scene = makeScene();
+      scene.context.services.plateau = {
+        isAddBlocked: () => false, startAsync: () => Promise.resolve()
+      };
+      return new Rapid.PixiLayerRapid(scene, 'rapid');
+    }
+
+    it('fills a building without a warning plainly', () => {
+      const fill = layer()._polygonFill(0xD500F9, false, { tags: {} });
+      expect(fill.pattern).to.be.undefined;
+    });
+
+    it('fills a building with a height warning with dots', () => {
+      const fill = layer()._polygonFill(0xD500F9, false, { heightWarnings: ['needle'] });
+      expect(fill.pattern).to.eql('dots');
+    });
+
+    it('prefers the construction stripes while adding is blocked', () => {
+      const fill = layer()._polygonFill(0xD500F9, true, { heightWarnings: ['needle'] });
+      expect(fill.pattern).to.eql('construction');
+    });
+  });
 });
