@@ -565,4 +565,23 @@ describe('actionRapidAcceptFeature', () => {
             assert.equal(graph.hasEntity('r_mp'), undefined);
         });
     });
+
+
+    it('does not keep the PLATEAU helper properties on the accepted way', () => {
+        // PlateauService は plateau:* のタグを heightWarnings と footprintM2 の
+        // プロパティに移す。OSM のデータに入る entity には、どちらも残さない。
+        const node1 = Rapid.osmNode({ id: 'a', loc: [0, 0] });
+        const node2 = Rapid.osmNode({ id: 'b', loc: [1, 1] });
+        const way = Object.assign(
+            Rapid.osmWay({ id: 'w', nodes: [node1.id, node2.id], tags: { building: 'yes', height: '0.5' } }),
+            { heightWarnings: ['absolute'], footprintM2: 1.0 }
+        );
+        const graph = Rapid.actionRapidAcceptFeature(way.id, new Rapid.Graph([node1, node2, way]))(new Rapid.Graph());
+
+        const accepted = graph.entity('w');
+        assert.deepEqual(accepted.tags, { building: 'yes', height: '0.5' });
+        assert.equal(Object.keys(accepted.tags).some(k => k.startsWith('plateau:')), false);
+        assert.equal('heightWarnings' in accepted, false);
+        assert.equal('footprintM2' in accepted, false);
+    });
 });

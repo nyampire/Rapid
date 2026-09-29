@@ -68,6 +68,10 @@ function removeMetadata(entity) {
     delete entity.__origid__;    // old
     delete entity.__service__;
     delete entity.__datasetid__;
+    // heightWarnings と footprintM2 は、PLATEAU の補助タグから作った内部のプロパティである。
+    // OSM のデータに入れる entity には残さない。
+    delete entity.heightWarnings;
+    delete entity.footprintM2;
     delete entity.tags.conn;
     delete entity.tags.orig_id;
     delete entity.tags.debug_way_id;
