@@ -1,5 +1,6 @@
 import * as PIXI from 'pixi.js';
 import { AbstractLayer } from './AbstractLayer.js';
+import { utilPlateauHasTransferWarning } from '../util/plateau_height_warning.js';
 
 
 const MIN_CANDIDATE_ZOOM = 17;
@@ -11,6 +12,13 @@ const STATE_STYLE = {
   COVERED:        { color: 0x66BB6A, radius: 8, glyph: '✓',   minZoom: MIN_INFO_ZOOM },
   CONFLICT:       { color: 0xFFC107, radius: 8, glyph: '!?',  minZoom: MIN_INFO_ZOOM },
   AREA_MISMATCH:  { color: 0xFF9800, radius: 8, glyph: '!?',  minZoom: MIN_INFO_ZOOM }
+};
+
+// 転記元の PLATEAU の建物に高さの警告があるときの CANDIDATE の印。
+// マゼンタは「転記できる候補」、赤い縁と「!」は「注意が要る」を表す。
+// 「!?」は OSM の値との食い違いと面積の不一致に使っているので、別の印にする。
+const WARNING_CANDIDATE_STYLE = {
+  color: 0xD500F9, radius: 7, glyph: '!', ring: 0xE53935, minZoom: MIN_CANDIDATE_ZOOM
 };
 
 
@@ -102,13 +110,32 @@ export class PixiLayerHeightTransfer extends AbstractLayer {
     if (!mode || !mode.active) return;
 
     for (const candidate of mode.candidates ?? []) {
-      const style = STATE_STYLE[candidate.state];
+      const style = this._styleFor(candidate);
       if (!style) continue;
       if (zoom < style.minZoom) continue;
 
       const icon = this._makeIcon(candidate, style, viewport);
       if (icon) this._container.addChild(icon);
     }
+  }
+
+
+  /**
+   * _styleFor
+   * 候補の印の描き方を選ぶ。
+   * 高さの警告で印を変えるのは CANDIDATE だけにする。
+   * ほかの状態はすでに色と「!?」で注意を示しており、警告の内容は転記の欄に出るためである。
+   * @param  candidate  MatchCandidate
+   * @return {Object?}  STATE_STYLE の値か WARNING_CANDIDATE_STYLE
+   */
+  _styleFor(candidate) {
+    if (candidate.state === 'CANDIDATE') {
+      // 転記の欄と同じ範囲の警告を見る。
+      const feature = candidate.plateauFeature;
+      const graph = this.context.services?.plateau?.graph?.(feature?.__datasetid__) ?? null;
+      if (utilPlateauHasTransferWarning(feature, graph)) return WARNING_CANDIDATE_STYLE;
+    }
+    return STATE_STYLE[candidate.state];
   }
 
 
@@ -129,7 +156,7 @@ export class PixiLayerHeightTransfer extends AbstractLayer {
     const g = new PIXI.Graphics()
       .circle(0, 0, style.radius)
       .fill({ color: style.color, alpha: 0.9 })
-      .stroke({ width: 1.5, color: 0xFFFFFF, alpha: 1.0 });
+      .stroke({ width: style.ring ? 2.5 : 1.5, color: style.ring ?? 0xFFFFFF, alpha: 1.0 });
 
     if (style.glyph) {
       const label = new PIXI.Text({

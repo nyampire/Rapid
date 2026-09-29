@@ -451,6 +451,21 @@ export class PixiLayerRapid extends AbstractLayer {
 
 
   /**
+   * _polygonFill
+   * Rapid の候補の塗り方を決める。
+   * 追加できないあいだは斜線、高さが怪しい PLATEAU の建物は点の模様にする。
+   * 両方に当てはまるときは斜線を優先する。
+   * 追加できないことを先に伝える必要があるためである。
+   * 色はデータセットの色のままにして、どのデータセットの候補かを見分けられるようにする。
+   */
+  _polygonFill(color, addBlocked, entity) {
+    if (addBlocked) return { width: 2, color: color, alpha: 0.3, pattern: 'construction' };
+    if (entity?.heightWarnings?.length) return { width: 2, color: color, alpha: 0.3, pattern: 'dots' };
+    return { width: 2, color: color, alpha: 0.3 };
+  }
+
+
+  /**
    * renderPolygons
    */
   renderPolygons(parentContainer, dataset, graph, frame, viewport, zoom, data) {
@@ -504,9 +519,7 @@ export class PixiLayerRapid extends AbstractLayer {
         if (feature.dirty) {
           const style = {
             labelTint: color,
-            fill: addBlocked
-              ? { width: 2, color: color, alpha: 0.3, pattern: 'construction' }
-              : { width: 2, color: color, alpha: 0.3 }
+            fill: this._polygonFill(color, addBlocked, entity)
           };
           feature.style = style;
           feature.label = l10n.displayName(entity.tags);
