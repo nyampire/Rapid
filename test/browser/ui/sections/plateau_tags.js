@@ -156,4 +156,26 @@ describe('uiSectionPlateauTags', () => {
     // 適用のボタンは残す。
     expect(wrap.select('.plateau-apply').empty()).to.be.false;
   });
+
+  it('does not show a warning that only a part of the building has', () => {
+    // 転記するのは外形の高さだけなので、部分立体自身の高さの問題は出さない。
+    const outline = Rapid.osmWay({ id: 'w9', tags: { building: 'yes', height: '9.1' }, nodes: [] });
+    const part = Object.assign(
+      Rapid.osmWay({ id: 'w10', tags: { 'building:part': 'yes', height: '0.5' }, nodes: [] }),
+      { heightWarnings: ['absolute'] });
+    const relation = Rapid.osmRelation({
+      id: 'r1', tags: { type: 'building', building: 'yes', height: '9.1' },
+      members: [{ id: 'w9', type: 'way', role: 'outline' },
+                { id: 'w10', type: 'way', role: 'part' }]
+    });
+    const graph = new Rapid.Graph([outline, part, relation]);
+
+    const cand = candidate('CANDIDATE', { missingTags: ['height'], plateauFeature: outline });
+    const context = new MockContext(cand);
+    context.services.plateau = { graph: () => graph };
+    render(context);
+
+    expect(wrap.select('.plateau-height-warning').empty()).to.be.true;
+    expect(wrap.select('.plateau-apply').empty()).to.be.false;
+  });
 });

@@ -1,7 +1,7 @@
 import { uiSection } from '../section.js';
 import { uiTooltip } from '../tooltip.js';
 import { uiPlateauHeightWarning } from '../plateau_height_warning.js';
-import { utilPlateauHeightWarningMessages } from '../../util/plateau_height_warning.js';
+import { utilPlateauTransferWarningMessages } from '../../util/plateau_height_warning.js';
 
 
 // States that get an explanatory note above the proposal. CANDIDATE needs none.
@@ -84,7 +84,7 @@ export function uiSectionPlateauTags(context) {
     // 適用の操作は止めない。
     const plateauFeature = cand.plateauFeature;
     const plateauGraph = context.services?.plateau?.graph?.(plateauFeature?.__datasetid__) ?? null;
-    const warnings = utilPlateauHeightWarningMessages(plateauFeature, plateauGraph, l10n);
+    const warnings = utilPlateauTransferWarningMessages(plateauFeature, plateauGraph, l10n);
     uiPlateauHeightWarning($panel, warnings, l10n);
 
     const noteKey = NOTE_KEYS[cand.state];
