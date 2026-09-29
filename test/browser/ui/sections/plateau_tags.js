@@ -139,4 +139,21 @@ describe('uiSectionPlateauTags', () => {
 
     expect(wrap.select('.section-plateau-tags').classed('hide')).to.equal(true);
   });
+
+  it('shows the height warning of the Plateau building above the proposal', () => {
+    const cand = candidate('CANDIDATE', {
+      missingTags: ['height'],
+      plateauFeature: Object.assign(
+        Rapid.osmWay({ id: 'w9', tags: { building: 'yes', height: '0.5' }, nodes: [] }),
+        { heightWarnings: ['absolute'] }
+      )
+    });
+    render(new MockContext(cand));
+
+    const $warning = wrap.select('.plateau-height-warning');
+    expect($warning.empty()).to.be.false;
+    expect($warning.text()).to.contain('plateau_height_warning.absolute');
+    // 適用のボタンは残す。
+    expect(wrap.select('.plateau-apply').empty()).to.be.false;
+  });
 });
