@@ -751,6 +751,21 @@
       "conflict_note": "既存の OSM の値が Plateau と異なります。上書きは保留中です（フェーズ3、コミュニティでの合意待ち）。",
       "area_mismatch_note": "Plateau の外形が OSM 建物の 2 倍以上の面積です。\n同じ建物を指していない可能性があるため、航空写真やMapillary等と見比べてから転記してください。"
     },
+    "plateau_height_warning": {
+      "title": "高さが誤っている可能性があります",
+      "advice": "追加する前に、航空写真や街路の写真で高さを確かめてください。",
+      "degenerate_area": "輪郭が壊れていて、面積が 0 以下です。",
+      "part_over_outline": "建物の一部（{part} m）が、建物全体（{outline} m）より {diff} m 高くなっています。",
+      "part_over_outline_generic": "建物の一部が、建物全体より 10 m を超えて高くなっています。",
+      "needle": "高さ {height} m に対して、底面積が {area} m² しかありません。",
+      "needle_generic": "高さに対して、底面積が小さすぎます。",
+      "absolute": "高さが {height} m で、建物としては低すぎます。",
+      "absolute_generic": "建物としては高さが低すぎます。",
+      "floor_height_high": "1 階あたりの高さが {per_floor} m で、住宅としては高すぎます。",
+      "floor_height_low": "1 階あたりの高さが {per_floor} m で、住宅としては低すぎます。",
+      "floor_height_generic": "住宅としては 1 階あたりの高さが極端です。",
+      "unknown": "高さが怪しいと判定されました。"
+    },
     "help": {
       "areas": {
         "add_area_command": "エリアを追加するには、マップ上部にあるツールバーの{area_icon} **{area}** ボタンを押すか、ショートカットキー`3`を押してください。",

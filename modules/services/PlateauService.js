@@ -1184,10 +1184,43 @@ export class PlateauService extends AbstractSystem {
   }
 
 
+  /**
+   * _extractHeightWarning
+   * API が添えた高さの警告のタグを、tags から取り除いて返す。
+   * `plateau:height_warning` と `plateau:footprint_m2` は OSM のタグではない。
+   * 追加した建物と一緒に OSM へ送られないよう、読めるかどうかに関わらず必ず消す。
+   *
+   * @param   {Object} tags  変更してよい tags（`_getTags` が作ったもの）
+   * @return  {{ checks: string[], footprintM2: number|null }}
+   */
+  _extractHeightWarning(tags) {
+    const raw = tags['plateau:height_warning'];
+    const rawArea = tags['plateau:footprint_m2'];
+    delete tags['plateau:height_warning'];
+    delete tags['plateau:footprint_m2'];
+
+    const checks = raw ? raw.split(';').map(s => s.trim()).filter(Boolean) : [];
+    const area = parseFloat(rawArea);
+    return { checks, footprintM2: Number.isFinite(area) ? area : null };
+  }
+
+
+  /**
+   * _applyHeightWarning
+   * 取り出した警告を、entity の属性に移す。
+   * 警告が無ければ何も付けない。
+   */
+  _applyHeightWarning(entity, warning) {
+    if (warning.checks.length) entity.heightWarnings = warning.checks;
+    if (warning.footprintM2 !== null) entity.footprintM2 = warning.footprintM2;
+  }
+
+
   _parseWay(obj, uid) {
     const attrs = obj.attributes;
     const tags = this._getTags(obj);
     const representativePoint = this._extractRepresentativePoint(tags);
+    const heightWarning = this._extractHeightWarning(tags);
     const way = new osmWay({
       id: uid,
       visible: this._getVisible(attrs),
@@ -1195,6 +1228,7 @@ export class PlateauService extends AbstractSystem {
       nodes: this._getNodes(obj),
     });
     if (representativePoint) way.representativePoint = representativePoint;
+    this._applyHeightWarning(way, heightWarning);
     return way;
   }
 
@@ -1203,6 +1237,7 @@ export class PlateauService extends AbstractSystem {
     const attrs = obj.attributes;
     const tags = this._getTags(obj);
     const representativePoint = this._extractRepresentativePoint(tags);
+    const heightWarning = this._extractHeightWarning(tags);
     const relation = new osmRelation({
       id: uid,
       visible: this._getVisible(attrs),
@@ -1210,6 +1245,7 @@ export class PlateauService extends AbstractSystem {
       members: this._getMembers(obj),
     });
     if (representativePoint) relation.representativePoint = representativePoint;
+    this._applyHeightWarning(relation, heightWarning);
     return relation;
   }
 

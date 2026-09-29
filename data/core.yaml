@@ -31,6 +31,20 @@ en:
     apply_tooltip: Add these Plateau tags to the selected building.
     conflict_note: Existing OSM values differ from Plateau. Override deferred (Phase 3, pending community consultation).
     area_mismatch_note: "The Plateau outline is at least twice the area of the OSM building.\nThey may not describe the same building — compare with aerial imagery or Mapillary before applying."
+  plateau_height_warning:
+    title: This height may be wrong
+    advice: Check the height against aerial imagery or street-level photos before adding it.
+    degenerate_area: The outline is broken and its area is zero or less.
+    part_over_outline: "A part of this building ({part} m) is {diff} m taller than the whole building ({outline} m)."
+    part_over_outline_generic: A part of this building is more than 10 m taller than the whole building.
+    needle: "The footprint is only {area} m² for a height of {height} m."
+    needle_generic: The footprint is too small for the height.
+    absolute: "The height is {height} m, too low for a building."
+    absolute_generic: The height is too low for a building.
+    floor_height_high: "Each floor is {per_floor} m tall, too tall for a residential building."
+    floor_height_low: "Each floor is {per_floor} m tall, too low for a residential building."
+    floor_height_generic: The height per floor is unusual for a residential building.
+    unknown: This building was flagged for a suspicious height.
   title:
     format:
       context: "{base} – {context}"
