@@ -71,6 +71,7 @@ above to use it instead of production.
 |---|---|---|
 | `plateau_api_url` | Override the Plateau API endpoint | `#plateau_api_url=http://localhost:8000/api/mapwithai/buildings` |
 | `plateau_conflation` | Disable client-side conflation | `#plateau_conflation=false` |
+| `plateau_overwrite` | Let tag transfer replace conflicting values with Plateau values (trial before community consultation) | `#plateau_overwrite=1` |
 
 ## Tag transfer (height / ele / building:levels)
 
@@ -123,9 +124,13 @@ appear. Those two are independent, which is why an `AREA_MISMATCH` still offers
 the Apply button alongside its warning note. A `CONFLICT` needs no special case:
 state precedence guarantees it has no tags to add, so it shows the note alone.
 
-Existing values are never overwritten. Where OSM and Plateau disagree the
-section only shows a note; whether to overwrite is pending community
-consultation.
+By default, existing values are never overwritten.
+Where OSM and Plateau disagree the section only shows a note.
+Whether to overwrite is pending community consultation.
+
+So that people taking part in the consultation can try it, adding `plateau_overwrite=1` to the URL lets each conflicting tag be set to either the OSM value or the Plateau value.
+The OSM value is selected initially.
+When the source building has a height warning, or in an `AREA_MISMATCH`, the Plateau value cannot be selected and the reason is shown.
 
 ## LOD2 relation support
 
