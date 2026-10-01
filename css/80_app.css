@@ -3713,6 +3713,31 @@ ul.plateau-additions.tag-list {
     padding: 0;
     list-style: none;
 }
+/* 食い違うタグの行。
+   選択肢は 1 行に 1 つ並べ、値が長くても折り返せるようにする。 */
+ul.plateau-conflicts {
+    margin: 6px 0 8px;
+    padding: 0;
+    list-style: none;
+}
+li.plateau-conflict {
+    padding: 4px 0;
+    border-top: 1px solid #ecdd9a;
+}
+.plateau-conflict-key {
+    font-family: monospace;
+    font-weight: bold;
+}
+label.plateau-conflict-choice {
+    display: block;
+    font-size: 12px;
+}
+label.plateau-conflict-choice input {
+    margin-right: 4px;
+}
+.plateau-conflict-values {
+    font-size: 12px;
+}
 .plateau-tags-actions {
     margin-top: 8px;
     text-align: right;
@@ -3734,6 +3759,11 @@ button.plateau-apply {
 button.plateau-apply:active,
 button.plateau-apply:focus {
     background: #f5c92e;
+}
+/* 適用して変わるものが無いときのボタン。 */
+button.plateau-apply:disabled {
+    opacity: 0.5;
+    cursor: default;
 }
 
 .issue-container:not(.active) ul.issue-fix-list {
