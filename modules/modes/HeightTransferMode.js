@@ -91,6 +91,7 @@ export class HeightTransferMode extends AbstractSystem {
     if (!this.active) return;
     this.active = false;
     this.candidates = [];
+    this._overwriteChoices.clear();
 
     const context = this.context;
     const map = context.systems.map;
@@ -388,10 +389,8 @@ export class HeightTransferMode extends AbstractSystem {
 
   /**
    * _onApplyShortcut
-   * Applies the candidate for the currently selected OSM building, if any. Does
-   * nothing unless exactly one building is selected and its candidate has tags
-   * to add -- so the key is inert on conflicts, on area mismatches with nothing
-   * left to transfer, or on a plain selection with no PLATEAU match.
+   * 選択中の OSM の建物に対応する候補を適用します。
+   * 建物がちょうど 1 つ選ばれていて、その候補で `hasWorkToApply` が真のときだけ適用します。
    */
   _onApplyShortcut(e) {
     const ids = this.context.selectedIDs?.() ?? [];

@@ -238,6 +238,18 @@ describe('uiSectionPlateauTags', () => {
       expect(applied).to.eql([cand]);
     });
 
+    it('disables Apply again when the choice is switched back to OSM', () => {
+      const cand = candidate('CONFLICT', { conflictingTags: heightConflict });
+      render(overwriteContext(cand, null));
+
+      wrap.select('input[value=plateau]').node().click();
+      wrap.select('input[value=osm]').node().click();
+
+      expect(wrap.select('input[value=osm]').property('checked')).to.equal(true);
+      expect(wrap.select('input[value=plateau]').property('checked')).to.equal(false);
+      expect(wrap.select('button.plateau-apply').property('disabled')).to.equal(true);
+    });
+
     it('disables the Plateau choice and explains why when the height may be wrong', () => {
       const cand = candidate('CONFLICT', { conflictingTags: heightConflict });
       render(overwriteContext(cand, 'warning'));

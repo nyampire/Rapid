@@ -36,9 +36,8 @@ const OVERWRITE_BLOCK_KEYS = {
  *   AREA_MISMATCH  -> area note, plus table + Apply when there is something to add
  *   COVERED        -> section hidden
  *
- * With overwriting enabled (`plateau_overwrite=1`), conflicting tags get their
- * own rows with an OSM / Plateau choice; see `_renderConflicts`. Without it the
- * section renders exactly as described above.
+ * URL パラメータ `plateau_overwrite=1` で書き換えを有効にすると、食い違うタグに専用の行が付き、OSM と PLATEAU の値を選べます（`_renderConflicts` を参照）。
+ * 有効にしないときは、上に書いたとおりに表示します。
  */
 export function uiSectionPlateauTags(context) {
   const l10n = context.systems.l10n;
