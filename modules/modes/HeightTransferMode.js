@@ -1,7 +1,8 @@
 import { AbstractSystem } from '../core/AbstractSystem.js';
 import { actionTransferPlateauTags } from '../actions/transfer_plateau_tags.js';
 import { findCandidates } from '../core/lib/HeightTransferMatcher.js';
-import { utilCmd } from '../util/index.js';
+import { utilStringQs } from '@rapid-sdk/util';
+import { utilCmd, utilPlateauHasTransferWarning } from '../util/index.js';
 
 const RECOMPUTE_DEBOUNCE_MS = 200;
 
@@ -39,6 +40,10 @@ export class HeightTransferMode extends AbstractSystem {
     this.active = false;
     this.candidates = [];
     this.transferredIDs = new Set();   // Set<plateauFeatureID> -- session-scoped only, never persisted
+
+    // PLATEAU の建物の id ごとに、「PLATEAU の値」を選んだタグの集合を持つ。
+    // 候補から外れた建物の分は、_recompute で捨てる。
+    this._overwriteChoices = new Map();   // Map<plateauFeatureID, Set<tagKey>>
 
     this._recomputeTimer = null;
     this._applyKeys = null;   // keys currently bound for the Apply shortcut
@@ -179,6 +184,9 @@ export class HeightTransferMode extends AbstractSystem {
    * `candidate.missingTags` is filtered through `candidate.plateauFeature.tags`, so a
    * key listed as "missing" but with an undefined Plateau value is silently dropped.
    *
+   * 書き換えられる候補では、「PLATEAU の値」を選んだタグの既存の値も置き換える。
+   * 追加と書き換えは 1 回の編集として記録し、1 回の取り消しで戻る。
+   *
    * @param  `candidate`  A `MatchCandidate` to apply
    */
   apply(candidate) {
@@ -207,14 +215,29 @@ export class HeightTransferMode extends AbstractSystem {
       .replace('-conflated', '');
     const dataset = rapid?.datasets?.get(datasetID);
 
-    const action = actionTransferPlateauTags(candidate.osmFeature.id, tagsToAdd);
+    // 書き換えは、適用の時点で書き換えられる候補のときだけ行う。
+    // 選んだあとにパラメータが外された場合などは、追加だけを行う。
+    const tagsToReplace = {};
+    if (this.getOverwriteBlock(candidate) === null) {
+      for (const key of this.getOverwriteKeys(candidate)) {
+        const value = candidate.plateauFeature.tags?.[key];
+        if (value !== undefined) tagsToReplace[key] = value;
+      }
+    }
+
+    // 記録すると候補が計算し直されるので、その前に選択を捨てる。
+    // 取り消したときは、最初の「OSM の値」の状態に戻る。
+    this._overwriteChoices.delete(candidate.plateauFeature.id);
+
+    const action = actionTransferPlateauTags(candidate.osmFeature.id, tagsToAdd, tagsToReplace);
     editor.perform(action);
     editor.commit({
       annotation: {
         type: action.actionName,
         plateauID: candidate.plateauFeature.id,
         entityID: candidate.osmFeature.id,
-        dataUsed: dataset?.dataUsed || [datasetID]
+        dataUsed: dataset?.dataUsed || [datasetID],
+        overwrittenKeys: Object.keys(tagsToReplace)
       },
       selectedIDs: [ candidate.osmFeature.id ]
     });
@@ -238,9 +261,104 @@ export class HeightTransferMode extends AbstractSystem {
 
 
   /**
+   * overwriteEnabled
+   * URL に `plateau_overwrite=1` があるときだけ、既存の値の書き換えを有効にする。
+   * コミュニティとの協議の前は、既定で隠しておくためである。
+   * API の接続先の指定（`plateau_api_url`）と同じく、URL のハッシュから読む。
+   * @return {boolean}
+   */
+  overwriteEnabled() {
+    return utilStringQs(window.location.hash).plateau_overwrite === '1';
+  }
+
+
+  /**
+   * getOverwriteBlock
+   * 候補の食い違うタグを書き換えられるかを調べ、書き換えられない理由を返す。
+   * 面積を警告より先に調べる。
+   * 面積の不一致では欄の行の形が変わり、警告の有無にかかわらず書き換えられないためである。
+   * @param  {Object}  candidate  MatchCandidate
+   * @return {null|'disabled'|'area'|'warning'}  書き換えられるときは null
+   */
+  getOverwriteBlock(candidate) {
+    if (!this.overwriteEnabled()) return 'disabled';
+    if (candidate.state === 'AREA_MISMATCH') return 'area';
+
+    const plateauFeature = candidate.plateauFeature;
+    const graph = this.context.services?.plateau?.graph?.(plateauFeature?.__datasetid__) ?? null;
+    if (utilPlateauHasTransferWarning(plateauFeature, graph)) return 'warning';
+    return null;
+  }
+
+
+  /**
+   * getOverwriteKeys
+   * 「PLATEAU の値」を選んだタグのうち、今も食い違っているものを返す。
+   * 欄を出したあとに OSM の値が手で直されると、選択の状態に古いタグが残りうるためである。
+   * @param  {Object}  candidate  MatchCandidate
+   * @return {Set<string>}
+   */
+  getOverwriteKeys(candidate) {
+    const result = new Set();
+    const chosen = this._overwriteChoices.get(candidate.plateauFeature?.id);
+    if (!chosen) return result;
+    for (const c of candidate.conflictingTags ?? []) {
+      if (chosen.has(c.key)) result.add(c.key);
+    }
+    return result;
+  }
+
+
+  /**
+   * setOverwrite
+   * 食い違うタグ 1 つについて、「PLATEAU の値」を使うかを切り替える。
+   * 書き換えられない候補では何もしない。
+   * @param  {Object}   candidate   MatchCandidate
+   * @param  {string}   key         タグの名前
+   * @param  {boolean}  usePlateau  真なら「PLATEAU の値」、偽なら「OSM の値」
+   */
+  setOverwrite(candidate, key, usePlateau) {
+    if (this.getOverwriteBlock(candidate) !== null) return;
+
+    const id = candidate.plateauFeature.id;
+    const chosen = new Set(this._overwriteChoices.get(id) ?? []);
+    if (usePlateau) {
+      chosen.add(key);
+    } else {
+      chosen.delete(key);
+    }
+
+    if (chosen.size) {
+      this._overwriteChoices.set(id, chosen);
+    } else {
+      this._overwriteChoices.delete(id);
+    }
+
+    this._refreshApplyShortcut();
+    this.emit('change');
+  }
+
+
+  /**
+   * hasWorkToApply
+   * 適用して変わるものがあるか。
+   * 追加するタグがあるか、書き換えられる候補で「PLATEAU の値」を選んだタグがあれば真にする。
+   * 欄のボタンの有効と無効、A キーの割り当ての両方がこの関数を使う。
+   * @param  {Object}  candidate  MatchCandidate
+   * @return {boolean}
+   */
+  hasWorkToApply(candidate) {
+    if (!candidate) return false;
+    if (candidate.missingTags?.length) return true;
+    if (this.getOverwriteBlock(candidate) !== null) return false;
+    return this.getOverwriteKeys(candidate).size > 0;
+  }
+
+
+  /**
    * _refreshApplyShortcut
    * Binds the Apply shortcut (A) only while a single building whose candidate
-   * has tags to add is selected, and unbinds it otherwise. That is the same
+   * has something to apply (`hasWorkToApply`) is selected, and unbinds it otherwise. That is the same
    * condition `uiSectionPlateauTags` uses to show its Apply button, so the key
    * and the button are never out of step. This keeps it exclusive with Rapid's
    * own `A` (accept feature): that binds only when a Rapid feature is selected,
@@ -256,7 +374,7 @@ export class HeightTransferMode extends AbstractSystem {
 
     const ids = context.selectedIDs?.() ?? [];
     const candidate = (ids.length === 1) ? this.getCandidateForOSM(ids[0]) : null;
-    const wantBound = !!candidate?.missingTags?.length;
+    const wantBound = this.hasWorkToApply(candidate);
 
     if (wantBound && !this._applyKeys) {
       this._applyKeys = [ utilCmd(l10n.t('shortcuts.command.apply_plateau_tags.key')) ];
@@ -280,7 +398,7 @@ export class HeightTransferMode extends AbstractSystem {
     if (ids.length !== 1) return;
 
     const candidate = this.getCandidateForOSM(ids[0]);
-    if (!candidate?.missingTags?.length) return;
+    if (!this.hasWorkToApply(candidate)) return;
 
     e?.preventDefault?.();
     this.apply(candidate);
@@ -336,6 +454,14 @@ export class HeightTransferMode extends AbstractSystem {
     }
 
     this.candidates = candidates;
+
+    // 候補から外れた建物の選択は捨てる。
+    // 地図を動かして画面の外に出た建物も外れるので、戻ってきたときは「OSM の値」から選び直しになる。
+    const liveIDs = new Set(candidates.map(c => c.plateauFeature.id));
+    for (const id of this._overwriteChoices.keys()) {
+      if (!liveIDs.has(id)) this._overwriteChoices.delete(id);
+    }
+
     this.emit('change');
 
     // The selected building may have gained/lost candidate status (e.g. after an

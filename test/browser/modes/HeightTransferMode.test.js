@@ -427,6 +427,150 @@ describe('HeightTransferMode', () => {
   });
 
 
+  describe('overwrite', () => {
+    function conflictCandidate(overrides = {}) {
+      return makeCandidate(Object.assign({
+        plateauFeature: { id: 'p1', tags: { height: '12', ele: '45' } },
+        state: 'CONFLICT',
+        missingTags: [],
+        conflictingTags: [{ key: 'height', osmValue: '10', plateauValue: '12' }]
+      }, overrides));
+    }
+
+    function enabledMode(context) {
+      const mode = new Rapid.HeightTransferMode(context);
+      sinon.stub(mode, 'overwriteEnabled').returns(true);
+      mode.activate();
+      return mode;
+    }
+
+    it('is disabled without the URL parameter', () => {
+      const mode = new Rapid.HeightTransferMode(makeContext());
+      mode.activate();
+      expect(mode.overwriteEnabled()).to.equal(false);
+      expect(mode.getOverwriteBlock(conflictCandidate())).to.equal('disabled');
+    });
+
+    it('allows overwriting a matched building with no height warning', () => {
+      const mode = enabledMode(makeContext());
+      expect(mode.getOverwriteBlock(conflictCandidate())).to.equal(null);
+    });
+
+    it('blocks overwriting when the Plateau building has a height warning', () => {
+      const mode = enabledMode(makeContext());
+      const cand = conflictCandidate({
+        plateauFeature: { id: 'p1', tags: { height: '0.5' }, heightWarnings: ['absolute'] }
+      });
+      expect(mode.getOverwriteBlock(cand)).to.equal('warning');
+    });
+
+    it('reports the area mismatch before the height warning', () => {
+      const mode = enabledMode(makeContext());
+      const cand = conflictCandidate({
+        state: 'AREA_MISMATCH',
+        ratio: 4.0,
+        plateauFeature: { id: 'p1', tags: { height: '0.5' }, heightWarnings: ['absolute'] }
+      });
+      expect(mode.getOverwriteBlock(cand)).to.equal('area');
+    });
+
+    it('keeps the chosen keys and emits change', () => {
+      const mode = enabledMode(makeContext());
+      const cand = conflictCandidate();
+      const spy = sinon.spy();
+      mode.on('change', spy);
+
+      mode.setOverwrite(cand, 'height', true);
+      expect([...mode.getOverwriteKeys(cand)]).to.eql(['height']);
+      expect(spy.called).to.equal(true);
+
+      mode.setOverwrite(cand, 'height', false);
+      expect([...mode.getOverwriteKeys(cand)]).to.eql([]);
+    });
+
+    it('ignores choices on a building that cannot be overwritten', () => {
+      const mode = enabledMode(makeContext());
+      const cand = conflictCandidate({ state: 'AREA_MISMATCH', ratio: 4.0 });
+      mode.setOverwrite(cand, 'height', true);
+      expect([...mode.getOverwriteKeys(cand)]).to.eql([]);
+    });
+
+    it('drops a chosen key that no longer conflicts', () => {
+      const mode = enabledMode(makeContext());
+      const cand = conflictCandidate();
+      mode.setOverwrite(cand, 'height', true);
+
+      // 欄を出したあとに、利用者が OSM の値を手で PLATEAU と同じ値に直した場合。
+      const recomputed = conflictCandidate({ conflictingTags: [] });
+      expect([...mode.getOverwriteKeys(recomputed)]).to.eql([]);
+    });
+
+    it('forgets the choices of a building that left the candidates', () => {
+      const mode = enabledMode(makeContext());
+      const cand = conflictCandidate();
+      mode.candidates = [cand];
+      mode.setOverwrite(cand, 'height', true);
+
+      mode._recompute();   // the mocked plateau service returns no buildings
+
+      expect([...mode.getOverwriteKeys(cand)]).to.eql([]);
+    });
+
+    it('binds the apply shortcut once a Plateau value is chosen, and unbinds it when switched back', () => {
+      const context = makeContext();
+      const mode = enabledMode(context);
+      const cand = conflictCandidate();
+      mode.candidates = [cand];
+      context._selectedIDs = ['w1'];
+      context._emit('modechange');
+      expect(context.keybinding().registered.length).to.equal(0);
+
+      mode.setOverwrite(cand, 'height', true);
+      expect(context.keybinding().registered.length).to.equal(1);
+
+      mode.setOverwrite(cand, 'height', false);
+      expect(context.keybinding().registered.length).to.equal(0);
+    });
+
+    it('apply() replaces the chosen values and records them on the annotation', () => {
+      const context = makeContext();
+      const mode = enabledMode(context);
+      const cand = conflictCandidate({ missingTags: ['ele'] });
+      mode.setOverwrite(cand, 'height', true);
+
+      mode.apply(cand);
+
+      const action = context.systems.editor.performCalls[0];
+      const graph = new Rapid.Graph([ Rapid.osmWay({ id: 'w1', tags: { building: 'yes', height: '10' } }) ]);
+      expect(action(graph).entity('w1').tags).to.eql({ building: 'yes', height: '12', ele: '45' });
+      expect(context.systems.editor.commitCalls[0].annotation.overwrittenKeys).to.eql(['height']);
+    });
+
+    it('apply() only adds when overwriting became unavailable after choosing', () => {
+      const context = makeContext();
+      const mode = enabledMode(context);
+      const cand = conflictCandidate({ missingTags: ['ele'] });
+      mode.setOverwrite(cand, 'height', true);
+      mode.overwriteEnabled.returns(false);   // the URL parameter was removed
+
+      mode.apply(cand);
+
+      const action = context.systems.editor.performCalls[0];
+      const graph = new Rapid.Graph([ Rapid.osmWay({ id: 'w1', tags: { building: 'yes', height: '10' } }) ]);
+      expect(action(graph).entity('w1').tags).to.eql({ building: 'yes', height: '10', ele: '45' });
+      expect(context.systems.editor.commitCalls[0].annotation.overwrittenKeys).to.eql([]);
+    });
+
+    it('hasWorkToApply() is false for a conflict-only building until a Plateau value is chosen', () => {
+      const mode = enabledMode(makeContext());
+      const cand = conflictCandidate();
+      expect(mode.hasWorkToApply(cand)).to.equal(false);
+      mode.setOverwrite(cand, 'height', true);
+      expect(mode.hasWorkToApply(cand)).to.equal(true);
+    });
+  });
+
+
   describe('getCandidateForOSM', () => {
     it('returns null when the system is inactive', () => {
       const mode = new Rapid.HeightTransferMode(makeContext());
