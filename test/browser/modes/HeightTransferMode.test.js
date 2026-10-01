@@ -516,6 +516,18 @@ describe('HeightTransferMode', () => {
       expect([...mode.getOverwriteKeys(cand)]).to.eql([]);
     });
 
+    it('forgets every choice when the mode is turned off', () => {
+      const mode = enabledMode(makeContext());
+      const cand = conflictCandidate();
+      mode.setOverwrite(cand, 'height', true);
+
+      mode.deactivate();
+      expect(mode._overwriteChoices.size).to.equal(0);
+
+      mode.activate();
+      expect([...mode.getOverwriteKeys(cand)]).to.eql([]);
+    });
+
     it('binds the apply shortcut once a Plateau value is chosen, and unbinds it when switched back', () => {
       const context = makeContext();
       const mode = enabledMode(context);
