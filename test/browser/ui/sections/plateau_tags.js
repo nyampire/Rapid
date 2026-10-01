@@ -39,6 +39,37 @@ describe('uiSectionPlateauTags', () => {
     }
   }
 
+  // 書き換えの関数を持つ heightTransfer の偽物。
+  // 選択の状態は自分で持ち、切り替えたら 'change' を出す。
+  class MockOverwriteTransfer extends MockHeightTransfer {
+    constructor(candidate, block) {
+      super(candidate);
+      this._block = block;
+      this._keys = new Set();
+    }
+    getOverwriteBlock() { return this._block; }
+    getOverwriteKeys() { return this._keys; }
+    setOverwrite(cand, key, usePlateau) {
+      if (usePlateau) {
+        this._keys.add(key);
+      } else {
+        this._keys.delete(key);
+      }
+      this.emit('change');
+    }
+    hasWorkToApply(cand) {
+      return !!cand.missingTags?.length || (this._block === null && this._keys.size > 0);
+    }
+  }
+
+  function overwriteContext(cand, block) {
+    const context = new MockContext(cand);
+    context.systems.heightTransfer = new MockOverwriteTransfer(cand, block);
+    return context;
+  }
+
+  const heightConflict = [{ key: 'height', osmValue: '10', plateauValue: '2.98' }];
+
   function candidate(state, extra = {}) {
     return Object.assign({
       osmFeature: { id: 'w1', type: 'way', tags: { building: 'yes' } },
@@ -177,5 +208,80 @@ describe('uiSectionPlateauTags', () => {
 
     expect(wrap.select('.plateau-height-warning').empty()).to.be.true;
     expect(wrap.select('.plateau-apply').empty()).to.be.false;
+  });
+
+  describe('with overwriting enabled', () => {
+    it('shows each conflicting tag with OSM chosen first and a disabled Apply', () => {
+      const cand = candidate('CONFLICT', { conflictingTags: heightConflict });
+      render(overwriteContext(cand, null));
+
+      const rows = wrap.selectAll('ul.plateau-conflicts li.plateau-conflict').nodes();
+      expect(rows.map(n => n.dataset.key)).to.eql(['height']);
+      expect(wrap.select('input[value=osm]').property('checked')).to.equal(true);
+      expect(wrap.select('input[value=plateau]').property('checked')).to.equal(false);
+      expect(wrap.select('input[value=plateau]').property('disabled')).to.equal(false);
+      expect(wrap.select('button.plateau-apply').property('disabled')).to.equal(true);
+      // 食い違うタグの行が、食い違いの注記の代わりになる。
+      expect(wrap.selectAll('.plateau-tags-note').text()).not.to.contain('conflict_note');
+    });
+
+    it('enables Apply once the Plateau value is chosen', () => {
+      const cand = candidate('CONFLICT', { conflictingTags: heightConflict });
+      render(overwriteContext(cand, null));
+
+      wrap.select('input[value=plateau]').node().click();
+
+      expect(wrap.select('input[value=plateau]').property('checked')).to.equal(true);
+      const button = wrap.select('button.plateau-apply');
+      expect(button.property('disabled')).to.equal(false);
+      button.node().dispatchEvent(new MouseEvent('click'));
+      expect(applied).to.eql([cand]);
+    });
+
+    it('disables the Plateau choice and explains why when the height may be wrong', () => {
+      const cand = candidate('CONFLICT', { conflictingTags: heightConflict });
+      render(overwriteContext(cand, 'warning'));
+
+      expect(wrap.select('input[value=plateau]').property('disabled')).to.equal(true);
+      expect(wrap.select('p.plateau-overwrite-blocked').text()).to.contain('overwrite_blocked_warning');
+      expect(wrap.select('button.plateau-apply').property('disabled')).to.equal(true);
+    });
+
+    it('shows the values without choices and explains why for an area mismatch', () => {
+      const cand = candidate('AREA_MISMATCH', { missingTags: ['ele'], conflictingTags: heightConflict });
+      render(overwriteContext(cand, 'area'));
+
+      expect(wrap.selectAll('input[type=radio]').nodes().length).to.equal(0);
+      expect(wrap.selectAll('.plateau-conflict-values').nodes().length).to.equal(1);
+      expect(wrap.select('p.plateau-overwrite-blocked').text()).to.contain('overwrite_blocked_area');
+      expect(wrap.selectAll('.plateau-tags-note').text()).to.contain('area_mismatch_note');
+      // 追加するタグがあるので、適用はできる。
+      expect(wrap.select('button.plateau-apply').property('disabled')).to.equal(false);
+    });
+
+    it('shows both the additions and the conflicting tags for a CANDIDATE', () => {
+      const cand = candidate('CANDIDATE', { missingTags: ['ele'], conflictingTags: heightConflict });
+      render(overwriteContext(cand, null));
+
+      const keys = wrap.selectAll('.plateau-additions li.tag-row input.key').nodes().map(n => n.value);
+      expect(keys).to.eql(['ele']);
+      expect(wrap.selectAll('li.plateau-conflict').nodes().length).to.equal(1);
+      expect(wrap.select('button.plateau-apply').property('disabled')).to.equal(false);
+    });
+
+    it('does not show an explanation when overwriting is allowed', () => {
+      const cand = candidate('CONFLICT', { conflictingTags: heightConflict });
+      render(overwriteContext(cand, null));
+      expect(wrap.select('p.plateau-overwrite-blocked').empty()).to.equal(true);
+    });
+
+    it('looks the same as before without the URL parameter', () => {
+      const cand = candidate('CONFLICT', { conflictingTags: heightConflict });
+      render(overwriteContext(cand, 'disabled'));
+
+      expect(wrap.selectAll('li.plateau-conflict').nodes().length).to.equal(0);
+      expect(wrap.selectAll('button.plateau-apply').nodes().length).to.equal(0);
+      expect(wrap.selectAll('.plateau-tags-note').text()).to.contain('conflict_note');
+    });
   });
 });
