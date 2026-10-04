@@ -41,9 +41,10 @@ export class HeightTransferMode extends AbstractSystem {
     this.candidates = [];
     this.transferredIDs = new Set();   // Set<plateauFeatureID> -- session-scoped only, never persisted
 
-    // PLATEAU の建物の id ごとに、「PLATEAU の値」を選んだタグの集合を持つ。
+    // PLATEAU の建物の id ごとに、利用者が押したボタンを「タグの名前と、'osm' か 'plateau'」の組で覚える。
+    // 押していないタグは覚えず、getChoice が最初の選択を返す。
     // 候補から外れた建物の分は、_recompute で捨てる。
-    this._overwriteChoices = new Map();   // Map<plateauFeatureID, Set<tagKey>>
+    this._choices = new Map();   // Map<plateauFeatureID, Map<tagKey, 'osm'|'plateau'>>
 
     this._recomputeTimer = null;
     this._applyKeys = null;   // keys currently bound for the Apply shortcut
@@ -91,7 +92,7 @@ export class HeightTransferMode extends AbstractSystem {
     if (!this.active) return;
     this.active = false;
     this.candidates = [];
-    this._overwriteChoices.clear();
+    this._choices.clear();
 
     const context = this.context;
     const map = context.systems.map;
@@ -185,7 +186,7 @@ export class HeightTransferMode extends AbstractSystem {
    * `candidate.missingTags` is filtered through `candidate.plateauFeature.tags`, so a
    * key listed as "missing" but with an undefined Plateau value is silently dropped.
    *
-   * 書き換えられる候補では、「PLATEAU の値」を選んだタグの既存の値も置き換える。
+   * 「Plateau」が選ばれたタグのうち、OSM に無いものを追加し、食い違うものは既存の値を置き換える。
    * 追加と書き換えは 1 回の編集として記録し、1 回の取り消しで戻る。
    *
    * @param  `candidate`  A `MatchCandidate` to apply
@@ -194,12 +195,6 @@ export class HeightTransferMode extends AbstractSystem {
     if (!this.active) return;
     const editor = this.context.systems.editor;
     if (!editor) return;
-
-    const tagsToAdd = {};
-    for (const key of candidate.missingTags) {
-      const value = candidate.plateauFeature.tags?.[key];
-      if (value !== undefined) tagsToAdd[key] = value;
-    }
 
     // `editor.commit()` below fires 'stablechange' synchronously, which `_onStableChange()`
     // handles by re-deriving `transferredIDs` from history (already includes this candidate's
@@ -216,19 +211,13 @@ export class HeightTransferMode extends AbstractSystem {
       .replace('-conflated', '');
     const dataset = rapid?.datasets?.get(datasetID);
 
-    // 書き換えは、適用の時点で書き換えられる候補のときだけ行う。
-    // 選んだあとにパラメータが外された場合などは、追加だけを行う。
-    const tagsToReplace = {};
-    if (this.getOverwriteBlock(candidate) === null) {
-      for (const key of this.getOverwriteKeys(candidate)) {
-        const value = candidate.plateauFeature.tags?.[key];
-        if (value !== undefined) tagsToReplace[key] = value;
-      }
-    }
+    // 適用の時点の選択で、追加と書き換えを決め直す。
+    // 選んだあとにパラメータが外された場合などは、getChoice が最初の選択を返すので、追加だけになる。
+    const { add: tagsToAdd, replace: tagsToReplace } = this._tagsToApply(candidate);
 
     // 記録すると候補が計算し直されるので、その前に選択を捨てる。
-    // 取り消したときは、最初の「OSM の値」の状態に戻る。
-    this._overwriteChoices.delete(candidate.plateauFeature.id);
+    // 取り消したときは、最初の選択に戻る。
+    this._choices.delete(candidate.plateauFeature.id);
 
     const action = actionTransferPlateauTags(candidate.osmFeature.id, tagsToAdd, tagsToReplace);
     editor.perform(action);
@@ -293,47 +282,51 @@ export class HeightTransferMode extends AbstractSystem {
 
 
   /**
-   * getOverwriteKeys
-   * 「PLATEAU の値」を選んだタグのうち、今も食い違っているものを返す。
-   * 欄を出したあとに OSM の値が手で直されると、選択の状態に古いタグが残りうるためである。
+   * getChoice
+   * 表の 1 行について、「OSM」と「Plateau」のどちらのボタンが選ばれているかを返す。
+   * OSM に無いタグの最初の選択は 'plateau'、食い違うタグの最初の選択は 'osm' とする。
+   * URL のパラメータが無いときは、今までと同じく OSM に無いタグを必ず追加するので、そのタグには 'plateau' を返す。
+   * 書き換えられない建物の食い違うタグには、覚えた選択にかかわらず 'osm' を返す。
+   * 選択はタグの名前で引くので、OSM の値が手で変えられてタグの種類が変わっても、利用者の選択が引き継がれる。
    * @param  {Object}  candidate  MatchCandidate
-   * @return {Set<string>}
+   * @param  {string}  key        タグの名前
+   * @return {'osm'|'plateau'|null}  表に出ないタグには null
    */
-  getOverwriteKeys(candidate) {
-    const result = new Set();
-    const chosen = this._overwriteChoices.get(candidate.plateauFeature?.id);
-    if (!chosen) return result;
-    for (const c of candidate.conflictingTags ?? []) {
-      if (chosen.has(c.key)) result.add(c.key);
-    }
-    return result;
+  getChoice(candidate, key) {
+    const kind = this._rowKind(candidate, key);
+    if (!kind) return null;
+
+    const block = this.getOverwriteBlock(candidate);
+    if (block === 'disabled') return (kind === 'missing') ? 'plateau' : 'osm';
+    if (kind === 'conflict' && block !== null) return 'osm';
+
+    const chosen = this._choices.get(candidate.plateauFeature?.id)?.get(key);
+    if (chosen) return chosen;
+    return (kind === 'missing') ? 'plateau' : 'osm';
   }
 
 
   /**
-   * setOverwrite
-   * 食い違うタグ 1 つについて、「PLATEAU の値」を使うかを切り替える。
-   * 書き換えられない候補では何もしない。
-   * @param  {Object}   candidate   MatchCandidate
-   * @param  {string}   key         タグの名前
-   * @param  {boolean}  usePlateau  真なら「PLATEAU の値」、偽なら「OSM の値」
+   * setChoice
+   * 表の 1 行で押されたボタンを覚え、'change' を知らせる。
+   * URL のパラメータが無いとき、表に出ないタグ、知らない値、書き換えられない建物の食い違うタグに 'plateau' を渡されたときは、何もしない。
+   * @param  {Object}  candidate  MatchCandidate
+   * @param  {string}  key        タグの名前
+   * @param  {string}  source     'osm' か 'plateau'
    */
-  setOverwrite(candidate, key, usePlateau) {
-    if (this.getOverwriteBlock(candidate) !== null) return;
+  setChoice(candidate, key, source) {
+    if (source !== 'osm' && source !== 'plateau') return;
+    const kind = this._rowKind(candidate, key);
+    if (!kind) return;
+
+    const block = this.getOverwriteBlock(candidate);
+    if (block === 'disabled') return;
+    if (kind === 'conflict' && block !== null && source === 'plateau') return;
 
     const id = candidate.plateauFeature.id;
-    const chosen = new Set(this._overwriteChoices.get(id) ?? []);
-    if (usePlateau) {
-      chosen.add(key);
-    } else {
-      chosen.delete(key);
-    }
-
-    if (chosen.size) {
-      this._overwriteChoices.set(id, chosen);
-    } else {
-      this._overwriteChoices.delete(id);
-    }
+    const chosen = new Map(this._choices.get(id) ?? []);
+    chosen.set(key, source);
+    this._choices.set(id, chosen);
 
     this._refreshApplyShortcut();
     this.emit('change');
@@ -341,18 +334,52 @@ export class HeightTransferMode extends AbstractSystem {
 
 
   /**
+   * _rowKind
+   * タグが表のどの種類の行になるかを返す。
+   * @return {'missing'|'conflict'|null}  OSM に無いタグは 'missing'、食い違うタグは 'conflict'、表に出ないタグは null
+   */
+  _rowKind(candidate, key) {
+    if ((candidate.missingTags ?? []).includes(key)) return 'missing';
+    if ((candidate.conflictingTags ?? []).some(c => c.key === key)) return 'conflict';
+    return null;
+  }
+
+
+  /**
+   * _tagsToApply
+   * 「Plateau」が選ばれたタグを、OSM に無いものは追加に、食い違うものは書き換えに振り分ける。
+   * PLATEAU の建物に値が無いタグは、どちらにも入れない。
+   * @return {{ add: Object<string,string>, replace: Object<string,string> }}
+   */
+  _tagsToApply(candidate) {
+    const add = {};
+    const replace = {};
+    const plateauTags = candidate.plateauFeature?.tags ?? {};
+
+    for (const key of candidate.missingTags ?? []) {
+      const value = plateauTags[key];
+      if (value !== undefined && this.getChoice(candidate, key) === 'plateau') add[key] = value;
+    }
+    for (const c of candidate.conflictingTags ?? []) {
+      const value = plateauTags[c.key];
+      if (value !== undefined && this.getChoice(candidate, c.key) === 'plateau') replace[c.key] = value;
+    }
+    return { add, replace };
+  }
+
+
+  /**
    * hasWorkToApply
    * 適用して変わるものがあるか。
-   * 追加するタグがあるか、書き換えられる候補で「PLATEAU の値」を選んだタグがあれば真にする。
+   * 追加か書き換えに回るタグが 1 つでもあれば真にする。
    * 欄のボタンの有効と無効、A キーの割り当ての両方がこの関数を使う。
    * @param  {Object}  candidate  MatchCandidate
    * @return {boolean}
    */
   hasWorkToApply(candidate) {
     if (!candidate) return false;
-    if (candidate.missingTags?.length) return true;
-    if (this.getOverwriteBlock(candidate) !== null) return false;
-    return this.getOverwriteKeys(candidate).size > 0;
+    const { add, replace } = this._tagsToApply(candidate);
+    return Object.keys(add).length > 0 || Object.keys(replace).length > 0;
   }
 
 
@@ -457,8 +484,8 @@ export class HeightTransferMode extends AbstractSystem {
     // 候補から外れた建物の選択は捨てる。
     // 地図を動かして画面の外に出た建物も外れるので、戻ってきたときは「OSM の値」から選び直しになる。
     const liveIDs = new Set(candidates.map(c => c.plateauFeature.id));
-    for (const id of this._overwriteChoices.keys()) {
-      if (!liveIDs.has(id)) this._overwriteChoices.delete(id);
+    for (const id of this._choices.keys()) {
+      if (!liveIDs.has(id)) this._choices.delete(id);
     }
 
     this.emit('change');
