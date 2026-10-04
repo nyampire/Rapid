@@ -1,13 +1,20 @@
-// Add PLATEAU-derived tag values to an OSM entity, but only for keys the
-// entity does not already have. Never overwrites existing values.
-export function actionTransferPlateauTags(entityID, tags) {
+// PLATEAU の値を OSM の entity に転記する。
+// addTags は、entity に値が無いキーだけを足し、既存の値は書き換えない。
+// replaceTags は、entity の値を渡された値で置き換える。
+// replaceTags を省いたときは、既存の値を 1 つも書き換えない。
+export function actionTransferPlateauTags(entityID, addTags, replaceTags = {}) {
   const action = function(graph) {
     const entity = graph.entity(entityID);
     const existing = entity.tags ?? {};
     const merged = { ...existing };
     let changed = false;
-    for (const [k, v] of Object.entries(tags)) {
+    for (const [k, v] of Object.entries(addTags ?? {})) {
       if (existing[k] !== undefined && existing[k] !== null && existing[k] !== '') continue;
+      merged[k] = v;
+      changed = true;
+    }
+    for (const [k, v] of Object.entries(replaceTags ?? {})) {
+      if (existing[k] === v) continue;
       merged[k] = v;
       changed = true;
     }

@@ -3713,6 +3713,79 @@ ul.plateau-additions.tag-list {
     padding: 0;
     list-style: none;
 }
+/* タグごとに OSM か Plateau の値を選ぶ表。
+   選んだボタンは濃い色で塗り、エディタの既定のボタンの見た目に上書きされないよう、欄の class から指定する。 */
+table.plateau-choices {
+    width: 100%;
+    margin: 6px 0 8px;
+    border-collapse: collapse;
+    table-layout: fixed;
+}
+table.plateau-choices thead th {
+    padding: 0 0 4px;
+    color: #7a6a1a;
+    font-size: 12px;
+    font-weight: normal;
+    text-align: center;
+}
+table.plateau-choices thead th:first-child {
+    width: 40%;
+}
+table.plateau-choices tbody tr {
+    border-top: 1px solid #ecdd9a;
+}
+table.plateau-choices th.plateau-choice-key {
+    padding: 5px 4px 5px 0;
+    font-family: monospace;
+    font-weight: normal;
+    text-align: left;
+    overflow-wrap: anywhere;
+}
+table.plateau-choices td {
+    padding: 5px 0;
+}
+.plateau-tags-panel button.plateau-choice {
+    width: 100%;
+    height: auto;
+    padding: 4px 6px;
+    border: 1px solid #e0c860;
+    border-radius: 0;
+    background: #ffffff;
+    color: #8a7a3a;
+    font-size: 13px;
+    font-weight: normal;
+}
+.plateau-tags-panel button.plateau-choice-osm {
+    border-radius: 4px 0 0 4px;
+}
+.plateau-tags-panel button.plateau-choice-plateau {
+    border-left: none;
+    border-radius: 0 4px 4px 0;
+}
+.plateau-tags-panel button.plateau-choice.selected {
+    border-color: #b88a00;
+    background: #e0a800;
+    color: #ffffff;
+    font-weight: bold;
+}
+@media (hover: hover) {
+    .plateau-tags-panel button.plateau-choice:not(.selected):not(:disabled):hover {
+        background: #fff6c8;
+    }
+    .plateau-tags-panel button.plateau-choice.selected:hover {
+        background: #e0a800;
+    }
+}
+.plateau-tags-panel button.plateau-choice:disabled {
+    opacity: 0.4;
+    cursor: default;
+}
+/* キーボードで選んでいるボタンを見えるようにする。
+   エディタの既定ではボタンの背景色で示すが、この欄では選んだ状態の色で上書きするため、枠で示す。 */
+.plateau-tags-panel button.plateau-choice:focus-visible {
+    outline: 2px solid #5a4a00;
+    outline-offset: -2px;
+}
 .plateau-tags-actions {
     margin-top: 8px;
     text-align: right;
@@ -3734,6 +3807,11 @@ button.plateau-apply {
 button.plateau-apply:active,
 button.plateau-apply:focus {
     background: #f5c92e;
+}
+/* 適用して変わるものが無いときのボタン。 */
+button.plateau-apply:disabled {
+    opacity: 0.5;
+    cursor: default;
 }
 
 .issue-container:not(.active) ul.issue-fix-list {

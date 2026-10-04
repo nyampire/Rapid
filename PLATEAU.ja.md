@@ -70,6 +70,7 @@ http://127.0.0.1:8080/#plateau_api_url=http://localhost:8000/api/mapwithai/build
 |---|---|---|
 | `plateau_api_url` | Plateau APIエンドポイントの上書き | `#plateau_api_url=http://localhost:8000/api/mapwithai/buildings` |
 | `plateau_conflation` | クライアントサイドconflationの無効化 | `#plateau_conflation=false` |
+| `plateau_overwrite` | タグ転記で、タグごとに OSM と Plateau のどちらの値を使うかを選べるようにする（協議の前の試用） | `#plateau_overwrite=1` |
 
 ## タグ転記（height / ele / building:levels）
 
@@ -119,8 +120,14 @@ Plateau が持つ高さ情報を、既存の OSM 建物へ転記する機能で�
 出ます。`CONFLICT` は状態の優先順位から追加できるタグが必ず空になるので、
 特別扱いなしに注記だけが表示されます。
 
-値の上書きは行いません。既存の OSM の値と食い違う場合は注記を出すだけで、
-上書きするかどうかはコミュニティでの合意を待っている段階です。
+既定では値の上書きは行いません。
+既存の OSM の値と食い違う場合は注記を出すだけです。
+上書きするかどうかは、コミュニティでの合意を待っている段階です。
+
+協議で実物を試してもらうため、URL に `plateau_overwrite=1` を付けたときだけ、OSM に無いタグと食い違うタグを 1 つの表に並べ、行ごとに「OSM」と「Plateau」のボタンで使う値を選べます。
+最初は、OSM に無いタグでは「Plateau」、食い違うタグでは「OSM」が選ばれています。
+OSM に無いタグで「OSM」を選ぶと、そのタグは追加しません。
+転記元の建物に高さの警告があるときと、面積の不一致のときは、食い違うタグの「Plateau」を選べず、その理由の文が出ます。
 
 ## LOD2 リレーション対応
 
