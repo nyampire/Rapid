@@ -2,12 +2,21 @@ import { uiSection } from '../section.js';
 import { uiTooltip } from '../tooltip.js';
 import { uiPlateauHeightWarning } from '../plateau_height_warning.js';
 import { utilPlateauTransferWarningMessages } from '../../util/plateau_height_warning.js';
+import { TARGET_TAG_KEYS } from '../../core/lib/HeightTransferMatcher.js';
 
 
 // States that get an explanatory note above the proposal. CANDIDATE needs none.
 const NOTE_KEYS = {
   CONFLICT:      'height_transfer.conflict_note',
   AREA_MISMATCH: 'height_transfer.area_mismatch_note'
+};
+
+// 書き換えられない理由の文。
+// 'disabled'（URL のパラメータが無い）では選ぶ表を出さない。
+// そのため、理由の文も無い。
+const OVERWRITE_BLOCK_KEYS = {
+  area:    'height_transfer.overwrite_blocked_area',
+  warning: 'height_transfer.overwrite_blocked_warning'
 };
 
 
@@ -28,6 +37,9 @@ const NOTE_KEYS = {
  *   CONFLICT       -> conflict note only (its `missingTags` is always empty)
  *   AREA_MISMATCH  -> area note, plus table + Apply when there is something to add
  *   COVERED        -> section hidden
+ *
+ * URL パラメータ `plateau_overwrite=1` があるときは、OSM に無いタグと食い違うタグを 1 つの表に並べ、行ごとに「OSM」と「Plateau」のボタンを置きます（`_renderChoices` を参照）。
+ * パラメータが無いときは、上に書いたとおりに表示します。
  */
 export function uiSectionPlateauTags(context) {
   const l10n = context.systems.l10n;
@@ -38,6 +50,9 @@ export function uiSectionPlateauTags(context) {
   const _applyTooltip = uiTooltip(context).placement('left');   // description + shortcut badge
 
   let _entityIDs = [];
+  // 押したボタンの位置。
+  // 表は作り直されるので、押したボタンと同じ位置のボタンへ、あとでフォーカスを戻す。
+  let _refocus = null;
 
   function _shouldDisplayNow() {
     const cand = _candidate();
@@ -87,6 +102,23 @@ export function uiSectionPlateauTags(context) {
     const warnings = utilPlateauTransferWarningMessages(plateauFeature, plateauGraph, l10n);
     uiPlateauHeightWarning($panel, warnings, l10n);
 
+    // パラメータがあるときだけ、ボタンの表を出す。
+    // heightTransfer が getOverwriteBlock を持たないときは、パラメータが無いとみなして今までと同じ表示にする。
+    // getOverwriteBlock は、書き換えられるときに null を返す。
+    // null をパラメータ無しと取り違えないように、関数の有無で分ける。
+    const hasBlock = typeof heightTransfer.getOverwriteBlock === 'function';
+    const block = hasBlock ? heightTransfer.getOverwriteBlock(cand) : 'disabled';
+    if (block === 'disabled') {
+      _renderPlain($panel, cand);
+    } else {
+      _renderChoices($panel, cand, block);
+    }
+  }
+
+
+  // パラメータが無いときの表示。
+  // 状態ごとの注記、追加するタグの読み取り専用の表、適用のボタンを出す。
+  function _renderPlain($panel, cand) {
     const noteKey = NOTE_KEYS[cand.state];
     if (noteKey) {
       $panel.append('p')
@@ -94,24 +126,128 @@ export function uiSectionPlateauTags(context) {
         .text(l10n.t(noteKey));
     }
 
-    // The proposal itself depends only on whether there is anything to add, not
-    // on the state. That gives AREA_MISMATCH the same table + Apply button as a
-    // plain CANDIDATE (the note above it carries the warning), and leaves
-    // CONFLICT with the note alone -- a CONFLICT always has an empty
-    // `missingTags`, since state precedence puts `missing` ahead of
-    // `conflicting`, so it needs no special case here.
-    if (!cand.missingTags?.length) return;
+    const missing = cand.missingTags ?? [];
+    if (!missing.length) return;
 
+    _renderAdditions($panel, cand, missing);
+    _renderApply($panel, cand, true);
+  }
+
+
+  // パラメータがあるときの表示。
+  // OSM に無いタグと食い違うタグを 1 つの表に並べ、行ごとに「OSM」と「Plateau」のボタンを置く。
+  // 食い違いの注記は出さず、表がその代わりになる。
+  function _renderChoices($panel, cand, block) {
+    if (cand.state === 'AREA_MISMATCH') {
+      $panel.append('p')
+        .attr('class', 'plateau-tags-note')
+        .text(l10n.t(NOTE_KEYS.AREA_MISMATCH));
+    }
+
+    const missing = cand.missingTags ?? [];
+    const conflicts = cand.conflictingTags ?? [];
+    const keys = TARGET_TAG_KEYS.filter(k => missing.includes(k) || conflicts.some(c => c.key === k));
+    if (!keys.length) {
+      _refocus = null;
+      return;
+    }
+
+    // 理由の文は、押せない「Plateau」のボタンがあるときだけ出す。
+    const reasonKey = OVERWRITE_BLOCK_KEYS[block];
+    if (reasonKey && conflicts.length) {
+      $panel.append('p')
+        .attr('class', 'plateau-tags-note plateau-overwrite-blocked')
+        .text(l10n.t(reasonKey));
+    }
+
+    const $table = $panel.append('table')
+      .attr('class', 'plateau-choices');
+    const $head = $table.append('thead').append('tr');
+    $head.append('th').attr('scope', 'col');
+    $head.append('th').attr('scope', 'col').text(l10n.t('height_transfer.column_osm'));
+    $head.append('th').attr('scope', 'col').text(l10n.t('height_transfer.column_plateau'));
+
+    const $body = $table.append('tbody');
+    for (const key of keys) {
+      const conflict = conflicts.find(c => c.key === key);
+      const osmValue = conflict ? conflict.osmValue : l10n.t('height_transfer.osm_none');
+      const plateauValue = cand.plateauFeature?.tags?.[key];
+      const choice = heightTransfer.getChoice(cand, key);
+      // 書き換えられない建物では、食い違うタグの「Plateau」だけを押せなくする。
+      const plateauDisabled = !!conflict && block !== null;
+
+      const $row = $body.append('tr')
+        .attr('class', 'plateau-choice-row')
+        .attr('data-key', key);
+      $row.append('th')
+        .attr('scope', 'row')
+        .attr('class', 'plateau-choice-key')
+        .text(key);
+      _renderChoiceButton($row, cand, key, 'osm', osmValue, choice === 'osm', false);
+      _renderChoiceButton($row, cand, key, 'plateau', plateauValue, choice === 'plateau', plateauDisabled);
+    }
+
+    _renderApply($panel, cand, heightTransfer.hasWorkToApply(cand));
+
+    // 押したボタンは作り直されて消えているので、同じ位置のボタンへフォーカスを戻す。
+    if (_refocus) {
+      const $again = $table.selectAll('tr.plateau-choice-row')
+        .filter(function() { return this.dataset.key === _refocus.key; })
+        .select(`button.plateau-choice-${_refocus.source}`);
+      if (!$again.empty()) $again.node().focus();
+      _refocus = null;
+    }
+  }
+
+
+  // 表の 1 つのボタン。
+  // 選ばれたボタンは .selected と aria-pressed で示し、色は css の規則で付ける。
+  function _renderChoiceButton($row, cand, key, source, value, isSelected, isDisabled) {
+    $row.append('td')
+      .append('button')
+      .attr('class', `plateau-choice plateau-choice-${source}`)
+      .attr('aria-label', `${key} ${l10n.t(source === 'osm' ? 'height_transfer.column_osm' : 'height_transfer.column_plateau')} ${value}`)
+      .classed('selected', isSelected)
+      .attr('aria-pressed', String(isSelected))
+      .property('disabled', isDisabled)
+      .text(value)
+      .on('click', () => {
+        _refocus = { key, source };
+        heightTransfer.setChoice(cand, key, source);
+      });
+  }
+
+
+  // 適用のボタン。
+  // 何も変わらないときは、押せない表示にする。
+  function _renderApply($panel, cand, canApply) {
+    $panel.append('div')
+      .attr('class', 'plateau-tags-actions')
+      .append('button')
+      .attr('class', 'plateau-apply')
+      .property('disabled', !canApply)
+      .text(l10n.t('height_transfer.apply'))
+      .on('click', () => {
+        if (canApply) heightTransfer.apply(cand);
+      })
+      .call(_applyTooltip
+        .title(l10n.t('height_transfer.apply_tooltip'))
+        .shortcut(l10n.t('shortcuts.command.apply_plateau_tags.key'))
+      );
+  }
+
+
+  // OSM に無いタグを、読み取り専用の行で並べる。
+  // 行の見た目は、下の「All fields」のタグの表とそろえる。
+  function _renderAdditions($panel, cand, missing) {
     $panel.append('p')
       .attr('class', 'plateau-tags-note')
       .text(l10n.t('height_transfer.additions'));
 
-    // Read-only key/value rows, reusing the raw tag editor's markup/CSS so they
-    // match iD's tag editor (the "All fields" section below).
     const $list = $panel.append('ul')
       .attr('class', 'tag-list plateau-additions');
 
-    for (const key of (cand.missingTags ?? [])) {
+    for (const key of missing) {
       const value = cand.plateauFeature?.tags?.[key];
       const $inner = $list.append('li')
         .attr('class', 'tag-row readonly')
@@ -123,17 +259,6 @@ export function uiSectionPlateauTags(context) {
         .append('input').attr('type', 'text').attr('class', 'value').attr('readonly', true)
         .property('value', value);
     }
-
-    $panel.append('div')
-      .attr('class', 'plateau-tags-actions')
-      .append('button')
-      .attr('class', 'plateau-apply')
-      .text(l10n.t('height_transfer.apply'))
-      .on('click', () => heightTransfer.apply(cand))
-      .call(_applyTooltip
-        .title(l10n.t('height_transfer.apply_tooltip'))
-        .shortcut(l10n.t('shortcuts.command.apply_plateau_tags.key'))
-      );
   }
 
 

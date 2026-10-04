@@ -38,4 +38,32 @@ describe('actionTransferPlateauTags', () => {
     const action = Rapid.actionTransferPlateauTags('w1', { height: '12' });
     expect(action.actionName).to.eql('transfer_plateau_tags');
   });
+
+  it('replaces existing values for the keys given in replaceTags', () => {
+    const way = Rapid.osmWay({ id: 'w1', tags: { building: 'yes', height: '10' } });
+    const graph = new Rapid.Graph([way]);
+    const g2 = Rapid.actionTransferPlateauTags('w1', {}, { height: '12.5' })(graph);
+    expect(g2.entity('w1').tags).to.eql({ building: 'yes', height: '12.5' });
+  });
+
+  it('adds and replaces in one call', () => {
+    const way = Rapid.osmWay({ id: 'w1', tags: { building: 'yes', height: '10' } });
+    const graph = new Rapid.Graph([way]);
+    const g2 = Rapid.actionTransferPlateauTags('w1', { ele: '45' }, { height: '12.5' })(graph);
+    expect(g2.entity('w1').tags).to.eql({ building: 'yes', height: '12.5', ele: '45' });
+  });
+
+  it('leaves the entity untouched when replaceTags already matches', () => {
+    const way = Rapid.osmWay({ id: 'w1', tags: { building: 'yes', height: '12' } });
+    const graph = new Rapid.Graph([way]);
+    const g2 = Rapid.actionTransferPlateauTags('w1', {}, { height: '12' })(graph);
+    expect(g2.entity('w1')).to.equal(graph.entity('w1'));   // reference equality
+  });
+
+  it('keeps the original graph unchanged so undo restores the old value', () => {
+    const way = Rapid.osmWay({ id: 'w1', tags: { building: 'yes', height: '10' } });
+    const graph = new Rapid.Graph([way]);
+    Rapid.actionTransferPlateauTags('w1', {}, { height: '12.5' })(graph);
+    expect(graph.entity('w1').tags.height).to.equal('10');
+  });
 });

@@ -33,7 +33,12 @@
       "apply": "Apply",
       "apply_tooltip": "Add these Plateau tags to the selected building.",
       "conflict_note": "Existing OSM values differ from Plateau. Override deferred (Phase 3, pending community consultation).",
-      "area_mismatch_note": "The Plateau outline is at least twice the area of the OSM building.\nThey may not describe the same building — compare with aerial imagery or Mapillary before applying."
+      "area_mismatch_note": "The Plateau outline is at least twice the area of the OSM building.\nThey may not describe the same building — compare with aerial imagery or Mapillary before applying.",
+      "column_osm": "OSM",
+      "column_plateau": "Plateau",
+      "osm_none": "none",
+      "overwrite_blocked_warning": "The Plateau height of this building may be wrong, so existing values can't be replaced.",
+      "overwrite_blocked_area": "The outlines differ greatly in area, so existing values can't be replaced."
     },
     "plateau_height_warning": {
       "title": "This height may be wrong",
