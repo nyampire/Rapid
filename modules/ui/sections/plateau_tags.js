@@ -12,7 +12,8 @@ const NOTE_KEYS = {
 };
 
 // 書き換えられない理由の文。
-// 'disabled'（URL のパラメータが無い）では食い違うタグの行を出さないので、文も無い。
+// 'disabled'（URL のパラメータが無い）では選ぶ表を出さない。
+// そのため、理由の文も無い。
 const OVERWRITE_BLOCK_KEYS = {
   area:    'height_transfer.overwrite_blocked_area',
   warning: 'height_transfer.overwrite_blocked_warning'
@@ -49,6 +50,9 @@ export function uiSectionPlateauTags(context) {
   const _applyTooltip = uiTooltip(context).placement('left');   // description + shortcut badge
 
   let _entityIDs = [];
+  // 押したボタンの位置。
+  // 表は作り直されるので、押したボタンと同じ位置のボタンへ、あとでフォーカスを戻す。
+  let _refocus = null;
 
   function _shouldDisplayNow() {
     const cand = _candidate();
@@ -143,7 +147,10 @@ export function uiSectionPlateauTags(context) {
     const missing = cand.missingTags ?? [];
     const conflicts = cand.conflictingTags ?? [];
     const keys = TARGET_TAG_KEYS.filter(k => missing.includes(k) || conflicts.some(c => c.key === k));
-    if (!keys.length) return;
+    if (!keys.length) {
+      _refocus = null;
+      return;
+    }
 
     // 理由の文は、押せない「Plateau」のボタンがあるときだけ出す。
     const reasonKey = OVERWRITE_BLOCK_KEYS[block];
@@ -156,9 +163,9 @@ export function uiSectionPlateauTags(context) {
     const $table = $panel.append('table')
       .attr('class', 'plateau-choices');
     const $head = $table.append('thead').append('tr');
-    $head.append('th');
-    $head.append('th').text(l10n.t('height_transfer.column_osm'));
-    $head.append('th').text(l10n.t('height_transfer.column_plateau'));
+    $head.append('th').attr('scope', 'col');
+    $head.append('th').attr('scope', 'col').text(l10n.t('height_transfer.column_osm'));
+    $head.append('th').attr('scope', 'col').text(l10n.t('height_transfer.column_plateau'));
 
     const $body = $table.append('tbody');
     for (const key of keys) {
@@ -173,6 +180,7 @@ export function uiSectionPlateauTags(context) {
         .attr('class', 'plateau-choice-row')
         .attr('data-key', key);
       $row.append('th')
+        .attr('scope', 'row')
         .attr('class', 'plateau-choice-key')
         .text(key);
       _renderChoiceButton($row, cand, key, 'osm', osmValue, choice === 'osm', false);
@@ -180,6 +188,15 @@ export function uiSectionPlateauTags(context) {
     }
 
     _renderApply($panel, cand, heightTransfer.hasWorkToApply(cand));
+
+    // 押したボタンは作り直されて消えているので、同じ位置のボタンへフォーカスを戻す。
+    if (_refocus) {
+      const $again = $table.selectAll('tr.plateau-choice-row')
+        .filter(function() { return this.dataset.key === _refocus.key; })
+        .select(`button.plateau-choice-${_refocus.source}`);
+      if (!$again.empty()) $again.node().focus();
+      _refocus = null;
+    }
   }
 
 
@@ -189,11 +206,15 @@ export function uiSectionPlateauTags(context) {
     $row.append('td')
       .append('button')
       .attr('class', `plateau-choice plateau-choice-${source}`)
+      .attr('aria-label', `${key} ${l10n.t(source === 'osm' ? 'height_transfer.column_osm' : 'height_transfer.column_plateau')} ${value}`)
       .classed('selected', isSelected)
       .attr('aria-pressed', String(isSelected))
       .property('disabled', isDisabled)
       .text(value)
-      .on('click', () => heightTransfer.setChoice(cand, key, source));
+      .on('click', () => {
+        _refocus = { key, source };
+        heightTransfer.setChoice(cand, key, source);
+      });
   }
 
 
