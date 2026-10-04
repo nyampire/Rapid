@@ -3780,6 +3780,12 @@ table.plateau-choices td {
     opacity: 0.4;
     cursor: default;
 }
+/* キーボードで選んでいるボタンを見えるようにする。
+   エディタの既定ではボタンの背景色で示すが、この欄では選んだ状態の色で上書きするため、枠で示す。 */
+.plateau-tags-panel button.plateau-choice:focus-visible {
+    outline: 2px solid #5a4a00;
+    outline-offset: -2px;
+}
 .plateau-tags-actions {
     margin-top: 8px;
     text-align: right;

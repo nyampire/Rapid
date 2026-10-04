@@ -266,7 +266,7 @@ export class HeightTransferMode extends AbstractSystem {
    * getOverwriteBlock
    * 候補の食い違うタグを書き換えられるかを調べ、書き換えられない理由を返す。
    * 面積を警告より先に調べる。
-   * 面積の不一致では欄の行の形が変わり、警告の有無にかかわらず書き換えられないためである。
+   * 面積の不一致と高さの警告の両方に当たるときは、欄に面積の理由の文を出すためである。
    * @param  {Object}  candidate  MatchCandidate
    * @return {null|'disabled'|'area'|'warning'}  書き換えられるときは null
    */
@@ -482,7 +482,7 @@ export class HeightTransferMode extends AbstractSystem {
     this.candidates = candidates;
 
     // 候補から外れた建物の選択は捨てる。
-    // 地図を動かして画面の外に出た建物も外れるので、戻ってきたときは「OSM の値」から選び直しになる。
+    // 地図を動かして画面の外に出た建物も外れるので、戻ってきたときは最初の選択に戻る。
     const liveIDs = new Set(candidates.map(c => c.plateauFeature.id));
     for (const id of this._choices.keys()) {
       if (!liveIDs.has(id)) this._choices.delete(id);

@@ -70,7 +70,7 @@ http://127.0.0.1:8080/#plateau_api_url=http://localhost:8000/api/mapwithai/build
 |---|---|---|
 | `plateau_api_url` | Plateau APIエンドポイントの上書き | `#plateau_api_url=http://localhost:8000/api/mapwithai/buildings` |
 | `plateau_conflation` | クライアントサイドconflationの無効化 | `#plateau_conflation=false` |
-| `plateau_overwrite` | タグ転記で、食い違うタグを PLATEAU の値で書き換えられるようにする（協議の前の試用） | `#plateau_overwrite=1` |
+| `plateau_overwrite` | タグ転記で、タグごとに OSM と Plateau のどちらの値を使うかを選べるようにする（協議の前の試用） | `#plateau_overwrite=1` |
 
 ## タグ転記（height / ele / building:levels）
 
