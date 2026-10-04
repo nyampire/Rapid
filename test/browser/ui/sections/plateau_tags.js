@@ -247,6 +247,8 @@ describe('uiSectionPlateauTags', () => {
       expect(texts('button.plateau-choice-osm'))
         .to.eql(['height_transfer.osm_none', 'height_transfer.osm_none', '2']);
       expect(texts('button.plateau-choice-plateau')).to.eql(['2.98', '69.1', '1']);
+      expect(wrap.select('tr[data-key="building:levels"] button.plateau-choice-osm').attr('aria-label'))
+        .to.equal('building:levels height_transfer.column_osm 2');
       // 表が、これまでの見出しと読み取り専用の表の代わりになる。
       expect(wrap.selectAll('.plateau-additions').nodes().length).to.equal(0);
       expect(wrap.selectAll('.plateau-tags-note').nodes().map(n => n.textContent).join(' '))
@@ -275,6 +277,17 @@ describe('uiSectionPlateauTags', () => {
 
       expect(context.systems.heightTransfer.setCalls)
         .to.eql([['building:levels', 'plateau'], ['ele', 'osm']]);
+    });
+
+    it('keeps keyboard focus on the pressed button after the table is rebuilt', () => {
+      render(choiceContext(mixed(), null));
+      const before = wrap.select('tr[data-key="building:levels"] button.plateau-choice-plateau').node();
+      before.focus();
+      before.click();
+
+      const after = wrap.select('tr[data-key="building:levels"] button.plateau-choice-plateau').node();
+      expect(after).not.to.equal(before);
+      expect(document.activeElement).to.equal(after);
     });
 
     it('enables Apply only while something is set to Plateau', () => {
