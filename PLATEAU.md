@@ -71,7 +71,7 @@ above to use it instead of production.
 |---|---|---|
 | `plateau_api_url` | Override the Plateau API endpoint | `#plateau_api_url=http://localhost:8000/api/mapwithai/buildings` |
 | `plateau_conflation` | Disable client-side conflation | `#plateau_conflation=false` |
-| `plateau_overwrite` | Let tag transfer replace conflicting values with Plateau values (trial before community consultation) | `#plateau_overwrite=1` |
+| `plateau_overwrite` | Let tag transfer choose OSM or Plateau per tag, including replacing conflicting values (trial before community consultation) | `#plateau_overwrite=1` |
 
 ## Tag transfer (height / ele / building:levels)
 
