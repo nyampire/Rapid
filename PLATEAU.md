@@ -128,9 +128,10 @@ By default, existing values are never overwritten.
 Where OSM and Plateau disagree the section only shows a note.
 Whether to overwrite is pending community consultation.
 
-So that people taking part in the consultation can try it, adding `plateau_overwrite=1` to the URL lets each conflicting tag be set to either the OSM value or the Plateau value.
-The OSM value is selected initially.
-When the source building has a height warning, or in an `AREA_MISMATCH`, the Plateau value cannot be selected and the reason is shown.
+So that people taking part in the consultation can try it, adding `plateau_overwrite=1` to the URL lists missing and conflicting tags in one table, with an "OSM" and a "Plateau" button on each row to pick the value to use.
+Plateau is selected initially for missing tags, and OSM for conflicting tags.
+Choosing OSM for a missing tag leaves that tag out.
+When the source building has a height warning, or in an `AREA_MISMATCH`, Plateau cannot be selected for conflicting tags and the reason is shown.
 
 ## LOD2 relation support
 
