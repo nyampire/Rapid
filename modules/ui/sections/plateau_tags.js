@@ -2,6 +2,7 @@ import { uiSection } from '../section.js';
 import { uiTooltip } from '../tooltip.js';
 import { uiPlateauHeightWarning } from '../plateau_height_warning.js';
 import { utilPlateauTransferWarningMessages } from '../../util/plateau_height_warning.js';
+import { TARGET_TAG_KEYS } from '../../core/lib/HeightTransferMatcher.js';
 
 
 // States that get an explanatory note above the proposal. CANDIDATE needs none.
@@ -36,8 +37,8 @@ const OVERWRITE_BLOCK_KEYS = {
  *   AREA_MISMATCH  -> area note, plus table + Apply when there is something to add
  *   COVERED        -> section hidden
  *
- * URL パラメータ `plateau_overwrite=1` で書き換えを有効にすると、食い違うタグに専用の行が付き、OSM と PLATEAU の値を選べます（`_renderConflicts` を参照）。
- * 有効にしないときは、上に書いたとおりに表示します。
+ * URL パラメータ `plateau_overwrite=1` があるときは、OSM に無いタグと食い違うタグを 1 つの表に並べ、行ごとに「OSM」と「Plateau」のボタンを置きます（`_renderChoices` を参照）。
+ * パラメータが無いときは、上に書いたとおりに表示します。
  */
 export function uiSectionPlateauTags(context) {
   const l10n = context.systems.l10n;
@@ -97,16 +98,24 @@ export function uiSectionPlateauTags(context) {
     const warnings = utilPlateauTransferWarningMessages(plateauFeature, plateauGraph, l10n);
     uiPlateauHeightWarning($panel, warnings, l10n);
 
-    // 書き換えが有効なときだけ、食い違うタグの行を出す。
-    // heightTransfer が書き換えの関数を持たないときは、無効とみなして今までと同じ表示にする。
+    // パラメータがあるときだけ、ボタンの表を出す。
+    // heightTransfer が getOverwriteBlock を持たないときは、パラメータが無いとみなして今までと同じ表示にする。
     // getOverwriteBlock は、書き換えられるときに null を返す。
-    // null を無効と取り違えないように、関数の有無で分ける。
-    const hasOverwrite = typeof heightTransfer.getOverwriteBlock === 'function';
-    const block = hasOverwrite ? heightTransfer.getOverwriteBlock(cand) : 'disabled';
-    const conflicts = (block === 'disabled') ? [] : (cand.conflictingTags ?? []);
+    // null をパラメータ無しと取り違えないように、関数の有無で分ける。
+    const hasBlock = typeof heightTransfer.getOverwriteBlock === 'function';
+    const block = hasBlock ? heightTransfer.getOverwriteBlock(cand) : 'disabled';
+    if (block === 'disabled') {
+      _renderPlain($panel, cand);
+    } else {
+      _renderChoices($panel, cand, block);
+    }
+  }
 
-    // 食い違うタグの行を出すときは、その行が食い違いの注記の代わりになる。
-    const noteKey = (cand.state === 'CONFLICT' && conflicts.length) ? null : NOTE_KEYS[cand.state];
+
+  // パラメータが無いときの表示。
+  // 状態ごとの注記、追加するタグの読み取り専用の表、適用のボタンを出す。
+  function _renderPlain($panel, cand) {
+    const noteKey = NOTE_KEYS[cand.state];
     if (noteKey) {
       $panel.append('p')
         .attr('class', 'plateau-tags-note')
@@ -114,19 +123,83 @@ export function uiSectionPlateauTags(context) {
     }
 
     const missing = cand.missingTags ?? [];
-    if (missing.length) {
-      _renderAdditions($panel, cand, missing);
-    }
-    if (conflicts.length) {
-      _renderConflicts($panel, cand, conflicts, block);
+    if (!missing.length) return;
+
+    _renderAdditions($panel, cand, missing);
+    _renderApply($panel, cand, true);
+  }
+
+
+  // パラメータがあるときの表示。
+  // OSM に無いタグと食い違うタグを 1 つの表に並べ、行ごとに「OSM」と「Plateau」のボタンを置く。
+  // 食い違いの注記は出さず、表がその代わりになる。
+  function _renderChoices($panel, cand, block) {
+    if (cand.state === 'AREA_MISMATCH') {
+      $panel.append('p')
+        .attr('class', 'plateau-tags-note')
+        .text(l10n.t(NOTE_KEYS.AREA_MISMATCH));
     }
 
-    // ボタンは、追加するタグか、選べる食い違いの行があるときに出す。
-    // 何も変わらないときは、無効の表示にする。
-    const selectable = conflicts.length > 0 && block !== 'area';
-    if (!missing.length && !selectable) return;
+    const missing = cand.missingTags ?? [];
+    const conflicts = cand.conflictingTags ?? [];
+    const keys = TARGET_TAG_KEYS.filter(k => missing.includes(k) || conflicts.some(c => c.key === k));
+    if (!keys.length) return;
 
-    const canApply = heightTransfer.hasWorkToApply?.(cand) ?? missing.length > 0;
+    // 理由の文は、押せない「Plateau」のボタンがあるときだけ出す。
+    const reasonKey = OVERWRITE_BLOCK_KEYS[block];
+    if (reasonKey && conflicts.length) {
+      $panel.append('p')
+        .attr('class', 'plateau-tags-note plateau-overwrite-blocked')
+        .text(l10n.t(reasonKey));
+    }
+
+    const $table = $panel.append('table')
+      .attr('class', 'plateau-choices');
+    const $head = $table.append('thead').append('tr');
+    $head.append('th');
+    $head.append('th').text(l10n.t('height_transfer.column_osm'));
+    $head.append('th').text(l10n.t('height_transfer.column_plateau'));
+
+    const $body = $table.append('tbody');
+    for (const key of keys) {
+      const conflict = conflicts.find(c => c.key === key);
+      const osmValue = conflict ? conflict.osmValue : l10n.t('height_transfer.osm_none');
+      const plateauValue = cand.plateauFeature?.tags?.[key];
+      const choice = heightTransfer.getChoice(cand, key);
+      // 書き換えられない建物では、食い違うタグの「Plateau」だけを押せなくする。
+      const plateauDisabled = !!conflict && block !== null;
+
+      const $row = $body.append('tr')
+        .attr('class', 'plateau-choice-row')
+        .attr('data-key', key);
+      $row.append('th')
+        .attr('class', 'plateau-choice-key')
+        .text(key);
+      _renderChoiceButton($row, cand, key, 'osm', osmValue, choice === 'osm', false);
+      _renderChoiceButton($row, cand, key, 'plateau', plateauValue, choice === 'plateau', plateauDisabled);
+    }
+
+    _renderApply($panel, cand, heightTransfer.hasWorkToApply(cand));
+  }
+
+
+  // 表の 1 つのボタン。
+  // 選ばれたボタンは .selected と aria-pressed で示し、色は css の規則で付ける。
+  function _renderChoiceButton($row, cand, key, source, value, isSelected, isDisabled) {
+    $row.append('td')
+      .append('button')
+      .attr('class', `plateau-choice plateau-choice-${source}`)
+      .classed('selected', isSelected)
+      .attr('aria-pressed', String(isSelected))
+      .property('disabled', isDisabled)
+      .text(value)
+      .on('click', () => heightTransfer.setChoice(cand, key, source));
+  }
+
+
+  // 適用のボタン。
+  // 何も変わらないときは、押せない表示にする。
+  function _renderApply($panel, cand, canApply) {
     $panel.append('div')
       .attr('class', 'plateau-tags-actions')
       .append('button')
@@ -165,69 +238,6 @@ export function uiSectionPlateauTags(context) {
         .append('input').attr('type', 'text').attr('class', 'value').attr('readonly', true)
         .property('value', value);
     }
-  }
-
-
-  // 食い違うタグを 1 行ずつ並べる。
-  // 書き換えられる候補と高さの警告がある候補では、「OSM の値」と「PLATEAU の値」の選択肢を出す。
-  // 高さの警告がある候補では、「PLATEAU の値」を選べなくする。
-  // 面積の不一致の候補では、選択肢を出さず、2 つの値の対比だけを出す。
-  function _renderConflicts($panel, cand, conflicts, block) {
-    $panel.append('p')
-      .attr('class', 'plateau-tags-note')
-      .text(l10n.t('height_transfer.conflicts'));
-
-    const reasonKey = OVERWRITE_BLOCK_KEYS[block];
-    if (reasonKey) {
-      $panel.append('p')
-        .attr('class', 'plateau-tags-note plateau-overwrite-blocked')
-        .text(l10n.t(reasonKey));
-    }
-
-    const chosen = heightTransfer.getOverwriteKeys?.(cand) ?? new Set();
-    const $list = $panel.append('ul')
-      .attr('class', 'plateau-conflicts');
-
-    for (const c of conflicts) {
-      const $row = $list.append('li')
-        .attr('class', 'plateau-conflict')
-        .attr('data-key', c.key);
-      $row.append('div')
-        .attr('class', 'plateau-conflict-key')
-        .text(c.key);
-
-      if (block === 'area') {
-        $row.append('div')
-          .attr('class', 'plateau-conflict-values')
-          .text(l10n.t('height_transfer.conflict_values', { osm: c.osmValue, plateau: c.plateauValue }));
-        continue;
-      }
-
-      const name = `plateau-overwrite-${c.key}`;
-      _renderChoice($row, name, 'osm',
-        l10n.t('height_transfer.keep_osm', { value: c.osmValue }),
-        !chosen.has(c.key), false,
-        () => heightTransfer.setOverwrite(cand, c.key, false));
-      _renderChoice($row, name, 'plateau',
-        l10n.t('height_transfer.use_plateau', { value: c.plateauValue }),
-        chosen.has(c.key), block === 'warning',
-        () => heightTransfer.setOverwrite(cand, c.key, true));
-    }
-  }
-
-
-  function _renderChoice($row, name, value, text, checked, disabled, onChange) {
-    const $label = $row.append('label')
-      .attr('class', `plateau-conflict-choice plateau-conflict-${value}`);
-    $label.append('input')
-      .attr('type', 'radio')
-      .attr('name', name)
-      .attr('value', value)
-      .property('checked', checked)
-      .property('disabled', disabled)
-      .on('change', onChange);
-    $label.append('span')
-      .text(text);
   }
 
 

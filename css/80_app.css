@@ -3713,30 +3713,72 @@ ul.plateau-additions.tag-list {
     padding: 0;
     list-style: none;
 }
-/* 食い違うタグの行。
-   選択肢は 1 行に 1 つ並べ、値が長くても折り返せるようにする。 */
-ul.plateau-conflicts {
+/* タグごとに OSM か Plateau の値を選ぶ表。
+   選んだボタンは濃い色で塗り、エディタの既定のボタンの見た目に上書きされないよう、欄の class から指定する。 */
+table.plateau-choices {
+    width: 100%;
     margin: 6px 0 8px;
-    padding: 0;
-    list-style: none;
+    border-collapse: collapse;
+    table-layout: fixed;
 }
-li.plateau-conflict {
-    padding: 4px 0;
+table.plateau-choices thead th {
+    padding: 0 0 4px;
+    color: #7a6a1a;
+    font-size: 12px;
+    font-weight: normal;
+    text-align: center;
+}
+table.plateau-choices thead th:first-child {
+    width: 40%;
+}
+table.plateau-choices tbody tr {
     border-top: 1px solid #ecdd9a;
 }
-.plateau-conflict-key {
+table.plateau-choices th.plateau-choice-key {
+    padding: 5px 4px 5px 0;
     font-family: monospace;
+    font-weight: normal;
+    text-align: left;
+    overflow-wrap: anywhere;
+}
+table.plateau-choices td {
+    padding: 5px 0;
+}
+.plateau-tags-panel button.plateau-choice {
+    width: 100%;
+    height: auto;
+    padding: 4px 6px;
+    border: 1px solid #e0c860;
+    border-radius: 0;
+    background: #ffffff;
+    color: #8a7a3a;
+    font-size: 13px;
+    font-weight: normal;
+}
+.plateau-tags-panel button.plateau-choice-osm {
+    border-radius: 4px 0 0 4px;
+}
+.plateau-tags-panel button.plateau-choice-plateau {
+    border-left: none;
+    border-radius: 0 4px 4px 0;
+}
+.plateau-tags-panel button.plateau-choice.selected {
+    border-color: #b88a00;
+    background: #e0a800;
+    color: #ffffff;
     font-weight: bold;
 }
-label.plateau-conflict-choice {
-    display: block;
-    font-size: 12px;
+@media (hover: hover) {
+    .plateau-tags-panel button.plateau-choice:not(.selected):not(:disabled):hover {
+        background: #fff6c8;
+    }
+    .plateau-tags-panel button.plateau-choice.selected:hover {
+        background: #e0a800;
+    }
 }
-label.plateau-conflict-choice input {
-    margin-right: 4px;
-}
-.plateau-conflict-values {
-    font-size: 12px;
+.plateau-tags-panel button.plateau-choice:disabled {
+    opacity: 0.4;
+    cursor: default;
 }
 .plateau-tags-actions {
     margin-top: 8px;
