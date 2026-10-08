@@ -5,6 +5,8 @@
 Plateau の建築物データを OpenStreetMap にインポートする作業を支援するために
 Rapid へ追加した機能について、実装と開発の進め方をまとめたものです。
 
+エディタの使い方は、OSM wikiの[JA:MLIT PLATEAU/Plateau RapiD](https://wiki.openstreetmap.org/wiki/JA:MLIT_PLATEAU/Plateau_RapiD)に利用者向けにまとめています。
+
 このフォークが扱うのは **Plateau の建築物データのみ**です。Plateau には橋梁・
 トンネル・植生などのカテゴリもありますが、それらは対象外です。
 
@@ -42,6 +44,8 @@ upstream の MapWithAI / PMTiles まわりから独立させてあります。
 | `modules/core/lib/HeightTransferMatcher.js` | Plateau 外形と OSM 建物の突き合わせ |
 | `modules/ui/sections/plateau_tags.js` | エンティティエディタ内のタグ転記セクション |
 | `modules/actions/transfer_plateau_tags.js` | タグ追加の編集アクション |
+| `modules/util/plateau_height_warning.js` | 高さの警告を、利用者に見せる文にする |
+| `modules/ui/plateau_height_warning.js` | 高さの警告の欄を描く |
 
 ## Plateau API
 
@@ -128,6 +132,54 @@ Plateau が持つ高さ情報を、既存の OSM 建物へ転記する機能で�
 最初は、OSM に無いタグでは「Plateau」、食い違うタグでは「OSM」が選ばれています。
 OSM に無いタグで「OSM」を選ぶと、そのタグは追加しません。
 転記元の建物に高さの警告があるときと、面積の不一致のときは、食い違うタグの「Plateau」を選べず、その理由の文が出ます。
+協議でご意見をいただきたい点と試し方は、OSM wikiの[既存の値の上書き（試用中）](https://wiki.openstreetmap.org/wiki/JA:MLIT_PLATEAU/Plateau_RapiD#%E6%97%A2%E5%AD%98%E3%81%AE%E5%80%A4%E3%81%AE%E4%B8%8A%E6%9B%B8%E3%81%8D%EF%BC%88%E8%A9%A6%E7%94%A8%E4%B8%AD%EF%BC%89)にまとめています。
+
+## 高さの警告
+
+Plateauの建物の高さには、誤りが含まれることがあります。
+誤った高さがそのままOSMに入らないよう、高さが怪しい建物を、追加するかどうかを決める時点で知らせます。
+警告の役目は知らせることだけで、追加やタグ転記の操作は止めない作りです。
+
+### APIからの受け取り
+
+判定はAPI側で行い、建物を返すときに目印のタグを添えます。
+
+| タグ | 値 |
+|---|---|
+| `plateau:height_warning` | 当てはまった検査の名前を`;`でつないだもの（例: `needle;floor-height`） |
+| `plateau:footprint_m2` | 平方メートルでの底面積。`needle`に当てはまったときだけ付く |
+
+この2つはOSMのタグではありません。
+`PlateauService`が読み込みの時点で取り除き、`heightWarnings`と`footprintM2`という建物の内部の属性に移します。
+建物を追加するときは、`rapid_accept_feature.js`がこの内部の属性も消すので、OSMには送られません。
+
+古いエディタは、届いたタグをすべて建物に写します。
+そのため、本番に出すときはエディタを先に、APIを後に更新します。
+
+### 検査
+
+| 検査 | 警告にする条件 |
+|---|---|
+| `degenerate-area` | 輪郭の面積が0以下 |
+| `part-over-outline` | 建物の一部が、建物全体より10mを超えて高い |
+| `needle` | 高さが15mを超え、底面積が20m²未満。建物の一部は対象外 |
+| `absolute` | 高さが1.0m未満 |
+| `floor-height` | `building`が`house`、`apartments`、`residential`で、高さを階数で割った値が1.5m未満か10.2mを超える |
+
+屋上の塔屋や階段室は、地面からの高さが高く、底面積は小さいのがふつうです。
+そのため、建物の一部は`needle`の対象から外しています。
+工場や倉庫は1階が高いことが多いので、`floor-height`は住宅に限っています。
+閾値と判定の詳細は、API側のリポジトリの`plateau_height_warning.py`を参照してください。
+
+### 表示
+
+警告の付いた建物の、地図上の塗りは点の模様です。
+建物を選ぶと、サイドバーのタグ一覧の上に、警告の理由の欄が出ます。
+建物が`type=building`のリレーションに属するときは、リレーションと全メンバーの警告をまとめて出します。
+1つを選んで追加すると、建物全体が一緒に追加されるためです。
+
+タグ転記では、転記元に警告があると、候補の印を赤い縁と「!」にし、「Plateauタグ転記」の欄にも同じ警告を出します。
+転記するのは外形の高さだけなので、ここで見るのは外形自身の警告と、建物の一部の`part-over-outline`だけです。
 
 ## LOD2 リレーション対応
 
