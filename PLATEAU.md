@@ -6,6 +6,8 @@ This guide covers the features this fork adds to Rapid for importing Plateau
 building data into OpenStreetMap: how they are implemented and how to work on
 them.
 
+How to use the editor is described for mappers on the OSM wiki page [JA:MLIT PLATEAU/Plateau RapiD](https://wiki.openstreetmap.org/wiki/JA:MLIT_PLATEAU/Plateau_RapiD) (in Japanese).
+
 This fork deals with **Plateau building data only**. Plateau also publishes
 bridges, tunnels, vegetation and other categories; those are out of scope.
 
@@ -43,6 +45,8 @@ Data emitted by this service carries `__service__ = 'plateau'`.
 | `modules/core/lib/HeightTransferMatcher.js` | Matches Plateau outlines to OSM buildings |
 | `modules/ui/sections/plateau_tags.js` | Tag-transfer section in the entity editor |
 | `modules/actions/transfer_plateau_tags.js` | The edit action that adds the tags |
+| `modules/util/plateau_height_warning.js` | Turns height warnings into messages for the user |
+| `modules/ui/plateau_height_warning.js` | Draws the height warning box |
 
 ## Plateau API
 
@@ -132,6 +136,52 @@ So that people taking part in the consultation can try it, adding `plateau_overw
 Plateau is selected initially for missing tags, and OSM for conflicting tags.
 Choosing OSM for a missing tag leaves that tag out.
 When the source building has a height warning, or in an `AREA_MISMATCH`, Plateau cannot be selected for conflicting tags and the reason is shown.
+The questions for the consultation and how to try the feature are on the OSM wiki, in [既存の値の上書き（試用中）](https://wiki.openstreetmap.org/wiki/JA:MLIT_PLATEAU/Plateau_RapiD#%E6%97%A2%E5%AD%98%E3%81%AE%E5%80%A4%E3%81%AE%E4%B8%8A%E6%9B%B8%E3%81%8D%EF%BC%88%E8%A9%A6%E7%94%A8%E4%B8%AD%EF%BC%89) (in Japanese).
+
+## Height warnings
+
+Plateau building heights sometimes contain errors.
+To keep wrong heights out of OSM, the editor flags suspicious buildings at the point where the mapper decides whether to add them.
+The warning only informs; it never blocks adding a building or transferring tags.
+
+### What the API sends
+
+The API runs the checks and adds marker tags to each building it returns.
+
+| Tag | Value |
+|---|---|
+| `plateau:height_warning` | Names of the checks that matched, joined with `;` (e.g. `needle;floor-height`) |
+| `plateau:footprint_m2` | Footprint area in square metres, present only when `needle` matched |
+
+These are not OSM tags.
+`PlateauService` strips them on load and moves them to internal properties of the entity, `heightWarnings` and `footprintM2`.
+When a building is added, `rapid_accept_feature.js` removes those internal properties too, so nothing reaches OSM.
+
+Older editor builds copy every received tag onto the building.
+When deploying, update the editor first and the API second.
+
+### Checks
+
+| Check | Warns when |
+|---|---|
+| `degenerate-area` | The outline's area is zero or less |
+| `part-over-outline` | A building part is more than 10 m taller than the whole building |
+| `needle` | Height is over 15 m and footprint is under 20 m²; building parts are excluded |
+| `absolute` | Height is under 1.0 m |
+| `floor-height` | `building` is `house`, `apartments` or `residential`, and height divided by levels is under 1.5 m or over 10.2 m |
+
+Rooftop stair towers and penthouses are tall from the ground and small in footprint, so building parts are left out of `needle`.
+Factories and warehouses often have tall ground floors, so `floor-height` is limited to residential buildings.
+For the exact thresholds and logic, see `plateau_height_warning.py` in the API repository.
+
+### Display
+
+Flagged buildings are filled with a dot pattern on the map.
+Selecting one shows a box with the reasons above the tag list in the sidebar.
+If the building belongs to a `type=building` relation, the warnings of the relation and all its members are shown together, because adding one member adds the whole building.
+
+In tag transfer, a source with a warning gets a candidate marker with a red edge and a "!", and the "Plateau tags" section shows the same warning.
+Only the outline's height is transferred, so only the outline's own warnings and its parts' `part-over-outline` are considered there.
 
 ## LOD2 relation support
 
