@@ -58,6 +58,27 @@
       "icon": "https://stamen.com/wp-content/uploads/2016/07/stamen_compass_rose_small-01.png",
       "max_zoom": 20,
       "min_zoom": 4
+    },
+    {
+      "id": "Plateau_orthophoto_all",
+      "name": "MLIT Plateau Ortho (all years)",
+      "type": "tms",
+      "category": "photo",
+      "url": "https://tile.plateauview.mlit.go.jp/tiles/ortho-all/{zoom}/{x}/{y}.png",
+      "extent": {
+        "min_zoom": 10,
+        "max_zoom": 19,
+        "bbox": { "min_lon": 122.9, "min_lat": 24.0, "max_lon": 146.0, "max_lat": 45.6 }
+      },
+      "attribution": {
+        "required": true,
+        "text": "MLIT_PLATEAU",
+        "url": "https://docs.plateauview.mlit.go.jp/datasets/ortho/"
+      },
+      "license_url": "https://www.mlit.go.jp/plateau/site-policy/",
+      "permission_osm": "explicit",
+      "country_code": "JP",
+      "description": "Japan MLIT Project PLATEAU orthophotos of all years, newest on top. Blank where no imagery is available."
     }
   ]
 }
