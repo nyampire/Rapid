@@ -142294,6 +142294,19 @@
       "description": "Japan MLIT, Plateau project official tile distribution"
     },
     {
+      "id": "Plateau_orthophoto_all",
+      "name": "MLIT Plateau Ortho (all years)",
+      "type": "tms",
+      "template": "https://tile.plateauview.mlit.go.jp/tiles/ortho-all/{zoom}/{x}/{y}.png",
+      "zoomExtent": [10, 19],
+      "polygon": [
+        [[122.9, 24], [122.9, 45.6], [146, 45.6], [146, 24], [122.9, 24]]
+      ],
+      "terms_url": "https://docs.plateauview.mlit.go.jp/datasets/ortho/",
+      "terms_text": "MLIT_PLATEAU",
+      "description": "Japan MLIT Project PLATEAU orthophotos of all years, newest on top. Blank where no imagery is available."
+    },
+    {
       "id": "mml-tausta",
       "name": "MML Background Map",
       "type": "wms",

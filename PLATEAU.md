@@ -208,6 +208,19 @@ translucent orange fill.
 Requires the `plateau_coverage` materialized view on the server. See the
 [rapid_plateau_api README](https://github.com/nyampire/rapid_plateau_api).
 
+## Background imagery
+
+The imagery list includes the PLATEAU VIEW orthophoto tiles (`ortho-all`) as "MLIT Plateau Ortho (all years)".
+It combines the imagery of every year into one tileset, with the newest year on top.
+The entry lives in this fork's own settings, `data/manual_imagery.json`, and the same entry is added by hand to `data/imagery.json`, which the editor reads.
+Regenerating the list with `npm run imagery` produces the same entry from the fork's settings.
+
+The entry is offered within a rough rectangle around Japan.
+Where there is no imagery (for example Kisarazu or central Okayama), choosing it leaves the background blank.
+
+`ortho-all` is not listed on the provider's documentation page, and its availability is not guaranteed.
+The 2020 imagery from editor-layer-index ("MLIT Plateau Official") is therefore kept as well.
+
 ## Client-side conflation
 
 Hides Plateau buildings that overlap an existing OSM building.
