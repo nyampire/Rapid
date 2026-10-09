@@ -204,6 +204,19 @@ PlateauのLOD2建物は、外形と屋根などの部分が`type=building`リレ
 サーバ側の`plateau_coverage`マテリアライズドビューが必要です。
 詳細は[rapid_plateau_api README](https://github.com/nyampire/rapid_plateau_api)を参照してください。
 
+## 背景画像
+
+背景画像の一覧に、PLATEAU VIEWのタイル配信のオルソ画像（`ortho-all`）を「MLIT Plateau Ortho (all years)」として足しています。
+すべての年の画像を、新しい年のものを上に重ねて1つにした配信です。
+項目はエディタ独自の設定の`data/manual_imagery.json`にあり、エディタが読む`data/imagery.json`にも同じ項目を手で足しています。
+`npm run imagery`で一覧を作り直しても、独自の設定から同じ項目が作られます。
+
+一覧に出る範囲は、日本のおおまかな四角形です。
+画像の無い場所（木更津、岡山の中心部など）では、選ぶと背景が空白になります。
+
+`ortho-all`は配信元の案内のページに載っておらず、配信が続く保証はありません。
+そのため、editor-layer-index由来の2020年版（「MLIT Plateau Official」）も残しています。
+
 ## クライアントサイドConflation
 
 Plateau建物が既存のOSM建物と重複する場合、自動的に非表示にする機能です。
