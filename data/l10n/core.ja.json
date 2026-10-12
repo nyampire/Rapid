@@ -3366,7 +3366,7 @@
           "label": "「ラインの追加」モード"
         },
         "add_note": {
-          "key": "北緯",
+          "key": "N",
           "label": "「メモの追加」モード"
         },
         "add_point": {
@@ -3397,7 +3397,7 @@
           "label": "編集メニューの表示/非表示"
         },
         "extract": {
-          "key": "東経",
+          "key": "E",
           "label": "ポイントを地物から抜き移す"
         },
         "find": {
@@ -3473,7 +3473,7 @@
           "label": "ラインやエリアの描画を終了"
         },
         "straighten": {
-          "key": "南緯",
+          "key": "S",
           "label": "ラインや複数ポイントを直線化"
         },
         "toggle_all_cards": {
@@ -3504,19 +3504,19 @@
           "label": "OpenStreetMapデータの表示切替"
         },
         "toggle_osm_notes": {
-          "key": "北緯"
+          "key": "N"
         },
         "toggle_preferences": {
           "label": "個人設定パネルを表示/非表示"
         },
         "toggle_streetside": {
-          "key": "南緯"
+          "key": "S"
         },
         "undo": {
           "label": "最後の操作を元に戻す"
         },
         "wireframe": {
-          "key": "西経"
+          "key": "W"
         }
       },
       "commands": "コマンド",
