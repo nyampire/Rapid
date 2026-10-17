@@ -3563,12 +3563,12 @@
       "lose_changes": "OSMへアップロードされていない編集があります。投稿先サーバを切り替えると編集内容は破棄されます。投稿先を切り替えてよろしいですか？"
     },
     "splash": {
-      "privacy": "{updateMessage} このソフトウェアを使用することで、あなたは {privacyLink}に同意したものとみなされます。",
+      "privacy": "このソフトウェアを使うことで、[Rapidのプライバシーポリシー](https://github.com/facebook/Rapid/blob/main/PRIVACY.md)に従って利用することに同意したものとみなされます。",
       "privacy_update": "プライバシーポリシーが更新されました。",
       "start": "今すぐ編集を始める",
-      "text": "iD はみんなで作る世界地図に貢献するための使いやすくパワフルなツールです。現在のバージョンは {version} です。詳細情報は {website} で、バグレポートは {github} でお願いします。",
+      "text": "Rapidは、自由な世界地図OpenStreetMapのための、使いやすく高機能なエディタです。初めての方は、下のボタンを押してチュートリアルを始めてください。誰でもマッパーになれます！\n\n詳しくは、GitHubの[更新履歴](https://github.com/facebook/Rapid/blob/main/CHANGELOG.md#whats-new)と[問題の報告先](https://github.com/facebook/Rapid/issues)をご覧ください。楽しくマッピングしましょう！👍",
       "walkthrough": "ウォークスルーを始める",
-      "welcome": "OpenStreetMap エディタの iD へようこそ"
+      "welcome": "{rapidicon} {version}へようこそ！"
     },
     "status": {
       "message": {
