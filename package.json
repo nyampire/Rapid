@@ -158,6 +158,6 @@
     "> 1%, last 3 major versions, Firefox ESR, maintained node versions, not dead"
   ],
   "volta": {
-    "node": "24.22.1"
+    "node": "26.12.1"
   }
 }
