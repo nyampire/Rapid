@@ -79,7 +79,6 @@ These files contain Plateau-specific modifications that may conflict with upstre
 | `data/core.yaml` | `plateau`, `japan` category keys and `plateauJapan` dataset translations |
 | `data/l10n/core.en.json` | English translations for Plateau dataset |
 | `data/l10n/core.ja.json` | Japanese translations for Plateau dataset |
-| `.github/workflows/pages.yml` | GitHub Pages deployment configuration |
 | `.gitignore` | Plateau dev artifact exclusions |
 
 ## Conflict Resolution Tips
