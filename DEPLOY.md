@@ -7,10 +7,13 @@ This document describes how to build and deploy this Rapid fork to the VPS.
 | Item | Detail |
 |------|--------|
 | Production URL | https://rapid.nyampire.info/ |
-| VPS host alias | `plateau-vps` (configured in `~/.ssh/config`) |
-| Document root | `/var/www/rapid/` |
+| VPS login | `plateau@<VPS_IP_ADDRESS>` (SSH key authentication) |
+| Document root | `<DOCUMENT_ROOT>`: the directory nginx serves Rapid from |
 | Web server | Static file serving (no application restart needed) |
 | Plateau API | Separate service ([nyampire/rapid_plateau_api](https://github.com/nyampire/rapid_plateau_api)) |
+| Dashboard | Lives in `dashboard/` inside the document root, deployed separately ([nyampire/rapid_plateau_dashboard](https://github.com/nyampire/rapid_plateau_dashboard)) |
+
+Replace `<VPS_IP_ADDRESS>` and `<DOCUMENT_ROOT>` with your own values in the commands below.
 
 ## Quick Deploy
 
@@ -22,8 +25,11 @@ git push origin main
 # 2. Build
 npm run all
 
-# 3. Deploy to VPS
-rsync -avz --delete dist/ plateau-vps:/var/www/rapid/
+# 3. Check what would be deleted (nothing is expected)
+rsync -avzn --delete --exclude '/dashboard/' dist/ plateau@<VPS_IP_ADDRESS>:<DOCUMENT_ROOT>/ | grep '^deleting'
+
+# 4. Deploy to VPS
+rsync -avz --delete --exclude '/dashboard/' dist/ plateau@<VPS_IP_ADDRESS>:<DOCUMENT_ROOT>/
 ```
 
 > **Note**: The VPS serves static files only. No service restart is required after deployment.
@@ -63,8 +69,17 @@ Expected output:
 
 ### 3. Deploy
 
+First, do a dry run and check the files that would be deleted.
+Nothing should be listed.
+
 ```bash
-rsync -avz --delete dist/ plateau-vps:/var/www/rapid/
+rsync -avzn --delete --exclude '/dashboard/' dist/ plateau@<VPS_IP_ADDRESS>:<DOCUMENT_ROOT>/ | grep '^deleting'
+```
+
+Then deploy:
+
+```bash
+rsync -avz --delete --exclude '/dashboard/' dist/ plateau@<VPS_IP_ADDRESS>:<DOCUMENT_ROOT>/
 ```
 
 | rsync flag | Purpose |
@@ -73,6 +88,8 @@ rsync -avz --delete dist/ plateau-vps:/var/www/rapid/
 | `-v` | Verbose output |
 | `-z` | Compress during transfer |
 | `--delete` | Remove files on VPS that no longer exist in `dist/` |
+| `--exclude '/dashboard/'` | Keep the dashboard. It is not in `dist/`, so `--delete` would remove it |
+| `-n` | Dry run: show what would change without changing anything |
 
 ### 4. Post-deploy Verification
 
@@ -95,7 +112,7 @@ git checkout <commit-hash>
 
 # Rebuild and redeploy
 npm run all
-rsync -avz --delete dist/ plateau-vps:/var/www/rapid/
+rsync -avz --delete --exclude '/dashboard/' dist/ plateau@<VPS_IP_ADDRESS>:<DOCUMENT_ROOT>/
 
 # Return to main
 git checkout main
