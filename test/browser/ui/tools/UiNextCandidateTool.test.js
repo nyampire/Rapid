@@ -1,5 +1,5 @@
 describe('UiNextCandidateTool', () => {
-  let selection, context, tool, clock, drawHandlers;
+  let selection, context, tool, clock, drawHandlers, modeHandlers;
 
   class MockL10n {
     constructor() { this.calls = []; }
@@ -26,6 +26,7 @@ describe('UiNextCandidateTool', () => {
       };
     }
     container() { return d3.select(document.body); }
+    on(event, fn) { if (event === 'modechange') modeHandlers.push(fn); }
   }
 
   function makeTool(status) {
@@ -49,6 +50,7 @@ describe('UiNextCandidateTool', () => {
 
   beforeEach(() => {
     drawHandlers = [];
+    modeHandlers = [];
     clock = sinon.useFakeTimers();
     context = new MockContext();
     selection = makeSelection();
@@ -144,6 +146,60 @@ describe('UiNextCandidateTool', () => {
     const $label = d3.select(selection.node().parentNode).select('.item-label');
     expect($label.text()).to.equal('toolbar.next_candidate.label_count');
     expect(context.checkOverflow.calledWith('.map-toolbar', true)).to.be.true;
+  });
+
+
+  it('同じ名前のまま 2 回描いても、checkOverflow は 1 回。数が変われば、もう 1 回呼ぶ', () => {
+    context.l10n.t = (id, params) => (params ? `${id}:${params.n}` : id);   // 数を名前に反映する
+    tool = makeTool({ reason: 'ok', count: 24 });
+    tool.render(selection);
+    tool.render(selection);
+    expect(context.checkOverflow.callCount).to.equal(1);
+
+    tool._status = () => ({ reason: 'ok', count: 23 });
+    tool.render(selection);
+    expect(context.checkOverflow.callCount).to.equal(2);
+    const $label = d3.select(selection.node().parentNode).select('.item-label');
+    expect($label.text()).to.equal('toolbar.next_candidate.label_count:23');
+  });
+
+
+  it('Plateau の候補を選んでいるとき、その id を付けて数える', () => {
+    context.systems.ui.Sidebar.RapidInspector.datum = { id: 'w7', __service__: 'plateau' };
+    tool = makeTool({ reason: 'ok', count: 2 });
+    tool.render(selection);
+    expect(tool._status.lastCall.args[0]).to.equal('w7');
+  });
+
+
+  it('Plateau 以外のものを選んでいるときと、何も選んでいないときは、id を付けない', () => {
+    context.systems.ui.Sidebar.RapidInspector.datum = { id: 'w8', __service__: 'mapwithai' };
+    tool = makeTool({ reason: 'ok', count: 2 });
+    tool.render(selection);
+    expect(tool._status.lastCall.args[0]).to.be.undefined;
+
+    context.systems.ui.Sidebar.RapidInspector.datum = null;
+    tool.render(selection);
+    expect(tool._status.lastCall.args[0]).to.be.undefined;
+  });
+
+
+  it('modechange でも、数え直す', () => {
+    tool = makeTool({ reason: 'ok', count: 5 });
+    tool.render(selection);
+    const before = tool._status.callCount;
+    expect(modeHandlers.length).to.be.above(0);
+    modeHandlers.forEach(fn => fn());
+    clock.tick(300);
+    expect(tool._status.callCount).to.be.above(before);
+  });
+
+
+  it('説明の単語キーを l10n から読む', () => {
+    tool = makeTool({ reason: 'ok', count: 5 });
+    expect(context.l10n.calls.some(c => c.id === 'shortcuts.command.next_plateau_candidate.key')).to.be.false;
+    tool.Tooltip.shortcut()();
+    expect(context.l10n.calls.some(c => c.id === 'shortcuts.command.next_plateau_candidate.key')).to.be.true;
   });
 
 

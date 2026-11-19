@@ -133,10 +133,14 @@ export function utilPlateauCandidates(context) {
  *   'none'          追加済みか無視済みの候補しか残っていない
  *   'ok'            押せる。このときだけ count > 0
  *
+ * excludeID を渡すと、そのメンバーを含む候補は数えない。右の枠の「残り」と同じ数え方で、
+ * 選んでいる候補を引くときに使う。
+ *
  * @param   {Context}  context
+ * @param   {string}   [excludeID]  数えない候補のメンバーの id
  * @return  {{reason: 'ok'|'layer-off'|'zoom'|'osm-layer-off'|'none', count: number}}
  */
-export function utilPlateauCandidateStatus(context) {
+export function utilPlateauCandidateStatus(context, excludeID) {
   const rapid = context.systems.rapid;
   const service = context.services.plateau;
   const layerOn = !!rapid && !!service
@@ -150,6 +154,8 @@ export function utilPlateauCandidateStatus(context) {
 
   if (service.isAddBlocked?.()) return { reason: 'osm-layer-off', count: 0 };
 
-  const count = utilPlateauCandidates(context).length;
+  const count = utilPlateauCandidates(context)
+    .filter(c => excludeID === undefined || !c.memberIDs.has(excludeID))
+    .length;
   return count > 0 ? { reason: 'ok', count } : { reason: 'none', count: 0 };
 }
