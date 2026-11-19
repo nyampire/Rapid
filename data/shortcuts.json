@@ -58,6 +58,10 @@
               "text": "shortcuts.command.lasso.label"
             },
             {
+              "shortcuts": ["shortcuts.command.next_plateau_candidate.key"],
+              "text": "shortcuts.command.next_plateau_candidate.label"
+            },
+            {
               "section": "with_selected",
               "text": "shortcuts.with_features_selected"
             },
@@ -130,10 +134,6 @@
             {
               "shortcuts": ["shortcuts.command.apply_plateau_tags.key"],
               "text": "shortcuts.command.apply_plateau_tags.label"
-            },
-            {
-              "shortcuts": ["shortcuts.command.next_plateau_candidate.key"],
-              "text": "shortcuts.command.next_plateau_candidate.label"
             },
             {
               "section": "photo_selected",
