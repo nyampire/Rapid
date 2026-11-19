@@ -65,6 +65,9 @@ export function utilPlateauCandidates(context) {
   const service = context.services.plateau;
   if (!rapid || !service) return [];
 
+  // Rapid レイヤー自体が消えているときは、PixiLayerRapid が何も描かない。
+  if (!context.systems.gfx?.scene?.layers.get('rapid')?.enabled) return [];
+
   // 描画と同じく、サービスが始まるまでは何も描いていない。
   if (!service.started) return [];
 
