@@ -65,6 +65,9 @@ export function utilPlateauCandidates(context) {
   const service = context.services.plateau;
   if (!rapid || !service) return [];
 
+  // 描画と同じく、サービスが始まるまでは何も描いていない。
+  if (!service.started) return [];
+
   // 取得と描画の閾値と同じ。届かないズームでは何も描いていない。
   if (context.viewport.transform.zoom < PLATEAU_BUILDINGS_MINZOOM) return [];
 
