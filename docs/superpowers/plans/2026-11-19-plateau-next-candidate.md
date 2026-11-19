@@ -225,3 +225,60 @@ Expected: すべて成功。
 git add modules/ui/UiRapidInspector.js data/core.yaml data/l10n/core.en.json data/l10n/core.ja.json data/shortcuts.json test/browser/ui/UiRapidInspector.js
 git commit -m "feat(plateau): 4のキーで画面の中の次のPlateauの候補を選ぶ"
 ```
+
+### Task 4: 外形と部品に分かれた建物を1件と数える（2026-11-19 に追加）
+
+設計文書の「対象にする候補」に足した段落を実装します。
+最後の確認で、`type=building` の relation の外形と部品が別々の候補として数えられ、`4` が同じ建物の中を行き来することが分かったためです。
+
+**Files:**
+- Modify: `modules/util/plateau_candidates.js`（`utilPlateauCandidates` だけ。`utilPlateauRenderables` と描く処理は変えない）
+- Modify: `modules/ui/UiRapidInspector.js`（`selectNextCandidate`、`remainingCandidateCount`）
+- Test: `test/browser/util/plateau_candidates.js`、`test/browser/ui/UiRapidInspector.js`
+
+**Interfaces:**
+- Changes: `utilPlateauCandidates(context) => Array<{ entity, graph, datasetID, memberIDs: Set<string> }>`。
+  - `utilBuildingRelationInfo(entity, graph)` の `relationType` が `'building'` の way は、同じ relation（`relation.id`）ごとに1件にまとめる。
+  - `entity` は代表で、その relation で役割が `outline` の way が残っていればそれ、無ければまとめた way のうち元の並びで最初のもの。
+  - `memberIDs` は、まとめた way の id すべて（代表を含む）。まとめない候補では `new Set([entity.id])`。
+  - 並びは、各グループの最初の要素が元の並びで現れた位置に置く。
+- Unchanged: `utilNearestPlateauCandidate(candidates, fromLoc, excludeID)`。除く id には代表の id を渡す。
+- Changes: `UiRapidInspector#remainingCandidateCount(excludeID?)` は、`memberIDs` に `excludeID` を含む候補を除いて数える。
+- Changes: `UiRapidInspector#selectNextCandidate()` は、選んでいる Plateau の datum を `memberIDs` に含む候補を探し、その代表の id を `excludeID` に渡す。起点は今までどおり選んでいる datum の外形の中心。
+
+- [ ] **Step 1: 失敗するテストを書く**
+
+`test/browser/util/plateau_candidates.js`:
+
+```js
+it('counts a type=building relation as one candidate represented by its outline', ...)
+  // r1 (type=building): outline w1, part w2, part w3 → 1 件、entity.id === 'w1'、memberIDs は {w1, w2, w3}
+it('falls back to the first remaining part once the outline is accepted', ...)
+  // acceptIDs に w1 → 1 件、entity.id === 'w2'、memberIDs は {w2, w3}
+it('keeps separate buildings separate', ...)
+  // r1 (w1,w2) と r2 (w3,w4) → 2 件
+it('gives a plain candidate a single-member set', ...)
+  // 単独の way w9 → memberIDs は {w9}
+```
+
+`test/browser/ui/UiRapidInspector.js`:
+
+```js
+it('skips every member of the selected building when a part is selected', ...)
+  // 候補 A {w1,w2,w3}（代表 w1）と B {w9}、datum = w2 → 選ばれるのは w9
+it('counts buildings, not parts, excluding the selected building', ...)
+  // 同じ候補で remainingCandidateCount('w2') === 1、remainingCandidateCount() === 2
+```
+
+- [ ] **Step 2: `npm run build` のあと `npm run test:browser` で、足したテストが失敗することを確かめる**
+
+- [ ] **Step 3: 実装する**
+
+- [ ] **Step 4: `npm run test:unit && npm run test:browser && npm run lint` がすべて成功することを確かめる**
+
+- [ ] **Step 5: コミット**
+
+```bash
+git add modules/util/plateau_candidates.js modules/ui/UiRapidInspector.js test/browser/util/plateau_candidates.js test/browser/ui/UiRapidInspector.js
+git commit -m "feat(plateau): 外形と部品に分かれた建物を、次の候補では1件と数える"
+```
