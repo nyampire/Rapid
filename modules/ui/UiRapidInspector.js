@@ -70,6 +70,10 @@ export class UiRapidInspector {
     this.renderNextCandidate = this.renderNextCandidate.bind(this);
     this._setupKeybinding = this._setupKeybinding.bind(this);
 
+    // 「次の候補」で選んだ候補の外形の ID。いちばん近い候補だけを見ると、
+    // A → B → A と往復するので、一度選んだ候補を飛ばすために覚えておく。
+    this._visitedCandidateIDs = new Set();
+
     // accept and enter one of these modes:
     this.moveFeature = (e, d) => this.acceptFeature(e, d, 'move');
     this.rotateFeature = (e, d) => this.acceptFeature(e, d, 'rotate');
@@ -345,8 +349,9 @@ export class UiRapidInspector {
   /**
    * selectNextCandidate
    * 画面の中でいちばん近い Plateau の候補を選び、地図の中央に寄せる。
-   * Plateau の候補を選んでいるときは、その外形の中心から、選んでいる候補を除いて探す。
-   * そうでなければ地図の中央から探す。ズームは変えない。
+   * Plateau の候補を選んでいるときは、その外形の中心から、選んでいる候補と、
+   * これまでに選んだ候補を除いて探す。全部選び終えていたら、覚えた候補を消して探し直す。
+   * そうでなければ、覚えた候補を消して地図の中央から探す。ズームは変えない。
    * 閲覧モードか選択モードのときだけ働く。描画・移動・回転・保存などの途中では何もしない。
    * @return {boolean}  移ったら true
    */
@@ -366,6 +371,7 @@ export class UiRapidInspector {
 
     const candidates = this._candidates();
     const datum = this.datum;
+    const visited = this._visitedCandidateIDs;
     let fromLoc, excludeID;
     if (datum?.__service__ === 'plateau') {
       const graph = plateau.graph(datum.__datasetid__);
@@ -373,11 +379,20 @@ export class UiRapidInspector {
       // 選んでいるのが部品でも、同じ建物の外形と部品は、まとめて飛ばす。
       const own = candidates.find(c => c.memberIDs.has(datum.id));
       excludeID = own ? own.entity.id : datum.id;
+      visited.add(excludeID);
     } else {
       fromLoc = context.viewport.centerLoc();
+      visited.clear();
     }
 
-    const next = utilNearestPlateauCandidate(candidates, fromLoc, excludeID);
+    const unvisited = candidates.filter(c => !visited.has(c.entity.id));
+    let next = utilNearestPlateauCandidate(unvisited, fromLoc, excludeID);
+    if (!next) {
+      // 画面の中の候補を全部回り終えた。選んでいる候補だけを残して、もう一周する。
+      visited.clear();
+      if (excludeID) visited.add(excludeID);
+      next = utilNearestPlateauCandidate(candidates, fromLoc, excludeID);
+    }
     if (!next) {
       flash('rapid_inspector.next_candidate.none');
       return false;
