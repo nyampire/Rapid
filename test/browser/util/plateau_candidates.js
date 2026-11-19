@@ -26,13 +26,14 @@ describe('utilPlateauCandidates', () => {
     const plateau = {
       started: opts.started ?? true,
       graph: () => graph,
-      getData: () => entities
+      getData: () => entities,
+      isAddBlocked: () => opts.addBlocked ?? false
     };
     const rapid = {
       acceptIDs: new Set(opts.accept ?? []),
       ignoreIDs: new Set(opts.ignore ?? []),
       datasets: new Map(opts.datasets ?? [
-        ['plateauJapan', { id: 'plateauJapan', service: 'plateau', added: true, enabled: true }]
+        ['plateauJapan', { id: 'plateauJapan', service: 'plateau', added: true, enabled: opts.datasetEnabled ?? true }]
       ])
     };
     return {
@@ -164,5 +165,52 @@ describe('utilPlateauCandidates', () => {
     let g = new Rapid.Graph();
     const a = addWay(g, 'w1', 0); g = a.graph;
     expect(Rapid.utilPlateauCandidates(makeContext([a.way], g, { rapidEnabled: false }))).to.eql([]);
+  });
+
+  describe('utilPlateauCandidateStatus', () => {
+    function oneWay() {
+      const a = addWay(new Rapid.Graph(), 'w1', 0);
+      return a;
+    }
+
+    it('Rapid のレイヤーが無効なら layer-off', () => {
+      const a = oneWay();
+      const ctx = makeContext([a.way], a.graph, { rapidEnabled: false });
+      expect(Rapid.utilPlateauCandidateStatus(ctx)).to.eql({ reason: 'layer-off', count: 0 });
+    });
+
+    it('有効な Plateau のデータセットが無ければ layer-off', () => {
+      const a = oneWay();
+      const ctx = makeContext([a.way], a.graph, { datasetEnabled: false });
+      expect(Rapid.utilPlateauCandidateStatus(ctx)).to.eql({ reason: 'layer-off', count: 0 });
+    });
+
+    it('ズーム 16 なら zoom', () => {
+      const a = oneWay();
+      const ctx = makeContext([a.way], a.graph, { zoom: 16 });
+      expect(Rapid.utilPlateauCandidateStatus(ctx)).to.eql({ reason: 'zoom', count: 0 });
+    });
+
+    it('OSM のレイヤーを切っていれば osm-layer-off', () => {
+      const a = oneWay();
+      const ctx = makeContext([a.way], a.graph, { addBlocked: true });
+      expect(Rapid.utilPlateauCandidateStatus(ctx)).to.eql({ reason: 'osm-layer-off', count: 0 });
+    });
+
+    it('追加済みと無視済みしか無ければ none', () => {
+      let g = new Rapid.Graph();
+      const a = addWay(g, 'w1', 0); g = a.graph;
+      const b = addWay(g, 'w2', 5); g = b.graph;
+      const ctx = makeContext([a.way, b.way], g, { accept: ['w1'], ignore: ['w2'] });
+      expect(Rapid.utilPlateauCandidateStatus(ctx)).to.eql({ reason: 'none', count: 0 });
+    });
+
+    it('候補が 2 件あれば ok と 2', () => {
+      let g = new Rapid.Graph();
+      const a = addWay(g, 'w1', 0); g = a.graph;
+      const b = addWay(g, 'w2', 5); g = b.graph;
+      const ctx = makeContext([a.way, b.way], g);
+      expect(Rapid.utilPlateauCandidateStatus(ctx)).to.eql({ reason: 'ok', count: 2 });
+    });
   });
 });
