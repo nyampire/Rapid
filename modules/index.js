@@ -16,6 +16,7 @@ export * from './ui/settings/index.js';
 export * from './ui/tools/index.js';
 export * from './ui/index.js';
 export * from './util/index.js';
+export * from './util/plateau_candidates.js';
 export * from './validations/index.js';
 
 export { Context } from './Context.js';
