@@ -212,5 +212,19 @@ describe('utilPlateauCandidates', () => {
       const ctx = makeContext([a.way, b.way], g);
       expect(Rapid.utilPlateauCandidateStatus(ctx)).to.eql({ reason: 'ok', count: 2 });
     });
+
+    it('excludeID が候補のメンバーなら、その候補を数えない', () => {
+      let g = new Rapid.Graph();
+      const a = addWay(g, 'w1', 0); g = a.graph;
+      const b = addWay(g, 'w2', 5); g = b.graph;
+      const ctx = makeContext([a.way, b.way], g);
+      expect(Rapid.utilPlateauCandidateStatus(ctx, 'w2')).to.eql({ reason: 'ok', count: 1 });
+    });
+
+    it('選んでいる候補しか無ければ none', () => {
+      const a = oneWay();
+      const ctx = makeContext([a.way], a.graph);
+      expect(Rapid.utilPlateauCandidateStatus(ctx, 'w1')).to.eql({ reason: 'none', count: 0 });
+    });
   });
 });

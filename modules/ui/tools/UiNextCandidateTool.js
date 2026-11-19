@@ -33,13 +33,14 @@ export class UiNextCandidateTool {
     this.id = 'next_candidate';
     this.stringID = 'toolbar.next_candidate.label';
 
-    // 直近に数えた結果
+    // 直近に数えた結果と、ツールバーに書いた名前
     this._lastStatus = null;
+    this._lastLabel = null;
 
     // Create child components
     this.Tooltip = uiTooltip(context)
       .title(() => this._tooltipText())
-      .shortcut('4');
+      .shortcut(() => context.systems.l10n.t('shortcuts.command.next_plateau_candidate.key'));
 
     // D3 selections
     this.$parent = null;
@@ -54,16 +55,18 @@ export class UiNextCandidateTool {
 
     // Event listeners
     context.systems.map?.on('draw', this.throttledRender);
+    context.on('modechange', this.throttledRender);   // 選択の変化で数が変わる
   }
 
 
   /**
    * _status
    * 押せるかどうかと候補の数を数える。テストでは差し替えられる。
+   * @param  {string}  [excludeID]  選んでいる Plateau の候補の id。その候補は数えない
    * @return {{reason: string, count: number}}
    */
-  _status() {
-    return utilPlateauCandidateStatus(this.context);
+  _status(excludeID) {
+    return utilPlateauCandidateStatus(this.context, excludeID);
   }
 
 
@@ -119,7 +122,9 @@ export class UiNextCandidateTool {
     }
 
     const context = this.context;
-    this._lastStatus = this._status();
+    const datum = context.systems.ui?.Sidebar?.RapidInspector?.datum;
+    const excludeID = (datum?.__service__ === 'plateau') ? datum.id : undefined;
+    this._lastStatus = this._status(excludeID);
     const isDisabled = (this._lastStatus.reason !== 'ok');
 
     this.Tooltip
@@ -149,7 +154,13 @@ export class UiNextCandidateTool {
 
     // 名前は動的に変わるので、ツールバーの名前の欄を書き換える
     const $item = select($parent.node().parentNode);
-    $item.select('.item-label').text(this.label());
-    context.systems.ui?.checkOverflow('.map-toolbar', true);
+    // 名前が変わったときだけ書き、幅を測り直す。毎回測り直すと、狭い窓で
+    // ツールバーの narrow が 250ms ごとに切り替わる。
+    const text = this.label();
+    if (text !== this._lastLabel) {
+      this._lastLabel = text;
+      $item.select('.item-label').text(text);
+      context.systems.ui?.checkOverflow('.map-toolbar', true);
+    }
   }
 }
