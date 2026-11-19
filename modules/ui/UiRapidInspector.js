@@ -8,6 +8,8 @@ import { uiFlash } from './flash.js';
 import { uiTooltip } from './tooltip.js';
 import { utilCmd } from '../util/cmd.js';
 import { utilKeybinding } from '../util/keybinding.js';
+import { utilNearestPlateauCandidate } from '../util/plateau_nearest_candidate.js';
+import { utilPlateauCandidates } from '../util/plateau_candidates.js';
 import { utilBuildingRelationInfo } from '../util/building_relation.js';
 import { uiPlateauHeightWarning } from './plateau_height_warning.js';
 import { utilPlateauHeightWarningMessages } from '../util/plateau_height_warning.js';
@@ -64,6 +66,8 @@ export class UiRapidInspector {
     this.renderNotice = this.renderNotice.bind(this);
     this.acceptFeature = this.acceptFeature.bind(this);
     this.ignoreFeature = this.ignoreFeature.bind(this);
+    this.selectNextCandidate = this.selectNextCandidate.bind(this);
+    this.renderNextCandidate = this.renderNextCandidate.bind(this);
     this._setupKeybinding = this._setupKeybinding.bind(this);
 
     // accept and enter one of these modes:
@@ -83,6 +87,14 @@ export class UiRapidInspector {
     // リセットされたあとも detached な DOM を指したまま残るため、この条件では
     // 弾けない。候補を選んでいない (`this.datum` が無い) あいだは描き直す意味が
     // 無いので、ここで先に弾く。
+    // 地図を動かすと画面の中の候補が変わるので、残りの件数の行だけ描き直す。
+    context.systems.map?.on('draw', () => {
+      if (this.datum?.__service__ !== 'plateau') return;
+      const $body = this.$inspector?.selectAll('.body');
+      if (!$body || $body.empty()) return;
+      this.renderNextCandidate($body);
+    });
+
     const scene = context.systems.gfx?.scene;
     scene?.on('layerchange', () => {
       if (!this.datum) return;
@@ -150,6 +162,7 @@ export class UiRapidInspector {
       .call(this.renderHeightWarning)
       .call(this.renderTagInfo)
       .call(this.renderChoices)
+      .call(this.renderNextCandidate)
       .call(this.renderNotice);
   }
 
@@ -305,6 +318,127 @@ export class UiRapidInspector {
 //      context.container()
 //        .call(uiRapidFirstEditDialog(context));
 //    }
+  }
+
+
+  /**
+   * _candidates
+   * 今の画面の中の Plateau の候補。テストでは差し替える。
+   * @return {Array<{entity, graph, datasetID}>}
+   */
+  _candidates() {
+    return utilPlateauCandidates(this.context);
+  }
+
+
+  /**
+   * remainingCandidateCount
+   * 今の画面の中に残っている Plateau の候補の数。
+   * @param  {string?}  excludeID  選んでいる entity.id。これをメンバーに含む候補は数えない
+   * @return {number}
+   */
+  remainingCandidateCount(excludeID) {
+    return this._candidates().filter(c => !c.memberIDs.has(excludeID)).length;
+  }
+
+
+  /**
+   * selectNextCandidate
+   * 画面の中でいちばん近い Plateau の候補を選び、地図の中央に寄せる。
+   * Plateau の候補を選んでいるときは、その外形の中心から、選んでいる候補を除いて探す。
+   * そうでなければ地図の中央から探す。ズームは変えない。
+   * 閲覧モードか選択モードのときだけ働く。描画・移動・回転・保存などの途中では何もしない。
+   * @return {boolean}  移ったら true
+   */
+  selectNextCandidate() {
+    const context = this.context;
+    const modeID = context.mode?.id ?? '';
+    if (modeID !== 'browse' && !modeID.startsWith('select')) return false;
+    const l10n = context.systems.l10n;
+    const plateau = context.services?.plateau;
+
+    const flash = (stringID) => uiFlash(context).duration(5000).label(l10n.t(stringID))();
+
+    if (plateau?.isAddBlocked?.()) {
+      flash('rapid_inspector.option_accept.disabled_osm_layer_off_flash');
+      return false;
+    }
+
+    const candidates = this._candidates();
+    const datum = this.datum;
+    let fromLoc, excludeID;
+    if (datum?.__service__ === 'plateau') {
+      const graph = plateau.graph(datum.__datasetid__);
+      fromLoc = datum.extent(graph).center();
+      // 選んでいるのが部品でも、同じ建物の外形と部品は、まとめて飛ばす。
+      const own = candidates.find(c => c.memberIDs.has(datum.id));
+      excludeID = own ? own.entity.id : datum.id;
+    } else {
+      fromLoc = context.viewport.centerLoc();
+    }
+
+    const next = utilNearestPlateauCandidate(candidates, fromLoc, excludeID);
+    if (!next) {
+      flash('rapid_inspector.next_candidate.none');
+      return false;
+    }
+
+    const entity = next.entity;
+    context.enter('select', { selection: new Map().set(entity.id, entity) });
+    context.systems.map.centerEase(entity.extent(next.graph).center());
+    return true;
+  }
+
+
+  /**
+   * renderNextCandidate
+   * Plateau の候補を選んでいるときだけ、「次の候補へ」のボタンと残りの数を描く。
+   * @param {d3-selection} $selection - 描く先
+   */
+  renderNextCandidate($selection) {
+    const datum = this.datum;
+    const isPlateau = datum?.__service__ === 'plateau';
+    let $next = $selection.selectAll('.rapid-inspector-next-candidate')
+      .data(isPlateau ? [0] : []);
+
+    $next.exit().remove();
+    if (!isPlateau) return;
+
+    const l10n = this.context.systems.l10n;
+
+    const $$next = $next.enter()
+      .append('div')
+      .attr('class', 'rapid-inspector-next-candidate');
+
+    $$next
+      .append('button')
+      .attr('class', 'choice-button')
+      .on('click', this.selectNextCandidate)
+      .append('div')
+      .attr('class', 'choice-label');
+
+    $$next
+      .append('p')
+      .attr('class', 'rapid-inspector-next-candidate-count');
+
+    $next = $next.merge($$next);
+
+    const n = this.remainingCandidateCount(datum.id);
+    const isDisabled = (n === 0);
+
+    $next.selectAll('.choice-button')
+      .classed('secondary', isDisabled)
+      .classed('disabled', isDisabled)
+      .attr('disabled', isDisabled ? true : null);
+
+    const key = l10n.t('shortcuts.command.next_plateau_candidate.key');
+    $next.selectAll('.choice-label')
+      .text(`${l10n.t('rapid_inspector.next_candidate.label')} (${key})`);
+
+    $next.selectAll('.rapid-inspector-next-candidate-count')
+      .text(isDisabled
+        ? l10n.t('rapid_inspector.next_candidate.none')
+        : l10n.t('rapid_inspector.next_candidate.remaining', { n }));
   }
 
 
@@ -797,7 +931,8 @@ export class UiRapidInspector {
     const ignoreKey = l10n.t('shortcuts.command.ignore_feature.key');
     const moveKey = l10n.t('shortcuts.command.move.key');
     const rotateKey = l10n.t('shortcuts.command.rotate.key');
-    this._keys = [acceptKey, acceptOnlyThisKey, ignoreKey, moveKey, rotateKey];
+    const nextKey = l10n.t('shortcuts.command.next_plateau_candidate.key');
+    this._keys = [acceptKey, acceptOnlyThisKey, ignoreKey, moveKey, rotateKey, nextKey];
 
     keybinding.on(acceptKey, this.acceptFeature);
     // Shift+A → Add Only This Feature. Only meaningful on multi-section
@@ -813,6 +948,8 @@ export class UiRapidInspector {
     keybinding.on(ignoreKey, this.ignoreFeature);
     keybinding.on(moveKey, this.moveFeature);
     keybinding.on(rotateKey, this.rotateFeature);
+    // capture なしで登録するので、入力欄に打った 4 には反応しない。
+    keybinding.on(nextKey, this.selectNextCandidate);
   }
 
 }

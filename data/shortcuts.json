@@ -132,6 +132,10 @@
               "text": "shortcuts.command.apply_plateau_tags.label"
             },
             {
+              "shortcuts": ["shortcuts.command.next_plateau_candidate.key"],
+              "text": "shortcuts.command.next_plateau_candidate.label"
+            },
+            {
               "section": "photo_selected",
               "text": "shortcuts.with_photo_selected"
             },

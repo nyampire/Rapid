@@ -1175,6 +1175,10 @@ en:
       description: Ignoring this feature helps us improve our machine learning. If you are unsure whether or not this is an accurate feature, feel free to leave it as is, nothing will be saved or lost. 👍
       annotation: Ignored a Rapid feature.
       tooltip: Ignore this feature.
+    next_candidate:
+      label: Next candidate
+      remaining: "{n} left on screen"
+      none: No candidates left on this screen.
   rapid_menu:
     license: License
     toggle_all: Toggle all {rapidicon} data
@@ -2703,6 +2707,9 @@ en:
       apply_plateau_tags:
         label: Apply Plateau tags to the selected building
         key: A   # <this key> to apply the Plateau tags (bound only while a candidate building is selected)
+      next_plateau_candidate:
+        label: Select the next Plateau candidate on screen
+        key: '4'   # <this key> to select the nearest remaining Plateau candidate on screen
 
       follow_sequence:
         label: Step to next / previous photo in sequence

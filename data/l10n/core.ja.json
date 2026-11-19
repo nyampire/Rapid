@@ -3047,6 +3047,11 @@
         "description": "この地物を無視すると、機械学習の改善に役立ちます。正確かどうか判断できない場合は、そのままにしておいて構いません。何も保存されず、失われもしません。👍",
         "annotation": "Rapid の地物を無視しました。",
         "tooltip": "この地物を無視します。"
+      },
+      "next_candidate": {
+        "label": "次の候補へ",
+        "remaining": "画面に残り {n} 件",
+        "none": "この画面に残りの候補はありません"
       }
     },
     "rapid_menu": {
@@ -3423,6 +3428,9 @@
         },
         "move": {
           "label": "選択した地物を移動"
+        },
+        "next_plateau_candidate": {
+          "label": "画面の中の次の Plateau の候補を選ぶ"
         },
         "orthogonalize": {
           "label": "ラインやエリアの角を直角化"
