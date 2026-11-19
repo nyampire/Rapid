@@ -1,8 +1,8 @@
 import { selection, select } from 'd3-selection';
 
 import {
-  UiDashboardTool, UiDownloadTool, UiDrawModesTool, UiHeightTransferTool, UiRapidTool,
-  UiSaveTool, UiUndoRedoTool, UiZoomOverviewTool
+  UiDashboardTool, UiDownloadTool, UiDrawModesTool, UiHeightTransferTool, UiNextCandidateTool,
+  UiRapidTool, UiSaveTool, UiUndoRedoTool, UiZoomOverviewTool
 } from './tools/index.js';
 
 
@@ -33,6 +33,7 @@ export class UiMapToolbar {
     this.DrawModes = new UiDrawModesTool(context);
     this.Rapid = new UiRapidTool(context);
     this.HeightTransfer = new UiHeightTransferTool(context);
+    this.NextCandidate = new UiNextCandidateTool(context);
     this.Dashboard = new UiDashboardTool(context);
     this.ZoomOverview = new UiZoomOverviewTool(context);
     this.UndoRedo = new UiUndoRedoTool(context);
@@ -53,6 +54,18 @@ export class UiMapToolbar {
 
 
   /**
+   * labelFor
+   * 道具に `label()` があればその戻り値を、無ければ `stringID` の文言を、名前として返す。
+   * @param  {Object|string}  d - 道具 (または 'spacer')
+   * @return {string}
+   */
+  labelFor(d) {
+    if (typeof d?.label === 'function') return d.label();
+    return d?.stringID ? this.context.systems.l10n.t(d.stringID) : '';
+  }
+
+
+  /**
    * render
    * Accepts a parent selection, and renders the content under it.
    * (The parent selection is required the first time, but can be inferred on subsequent renders)
@@ -66,7 +79,6 @@ export class UiMapToolbar {
     }
 
     const context = this.context;
-    const l10n = context.systems.l10n;
     const urlhash = context.systems.urlhash;
     const ui = context.systems.ui;
 
@@ -77,6 +89,7 @@ export class UiMapToolbar {
       this.Dashboard,
       this.ZoomOverview,
       this.HeightTransfer,
+      this.NextCandidate,
       'spacer',
       this.UndoRedo,
       this.Save,
@@ -134,7 +147,7 @@ export class UiMapToolbar {
 
     $items
       .selectAll('.item-label')
-      .text(d => d.stringID ? l10n.t(d.stringID) : '');
+      .text(d => this.labelFor(d));
 
     // If we are adding/removing any buttons, check if toolbar has overflowed..
     ui.checkOverflow('.map-toolbar', true);

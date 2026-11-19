@@ -3629,6 +3629,14 @@
       "dashboard_tooltip": "Rapid Plateau 進捗ダッシュボードを新しいタブで開く",
       "zoom_overview_label": "Zoom 14",
       "zoom_overview_tooltip": "ズーム 14 へ移動して建物の読み込みを止め、移動を高速化します。<br>建物は z16 から読み込まれます。",
+      "next_candidate": {
+        "label": "次の候補",
+        "label_count": "次の候補 {n}",
+        "tooltip": "画面の中の次の Plateau の候補を選ぶ",
+        "layer_off": "Rapid のデータで Plateau を有効にすると使えます。",
+        "zoom": "ズーム 17 以上で使えます。",
+        "osm_layer_off": "OSM のデータのレイヤーを表示すると使えます。"
+      },
       "favorites": "お気に入り",
       "inspect": "位置検索/タグ編集",
       "recent": "選択履歴",
