@@ -7,6 +7,14 @@ describe('UiRapidInspector', () => {
     emit(type) { for (const fn of this._handlers[type] ?? []) fn(); }
   }
 
+  class MockEmitter {
+    constructor() {
+      const handlers = {};
+      this.on = (type, fn) => { (handlers[type] ??= []).push(fn); return this; };
+      this.emit = (type) => { for (const fn of handlers[type] ?? []) fn(); };
+    }
+  }
+
   class MockContext {
     constructor() {
       this.systems = {
@@ -14,7 +22,7 @@ describe('UiRapidInspector', () => {
         rapid: { taskExtent: null, acceptIDs: new Set() },
         urlhash: { getParam: () => null },
         gfx: { scene: new MockScene() },
-        map: { centerEase: (loc) => { this.eased.push(loc); } }
+        map: { centerEase: (loc) => { this.eased.push(loc); }, ...new MockEmitter() }
       };
       this.eased = [];
       this.entered = [];
@@ -226,6 +234,57 @@ describe('UiRapidInspector', () => {
     it('reacts to 4 pressed on the document', () => {
       document.body.dispatchEvent(new KeyboardEvent('keydown', { key: '4', bubbles: true }));
       expect(ctx.entered).to.have.lengthOf(1);
+    });
+  });
+
+
+  describe('#renderNextCandidate', () => {
+    function candidate(id) {
+      return { entity: { id, __service__: 'plateau' }, graph: null, datasetID: 'plateauJapan' };
+    }
+    function plateauDatum() {
+      return { id: 'w1', __service__: 'plateau', __datasetid__: 'plateauJapan' };
+    }
+    let $body;
+    beforeEach(() => {
+      $body = d3.select('body').append('div').attr('class', 'test-body');
+    });
+    afterEach(() => d3.selectAll('.test-body').remove());
+
+    it('renders nothing for a non-Plateau datum', () => {
+      inspector.datum = { id: 'x1', __service__: 'esri' };
+      inspector._candidates = () => [candidate('w2')];
+      inspector.renderNextCandidate($body);
+      expect($body.select('.rapid-inspector-next-candidate').empty()).to.be.true;
+    });
+
+    it('shows the label with the key and the remaining count, excluding the selected one', () => {
+      inspector.datum = plateauDatum();
+      inspector._candidates = () => [candidate('w1'), candidate('w2'), candidate('w3')];
+      inspector.renderNextCandidate($body);
+      expect($body.select('.choice-label').text()).to.contain('rapid_inspector.next_candidate.label (4)');
+      expect($body.select('.rapid-inspector-next-candidate-count').text()).to.contain('rapid_inspector.next_candidate.remaining');
+      expect($body.select('.choice-button').property('disabled')).to.be.false;
+    });
+
+    it('disables the button and shows the none text when nothing remains', () => {
+      inspector.datum = plateauDatum();
+      inspector._candidates = () => [candidate('w1')];
+      inspector.renderNextCandidate($body);
+      expect($body.select('.choice-button').property('disabled')).to.be.true;
+      expect($body.select('.rapid-inspector-next-candidate-count').text()).to.eql('rapid_inspector.next_candidate.none');
+    });
+
+    it('refreshes the count when the map draws', () => {
+      inspector.datum = plateauDatum();
+      inspector._candidates = () => [candidate('w1'), candidate('w2')];
+      inspector.$inspector = $body.append('div');
+      inspector.$inspector.append('div').attr('class', 'body');
+      inspector.renderNextCandidate(inspector.$inspector.select('.body'));
+      expect(inspector.$inspector.select('.choice-button').property('disabled')).to.be.false;
+      inspector._candidates = () => [candidate('w1')];
+      inspector.context.systems.map.emit('draw');
+      expect(inspector.$inspector.select('.choice-button').property('disabled')).to.be.true;
     });
   });
 
