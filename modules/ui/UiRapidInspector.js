@@ -87,6 +87,14 @@ export class UiRapidInspector {
     // リセットされたあとも detached な DOM を指したまま残るため、この条件では
     // 弾けない。候補を選んでいない (`this.datum` が無い) あいだは描き直す意味が
     // 無いので、ここで先に弾く。
+    // 地図を動かすと画面の中の候補が変わるので、残りの件数の行だけ描き直す。
+    context.systems.map?.on('draw', () => {
+      if (this.datum?.__service__ !== 'plateau') return;
+      const $body = this.$inspector?.selectAll('.body');
+      if (!$body || $body.empty()) return;
+      this.renderNextCandidate($body);
+    });
+
     const scene = context.systems.gfx?.scene;
     scene?.on('layerchange', () => {
       if (!this.datum) return;
@@ -416,10 +424,11 @@ export class UiRapidInspector {
     $next.selectAll('.choice-button')
       .classed('secondary', isDisabled)
       .classed('disabled', isDisabled)
-      .attr('title', l10n.t('shortcuts.command.next_plateau_candidate.key'));
+      .attr('disabled', isDisabled ? true : null);
 
+    const key = l10n.t('shortcuts.command.next_plateau_candidate.key');
     $next.selectAll('.choice-label')
-      .text(l10n.t('rapid_inspector.next_candidate.label'));
+      .text(`${l10n.t('rapid_inspector.next_candidate.label')} (${key})`);
 
     $next.selectAll('.rapid-inspector-next-candidate-count')
       .text(isDisabled
