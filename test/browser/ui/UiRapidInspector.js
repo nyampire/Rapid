@@ -166,7 +166,7 @@ describe('UiRapidInspector', () => {
       const way = Rapid.osmWay({ id, nodes: [...nodes.map(n => n.id), nodes[0].id], tags: { building: 'yes' } });
       const graph = new Rapid.Graph([...nodes, way]);
       Object.assign(way, { __service__: 'plateau', __datasetid__: 'plateauJapan' });
-      return { entity: way, graph, datasetID: 'plateauJapan' };
+      return { entity: way, graph, datasetID: 'plateauJapan', memberIDs: new Set([id]) };
     }
 
     let near, mid, far, far2, ctx;
@@ -240,6 +240,27 @@ describe('UiRapidInspector', () => {
       expect(inspector.remainingCandidateCount('w2')).to.eql(3);
     });
 
+    it('skips every member of the selected building when a part is selected', () => {
+      const bldg = makeCandidate('w1', 1);
+      const part = makeCandidate('w2', 2);
+      bldg.memberIDs = new Set(['w1', 'w2', 'w3']);
+      const other = makeCandidate('w9', 30);
+      inspector._candidates = () => [bldg, other];
+      inspector.datum = part.entity;
+      ctx.services.plateau.graph = () => part.graph;
+      expect(inspector.selectNextCandidate()).to.be.true;
+      expect([...ctx.entered[0].options.selection.keys()]).to.eql(['w9']);
+    });
+
+    it('counts buildings, not parts, excluding the selected building', () => {
+      const bldg = makeCandidate('w1', 1);
+      bldg.memberIDs = new Set(['w1', 'w2', 'w3']);
+      const other = makeCandidate('w9', 30);
+      inspector._candidates = () => [bldg, other];
+      expect(inspector.remainingCandidateCount('w2')).to.eql(1);
+      expect(inspector.remainingCandidateCount()).to.eql(2);
+    });
+
     it('does not react to 4 typed into a text field', () => {
       const input = document.createElement('input');
       input.className = 'test-input';
@@ -258,7 +279,7 @@ describe('UiRapidInspector', () => {
 
   describe('#renderNextCandidate', () => {
     function candidate(id) {
-      return { entity: { id, __service__: 'plateau' }, graph: null, datasetID: 'plateauJapan' };
+      return { entity: { id, __service__: 'plateau' }, graph: null, datasetID: 'plateauJapan', memberIDs: new Set([id]) };
     }
     function plateauDatum() {
       return { id: 'w1', __service__: 'plateau', __datasetid__: 'plateauJapan' };

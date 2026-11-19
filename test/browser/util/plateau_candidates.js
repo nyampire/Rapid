@@ -82,6 +82,65 @@ describe('utilPlateauCandidates', () => {
     expect(out[0].entity.id).to.equal('r1');
   });
 
+  // type=building の relation と、そのメンバー way を作る。members は [id, role] の配列。
+  function buildingRelation(g, relID, members, startX) {
+    const ways = [];
+    members.forEach(([id, role], i) => {
+      const a = addWay(g, id, startX + i * 0.1, { building: 'yes' });
+      g = a.graph;
+      ways.push(a.way);
+    });
+    const rel = Rapid.osmRelation({
+      id: relID,
+      tags: { type: 'building' },
+      members: members.map(([id, role]) => ({ id, type: 'way', role }))
+    });
+    return { graph: g.replace(rel), ways };
+  }
+
+  it('counts a type=building relation as one candidate represented by its outline', () => {
+    const r = buildingRelation(new Rapid.Graph(), 'r1', [['w2', 'part'], ['w1', 'outline'], ['w3', 'part']], 0);
+    const out = Rapid.utilPlateauCandidates(makeContext(r.ways, r.graph));
+    expect(out).to.have.lengthOf(1);
+    expect(out[0].entity.id).to.equal('w1');
+    expect([...out[0].memberIDs].sort()).to.eql(['w1', 'w2', 'w3']);
+  });
+
+  it('falls back to the first remaining part once the outline is accepted', () => {
+    const r = buildingRelation(new Rapid.Graph(), 'r1', [['w1', 'outline'], ['w2', 'part'], ['w3', 'part']], 0);
+    const out = Rapid.utilPlateauCandidates(makeContext(r.ways, r.graph, { accept: ['w1'] }));
+    expect(out).to.have.lengthOf(1);
+    expect(out[0].entity.id).to.equal('w2');
+    expect([...out[0].memberIDs].sort()).to.eql(['w2', 'w3']);
+  });
+
+  it('keeps separate buildings separate', () => {
+    let r1 = buildingRelation(new Rapid.Graph(), 'r1', [['w1', 'outline'], ['w2', 'part']], 0);
+    let r2 = buildingRelation(r1.graph, 'r2', [['w3', 'outline'], ['w4', 'part']], 10);
+    const out = Rapid.utilPlateauCandidates(makeContext([...r1.ways, ...r2.ways], r2.graph));
+    expect(out.map(c => c.entity.id)).to.eql(['w1', 'w3']);
+  });
+
+  it('gives a plain candidate a single-member set', () => {
+    let g = new Rapid.Graph();
+    const a = addWay(g, 'w9', 0); g = a.graph;
+    const out = Rapid.utilPlateauCandidates(makeContext([a.way], g));
+    expect([...out[0].memberIDs]).to.eql(['w9']);
+  });
+
+  it('gives a courtyard relation a member set of itself', () => {
+    let g = new Rapid.Graph();
+    const a = addWay(g, 'w1', 0); g = a.graph;
+    const rel = Rapid.osmRelation({
+      id: 'r1',
+      tags: { type: 'multipolygon', building: 'yes' },
+      members: [{ id: 'w1', type: 'way', role: 'outer' }]
+    });
+    g = g.replace(rel);
+    const out = Rapid.utilPlateauCandidates(makeContext([a.way, rel], g));
+    expect([...out[0].memberIDs]).to.eql(['r1']);
+  });
+
   it('returns nothing below the Plateau minimum zoom', () => {
     let g = new Rapid.Graph();
     const a = addWay(g, 'w1', 0); g = a.graph;

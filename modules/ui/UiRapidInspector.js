@@ -334,11 +334,11 @@ export class UiRapidInspector {
   /**
    * remainingCandidateCount
    * 今の画面の中に残っている Plateau の候補の数。
-   * @param  {string?}  excludeID  数えない entity.id (選んでいる候補自身)
+   * @param  {string?}  excludeID  選んでいる entity.id。これをメンバーに含む候補は数えない
    * @return {number}
    */
   remainingCandidateCount(excludeID) {
-    return this._candidates().filter(c => c.entity.id !== excludeID).length;
+    return this._candidates().filter(c => !c.memberIDs.has(excludeID)).length;
   }
 
 
@@ -370,7 +370,9 @@ export class UiRapidInspector {
     if (datum?.__service__ === 'plateau') {
       const graph = plateau.graph(datum.__datasetid__);
       fromLoc = datum.extent(graph).center();
-      excludeID = datum.id;
+      // 選んでいるのが部品でも、同じ建物の外形と部品は、まとめて飛ばす。
+      const own = candidates.find(c => c.memberIDs.has(datum.id));
+      excludeID = own ? own.entity.id : datum.id;
     } else {
       fromLoc = context.viewport.centerLoc();
     }
