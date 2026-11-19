@@ -37,7 +37,10 @@ describe('utilPlateauCandidates', () => {
     };
     return {
       services: { plateau },
-      systems: { rapid },
+      systems: {
+        rapid,
+        gfx: { scene: { layers: new Map([['rapid', { enabled: opts.rapidEnabled ?? true }]]) } }
+      },
       viewport: { transform: { zoom: opts.zoom ?? 18 } }
     };
   }
@@ -96,5 +99,11 @@ describe('utilPlateauCandidates', () => {
     let g = new Rapid.Graph();
     const a = addWay(g, 'w1', 0); g = a.graph;
     expect(Rapid.utilPlateauCandidates(makeContext([a.way], g, { started: false }))).to.eql([]);
+  });
+
+  it('returns nothing while the Rapid layer is switched off', () => {
+    let g = new Rapid.Graph();
+    const a = addWay(g, 'w1', 0); g = a.graph;
+    expect(Rapid.utilPlateauCandidates(makeContext([a.way], g, { rapidEnabled: false }))).to.eql([]);
   });
 });

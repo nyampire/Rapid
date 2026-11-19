@@ -347,10 +347,13 @@ export class UiRapidInspector {
    * 画面の中でいちばん近い Plateau の候補を選び、地図の中央に寄せる。
    * Plateau の候補を選んでいるときは、その外形の中心から、選んでいる候補を除いて探す。
    * そうでなければ地図の中央から探す。ズームは変えない。
+   * 閲覧モードか選択モードのときだけ働く。描画・移動・回転・保存などの途中では何もしない。
    * @return {boolean}  移ったら true
    */
   selectNextCandidate() {
     const context = this.context;
+    const modeID = context.mode?.id ?? '';
+    if (modeID !== 'browse' && !modeID.startsWith('select')) return false;
     const l10n = context.systems.l10n;
     const plateau = context.services?.plateau;
 

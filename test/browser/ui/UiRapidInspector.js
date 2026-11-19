@@ -26,6 +26,7 @@ describe('UiRapidInspector', () => {
       };
       this.eased = [];
       this.entered = [];
+      this.mode = { id: 'browse' };
       this.viewport = { centerLoc: () => [0, 0] };
       this.services = { plateau: { isAddBlocked: () => false } };
     }
@@ -215,6 +216,23 @@ describe('UiRapidInspector', () => {
       inspector.datum = { __service__: 'esri', id: 'x1' };
       expect(inspector.selectNextCandidate()).to.be.true;
       expect([...ctx.entered[0].options.selection.keys()]).to.eql(['w3']);
+    });
+
+    it('works in select modes', () => {
+      ctx.mode = { id: 'select-osm' };
+      expect(inspector.selectNextCandidate()).to.be.true;
+      ctx.mode = { id: 'select' };
+      expect(inspector.selectNextCandidate()).to.be.true;
+      expect(ctx.entered).to.have.lengthOf(2);
+    });
+
+    it('does nothing in modes other than browse and select', () => {
+      for (const id of ['draw-area', 'draw-line', 'move', 'rotate', 'save', 'height-transfer', 'add-point', 'add-note', 'drag-node']) {
+        ctx.mode = { id };
+        expect(inspector.selectNextCandidate(), id).to.be.false;
+      }
+      expect(ctx.entered).to.have.lengthOf(0);
+      expect(ctx.eased).to.have.lengthOf(0);
     });
 
     it('counts the remaining candidates on screen', () => {
