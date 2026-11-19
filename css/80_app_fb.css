@@ -481,11 +481,26 @@ button.overture-inspector-close:hover {
   padding: 15px;
 }
 
-/* 「次の候補へ」のボタン。エディタ全体のボタンの指定は余白が 0 なので、
+/* 「次の候補へ」のボタンと残りの件数を横に並べる。
+   左端と、上の枠とのすき間 (20px) と、角の丸み (25px) は、
+   枠の中の「追加」「無視」のボタンにそろえる。 */
+.ideditor .rapid-inspector-next-candidate {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 20px 10px 0;
+}
+/* エディタ全体のボタンの指定は余白が 0 なので、
    文字が丸めた角にかからないよう左右に余白を付ける。 */
-.rapid-inspector-next-candidate .choice-button {
+.ideditor .rapid-inspector-next-candidate .choice-button {
+  flex: 0 0 auto;
   padding: 0 20px;
+  border-radius: 25px;
   white-space: nowrap;
+}
+/* 右の欄の段落に付く上下の余白を外し、ボタンと上下の中央をそろえる。 */
+.ideditor .rapid-inspector .body .rapid-inspector-next-candidate-count {
+  padding: 0;
 }
 
 .overture-inspector img.wordmark-overture {
