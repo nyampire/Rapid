@@ -261,6 +261,53 @@ describe('UiRapidInspector', () => {
       expect(inspector.remainingCandidateCount()).to.eql(2);
     });
 
+    // 外形の中心が a (0.05)、b (2.05)、c (5.05) の 3 件。b からは c より a が近い。
+    function walk(candidates, startEntity, graphOf, steps) {
+      inspector._candidates = () => candidates;
+      ctx.services.plateau.graph = () => graphOf[startEntity.id];
+      inspector.datum = startEntity;
+      const visited = [];
+      for (let i = 0; i < steps; i++) {
+        ctx.entered = [];
+        if (!inspector.selectNextCandidate()) { visited.push(null); continue; }
+        const id = [...ctx.entered[0].options.selection.keys()][0];
+        visited.push(id);
+        // 実際のエディタでは、選んだ候補がそのまま右の欄の datum になる。
+        inspector.datum = candidates.find(c => c.entity.id === id).entity;
+        ctx.services.plateau.graph = () => graphOf[id];
+      }
+      return visited;
+    }
+
+    it('does not go back to a candidate it has already moved from', () => {
+      const a = makeCandidate('wa', 0);
+      const b = makeCandidate('wb', 2);
+      const c = makeCandidate('wc', 5);
+      const graphOf = { wa: a.graph, wb: b.graph, wc: c.graph };
+      expect(walk([a, b, c], a.entity, graphOf, 2)).to.eql(['wb', 'wc']);
+    });
+
+    it('starts over from the nearest one once every candidate has been visited', () => {
+      const a = makeCandidate('wa', 0);
+      const b = makeCandidate('wb', 2);
+      const c = makeCandidate('wc', 5);
+      const graphOf = { wa: a.graph, wb: b.graph, wc: c.graph };
+      expect(walk([a, b, c], a.entity, graphOf, 3)).to.eql(['wb', 'wc', 'wb']);
+    });
+
+    it('forgets the visited candidates when it starts from the map center', () => {
+      const a = makeCandidate('wa', 0);
+      const b = makeCandidate('wb', 2);
+      const c = makeCandidate('wc', 5);
+      const graphOf = { wa: a.graph, wb: b.graph, wc: c.graph };
+      walk([a, b, c], a.entity, graphOf, 1);    // a → b
+      inspector.datum = null;                    // 選択を外す
+      ctx.viewport.centerLoc = () => [0.05, 0.05];
+      ctx.entered = [];
+      expect(inspector.selectNextCandidate()).to.be.true;
+      expect([...ctx.entered[0].options.selection.keys()]).to.eql(['wa']);
+    });
+
     it('does not react to 4 typed into a text field', () => {
       const input = document.createElement('input');
       input.className = 'test-input';
