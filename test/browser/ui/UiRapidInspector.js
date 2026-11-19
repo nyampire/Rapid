@@ -10,14 +10,19 @@ describe('UiRapidInspector', () => {
   class MockContext {
     constructor() {
       this.systems = {
-        l10n: { t: (key) => key, isRTL: () => false, on: () => {} },
+        l10n: { t: (key) => (key === 'shortcuts.command.next_plateau_candidate.key' ? '4' : key), isRTL: () => false, on: () => {} },
         rapid: { taskExtent: null, acceptIDs: new Set() },
         urlhash: { getParam: () => null },
-        gfx: { scene: new MockScene() }
+        gfx: { scene: new MockScene() },
+        map: { centerEase: (loc) => { this.eased.push(loc); } }
       };
+      this.eased = [];
+      this.entered = [];
+      this.viewport = { centerLoc: () => [0, 0] };
       this.services = { plateau: { isAddBlocked: () => false } };
     }
     container() { return d3.select('body'); }
+    enter(modeID, options) { this.entered.push({ modeID, options }); }
   }
 
   beforeEach(() => {
@@ -143,6 +148,87 @@ describe('UiRapidInspector', () => {
       expect(inspector._osmLayerOffDisabled()).to.be.null;
     });
   });
+
+  describe('#selectNextCandidate', () => {
+    // x 座標だけで位置を決める 1 辺 0.1 度の四角の候補。外形の中心は (x + 0.05, 0.05)。
+    function makeCandidate(id, x) {
+      const nodes = [[x, 0], [x + 0.1, 0], [x + 0.1, 0.1], [x, 0.1]]
+        .map((loc, i) => Rapid.osmNode({ id: `${id}-n${i}`, loc }));
+      const way = Rapid.osmWay({ id, nodes: [...nodes.map(n => n.id), nodes[0].id], tags: { building: 'yes' } });
+      const graph = new Rapid.Graph([...nodes, way]);
+      Object.assign(way, { __service__: 'plateau', __datasetid__: 'plateauJapan' });
+      return { entity: way, graph, datasetID: 'plateauJapan' };
+    }
+
+    let near, mid, far, far2, ctx;
+    beforeEach(() => {
+      near = makeCandidate('w1', 1);
+      mid = makeCandidate('w2', 5);
+      far = makeCandidate('w3', 9);
+      far2 = makeCandidate('w4', 14);
+      ctx = inspector.context;
+      inspector._candidates = () => [far, mid, near, far2];
+    });
+    afterEach(() => d3.selectAll('.test-input').remove());
+
+    it('selects the nearest candidate and centers the map on it', () => {
+      expect(inspector.selectNextCandidate()).to.be.true;
+      expect(ctx.entered).to.have.lengthOf(1);
+      expect(ctx.entered[0].modeID).to.eql('select');
+      expect([...ctx.entered[0].options.selection.keys()]).to.eql(['w1']);
+      expect(ctx.eased).to.have.lengthOf(1);
+      expect(ctx.eased[0][0]).to.be.closeTo(1.05, 1e-9);
+    });
+
+    it('moves from the selected Plateau candidate to the nearest other one', () => {
+      // 地図の中央 (0, 0) からなら near だが、far を選んでいるので、そこから近い mid になる。
+      inspector.datum = far.entity;
+      ctx.services.plateau.graph = () => far.graph;
+      expect(inspector.selectNextCandidate()).to.be.true;
+      expect([...ctx.entered[0].options.selection.keys()]).to.eql(['w2']);
+    });
+
+    it('does not move when the only candidate is the selected one', () => {
+      inspector._candidates = () => [mid];
+      inspector.datum = mid.entity;
+      ctx.services.plateau.graph = () => mid.graph;
+      expect(inspector.selectNextCandidate()).to.be.false;
+      expect(ctx.entered).to.have.lengthOf(0);
+    });
+
+    it('does not move while the OSM layer is switched off', () => {
+      ctx.services.plateau.isAddBlocked = () => true;
+      expect(inspector.selectNextCandidate()).to.be.false;
+      expect(ctx.entered).to.have.lengthOf(0);
+    });
+
+    it('starts from the map center when a non-Plateau feature is selected', () => {
+      ctx.viewport.centerLoc = () => [9.05, 0.05];
+      inspector.datum = { __service__: 'esri', id: 'x1' };
+      expect(inspector.selectNextCandidate()).to.be.true;
+      expect([...ctx.entered[0].options.selection.keys()]).to.eql(['w3']);
+    });
+
+    it('counts the remaining candidates on screen', () => {
+      expect(inspector.remainingCandidateCount()).to.eql(4);
+      expect(inspector.remainingCandidateCount('w2')).to.eql(3);
+    });
+
+    it('does not react to 4 typed into a text field', () => {
+      const input = document.createElement('input');
+      input.className = 'test-input';
+      document.body.appendChild(input);
+      input.focus();
+      input.dispatchEvent(new KeyboardEvent('keydown', { key: '4', bubbles: true }));
+      expect(ctx.entered).to.have.lengthOf(0);
+    });
+
+    it('reacts to 4 pressed on the document', () => {
+      document.body.dispatchEvent(new KeyboardEvent('keydown', { key: '4', bubbles: true }));
+      expect(ctx.entered).to.have.lengthOf(1);
+    });
+  });
+
 
   describe('#renderHeightWarning', () => {
     function plateauDatum(extra = {}) {

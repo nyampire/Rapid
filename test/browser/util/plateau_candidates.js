@@ -24,6 +24,7 @@ describe('utilPlateauCandidates', () => {
   // 模擬の context。entities は getData が返す配列、graph はそのグラフ。
   function makeContext(entities, graph, opts = {}) {
     const plateau = {
+      started: opts.started ?? true,
       graph: () => graph,
       getData: () => entities
     };
@@ -89,5 +90,11 @@ describe('utilPlateauCandidates', () => {
     const a = addWay(g, 'w1', 0); g = a.graph;
     const datasets = [['esri1', { id: 'esri1', service: 'esri', added: true, enabled: true }]];
     expect(Rapid.utilPlateauCandidates(makeContext([a.way], g, { datasets }))).to.eql([]);
+  });
+
+  it('returns nothing while the Plateau service is not started', () => {
+    let g = new Rapid.Graph();
+    const a = addWay(g, 'w1', 0); g = a.graph;
+    expect(Rapid.utilPlateauCandidates(makeContext([a.way], g, { started: false }))).to.eql([]);
   });
 });
