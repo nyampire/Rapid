@@ -24,6 +24,13 @@ en:
     dashboard_tooltip: Open the Rapid Plateau progress dashboard (new tab)
     zoom_overview_label: Zoom 14
     zoom_overview_tooltip: Snap to zoom 14 so tiles stop loading and panning stays fast.<br>Buildings render from z16.
+    next_candidate:
+      label: Next candidate
+      label_count: "Next candidate {n}"
+      tooltip: Select the next Plateau candidate on screen.
+      layer_off: Turn on Plateau data in the Rapid layer to use this.
+      zoom: Zoom in to 17 or closer to use this.
+      osm_layer_off: Show the OSM data layer to use this.
   height_transfer:
     section_title: Plateau tags
     additions: Add from Plateau
