@@ -1,5 +1,6 @@
 import { utilStringQs } from '@rapid-sdk/util';
 
+import { utilBuildingRelationInfo } from './building_relation.js';
 import { PLATEAU_BUILDINGS_MINZOOM } from '../services/PlateauService.js';
 
 
@@ -58,7 +59,11 @@ export function utilPlateauRenderables(entities, graph, skip) {
  * 描く処理と同じ絞り込みを通すので、画面に無い候補が混ざったり、数がずれたりしない。
  *
  * @param   {Context}  context
- * @return  {Array<{entity: Entity, graph: Graph, datasetID: string}>}
+ * 外形と部品に分かれた建物（`type=building` の relation）は、まとめて1件と数える。
+ * 代表は外形で、外形がもう残っていなければ、残っている部品のうち最初のもの。
+ * memberIDs には、まとめた way の id がすべて入る。
+ *
+ * @return  {Array<{entity: Entity, graph: Graph, datasetID: string, memberIDs: Set<string>}>}
  */
 export function utilPlateauCandidates(context) {
   const rapid = context.systems.rapid;
@@ -87,8 +92,29 @@ export function utilPlateauCandidates(context) {
     const datasetID = dataset.id + ((dataset.conflated && !noConflation) ? '-conflated' : '');
     const graph = service.graph(datasetID);
     const { polygons } = utilPlateauRenderables(service.getData(datasetID), graph, skip);
+    const groups = new Map();   // relation.id -> { relation, ways, result }
     for (const entity of polygons) {
-      results.push({ entity, graph, datasetID });
+      const info = (entity.type === 'way') ? utilBuildingRelationInfo(entity, graph) : null;
+      if (info?.relationType !== 'building') {
+        results.push({ entity, graph, datasetID, memberIDs: new Set([entity.id]) });
+        continue;
+      }
+
+      const relID = info.relation.id;
+      let group = groups.get(relID);
+      if (!group) {
+        // グループの最初の要素が現れた位置に置く。代表は、まとめ終えてから決める。
+        group = { relation: info.relation, ways: [], result: { entity, graph, datasetID, memberIDs: new Set() } };
+        groups.set(relID, group);
+        results.push(group.result);
+      }
+      group.ways.push(entity);
+      group.result.memberIDs.add(entity.id);
+    }
+
+    for (const { relation, ways, result } of groups.values()) {
+      const outlineIDs = new Set((relation.members ?? []).filter(m => m.role === 'outline').map(m => m.id));
+      result.entity = ways.find(w => outlineIDs.has(w.id)) ?? ways[0];
     }
   }
   return results;
