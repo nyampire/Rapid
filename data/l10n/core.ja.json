@@ -3051,7 +3051,7 @@
       "next_candidate": {
         "label": "次の候補へ",
         "remaining": "画面に残り {n} 件",
-        "none": "この画面に残りの候補はありません"
+        "none": "この画面に候補はありません"
       }
     },
     "rapid_menu": {
