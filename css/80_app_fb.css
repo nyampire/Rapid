@@ -481,6 +481,13 @@ button.overture-inspector-close:hover {
   padding: 15px;
 }
 
+/* 「次の候補へ」のボタン。エディタ全体のボタンの指定は余白が 0 なので、
+   文字が丸めた角にかからないよう左右に余白を付ける。 */
+.rapid-inspector-next-candidate .choice-button {
+  padding: 0 20px;
+  white-space: nowrap;
+}
+
 .overture-inspector img.wordmark-overture {
   width: 100%;
   max-width: 225px;
